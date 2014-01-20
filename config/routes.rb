@@ -1,4 +1,6 @@
 HubsBackOffice::Application.routes.draw do
+  root 'errors_handling#error_page'
+  
   get "products/index"
   get "products/edit"
   get "products/show"
