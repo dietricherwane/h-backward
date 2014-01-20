@@ -81580,3 +81580,21 @@ Completed 200 OK in 609ms (Views: 540.6ms | ActiveRecord: 61.0ms)
   [1m[36m (0.5ms)[0m  [1mBEGIN[0m
   [1m[35mSQL (0.9ms)[0m  UPDATE "sessions" SET "data" = $1, "updated_at" = $2 WHERE "sessions"."id" = 2  [["data", "BAh7CUkiDHNlcnZpY2UGOgZFRnsOSSIHaWQGOwBUSSIKV3MwMDEGOwBUSSIS\nYmFza2V0X251bWJlcgY7AFRJIgc1NgY7AFRJIhFvcGVyYXRpb25faWQGOwBU\nSSIGMQY7AFRJIhd0cmFuc2FjdGlvbl9hbW91bnQGOwBUSSIJOTk5NgY7AFRJ\nIg9vcGVyYXRpb25zBjsAVHsHSSIGMQY7AFR7B0kiCnRpdGxlBjsAVEkiGEVm\nZmVjdHVlciB1biBhY2hhdC4GOwBUSSISdGl0bGVfY29tbWVudAY7AFRJIhdB\nY2hhdCBkZSBtdXNpcXVlcy4GOwBUSSIGMgY7AFR7B0kiCnRpdGxlBjsAVEki\nHUVmZmVjdHVlciB1biBhYm9ubmVtZW50LgY7AFRJIhJ0aXRsZV9jb21tZW50\nBjsAVEkiNVMnYWJvbm5lciBldCBiw6luw6lmaWNpZXIgZGUgbm9tYnJldXgg\nYXZhbnRhZ2VzLgY7AFRJIgluYW1lBjsAVEkiC1dpbWJvbwY7AFRJIhNsb2dv\nX2Nzc19jbGFzcwY7AFRJIhB3aW1ib29fbG9nbwY7AFRJIg9yZXR1cm5fdXJs\nBjsAVEkiJ2h0dHA6Ly93aW1ib28uY29tL3BheW1lbnQvc3VjY2Vzcy8GOwBU\nSSIXdHJhbnNhY3Rpb25fc3RhdHVzBjsAVEkiAAY7AFRJIg9zZXJ2aWNlX2lk\nBjsARmkGSSIQX2NzcmZfdG9rZW4GOwBGSSIxaURHKzV6QWxBaEpQR3B0dzN3\nUFRtT0xENWxNc1ZFTEw2SXFxNmhLWXN6Zz0GOwBGSSIMY2FwdGNoYQY7AEZJ\nIi02Y2Q0YTUxMTRjZDY5MmE3OTI2YjFlNDZhNDQxMTU5YzMxYzU4NWUyBjsA\nRg==\n"], ["updated_at", Mon, 20 Jan 2014 10:59:34 UTC +00:00]]
   [1m[36m (68.5ms)[0m  [1mCOMMIT[0m
+
+
+Started GET "/paymoney/Ws001/1/56/9996" for 127.0.0.1 at 2014-01-20 03:37:56 -0800
+  [1m[36mActiveRecord::SchemaMigration Load (1.8ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by PayMoneyController#guard as */*
+  Parameters: {"service_id"=>"Ws001", "operation_id"=>"1", "basket_number"=>"56", "transaction_amount"=>"9996"}
+  [1m[35mService Load (1.8ms)[0m  SELECT "services".* FROM "services" WHERE "services"."code" = 'Ws001' LIMIT 1
+  [1m[36m (5.0ms)[0m  [1mSELECT COUNT(*) FROM "baskets" WHERE "baskets"."service_id" = $1 AND (number = '56' AND operation_id = 1)[0m  [["service_id", 1]]
+Redirected to http://0.0.0.0:3000/PayMoney
+Completed 302 Found in 215ms (ActiveRecord: 13.1ms)
+
+
+Started GET "/PayMoney" for 127.0.0.1 at 2014-01-20 03:37:57 -0800
+Processing by PayMoneyController#index as */*
+  [1m[35mService Load (3.2ms)[0m  SELECT "services".* FROM "services" WHERE "services"."code" = 'Ws001' LIMIT 1
+  [1m[36m (1.2ms)[0m  [1mSELECT COUNT(*) FROM "baskets" WHERE "baskets"."service_id" = $1 AND (number = '0' AND operation_id = 1)[0m  [["service_id", 1]]
+  Rendered pay_money/index.html.erb within layouts/payMoney (12.1ms)
+Completed 200 OK in 8053ms (Views: 8038.0ms | ActiveRecord: 4.4ms)
