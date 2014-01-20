@@ -1,0 +1,2 @@
+module PayMoneyHelper
+end
