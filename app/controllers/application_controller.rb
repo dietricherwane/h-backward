@@ -20,10 +20,14 @@ class ApplicationController < ActionController::Base
   
   def basket_already_paid?(basket_number)
     @service = Service.find_by_code(session[:service]["id"])
-    @basket = @service.baskets.where("number = '#{basket_number.to_i}' AND operation_id = #{session[:service]["operation_id"].to_i}")#find_by_number(basket_number.to_i)
-    session[:service_id] = @service.id
-    if !@basket.empty? and @basket.first.payment_status.eql?(true)
+    if @service.blank?
       redirect_to error_page_path
+    else
+      @basket = @service.baskets.where("number = '#{basket_number.to_i}' AND operation_id = #{session[:service]["operation_id"].to_i}")#find_by_number(basket_number.to_i)
+      session[:service_id] = @service.id
+      if !@basket.empty? and @basket.first.payment_status.eql?(true)
+        redirect_to error_page_path
+      end
     end
   end
   
