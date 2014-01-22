@@ -32,8 +32,6 @@ class PaypalController < ApplicationController
       #redirect_to "www.wimboo.com/paypal/#{params[:cm]}/0/#{params[:amt]}"
     end    
   end
-    
-  end
   
   def paypal_display
     @params = params
