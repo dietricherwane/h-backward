@@ -17,7 +17,7 @@ HubsBackOffice::Application.routes.draw do
   get "Paypal" => "paypal#index"
   get "Paypal/PaymentResult" => "paypal#paypal_display"
   post "Paypal/ProcessPayment" => "paypal#process_payment"
-  post "Paypal/PaymentResultListener" => "paypal#payment_result_listener"
+  get "Paypal/PaymentResultListener" => "paypal#payment_result_listener"
   
   get "PayPal/PaymentValidation" => "paypal_payment_validation#my_queue"
   
