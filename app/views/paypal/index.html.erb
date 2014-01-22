@@ -27,24 +27,43 @@
 	  
 	  
     
-    <!------------------------------------------ Data-fluid ----------------------------------->
+    <!------------------------------------------ Data-fluid ----------------------------------->				
 		<div class = "data-fluid" >
-		  <%= form_tag ("/Paypal/ProcessPayment") do %>       
-	      <div class = "<%= @transaction_amount_css %>">
+		  <form method="post" action="https://www.sandbox.paypal.com/cgi-bin/webscr" class = "paypal-button" target="_top" style="opacity: 1;">
+		    <input type="hidden" name="button" value="buynow">
+		    <input type="hidden" name="business" value="92ZE9QH5KHPHY">
+		    <%= hidden_field_tag "item_name", "#{session[:service]["name"]}" %>
+		    <input type="hidden" name="quantity" value="1">
+		    <div class = "row-form">
 	        <div class = "input-append">
 		        <div class = "span9">
-			        <%= text_field_tag "magellan", session[:service]["transaction_amount"], :readonly => true %>
+			        <%= text_field_tag "amount", session[:service]["transaction_amount"], :readonly => true %>
 			        <button class = "btn btn-info" type = "button">USD</button>
 		        </div>
 		      </div>
-	      </div>       	      
-        <br />
-        <div class="span12">
+	      </div>
+		    <input type="hidden" name="currency_code" value="USD">
+		    <input type="hidden" name="tax" value="0">
+		    <input type="hidden" name="notify_url" value="http://contactgroup.herokuapp.com/HubReportPOST">
+		    <input type="hidden" name="cmd" value="_xclick">
+		    <input type="hidden" name="bn" value="JavaScriptButton_buynow">
+		    <input type="hidden" name="env" value="www">
+		    <div class = "row-form">
+	        <div class = "input-append">
+		        <div class = "span9">
+			        <%= text_field_tag "shipping", "#{@shipping}", :readonly => true %>
+			        <button class = "btn btn-info" type = "button">Shipping ($)</button>
+		        </div>
+		      </div>
+	      </div>
+		    <%= hidden_field_tag "custom", "#{session[:service]["basket_number"]}" %>
+		    <br />
+		    <div class="span12">
 		      <button class="btn">
-			      Payer via Paypal <div class="icon-arrow-next icon-white"></div>  	
+			      Payer avec Paypal <div class="icon-arrow-next icon-white"></div>  	
 		      </button>
 	      </div>
-      <% end %>
+		  </form>		  
 		</div>
 	  <!------------------------------------------ Data-fluid ----------------------------------->
 	  </div>	

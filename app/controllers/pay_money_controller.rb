@@ -17,6 +17,7 @@ class PayMoneyController < ApplicationController
   
   def index
     # initialisation des feuilles de style des zones de saisie
+    @shipping = ((session[:service]["transaction_amount"]).to_f * 0.02).round(2)
     @transaction_amount_css = @account_number_css = @password_css = "row-form"
   end
   

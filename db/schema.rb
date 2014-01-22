@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140120083448) do
+ActiveRecord::Schema.define(version: 20140120190801) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,11 +23,22 @@ ActiveRecord::Schema.define(version: 20140120083448) do
     t.datetime "updated_at"
     t.boolean  "payment_status"
     t.integer  "operation_id"
+    t.float    "transaction_amount"
   end
 
   add_index "baskets", ["number"], name: "index_baskets_on_number", using: :btree
   add_index "baskets", ["operation_id"], name: "index_baskets_on_operation_id", using: :btree
   add_index "baskets", ["service_id"], name: "index_baskets_on_service_id", using: :btree
+
+  create_table "paypal_baskets", force: true do |t|
+    t.string   "number"
+    t.integer  "service_id"
+    t.integer  "operation_id"
+    t.boolean  "payment_status"
+    t.float    "transaction_amount"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "products", force: true do |t|
     t.string   "name",          limit: 100

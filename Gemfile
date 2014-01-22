@@ -57,8 +57,10 @@ gem 'protected_attributes'
 # stores session variables into database
 gem 'activerecord-session_store', github: 'rails/activerecord-session_store'
 
-gem 'rails_log_stdout',           github: 'heroku/rails_log_stdout'
-gem 'rails3_serve_static_assets', github: 'heroku/rails3_serve_static_assets'
+gem "rails_12factor", group: :production
+
+#gem 'rails_log_stdout',           github: 'heroku/rails_log_stdout'
+#gem 'rails3_serve_static_assets', github: 'heroku/rails3_serve_static_assets'
 
 # Captcha system
 #gem 'simple_captcha', :git => 'git://github.com/Azdaroth/simple-captcha.git', :branch => 'rails-4'

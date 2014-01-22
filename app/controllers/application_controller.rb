@@ -6,8 +6,8 @@ class ApplicationController < ActionController::Base
   def get_service(service_id, operation_id, basket_number, transaction_amount)
     # check if transaction_amount is a number
     session[:service] = case service_id
-      when "Ws001" then {"id" => "Ws001", "basket_number" => "#{basket_number}", "operation_id" => "#{operation_id}", "transaction_amount" => "#{transaction_amount}", "operations" => {"1" => {"title" => "Effectuer un achat.", "title_comment" => "Achat de musiques."}, "2" => {"title" => "Effectuer un abonnement.", "title_comment" => "S'abonner et bénéficier de nombreux avantages."}}, "name" => "Wimboo", "logo_css_class" => "wimboo_logo", "return_url" => "http://wimboo.com/payment/success/", "transaction_status" => ""}
-      when "Ws002" then {"id" => "Ws002", "basket_number" => "#{basket_number}", "operation_id" => "#{operation_id}", "transaction_amount" => "#{transaction_amount}", "operations" => {"1" => {"title" => "Effectuer un achat.", "title_comment" => "Achat de journaux."}}, "name" => "E-kiosk", "logo_css_class" => "e-kiosk_logo", "return_url" => "http://wimboo.com/payment/success/", "transaction_status" => ""}
+      when "Ws001" then {"id" => "Ws001", "name" => "Musiques", "basket_number" => "#{basket_number}", "operation_id" => "#{operation_id}", "transaction_amount" => "#{transaction_amount}", "operations" => {"1" => {"title" => "Effectuer un achat.", "title_comment" => "Achat de musiques."}, "2" => {"title" => "Effectuer un abonnement.", "title_comment" => "S'abonner et bénéficier de nombreux avantages."}}, "name" => "Wimboo", "logo_css_class" => "wimboo_logo", "return_url" => "http://wimboo.com/payment/success/", "transaction_status" => ""}
+      when "Ws002" then {"id" => "Ws002", "name" => "Journaux", "basket_number" => "#{basket_number}", "operation_id" => "#{operation_id}", "transaction_amount" => "#{transaction_amount}", "operations" => {"1" => {"title" => "Effectuer un achat.", "title_comment" => "Achat de journaux."}}, "name" => "E-kiosk", "logo_css_class" => "e-kiosk_logo", "return_url" => "http://wimboo.com/payment/success/", "transaction_status" => ""}
       else {}
     end
   end
@@ -24,6 +24,19 @@ class ApplicationController < ActionController::Base
       redirect_to error_page_path
     else
       @basket = @service.baskets.where("number = '#{basket_number.to_i}' AND operation_id = #{session[:service]["operation_id"].to_i}")#find_by_number(basket_number.to_i)
+      session[:service_id] = @service.id
+      if !@basket.empty? and @basket.first.payment_status.eql?(true)
+        redirect_to error_page_path
+      end
+    end
+  end
+  
+  def paypal_basket_already_paid?(basket_number)
+    @service = Service.find_by_code(session[:service]["id"])
+    if @service.blank?
+      redirect_to error_page_path
+    else
+      @basket = @service.paypal_baskets.where("number = '#{basket_number.to_i}' AND operation_id = #{session[:service]["operation_id"].to_i}")#find_by_number(basket_number.to_i)
       session[:service_id] = @service.id
       if !@basket.empty? and @basket.first.payment_status.eql?(true)
         redirect_to error_page_path

@@ -1,5 +1,5 @@
 HubsBackOffice::Application.routes.draw do
-  root 'errors_handling#error_page'
+  #root 'errors_handling#error_page'
   
   get "products/index"
   get "products/edit"
@@ -17,9 +17,12 @@ HubsBackOffice::Application.routes.draw do
   get "Paypal" => "paypal#index"
   get "Paypal/PaymentResult" => "paypal#paypal_display"
   post "Paypal/ProcessPayment" => "paypal#process_payment"
+  post "Paypal/PaymentResultListener" => "paypal#payment_result_listener"
+  
+  get "PayPal/PaymentValidation" => "paypal_payment_validation#my_queue"
   
   get "error" => "errors_handling#error_page", as: :error_page
-  get "success" => "errors_handling#success_page"
+  get "success" => "errors_handling#success_page", as: :success_page
   
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
