@@ -38,6 +38,14 @@
 		        </div>
 		      </div>
 	      </div>
+	      <div class = "row-form">
+	        <div class = "input-append">
+		        <div class = "span9">
+			        <%= text_field_tag "shipping", "#{@shipping}", :readonly => true %>
+			        <button class = "btn btn-info" type = "button">Shipping ($)</button>
+		        </div>
+		      </div>
+	      </div>
         <div class = "<%= @account_number_css %>">		      
 		      <div class = "span12">
 			      <%= text_field_tag "colomb", params[:colomb], placeholder: 'Numéro de compte', :autocomplete => :off %>
@@ -51,7 +59,7 @@
         <br />
         <div class="span12">
 		      <button class="btn">
-			      Valider <div class="icon-arrow-next icon-white"></div>  	
+			      Payer avec Paymoney <div class="icon-arrow-next icon-white"></div>  	
 		      </button>
 	      </div>
       <% end %>
