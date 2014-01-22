@@ -19,7 +19,6 @@ class PaypalController < ApplicationController
     @request = Typhoeus::Request.new("https://www.sandbox.paypal.com/cgi-bin/webscr", method: :post, params: {cmd: "_notify-sync", tx: "#{params[:tx]}", at: "wc9rbATkeBqy488jdxnQeXHsv9ya8Sh6Pq_DST3BihQ4oV2-De3epJilfKG"})
     @request.run
     @response = @request.response
-    Hub.create(:server_response => "params => #{params[:tx]} #{params[:st]}")
     if(params[:st] == "Completed")
       @basket = PaypalBasket.find_by_number(params[:cm].to_s)
       if(!@basket.blank?)
