@@ -11,33 +11,73 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140120190801) do
+ActiveRecord::Schema.define(version: 20140407112650) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "baskets", force: true do |t|
     t.string   "number"
-    t.integer  "service_id"
+    t.string   "service_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "payment_status"
-    t.integer  "operation_id"
+    t.string   "operation_id"
     t.float    "transaction_amount"
+    t.boolean  "notified_to_back_office"
+    t.string   "transaction_id"
+    t.boolean  "notified_to_ecommerce"
   end
 
   add_index "baskets", ["number"], name: "index_baskets_on_number", using: :btree
   add_index "baskets", ["operation_id"], name: "index_baskets_on_operation_id", using: :btree
   add_index "baskets", ["service_id"], name: "index_baskets_on_service_id", using: :btree
 
+  create_table "delayed_payments", force: true do |t|
+    t.string   "number"
+    t.string   "service_id"
+    t.boolean  "payment_status"
+    t.string   "operation_id"
+    t.boolean  "notified_to_back_office"
+    t.float    "transaction_amount"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "transaction_id"
+    t.boolean  "notified_to_ecommerce"
+  end
+
+  create_table "operations", force: true do |t|
+    t.string   "code"
+    t.string   "name"
+    t.string   "comment"
+    t.integer  "service_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "published"
+  end
+
+  create_table "payment_way_fees", force: true do |t|
+    t.string   "code"
+    t.string   "name"
+    t.float    "fee"
+    t.boolean  "percentage"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "published"
+    t.boolean  "enabled"
+  end
+
   create_table "paypal_baskets", force: true do |t|
     t.string   "number"
-    t.integer  "service_id"
-    t.integer  "operation_id"
+    t.string   "service_id"
+    t.string   "operation_id"
     t.boolean  "payment_status"
     t.float    "transaction_amount"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "notified_to_back_office"
+    t.string   "transaction_id"
+    t.boolean  "notified_to_ecommerce"
   end
 
   create_table "products", force: true do |t|
@@ -54,6 +94,18 @@ ActiveRecord::Schema.define(version: 20140120190801) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "sales_area"
+    t.string   "url_on_success"
+    t.string   "url_on_error"
+    t.string   "url_on_session_expired"
+    t.string   "url_on_hold_success"
+    t.string   "url_on_hold_error"
+    t.string   "url_on_hold_listener"
+    t.string   "authentication_token"
+    t.string   "comment"
+    t.boolean  "published"
+    t.string   "url_on_basket_already_paid"
+    t.string   "url_to_ipn"
   end
 
   add_index "services", ["code"], name: "index_services_on_code", using: :btree

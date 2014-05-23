@@ -1,6 +1,8 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+#gem 'rails', '4.0.4'
+#gem 'rails', :git => 'git://github.com/rails/rails.git' 
 gem 'rails', '4.0.0'
 
 ruby '2.0.0'
@@ -9,7 +11,8 @@ ruby '2.0.0'
 gem 'pg'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.0'
+#gem 'sass-rails', '~> 4.0.0'
+gem 'sass-rails', '~> 4.0.3'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
@@ -57,7 +60,7 @@ gem 'protected_attributes'
 # stores session variables into database
 gem 'activerecord-session_store', github: 'rails/activerecord-session_store'
 
-gem "rails_12factor", group: :production
+#gem "rails_12factor", group: :production
 
 #gem 'rails_log_stdout',           github: 'heroku/rails_log_stdout'
 #gem 'rails3_serve_static_assets', github: 'heroku/rails3_serve_static_assets'

@@ -1,0 +1,24 @@
+/home/ngser/.rvm/rubies/ruby-2.0.0-p195/bin/ruby extconf.rb 
+creating Makefile
+
+make "DESTDIR=" clean
+
+make "DESTDIR="
+compiling yajl_parser.c
+compiling yajl_lex.c
+compiling yajl_buf.c
+compiling yajl_alloc.c
+compiling yajl_encode.c
+compiling yajl.c
+compiling yajl_version.c
+compiling yajl_ext.c
+yajl_ext.c: In function ‘yajl_found_hash_key’:
+yajl_ext.c:321:9: attention : ISO C89 interdit les mélanges de déclarations et de code [-Wdeclaration-after-statement]
+yajl_ext.c: In function ‘rb_yajl_parser_parse’:
+yajl_ext.c:472:17: attention : variable ‘stat’ set but not used [-Wunused-but-set-variable]
+compiling yajl_gen.c
+linking shared-object yajl/yajl.so
+
+make "DESTDIR=" install
+/usr/bin/install -m 0755 yajl.so ./.gem.20140122-16484-1a6adsw/yajl
+installing default yajl libraries

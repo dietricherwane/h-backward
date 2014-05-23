@@ -2,7 +2,7 @@
     <div class="icon">
         <span class="ico-arrow-right"></span>
     </div>
-    <h1><%= session[:service]["operations"]["#{session[:service]['operation_id']}"]["title"] %><small><%= session[:service]["operations"]["#{session[:service]['operation_id']}"]["title_comment"] %></small></h1>
+    <h1><%= session[:operation].name %><small><%= session[:operation].comment %></small></h1>
 </div>
 <div class = "row-fluid">
 	<div class = "span12">
@@ -32,18 +32,17 @@
 		  <form method="post" action="https://www.sandbox.paypal.com/cgi-bin/webscr" class = "paypal-button" target="_top" style="opacity: 1;">
 		    <input type="hidden" name="button" value="buynow">
 		    <input type="hidden" name="business" value="6XLW4P3YQCASY">
-		    <%= hidden_field_tag "item_name", "#{session[:service]["name"]}" %>
+		    <%= hidden_field_tag "item_name", "#{session[:service].name}" %>
 		    <input type="hidden" name="quantity" value="1">
 		    <div class = "row-form">
 	        <div class = "input-append">
 		        <div class = "span9">
-			        <%= text_field_tag "amount", session[:service]["transaction_amount"], :readonly => true %>
+			        <%= text_field_tag "amount", session[:basket]["transaction_amount"], :readonly => true %>
 			        <button class = "btn btn-info" type = "button">USD</button>
 		        </div>
 		      </div>
 	      </div>
 		    <input type="hidden" name="currency_code" value="USD">
-		    <input type="hidden" name="tax" value="0">
 		    <input type="hidden" name="notify_url" value="">
 		    <input type="hidden" name="cmd" value="_xclick">
 		    <input type="hidden" name="bn" value="JavaScriptButton_buynow">
@@ -51,12 +50,12 @@
 		    <div class = "row-form">
 	        <div class = "input-append">
 		        <div class = "span9">
-			        <%= text_field_tag "shipping", "#{@shipping}", :readonly => true %>
+			        <%= text_field_tag "tax", "#{@shipping}", :readonly => true %>
 			        <button class = "btn btn-info" type = "button">Shipping ($)</button>
 		        </div>
 		      </div>
 	      </div>
-		    <%= hidden_field_tag "custom", "#{session[:service]["basket_number"]}" %>
+		    <%= hidden_field_tag "custom", "#{@temporary_basket.transaction_id}" %>
 		    <br />
 		    <div class="span12">
 		      <button class="btn">
