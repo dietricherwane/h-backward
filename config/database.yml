@@ -18,7 +18,7 @@ development:
   adapter: postgresql
   encoding: unicode
   database: HubsBackOffice_development
-  pool: 5
+  pool: 10005
   username: erwan
   password: dukenukemdie
   host: localhost
@@ -61,7 +61,7 @@ production:
   adapter: postgresql
   encoding: unicode
   database: HubsBackOffice_production
-  pool: 5
+  pool: 10005
   username: erwan
   password: dukenukemdie
   host: localhost
