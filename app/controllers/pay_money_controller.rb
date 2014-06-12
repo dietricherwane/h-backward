@@ -96,7 +96,7 @@ class PayMoneyController < ApplicationController
         end
         
         #redirect_to success_page_path
-        redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paymoney"
+        redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paymoney&transaction_amount=#{session[:basket]["transaction_amount"]}"
         #redirect_to "https://www.wimboo.net/payments/ipn.php?order_id=#{session[:basket]['basket_number']}&statut_id=#{@transaction_status}"
 #redirect_to "#{session[:service].url_on_success}?order_id=#{session[:basket]['basket_number']}&statut_id=2"
         #Typhoeus.get(session[:service]["url_on_success"] << "?order_id=" << session[:service]["basket_number"] << "&statut_id=2")
