@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140407112650) do
+ActiveRecord::Schema.define(version: 20140611144348) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,13 @@ ActiveRecord::Schema.define(version: 20140407112650) do
   add_index "baskets", ["number"], name: "index_baskets_on_number", using: :btree
   add_index "baskets", ["operation_id"], name: "index_baskets_on_operation_id", using: :btree
   add_index "baskets", ["service_id"], name: "index_baskets_on_service_id", using: :btree
+
+  create_table "countries", force: true do |t|
+    t.string   "name"
+    t.boolean  "published"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "delayed_payments", force: true do |t|
     t.string   "number"
@@ -54,6 +61,7 @@ ActiveRecord::Schema.define(version: 20140407112650) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "published"
+    t.string   "authentication_token"
   end
 
   create_table "payment_way_fees", force: true do |t|
@@ -103,9 +111,9 @@ ActiveRecord::Schema.define(version: 20140407112650) do
     t.string   "url_on_hold_listener"
     t.string   "authentication_token"
     t.string   "comment"
-    t.boolean  "published"
     t.string   "url_on_basket_already_paid"
     t.string   "url_to_ipn"
+    t.boolean  "published"
   end
 
   add_index "services", ["code"], name: "index_services_on_code", using: :btree
@@ -129,5 +137,15 @@ ActiveRecord::Schema.define(version: 20140407112650) do
   end
 
   add_index "simple_captcha_data", ["key"], name: "idx_key", using: :btree
+
+  create_table "wallets", force: true do |t|
+    t.string   "name"
+    t.string   "url"
+    t.string   "logo"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "country_id"
+    t.boolean  "published"
+  end
 
 end

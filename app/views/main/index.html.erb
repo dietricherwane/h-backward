@@ -1,0 +1,86 @@
+<script type="text/javascript" language="JavaScript">
+  $(document).on('ready page:load', function(){  
+		$('#wallets').vaccordion({
+			expandedHeight	: 450,
+			animSpeed		: 500,
+			animEasing		: 'easeInOutBack',
+			animOpacity		: 0.4,
+			visibleSlices	: <%= session[:visible_slices] %>
+		}); 
+		
+		$(".va-title").shuffleLetters();  
+		
+		$("#country_country_id").change(function() {
+      var country_id = this.options[this.selectedIndex].value;
+      $(this).get_wallets(country_id)
+    });
+    
+    $.fn.get_wallets = function(country_id) {           
+      $.ajax({   
+        url: "<%= url_for :action => 'get_wallets', :controller => 'wallets' %>",
+        data: {country_id: country_id},
+        dataType: "text",
+        error: function(xhr, textStatus, errorThrown){  
+        	alert("Une erreur s'est produite: " + errorThrown);
+        },
+        success: function(response, response_status, xhr) {       
+          //$("#custom_messages").html("<div class = 'alert alert-success'>La demande a été traitée.</div>");     
+          if(response == "Il n'y a aucun moyen de paiement pour ce pays."){
+            $("#wallets_list").html(response);
+          }
+          else{
+            $("#wallets_list").html(response);
+            $('#wallets').vaccordion({
+		          expandedHeight	: 350,
+		          animSpeed		: 400,
+		          animOpacity		: 0.7,
+		          visibleSlices	: <%= session[:visible_slices] %>
+	          });
+	          $(".va-title").shuffleLetters();
+          }         
+        }
+      });  
+    }  
+    
+  });
+</script>
+
+<!--<div class="header">
+	<a><span>&laquo; <%= session[:service].name %>: <%= session[:operation].comment %> &raquo;</span></a>
+	<span class="right_ab">
+		<a><span>Veuillez choisir un moyen de paiement.</span></a>
+	</span>
+</div>-->
+<div class="container">
+	<div id="wallets" class="va-container">			  
+		<div class="va-nav">
+			<span class="va-nav-prev">Previous</span>
+			<span class="va-nav-next">Next</span>
+		</div>
+		<span id = "wallets_list">
+		      <div class="va-wrapper">		
+		        
+		          
+		        <% @wallets.each do |wallet| %>
+			        <div class="va-slice" style = "background:#000 url(<%= wallet.logo %>) no-repeat center center;">
+				        <h3 class="va-title"><%= wallet.name %></h3>
+				        <div class="va-content">
+				          <p>Description</p>
+					        <ul>
+						        <li><%= link_to "Payer: #{session[:basket]["transaction_amount"]} USD", "#{wallet.url}/#{session[:service].code}/#{session[:operation].code}/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}" %></li>
+					        </ul>
+				        </div>
+			        </div>
+			      <% end %>		
+			    </div>	
+		</span>
+	</div>
+</div>
+<footer>
+  <span class = "service">
+    <i>&laquo; <%= session[:service].name %>: <%= session[:operation].comment %> &raquo;</i>
+  </span>  
+  <span class = "countries">
+    Choisir un moyen de paiement relatif à votre localisation: <%= collection_select(:country, :country_id, @countries, :id, :name, :selected => @international.id) %>                                    
+  </span>  
+</footer>
