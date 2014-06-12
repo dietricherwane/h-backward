@@ -9,7 +9,12 @@ HubsBackOffice::Application.routes.draw do
   post "products/update"
   post "products/delete"
   
-  get "paymoney/:service_id/:operation_id/:basket_number/:transaction_amount" => "pay_money#guard", :constraints => {:transaction_amount => /\-*\d+.\d+/}
+  get "order/:service_token/:operation_token/:order/:transaction_amount" => "main#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
+  get "Main" => "main#index"
+  
+  get "get_wallets" => "wallets#get_wallets"
+  
+  get "paymoney/:service_id/:operation_id/:basket_number/:transaction_amount" => "pay_money#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "PayMoney" => "pay_money#index"
   post "PayMoney/ProcessPayment" => "pay_money#process_payment"
   get "PayMoney/Account" => "pay_money#account"
@@ -19,7 +24,7 @@ HubsBackOffice::Application.routes.draw do
   post "paymoney/ipn" => "pay_money#ipn" 
   post "paymoney/transaction_acknowledgement" => "pay_money#transaction_acknowledgement"
   
-  get "paypal/:service_id/:operation_id/:basket_number/:transaction_amount" => "paypal#guard", :constraints => {:transaction_amount => /\-*\d+.\d+/}
+  get "paypal/:service_id/:operation_id/:basket_number/:transaction_amount" => "paypal#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "Paypal" => "paypal#index"
   get "Paypal/PaymentResult" => "paypal#paypal_display"
   post "Paypal/ProcessPayment" => "paypal#process_payment"

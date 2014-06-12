@@ -4,12 +4,14 @@ class PaypalController < ApplicationController
   # Only for guard action, we check if service_id exists and initialize a session variable containing transaction_data
   before_action :only => :guard do |s| s.get_service(params[:service_id], params[:operation_id], params[:basket_number], params[:transaction_amount]) end
   # Only for guard action, we check if the session varable is initialized, if the operation_id is initialized and if transaction_amount is a number
-  before_action :only => :guard do |o| o.filter_connections params[:operation_id] end
+  before_action :only => :guard do |o| o.filter_connections end
   #before_action :only => :guard do |r| r.authenticate_incoming_request(params[:operation_id], params[:basket_number], params[:transaction_amount]) end
   # Vérifie que le panier n'a pas déjà été payé via paypal
   before_action :only => :guard do |s| s.basket_already_paid?(params[:basket_number]) end
   # Vérifie pour toutes les actions que la variable de session existe
   before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement]
+  # Si l'utilisateur ne s'est pas connecté en passant par main#guard, on le rejette
+  before_action :except => [:ipn, :transaction_acknowledgement] do |s| s.session_authenticated? end 
 
   layout "paypal"
   

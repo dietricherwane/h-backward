@@ -30,8 +30,10 @@
     <!------------------------------------------ Data-fluid ----------------------------------->				
 		<div class = "data-fluid" >
 		  <form method="post" action="https://www.sandbox.paypal.com/cgi-bin/webscr" class = "paypal-button" target="_top" style="opacity: 1;">
+		  <!--<form method="post" action="https://www.paypal.com/cgi-bin/webscr" class = "paypal-button" target="_top" style="opacity: 1;">-->
 		    <input type="hidden" name="button" value="buynow">
 		    <input type="hidden" name="business" value="6XLW4P3YQCASY">
+		    <!--<input type="hidden" name="business" value="92ZE9QH5KHPHY">-->
 		    <%= hidden_field_tag "item_name", "#{session[:service].name}" %>
 		    <input type="hidden" name="quantity" value="1">
 		    <div class = "row-form">

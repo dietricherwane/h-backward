@@ -4,25 +4,35 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session#:exception
   
   # Initialise la variable de session contenant les informations sur la transaction
+  def get_service_by_token(service_token, operation_token, order, transaction_amount)
+    @service = Service.where("authentication_token = '#{service_token}' AND published IS NOT FALSE")
+    unless @service.blank?
+      @service = @service.first
+      @operation = Operation.where("authentication_token = '#{operation_token}' AND service_id = #{@service.id} AND published IS NOT FALSE")
+      unless @operation.blank?
+        @operation = @operation.first
+        unless not_a_number?(transaction_amount)
+          session[:service] = Service.find_by_authentication_token(service_token)
+          session[:operation] = Operation.find_by_authentication_token(operation_token)
+          session[:basket] = {"basket_number" => "#{order}", "transaction_amount" => "#{transaction_amount.to_f}"}
+        end
+      end
+    end   
+  end
+  
+  # Initialise la variable de session contenant les informations sur la transaction
   def get_service(service_id, operation_id, basket_number, transaction_amount)
     @service = Service.find_by_code(service_id)
     unless @service.blank?
       @operation = @service.operations.find_by_id(operation_id)
       unless @operation.blank?
-        session[:service] = @service
-        session[:operation] = @operation
-        session[:basket] = {"basket_number" => "#{basket_number}", "transaction_amount" => "#{transaction_amount.to_f}"}
+        unless not_a_number?(transaction_amount)
+          session[:service] = @service
+          session[:operation] = @operation
+          session[:basket] = {"basket_number" => "#{basket_number}", "transaction_amount" => "#{transaction_amount.to_f}"}
+        end
       end
-    end
-
-=begin    
-    session[:service] = case service_id
-      when "Ws001" then {"id" => "Ws001", "name" => "Musiques", "basket_number" => "#{basket_number}", "operation_id" => "#{operation_id}", "transaction_amount" => "#{transaction_amount}", "operations" => {"2" => {"title" => "Effectuer un achat.", "title_comment" => "Achat de musiques."}, "1" => {"title" => "Effectuer un abonnement.", "title_comment" => "S'abonner et bénéficier de nombreux avantages."}}, "name" => "Wimboo", "logo_css_class" => "wimboo_logo", "return_url" => "http://wimboo.com/payment/success/", "transaction_status" => "", "url_on_error" => "https://www.wimboo.net/checkout_failed.php", "url_on_session_expired" => "", "url_on_success" => "https://www.wimboo.net/payments/ipn.php", "url_on_hold_success" => "https://www.wimboo.net/payments/ipn.php", "url_on_hold_error" => "https://www.wimboo.net/payments/ipn.php", "url_to_authenticate_incoming_request" => "", "authentication_token" => "7a57b200d5be13837de15874300b16ee"}
-      when "KS002" then {"id" => "KS002", "name" => "Journaux", "basket_number" => "#{basket_number}", "operation_id" => "#{operation_id}", "transaction_amount" => "#{transaction_amount}", "operations" => {"4" => {"title" => "Effectuer un achat.", "title_comment" => "Achat de journaux."}, "3" => {"title" => "Effectuer un abonnement.", "title_comment" => "S'abonner et bénéficier de nombreux avantages."}}, "name" => "E-kiosk", "logo_css_class" => "e-kiosk_logo", "return_url" => "http://wimboo.com/payment/success/", "transaction_status" => "", "url_on_error" => "", "url_on_session_expired" => "", "url_on_success" => "", "url_on_hold_success" => "https://www.wimboo.net/payments/ipn.php", "url_on_hold_error" => "https://www.wimboo.net/payments/ipn.php", "url_to_authenticate_incoming_request" => "", "authentication_token" => "99f14f49d5390af427594d25f1ec0922"}
-      when "OHA005" then {"id" => "OHA005", "name" => "Fichiers régionaux", "basket_number" => "#{basket_number}", "operation_id" => "#{operation_id}", "transaction_amount" => "#{transaction_amount}", "operations" => {"8" => {"title" => "Effectuer un achat.", "title_comment" => "Paiement pour la consultation de fichiers régionaux."}, "9" => {"title" => "Effectuer un abonnement.", "title_comment" => "S'abonner pour la consultation de fichiers régionaux."}}, "name" => "OHADA", "logo_css_class" => "e-kiosk_logo", "return_url" => "http://wimboo.com/payment/success/", "transaction_status" => "", "url_on_error" => "", "url_on_session_expired" => "", "url_on_success" => "", "url_on_hold_success" => "https://www.wimboo.net/payments/ipn.php", "url_on_hold_error" => "https://www.wimboo.net/payments/ipn.php", "url_to_authenticate_incoming_request" => "", "authentication_token" => "99f14f49d5390af427594d25f1ec0922"}
-      else {}
-    end
-=end    
+    end   
   end
 
   # S'assure que la variable de session existe
@@ -33,8 +43,14 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  def session_authenticated?
+    if session[:b83eff1c1b3fdbb26153075044297e91].blank?
+      redirect_to error_page_path
+    end
+  end
+  
   # Vérifie que la variable de session existe, que l'opération demandée existe, que le montant de la transaction est numérique
-  def filter_connections(operation_id)
+  def filter_connections
     if session[:service].blank? or session[:operation].blank? or session[:basket].blank? or not_a_number?(session[:basket]["transaction_amount"])
       #redirect_to session[:service].url_on_error
       redirect_to error_page_path

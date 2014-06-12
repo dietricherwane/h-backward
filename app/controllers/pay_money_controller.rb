@@ -5,13 +5,14 @@ class PayMoneyController < ApplicationController
   # Only for guard action, we check if service_id exists and initialize a session variable containing transaction_data
   before_action :only => :guard do |s| s.get_service(params[:service_id], params[:operation_id], params[:basket_number], params[:transaction_amount]) end
   # Only for guard action, we check if the session varable is initialized, if the operation_id is initialized and if transaction_amount is a number
-  before_action :only => :guard do |o| o.filter_connections params[:operation_id] end
+  before_action :only => :guard do |o| o.filter_connections end
   #before_action :only => :guard do |r| r.authenticate_incoming_request(params[:operation_id], params[:basket_number], params[:transaction_amount]) end
   # Vérifie que le panier n'a pas déjà été payé via paymoney
   before_action :only => :guard do |s| s.basket_already_paid?(params[:basket_number]) end
   # Vérifie pour toutes les actions que la variable de session existe
   before_action :session_exists?, :except => [:create_account, :account, :credit_account, :add_credit, :transaction_acknowledgement] 
   before_action :only => :process_payment do |s| s.basket_already_paid?(session[:service]['basket_number']) end
+  before_action :except => [:create_account, :account, :credit_account, :add_credit, :transaction_acknowledgement] do |s| s.session_authenticated? end 
 
   layout "payMoney"  
   # Inclure une sécurité au niveau de la fonction index basée sur l'adresse IP entrante. S'ssurer qu'elle correspond aux IP des services agréés (Les insérer dans une base de données locale ou externe?)  

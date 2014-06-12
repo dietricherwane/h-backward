@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <title>Hub monetique</title>
+		<meta charset="UTF-8" />
+		<meta name="author" content="NGSER" />
+		<%= stylesheet_link_tag "main/main", media: "all", "data-turbolinks-track" => true %>
+		<%= stylesheet_link_tag "main/reset", media: "all", "data-turbolinks-track" => true %>
+		<%= stylesheet_link_tag "main/style", media: "all", "data-turbolinks-track" => true %>		
+		<noscript>
+			<%= stylesheet_link_tag "main/styleNoJS", media: "all", "data-turbolinks-track" => true %>
+		</noscript>
+		
+		<%= javascript_include_tag "plugins/jquery/jquery-1.9.1.min", "data-turbolinks-track" => true %>
+		<%= javascript_include_tag "accordion/jquery.easing.1.3", "data-turbolinks-track" => true %>
+		<%= javascript_include_tag "plugins/other/jquery.mousewheel.min", "data-turbolinks-track" => true %>
+		<%= javascript_include_tag "accordion/jquery.vaccordion", "data-turbolinks-track" => true %>
+		<%= javascript_include_tag "shuffle_letters/jquery.shuffleLetters", "data-turbolinks-track" => true %>
+		          		
+    </head>
+    <body>
+		  <%= yield %>
+    </body>
+</html>
