@@ -1,21 +1,15 @@
 <script type="text/javascript" language="JavaScript">
-  $(document).on('ready page:load', function(){  
-		$('#wallets').vaccordion({
-			expandedHeight	: 450,
-			animSpeed		: 500,
-			animEasing		: 'easeInOutBack',
-			animOpacity		: 0.4,
-			visibleSlices	: <%= session[:visible_slices] %>
-		}); 
-		
-		$(".va-title").shuffleLetters();  
-		
-		$("#country_country_id").change(function() {
-      var country_id = this.options[this.selectedIndex].value;
-      $(this).get_wallets(country_id)
-    });
-    
-    $.fn.get_wallets = function(country_id) {           
+  function loadAccordion() {
+    $('#wallets').vaccordion({
+		  expandedHeight	: 450,
+		  animSpeed		: 500,
+		  animEasing		: 'easeInOutBack',
+		  animOpacity		: 0.4//,
+		  //visibleSlices	: 3
+	  });
+  } 
+  
+  $.fn.get_wallets = function(country_id) {           
       $.ajax({   
         url: "<%= url_for :action => 'get_wallets', :controller => 'wallets' %>",
         data: {country_id: country_id},
@@ -31,17 +25,31 @@
           else{
             $("#wallets_list").html(response);
             $('#wallets').vaccordion({
-		          expandedHeight	: 350,
-		          animSpeed		: 400,
-		          animOpacity		: 0.7,
-		          visibleSlices	: <%= session[:visible_slices] %>
-	          });
+		          expandedHeight	: 450,
+		          animSpeed		: 500,
+		          animEasing		: 'easeInOutBack',
+		          animOpacity		: 0.4//,
+		          //visibleSlices	: 3
+	          }); 
 	          $(".va-title").shuffleLetters();
           }         
         }
       });  
     }  
-    
+  
+  $(document).on('ready page:load', function(){  
+				
+		loadAccordion(); 
+		$(".va-title").shuffleLetters();  
+		
+		$("#country_country_id").on('change',function() {
+      var country_id = this.options[this.selectedIndex].value;
+      $(this).get_wallets(country_id)
+    });
+		
+			
+		//$("#country_country_id").change(function() {
+		   
   });
 </script>
 
@@ -58,9 +66,7 @@
 			<span class="va-nav-next">Next</span>
 		</div>
 		<span id = "wallets_list">
-		      <div class="va-wrapper">		
-		        
-		          
+		      <div class="va-wrapper">				        		          
 		        <% @wallets.each do |wallet| %>
 			        <div class="va-slice" style = "background:#000 url(<%= wallet.logo %>) no-repeat center center;">
 				        <h3 class="va-title"><%= wallet.name %></h3>
