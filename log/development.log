@@ -21890,3 +21890,15 @@ Migrating to AddAuthenticationTokenToWallets (20140613093947)
   [1m[35mSQL (32.8ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20140613093947"]]
   [1m[36m (324.8ms)[0m  [1mCOMMIT[0m
   [1m[35mActiveRecord::SchemaMigration Load (0.7ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (1.8ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddFeesToBaskets (20140613095614)
+  [1m[35m (0.7ms)[0m  BEGIN
+  [1m[36m (12.1ms)[0m  [1mALTER TABLE "baskets" ADD COLUMN "fees" float[0m
+  [1m[35mSQL (1.9ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20140613095614"]]
+  [1m[36m (127.7ms)[0m  [1mCOMMIT[0m
+Migrating to AddFeesToPaypalBaskets (20140613095729)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (0.8ms)[0m  [1mALTER TABLE "paypal_baskets" ADD COLUMN "fees" float[0m
+  [1m[35mSQL (1.0ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20140613095729"]]
+  [1m[36m (45.9ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (1.0ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
