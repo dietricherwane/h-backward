@@ -21883,3 +21883,10 @@ Processing by WalletsController#get_wallets as TEXT
 Completed 200 OK in 8ms (Views: 0.6ms | ActiveRecord: 2.2ms)
   [1m[36m (0.3ms)[0m  [1mBEGIN[0m
   [1m[35m (0.3ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (64.2ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddAuthenticationTokenToWallets (20140613093947)
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36m (106.3ms)[0m  [1mALTER TABLE "wallets" ADD COLUMN "authentication_token" character varying(255)[0m
+  [1m[35mSQL (32.8ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20140613093947"]]
+  [1m[36m (324.8ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.7ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"

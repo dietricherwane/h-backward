@@ -23,7 +23,7 @@ class MainController < ApplicationController
   
   def index
     @countries = Country.where("published IS TRUE").order("name ASC")
-    @international = Country.find_by_name("Cote D'ivoire")
+    @international = Country.find_by_name("International")
     @wallets = Wallet.where("published IS NOT FALSE AND country_id = #{@international.id}").order("name ASC")
     @wallets.count < 4 ? session[:visible_slices] = @wallets.count : session[:visible_slices] = 3
   end
