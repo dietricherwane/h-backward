@@ -70,7 +70,7 @@ class PayMoneyController < ApplicationController
       
       if @status.to_s.strip == "1"
         @transaction_id = Time.now.strftime("%Y%m%d%H%M%S%L")
-        @basket = Basket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :payment_status => true, :operation_id => session[:operation].id, :transaction_amount => (session[:basket]["transaction_amount"].to_f, :fees => @shipping.to_f), transaction_id: @transaction_id)
+        @basket = Basket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :payment_status => true, :operation_id => session[:operation].id, :transaction_amount => session[:basket]["transaction_amount"].to_f, transaction_id: @transaction_id, :fees => @shipping.to_f)
         
         # Notification to ecommerce IPN
         Thread.new do
