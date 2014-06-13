@@ -35,7 +35,7 @@ class PayMoneyController < ApplicationController
   
   def process_payment
     @transaction_status = "7"
-    @transaction_amount = params[:magellan].to_f + params[:shipping].to_f
+    @transaction_amount = params[:magellan].to_f 
     @account_number = params[:colomb]
     @shipping = params[:shipping]
     @password = params[:drake]    
@@ -58,7 +58,7 @@ class PayMoneyController < ApplicationController
       render action: 'index'
     else    
       # communication with paymoney
-      @request = Typhoeus::Request.new("#{@@url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{@transaction_amount}", followlocation: true)
+      @request = Typhoeus::Request.new("#{@@url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{@transaction_amount + params[:shipping].to_f}", followlocation: true)
       
       @internal_com_request = "@response = Nokogiri.XML(request.response.body)
       @response.xpath('//status').each do |link|
@@ -70,7 +70,7 @@ class PayMoneyController < ApplicationController
       
       if @status.to_s.strip == "1"
         @transaction_id = Time.now.strftime("%Y%m%d%H%M%S%L")
-        @basket = Basket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :payment_status => true, :operation_id => session[:operation].id, :transaction_amount => (session[:basket]["transaction_amount"].to_f + @shipping.to_f), transaction_id: @transaction_id)
+        @basket = Basket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :payment_status => true, :operation_id => session[:operation].id, :transaction_amount => (session[:basket]["transaction_amount"].to_f, :fees => @shipping.to_f), transaction_id: @transaction_id)
         
         # Notification to ecommerce IPN
         Thread.new do

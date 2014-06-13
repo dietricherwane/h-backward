@@ -27,7 +27,7 @@ class PaypalController < ApplicationController
     #session[:basket]["transaction_amount"] = (session[:basket]["transaction_amount"].to_f / 474).round(2).to_s
     @shipping = get_shipping_fee("Paypal")
     if PaypalBasket.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}' AND notified_to_back_office IS TRUE").blank?
-      @temporary_basket = PaypalBasket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :transaction_amount => (session[:basket]["transaction_amount"].to_f + @shipping), transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"))
+      @temporary_basket = PaypalBasket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :transaction_amount => (session[:basket]["transaction_amount"].to_f, :fees => @shipping), transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"))
     end
   end
   
@@ -42,8 +42,10 @@ class PaypalController < ApplicationController
     @request.run
     @response = @request.response
     if @response.body == "VERIFIED"
-      @basket = PaypalBasket.find_by_transaction_id(params[:custom].to_s)
+      #@basket = PaypalBasket.find_by_transaction_id(params[:custom].to_s)
+      @basket = PaypalBasket.where("transaction_id = '#{params[:custom].to_s}' AND transaction_amount = #{@gross.to_f} AND fees = #{@fees.to_f}")
       if !@basket.blank?
+        @basket = PaypalBasket.find_by_transaction_id(params[:custom].to_s)
         if @basket.payment_status != true
           @basket.update_attributes(:payment_status => true) 
         end
@@ -86,8 +88,10 @@ class PaypalController < ApplicationController
     @request.run
     @response = @request.response
     if(params[:st] == "Completed")
-      @basket = PaypalBasket.find_by_transaction_id(params[:cm].to_s)
+      #@basket = PaypalBasket.find_by_transaction_id(params[:cm].to_s)
+      @basket = PaypalBasket.where("transaction_id = '#{params[:cm].to_s}' AND transaction_amount = #{params[:amt].to_f} AND fees = #{params[:tx].to_f}")
       if !@basket.blank?
+        @basket = PaypalBasket.find_by_transaction_id(params[:cm].to_s)
         # Le panier a été payé
         if @basket.payment_status == true
           if @basket.notified_to_back_office != true
