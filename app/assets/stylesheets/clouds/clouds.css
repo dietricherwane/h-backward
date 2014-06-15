@@ -3,8 +3,8 @@
   position:absolute;
   bottom: 2%;
 	background:url('/images/cloud1.png');
-	width:196px;
-	height:159px;
+	width:170px;
+	height:138px;
 	overflow:hidden;  
 	margin-left:50px;
 	padding-top:10px;
@@ -43,8 +43,8 @@
   position:absolute;
   bottom: 20%;
 	background:url('/images/cloud3.png');
-	width:254px;
-	height:154px;	
+	width:240px;
+	height:141px;	
 	overflow:hidden;  
 	margin-left:50px;
 	padding-top:10px;
@@ -83,8 +83,8 @@
   position:absolute;
   top: 5%;
 	background:url('/images/cloud2.png');
-	width:167px;
-	height:113px;
+	width:150px;
+	height:101px;
 	overflow:hidden;  
 	margin-left:50px;
 	padding-top:10px;
@@ -123,8 +123,8 @@
   position:absolute;
   bottom: 25%;
 	background:url('/images/cloud4.png');
-	width:150px;
-	height:115px;
+	width:200px;
+	height:150px;
 	overflow:hidden;  
 	margin-left:50px;
 	padding-top:10px;
