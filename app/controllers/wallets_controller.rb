@@ -11,20 +11,15 @@ class WalletsController < ApplicationController
       else
         @transaction_amount = session[:basket]["transaction_amount"]
         @basket_number = session[:basket]['basket_number']
-        @message << "<div class='va-wrapper'>"
         @wallets.each do |wallet|
-          @message << "<div class='va-slice' style = 'background:#000 url(#{wallet.logo}) no-repeat center center;'>
-          <h3 class='va-title'>#{wallet.name}</h3>
-          <div class='va-content'>
-          <p>Description</p>
-          <ul>
-          <li><a href='#{wallet.url}/#{session[:service].code}/#{session[:operation].code}/#{@basket_number}/#{@transaction_amount}'>Payer: #{@transaction_amount} USD</a></li>
-          </ul>
-          </div>
-          </div>
+          @url = "#{wallet.url}/#{session[:service].code}/#{session[:operation].code}/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}"
+          @message << "<a href='#{@url}'>
+          <span data-hover='#{wallet.name}'>
+          #{wallet.name}
+          </span>
+          </a>
           "
         end
-        @message << "</div>"
       end
     end
         

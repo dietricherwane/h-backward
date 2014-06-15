@@ -156,7 +156,7 @@
 					return false;
 				
 				if( dir === -1 && cache.current === 1 )
-					$navPrev.fadeOut();
+					$navPrev.fadeOut();					
 				else
 					$navPrev.fadeIn();
 					
