@@ -55,7 +55,7 @@
  	-moz-animation-name: cloud2;
  	-moz-animation-duration: 30s;
  	-moz-animation-iteration-count: infinite;
- 	-moz-animation-direction: normal, alternate;
+ 	-moz-animation-direction: alternate;
  	-o-animation-name: cloud2;
  	-o-animation-duration: 30s;
  	-o-animation-iteration-count: infinite;
@@ -89,15 +89,15 @@
 	margin-left:50px;
 	padding-top:10px;
 	-webkit-animation-name: cloud3;
- 	-webkit-animation-duration: 40s;
+ 	-webkit-animation-duration: 60s;
  	-webkit-animation-iteration-count: infinite;
  	-webkit-animation-direction: normal, alternate;
  	-moz-animation-name: cloud3;
- 	-moz-animation-duration: 40s;
+ 	-moz-animation-duration: 60s;
  	-moz-animation-iteration-count: infinite;
- 	-moz-animation-direction: normal, alternate;
+ 	-moz-animation-direction: alternate;
  	-o-animation-name: cloud3;
- 	-o-animation-duration: 40s;
+ 	-o-animation-duration: 60s;
  	-o-animation-iteration-count: infinite;
  	-o-animation-direction: normal, alternate;
 }
@@ -135,7 +135,7 @@
  	-moz-animation-name: cloud3;
  	-moz-animation-duration: 40s;
  	-moz-animation-iteration-count: infinite;
- 	-moz-animation-direction: normal, alternate;
+ 	-moz-animation-direction: alternate;
  	-o-animation-name: cloud3;
  	-o-animation-duration: 40s;
  	-o-animation-iteration-count: infinite;
