@@ -52,12 +52,12 @@
 		    <div class = "row-form">
 	        <div class = "input-append">
 		        <div class = "span9">
-			        <%= text_field_tag "tax", "#{@shipping}", :readonly => true %>
+			        <%= text_field_tag "custom", "#{@shipping}", :readonly => true %>
 			        <button class = "btn btn-info" type = "button">Shipping [Frais] USD ($)</button>
 		        </div>
 		      </div>
 	      </div>
-		    <%= hidden_field_tag "custom", "#{@temporary_basket.transaction_id}" %>
+		    <%= hidden_field_tag "tax", "#{@temporary_basket.transaction_id}" %>
 		    <br />
 		    <div class="span12">
 		      <button class="btn">
