@@ -25,10 +25,14 @@ class PaypalController < ApplicationController
     # à supprimer lorsque les e-commerce enverront effectivement le montant en USD
     session[:basket]["transaction_amount"] = (session[:basket]["transaction_amount"].to_f).round(2).to_s
     #session[:basket]["transaction_amount"] = (session[:basket]["transaction_amount"].to_f / 474).round(2).to_s
+    @wallet = Wallet.find_by_name("Paypal")
     @shipping = get_shipping_fee("Paypal")
+    #if @wallet.currency.downcase != "usd"
+      #@shipping = @shipping * @wallet.currency_amount
+    #end
     if PaypalBasket.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}' AND notified_to_back_office IS TRUE").blank?
       @temporary_basket = PaypalBasket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :transaction_amount => (session[:basket]["transaction_amount"].to_f), transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"), :fees => @shipping)
-    end
+    end    
   end
   
   #Instant Payment Notification de paypal, transparent pour l'utilisateur
@@ -103,7 +107,7 @@ class PaypalController < ApplicationController
           @basket.update_attributes(:payment_status => true)
           notify_to_back_office(@basket, "#{@@url}/GATEWAY/rest/WS/#{session[:operation].id}/#{session[:basket]['basket_number']}/#{session[:basket]['basket_number']}/#{params[:amt].to_f + params[:tx].to_f}/#{params[:tx].to_f}/2")
               
-          redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=e6da96e284&transaction_amount=#{session[:basket]['transaction_amount']}"
+          redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=e6da96e284&transaction_amount=#{@basket.transaction_amount}"
           #redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1"
           #redirect_to "https://www.wimboo.net/payments/ipn.php?order_id=#{params[:cm]}&statut_id=2"
         end
