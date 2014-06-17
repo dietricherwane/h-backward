@@ -96,7 +96,7 @@ class PaypalController < ApplicationController
       #@basket = PaypalBasket.find_by_transaction_id(params[:cm].to_s)
       @basket = PaypalBasket.find_by_transaction_id(params[:tx])
       #.where("transaction_id = '#{params[:cm].to_s}' AND transaction_amount = #{params[:amt].to_f}")
-      if !@basket.blank? and (params[:amt].to_f + params[:cm].to_f).round(2) == (@basket.transaction_amount + @basket.fees) 
+      if !@basket.blank? and (params[:amt].to_f + params[:tax].to_f).round(2) == (@basket.transaction_amount + @basket.fees) 
         #@basket = PaypalBasket.find_by_transaction_id(params[:cm].to_s)
         # Le panier a été payé
         if @basket.payment_status == true
@@ -114,7 +114,7 @@ class PaypalController < ApplicationController
           #redirect_to "https://www.wimboo.net/payments/ipn.php?order_id=#{params[:cm]}&statut_id=2"
         end
       else
-        DelayedPayment.create(number: "transaction_id = '#{params[:cm].to_s}' AND transaction_amount = #{params[:amt].to_f} AND fees = #{params[:cm].to_f} @basket: #{@basket.blank?} comparison: #{(params[:amt].to_f + params[:cm].to_f).round(2)} #{@basket.transaction_amount + @basket.fees} 1")
+        DelayedPayment.create(number: "transaction_id = '#{params[:cm].to_s}' AND transaction_amount = #{params[:amt].to_f} AND fees = #{params[:cm].to_f} tax #{params[:tax]} tx #{params[:tx]} @basket: #{@basket.blank?} comparison: #{(params[:amt].to_f + params[:tax].to_f).round(2)} #{@basket.transaction_amount + @basket.fees} 1")
         redirect_to error_page_path
         #redirect_to "#{session[:service].url_on_error}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0"
       end
