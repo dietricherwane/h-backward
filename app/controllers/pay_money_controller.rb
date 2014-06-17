@@ -97,7 +97,7 @@ class PayMoneyController < ApplicationController
         end
         
         #redirect_to success_page_path
-        redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=05ccd7ba3d&transaction_amount=#{@basket.transaction_amount}"
+        redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paymoney&transaction_amount=#{@basket.transaction_amount}"
         #redirect_to "https://www.wimboo.net/payments/ipn.php?order_id=#{session[:basket]['basket_number']}&statut_id=#{@transaction_status}"
 #redirect_to "#{session[:service].url_on_success}?order_id=#{session[:basket]['basket_number']}&statut_id=2"
         #Typhoeus.get(session[:service]["url_on_success"] << "?order_id=" << session[:service]["basket_number"] << "&statut_id=2")
@@ -113,7 +113,8 @@ class PayMoneyController < ApplicationController
   
   def ipn(basket)
     @service = Service.find_by_id(basket.service_id)
-    @request = Typhoeus::Request.new("#{@service.url_to_ipn}?transaction_id=#{basket.transaction_id}&order_id=#{basket.number}&status_id=1&wallet=05ccd7ba3d&transaction_amount=#{@basket.transaction_amount}", followlocation: true, method: :post)
+    @request = Typhoeus::Request.new("#{@service.url_to_ipn}?transaction_id=#{basket.transaction_id}&order_id=#{basket.number}&status_id=1&wallet=paymoney&transaction_amount=#{@basket.transaction_amount}", followlocation: true, method: :post)
+    # wallet=05ccd7ba3d
     @request.run
     @response = @request.response
     if @response.to_s == "200" and @response.body.blank?

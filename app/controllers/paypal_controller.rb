@@ -60,7 +60,8 @@ class PaypalController < ApplicationController
         # Notification au back office du ecommerce
         if @basket.notified_to_ecommerce != true
           @service = Service.find_by_id(@basket.service_id)
-          @request = Typhoeus::Request.new("#{@service.url_to_ipn}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=e6da96e284&transaction_amount=#{@basket.transaction_amount}", followlocation: true, method: :post)
+          @request = Typhoeus::Request.new("#{@service.url_to_ipn}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paypal&transaction_amount=#{@basket.transaction_amount}", followlocation: true, method: :post)
+          # wallet=e6da96e284
           @request.run
           @response = @request.response
           if @response.to_s == "200" and @response.body.blank?
@@ -107,7 +108,7 @@ class PaypalController < ApplicationController
           @basket.update_attributes(:payment_status => true)
           notify_to_back_office(@basket, "#{@@url}/GATEWAY/rest/WS/#{session[:operation].id}/#{session[:basket]['basket_number']}/#{session[:basket]['basket_number']}/#{params[:amt].to_f + params[:tx].to_f}/#{params[:tx].to_f}/2")
               
-          redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=e6da96e284&transaction_amount=#{@basket.transaction_amount}"
+          redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paypal&transaction_amount=#{@basket.transaction_amount}"
           #redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1"
           #redirect_to "https://www.wimboo.net/payments/ipn.php?order_id=#{params[:cm]}&statut_id=2"
         end
