@@ -47,7 +47,7 @@ class PaypalController < ApplicationController
     @response = @request.response
     if @response.body == "VERIFIED"
       #@basket = PaypalBasket.find_by_transaction_id(params[:custom].to_s)
-      @basket = PaypalBasket.where("transaction_id = '#{params[:custom].to_s}' AND transaction_amount = #{@gross.to_f} AND fees = #{@fees.to_f}")
+      @basket = PaypalBasket.where("transaction_id = '#{params[:custom].to_s}' AND transaction_amount = #{@gross.to_f}")
       if !@basket.blank?
         @basket = PaypalBasket.find_by_transaction_id(params[:custom].to_s)
         if @basket.payment_status != true
@@ -55,7 +55,7 @@ class PaypalController < ApplicationController
         end
         if @basket.notified_to_back_office != true
           # Notification au back office du HUB
-          notify_to_back_office(@basket, "#{@@url}/GATEWAY/rest/WS/#{@basket.operation_id}/#{@basket.number}/#{@basket.transaction_id}/#{@gross.to_f + @fees.to_f}/#{@fees.to_f}/2")
+          notify_to_back_office(@basket, "#{@@url}/GATEWAY/rest/WS/#{@basket.operation_id}/#{@basket.number}/#{@basket.transaction_id}/#{@gross.to_f + @basket.fees}/#{@basket.fees}/2")
         end
         # Notification au back office du ecommerce
         if @basket.notified_to_ecommerce != true
@@ -94,32 +94,33 @@ class PaypalController < ApplicationController
     @response = @request.response
     if(params[:st] == "Completed")
       #@basket = PaypalBasket.find_by_transaction_id(params[:cm].to_s)
-      @basket = PaypalBasket.where("transaction_id = '#{params[:cm].to_s}' AND transaction_amount = #{params[:amt].to_f - params[:tx].to_f} AND fees = #{params[:tx].to_f}")
-      if !@basket.blank?
-        @basket = PaypalBasket.find_by_transaction_id(params[:cm].to_s)
+      @basket = PaypalBasket.find_by_transaction_id(params[:cm])
+      #.where("transaction_id = '#{params[:cm].to_s}' AND transaction_amount = #{params[:amt].to_f}")
+      if !@basket.blank? and (params[:amt].to_f + params[:tx].to_f).round(2) == (@basket.transaction_amount + @basket.fees) 
+        #@basket = PaypalBasket.find_by_transaction_id(params[:cm].to_s)
         # Le panier a été payé
         if @basket.payment_status == true
           if @basket.notified_to_back_office != true
-            notify_to_back_office(@basket, "#{@@url}/GATEWAY/rest/WS/#{session[:operation].id}/#{session[:basket]['basket_number']}/#{session[:basket]['basket_number']}/#{params[:amt].to_f + params[:tx].to_f}/#{params[:tx].to_f}/2")         
+            notify_to_back_office(@basket, "#{@@url}/GATEWAY/rest/WS/#{session[:operation].id}/#{session[:basket]['basket_number']}/#{session[:basket]['basket_number']}/#{params[:amt].to_f}/#{@basket.fees}/2")         
           end
           redirect_to success_page_path
           #redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1"
         else
           @basket.update_attributes(:payment_status => true)
-          notify_to_back_office(@basket, "#{@@url}/GATEWAY/rest/WS/#{session[:operation].id}/#{session[:basket]['basket_number']}/#{session[:basket]['basket_number']}/#{params[:amt].to_f + params[:tx].to_f}/#{params[:tx].to_f}/2")
+          notify_to_back_office(@basket, "#{@@url}/GATEWAY/rest/WS/#{session[:operation].id}/#{session[:basket]['basket_number']}/#{session[:basket]['basket_number']}/#{params[:amt].to_f}/#{@basket.fees}/2")
               
           redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paypal&transaction_amount=#{@basket.transaction_amount}"
           #redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1"
           #redirect_to "https://www.wimboo.net/payments/ipn.php?order_id=#{params[:cm]}&statut_id=2"
         end
       else
-        DelayedPayment.create(number: "transaction_id = '#{params[:cm].to_s}' AND transaction_amount = #{params[:amt].to_f - params[:tx].to_f} AND fees = #{params[:tx].to_f}")
-        redirect_to error_page_path, :notice => DelayedPayment.last
+        DelayedPayment.create(number: "transaction_id = '#{params[:cm].to_s}' AND transaction_amount = #{params[:amt].to_f} AND fees = #{params[:tx].to_f} @basket: #{@basket.blank?} comparison: #{(params[:amt].to_f + params[:tx].to_f).round(2)} #{@basket.transaction_amount + @basket.fees} 1")
+        redirect_to error_page_path
         #redirect_to "#{session[:service].url_on_error}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0"
       end
     else
-      DelayedPayment.create(number: "transaction_id = '#{params[:cm].to_s}' AND transaction_amount = #{params[:amt].to_f - params[:tx].to_f} AND fees = #{params[:tx].to_f}")
-      redirect_to error_page_path, :notice => DelayedPayment.last
+      DelayedPayment.create(number: "transaction_id = '#{params[:cm].to_s}' AND transaction_amount = #{params[:amt].to_f} AND fees = #{params[:tx].to_f} @basket: #{@basket.blank?} comparison: #{(params[:amt].to_f + params[:tx].to_f).round(2)} #{@basket.transaction_amount + @basket.fees} 2")
+      redirect_to error_page_path
       #redirect_to "#{session[:service].url_on_error}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0"
     end    
   end
