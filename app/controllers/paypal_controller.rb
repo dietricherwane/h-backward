@@ -94,7 +94,7 @@ class PaypalController < ApplicationController
     @response = @request.response
     if(params[:st] == "Completed")
       #@basket = PaypalBasket.find_by_transaction_id(params[:cm].to_s)
-      @basket = PaypalBasket.where("transaction_id = '#{params[:cm].to_s}' AND transaction_amount = #{params[:amt].to_f} AND fees = #{params[:tx].to_f}")
+      @basket = PaypalBasket.where("transaction_id = '#{params[:cm].to_s}' AND transaction_amount = #{params[:amt].to_f - params[:tx].to_f} AND fees = #{params[:tx].to_f}")
       if !@basket.blank?
         @basket = PaypalBasket.find_by_transaction_id(params[:cm].to_s)
         # Le panier a été payé
@@ -113,11 +113,13 @@ class PaypalController < ApplicationController
           #redirect_to "https://www.wimboo.net/payments/ipn.php?order_id=#{params[:cm]}&statut_id=2"
         end
       else
-        redirect_to error_page_path
+        DelayedPayment.create(number: "transaction_id = '#{params[:cm].to_s}' AND transaction_amount = #{params[:amt].to_f - params[:tx].to_f} AND fees = #{params[:tx].to_f}")
+        redirect_to error_page_path, :notice => DelayedPayment.last
         #redirect_to "#{session[:service].url_on_error}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0"
       end
     else
-      redirect_to error_page_path
+      DelayedPayment.create(number: "transaction_id = '#{params[:cm].to_s}' AND transaction_amount = #{params[:amt].to_f - params[:tx].to_f} AND fees = #{params[:tx].to_f}")
+      redirect_to error_page_path, :notice => DelayedPayment.last
       #redirect_to "#{session[:service].url_on_error}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0"
     end    
   end
