@@ -104,7 +104,8 @@ class PaypalController < ApplicationController
           if @basket.notified_to_back_office != true
             notify_to_back_office(@basket, "#{@@url}/GATEWAY/rest/WS/#{session[:operation].id}/#{session[:basket]['basket_number']}/#{session[:basket]['basket_number']}/#{params[:amt].to_f + params[:tax].to_f}/#{params[:tax].to_f}/2")         
           end
-          redirect_to success_page_path
+          @basket.update_attributes(:payment_status => true)
+          redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paypal&transaction_amount=#{@basket.transaction_amount}"
           #redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1"
         else
           @basket.update_attributes(:payment_status => true)
