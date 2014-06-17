@@ -94,7 +94,7 @@ class PaypalController < ApplicationController
     @response = @request.response
     if(params[:st] == "Completed")
       #@basket = PaypalBasket.find_by_transaction_id(params[:cm].to_s)
-      @basket = PaypalBasket.find_by_transaction_id(params[:tx])
+      @basket = PaypalBasket.find_by_transaction_id(params[:cm])
       #.where("transaction_id = '#{params[:cm].to_s}' AND transaction_amount = #{params[:amt].to_f}")
       if !@basket.blank? and (params[:amt].to_f + params[:tax].to_f).round(2) == (@basket.transaction_amount + @basket.fees) 
         #@basket = PaypalBasket.find_by_transaction_id(params[:cm].to_s)
