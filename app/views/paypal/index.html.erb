@@ -40,7 +40,7 @@
 	        <div class = "input-append">
 		        <div class = "span9">
 			        <%= text_field_tag "amount", session[:basket]["transaction_amount"], :readonly => true %>
-			        <button class = "btn btn-info" type = "button">USD</button>
+			        <button class = "btn btn-info" type = "button">USD ($)</button>
 		        </div>
 		      </div>
 	      </div>
@@ -53,7 +53,7 @@
 	        <div class = "input-append">
 		        <div class = "span9">
 			        <%= text_field_tag "tax", "#{@shipping}", :readonly => true %>
-			        <button class = "btn btn-info" type = "button">Shipping ($)</button>
+			        <button class = "btn btn-info" type = "button">Shipping [Frais] USD ($)</button>
 		        </div>
 		      </div>
 	      </div>
