@@ -32,6 +32,8 @@ class PaypalController < ApplicationController
     #end
     if PaypalBasket.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}' AND notified_to_back_office IS TRUE").blank?
       @temporary_basket = PaypalBasket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :transaction_amount => (session[:basket]["transaction_amount"].to_f), transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"), :fees => @shipping)
+    else
+      @temporary_basket = PaypalBasket.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}' AND notified_to_back_office IS TRUE").first
     end    
   end
   
