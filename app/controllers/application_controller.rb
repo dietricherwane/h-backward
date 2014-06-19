@@ -14,7 +14,8 @@ class ApplicationController < ActionController::Base
         unless not_a_number?(transaction_amount)
           session[:service] = Service.find_by_authentication_token(service_token)
           session[:operation] = Operation.find_by_authentication_token(operation_token)
-          session[:basket] = {"basket_number" => "#{order}", "transaction_amount" => "#{transaction_amount.to_f}"}
+          session[:trs_amount] = transaction_amount.to_f.round(2)
+          session[:basket] = {"basket_number" => "#{order}", "transaction_amount" => "#{transaction_amount.to_f.round(2)}"}
         end
       end
     end   
