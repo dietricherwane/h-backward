@@ -1,0 +1,81 @@
+
++BRAKEMAN REPORT+
+
+Application path: /home/erwan/workshop/HubsBackOffice
+Rails version: 4.0.0
+Brakeman version: 2.6.0
+Started at 2014-06-18 11:49:55 +0000
+Duration: 1.740720582 seconds
+Checks run: BasicAuth, ContentTag, CrossSiteScripting, DefaultRoutes, Deserialize, DetailedExceptions, DigestDoS, EscapeFunction, Evaluation, Execute, FileAccess, FilterSkipping, ForgerySetting, HeaderDoS, I18nXSS, JRubyXML, JSONParsing, LinkTo, LinkToHref, MailTo, MassAssignment, ModelAttrAccessible, ModelAttributes, ModelSerialize, NestedAttributes, NumberToCurrency, QuoteTableName, Redirect, RegexDoS, Render, RenderDoS, ResponseSplitting, SQL, SQLCVEs, SSLVerify, SafeBufferManipulation, SanitizeMethods, SelectTag, SelectVulnerability, Send, SendFile, SessionSettings, SimpleFormat, SingleQuotes, SkipBeforeFilter, StripTags, SymbolDoS, TranslateBug, UnsafeReflection, ValidationRegex, WithoutProtection, YAMLParsing
+
+
++SUMMARY+
+
++-------------------+--------+
+| Scanned/Reported  | Total  |
++-------------------+--------+
+| Controllers       | 13     |
+| Models            | 9      |
+| Templates         | 37     |
+| Errors            | 0      |
+| Security Warnings | 29 (9) |
++-------------------+--------+
+
++-----------------------+-------+
+| Warning Type          | Total |
++-----------------------+-------+
+| Cross Site Scripting  | 2     |
+| Denial of Service     | 1     |
+| Mass Assignment       | 11    |
+| Redirect              | 3     |
+| Remote Code Execution | 1     |
+| SQL Injection         | 10    |
+| Session Setting       | 1     |
++-----------------------+-------+
+
+
++SECURITY WARNINGS+
+
++------------+---------------------------+--------------------------+-----------------------+---------------------->>
+| Confidence | Class                     | Method                   | Warning Type          | Message              >>
++------------+---------------------------+--------------------------+-----------------------+---------------------->>
+| High       | PayMoneyController        | process_payment          | Redirect              | Possible unprotected >>
+| High       | PaypalController          | payment_result_listener  | Redirect              | Possible unprotected >>
+| High       | PaypalController          | payment_result_listener  | Redirect              | Possible unprotected >>
+| High       |                           |                          | SQL Injection         | Rails 4.0.0 contains >>
+| High       |                           |                          | SQL Injection         | Rails 4.0.0 contains >>
+| High       | DelayedPaymentsController | delayed_payment_listener | SQL Injection         | Possible SQL injectio>>
+| High       | PaypalController          | ipn                      | SQL Injection         | Possible SQL injectio>>
+| High       | WalletsController         | get_wallets              | SQL Injection         | Possible SQL injectio>>
+| High       |                           |                          | Session Setting       | Session secret should>>
+| Medium     |                           |                          | Cross Site Scripting  | Rails 4.0.0 has a vul>>
+| Medium     |                           |                          | Cross Site Scripting  | Rails 4.0.0 has a vul>>
+| Medium     |                           |                          | Denial of Service     | Rails 4.0.0 has a den>>
+| Medium     |                           |                          | Remote Code Execution | Rails 4.0.0 with glob>>
+| Medium     | ApplicationController     | get_service_by_token     | SQL Injection         | Possible SQL injectio>>
+| Medium     | ApplicationController     | get_service_by_token     | SQL Injection         | Possible SQL injectio>>
+| Medium     | DelayedPaymentsController | index                    | SQL Injection         | Possible SQL injectio>>
+| Medium     | PaypalController          | index                    | SQL Injection         | Possible SQL injectio>>
+| Medium     | PaypalController          | index                    | SQL Injection         | Possible SQL injectio>>
++------------+---------------------------+--------------------------+-----------------------+---------------------->>
+
+
+
+Model Warnings:
+
++------------+----------------+-----------------+------------------------------------------------------------------>>
+| Confidence | Model          | Warning Type    | Message                                                          >>
++------------+----------------+-----------------+------------------------------------------------------------------>>
+| Weak       | Basket         | Mass Assignment | Potentially dangerous attribute available for mass assignment: :s>>
+| Weak       | Basket         | Mass Assignment | Potentially dangerous attribute available for mass assignment: :o>>
+| Weak       | Basket         | Mass Assignment | Potentially dangerous attribute available for mass assignment: :t>>
+| Weak       | DelayedPayment | Mass Assignment | Potentially dangerous attribute available for mass assignment: :s>>
+| Weak       | DelayedPayment | Mass Assignment | Potentially dangerous attribute available for mass assignment: :o>>
+| Weak       | DelayedPayment | Mass Assignment | Potentially dangerous attribute available for mass assignment: :t>>
+| Weak       | Operation      | Mass Assignment | Potentially dangerous attribute available for mass assignment: :s>>
+| Weak       | PaypalBasket   | Mass Assignment | Potentially dangerous attribute available for mass assignment: :s>>
+| Weak       | PaypalBasket   | Mass Assignment | Potentially dangerous attribute available for mass assignment: :o>>
+| Weak       | PaypalBasket   | Mass Assignment | Potentially dangerous attribute available for mass assignment: :t>>
+| Weak       | Wallet         | Mass Assignment | Potentially dangerous attribute available for mass assignment: :c>>
++------------+----------------+-----------------+------------------------------------------------------------------>>
+
