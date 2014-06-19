@@ -32,6 +32,7 @@ class PayMoneyController < ApplicationController
     @shipping = get_shipping_fee("Paymoney")
     @transaction_amount_css = @account_number_css = @password_css = "row-form"
     @wallet = Wallet.find_by_name("Paymoney")
+    session[:basket]["transaction_amount"] = (session[:trs_amount] * 470).round(2)
   end
   
   def process_payment

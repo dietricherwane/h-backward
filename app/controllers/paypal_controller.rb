@@ -22,6 +22,7 @@ class PaypalController < ApplicationController
   
   # Efface les parmètres du corps de la requête et affiche un friendly url dans le navigateur du client
   def index
+    session[:basket]["transaction_amount"] = session[:trs_amount]
     # à supprimer lorsque les e-commerce enverront effectivement le montant en USD
     session[:basket]["transaction_amount"] = (session[:basket]["transaction_amount"].to_f).round(2).to_s
     #session[:basket]["transaction_amount"] = (session[:basket]["transaction_amount"].to_f / 474).round(2).to_s
