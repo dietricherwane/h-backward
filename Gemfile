@@ -60,6 +60,15 @@ gem 'protected_attributes'
 # stores session variables into database
 gem 'activerecord-session_store', github: 'rails/activerecord-session_store'
 
+# 
+gem 'bundler-audit'
+
+# 
+gem 'brakeman'
+
+#
+gem 'rack-attack'
+
 #gem "rails_12factor", group: :production
 
 #gem 'rails_log_stdout',           github: 'heroku/rails_log_stdout'

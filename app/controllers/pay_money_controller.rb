@@ -28,7 +28,6 @@ class PayMoneyController < ApplicationController
   
   # Efface les parmètres du corps de la requête et affiche un friendly url dans le navigateur du client
   def index
-    # initialisation des feuilles de style des zones de saisie
     @shipping = get_shipping_fee("Paymoney")
     @transaction_amount_css = @account_number_css = @password_css = "row-form"
     @wallet = Wallet.find_by_name("Paymoney")
