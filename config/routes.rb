@@ -9,7 +9,7 @@ HubsBackOffice::Application.routes.draw do
   post "products/update"
   post "products/delete"
   
-  get "order/:service_token/:operation_token/:order/:transaction_amount" => "main#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
+  get "order/:currency/:service_token/:operation_token/:order/:transaction_amount" => "main#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "Main" => "main#index"
   
   get "get_wallets" => "wallets#get_wallets"

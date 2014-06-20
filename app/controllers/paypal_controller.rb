@@ -2,12 +2,12 @@ class PaypalController < ApplicationController
   #@@url = "http://localhost:8080"
   @@url = "http://41.189.40.193:8080"
   # Only for guard action, we check if service_id exists and initialize a session variable containing transaction_data
-  before_action :only => :guard do |s| s.get_service(params[:service_id], params[:operation_id], params[:basket_number], params[:transaction_amount]) end
+  #before_action :only => :guard do |s| s.get_service(params[:service_id], params[:operation_id], params[:basket_number], params[:transaction_amount]) end
   # Only for guard action, we check if the session varable is initialized, if the operation_id is initialized and if transaction_amount is a number
   before_action :only => :guard do |o| o.filter_connections end
   #before_action :only => :guard do |r| r.authenticate_incoming_request(params[:operation_id], params[:basket_number], params[:transaction_amount]) end
   # Vérifie que le panier n'a pas déjà été payé via paypal
-  before_action :only => :guard do |s| s.basket_already_paid?(params[:basket_number]) end
+  #before_action :only => :guard do |s| s.basket_already_paid?(params[:basket_number]) end
   # Vérifie pour toutes les actions que la variable de session existe
   before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement]
   # Si l'utilisateur ne s'est pas connecté en passant par main#guard, on le rejette
@@ -22,15 +22,12 @@ class PaypalController < ApplicationController
   
   # Efface les parmètres du corps de la requête et affiche un friendly url dans le navigateur du client
   def index
-    session[:basket]["transaction_amount"] = session[:trs_amount]
-    # à supprimer lorsque les e-commerce enverront effectivement le montant en USD
-    session[:basket]["transaction_amount"] = (session[:basket]["transaction_amount"].to_f).round(2).to_s
-    #session[:basket]["transaction_amount"] = (session[:basket]["transaction_amount"].to_f / 474).round(2).to_s
     @wallet = Wallet.find_by_name("Paypal")
+    @wallet_currency = @wallet.currency
     @shipping = get_shipping_fee("Paypal")
-    #if @wallet.currency.downcase != "usd"
-      #@shipping = @shipping * @wallet.currency_amount
-    #end
+    @rate = get_change_rate(session[:currency].code, @wallet_currency.code)
+    session[:basket]["transaction_amount"] = (session[:trs_amount] * @rate).round(2)
+    
     if PaypalBasket.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}' AND notified_to_back_office IS TRUE").blank?
       @temporary_basket = PaypalBasket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :transaction_amount => (session[:basket]["transaction_amount"].to_f), transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"), :fees => @shipping)
     else
@@ -49,7 +46,6 @@ class PaypalController < ApplicationController
     @request.run
     @response = @request.response
     if @response.body == "VERIFIED"
-      #@basket = PaypalBasket.find_by_transaction_id(params[:custom].to_s)
       @basket = PaypalBasket.where("transaction_id = '#{params[:custom].to_s}' AND transaction_amount = #{@gross.to_f}")
       if !@basket.blank?
         @basket = PaypalBasket.find_by_transaction_id(params[:custom].to_s)

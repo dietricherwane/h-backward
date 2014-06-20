@@ -3,12 +3,12 @@ class PayMoneyController < ApplicationController
   #@@url = "http://localhost:8080"
   @@url = "http://41.189.40.193:8080"
   # Only for guard action, we check if service_id exists and initialize a session variable containing transaction_data
-  before_action :only => :guard do |s| s.get_service(params[:service_id], params[:operation_id], params[:basket_number], params[:transaction_amount]) end
+  #before_action :only => :guard do |s| s.get_service(params[:service_id], params[:operation_id], params[:basket_number], params[:transaction_amount]) end
   # Only for guard action, we check if the session varable is initialized, if the operation_id is initialized and if transaction_amount is a number
   before_action :only => :guard do |o| o.filter_connections end
   #before_action :only => :guard do |r| r.authenticate_incoming_request(params[:operation_id], params[:basket_number], params[:transaction_amount]) end
   # Vérifie que le panier n'a pas déjà été payé via paymoney
-  before_action :only => :guard do |s| s.basket_already_paid?(params[:basket_number]) end
+  #before_action :only => :guard do |s| s.basket_already_paid?(params[:basket_number]) end
   # Vérifie pour toutes les actions que la variable de session existe
   before_action :session_exists?, :except => [:create_account, :account, :credit_account, :add_credit, :transaction_acknowledgement] 
   before_action :only => :process_payment do |s| s.basket_already_paid?(session[:service]['basket_number']) end
@@ -31,7 +31,9 @@ class PayMoneyController < ApplicationController
     @shipping = get_shipping_fee("Paymoney")
     @transaction_amount_css = @account_number_css = @password_css = "row-form"
     @wallet = Wallet.find_by_name("Paymoney")
-    session[:basket]["transaction_amount"] = (session[:trs_amount] * 470).round(2)
+    @wallet_currency = @wallet.currency
+    @rate = get_change_rate(session[:currency].code, @wallet_currency.code)
+    session[:basket]["transaction_amount"] = (session[:trs_amount] * @rate).round(2)
   end
   
   def process_payment
@@ -71,7 +73,12 @@ class PayMoneyController < ApplicationController
       
       if @status.to_s.strip == "1"
         @transaction_id = Time.now.strftime("%Y%m%d%H%M%S%L")
-        @basket = Basket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :payment_status => true, :operation_id => session[:operation].id, :transaction_amount => session[:basket]["transaction_amount"].to_f, transaction_id: @transaction_id, :fees => @shipping.to_f)
+        @basket = Basket.find_by_number(session[:basket]["basket_number"])
+        if @basket.blank?
+          @basket = Basket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :payment_status => true, :operation_id => session[:operation].id, :transaction_amount => session[:basket]["transaction_amount"].to_f, transaction_id: @transaction_id, :fees => @shipping.to_f, :currency_id => session[:currency].id)
+        else
+          @basket.update_attributes(:payment_status => true, :transaction_amount => session[:basket]["transaction_amount"].to_f, :fees => @shipping.to_f, :currency_id => session[:currency].id)
+        end
         
         # Notification to ecommerce IPN
         Thread.new do

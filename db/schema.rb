@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140616111050) do
+ActiveRecord::Schema.define(version: 20140619133116) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(version: 20140616111050) do
     t.string   "transaction_id"
     t.boolean  "notified_to_ecommerce"
     t.float    "fees"
+    t.integer  "currency_id"
   end
 
   add_index "baskets", ["number"], name: "index_baskets_on_number", using: :btree
@@ -39,6 +40,21 @@ ActiveRecord::Schema.define(version: 20140616111050) do
     t.boolean  "published"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "currencies", force: true do |t|
+    t.string   "name",       limit: 64
+    t.string   "code",       limit: 3
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "published"
+    t.string   "symbol",     limit: 7
+  end
+
+  create_table "currencies_matches", id: false, force: true do |t|
+    t.string "first_code",  limit: 3
+    t.string "second_code", limit: 3
+    t.float  "rate"
   end
 
   create_table "delayed_payments", force: true do |t|
@@ -88,6 +104,7 @@ ActiveRecord::Schema.define(version: 20140616111050) do
     t.string   "transaction_id"
     t.boolean  "notified_to_ecommerce"
     t.float    "fees"
+    t.integer  "currency_id"
   end
 
   create_table "products", force: true do |t|
@@ -149,8 +166,7 @@ ActiveRecord::Schema.define(version: 20140616111050) do
     t.integer  "country_id"
     t.boolean  "published"
     t.string   "authentication_token"
-    t.string   "currency"
-    t.float    "currency_amount"
+    t.integer  "currency_id"
   end
 
 end
