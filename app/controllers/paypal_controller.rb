@@ -70,9 +70,9 @@ class PaypalController < ApplicationController
           # wallet=e6da96e284
           @request.run
           @response = @request.response
-          if @response.to_s == "200" and @response.body.blank?
+          #if @response.to_s == "200" and @response.body.blank?
             @basket.update_attributes(:notified_to_ecommerce => true)
-          end
+          #end
         end
       end
     end

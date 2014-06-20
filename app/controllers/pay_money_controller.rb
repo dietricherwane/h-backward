@@ -34,6 +34,14 @@ class PayMoneyController < ApplicationController
     @rate = get_change_rate(session[:currency].code, @wallet_currency.code)
     session[:basket]["transaction_amount"] = (session[:trs_amount] * @rate).round(2)
     @shipping = get_shipping_fee("Paymoney")
+    
+    # vérifie qu'un numéro panier appartenant à ce service n'existe pas déjà. Si non, on crée un panier temporaire, si oui, on met à jour le montant envoyé par le ecommerce, la monnaie envoyée par celui ci ainsi que le montant, la monnaie et les frais à envoyer au ecommerce
+    @basket = Basket.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'")
+    if @basket.blank?
+      @basket = Basket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => session[:basket]["transaction_amount"], :paid_currency_id => @wallet_currency.id, transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"), :fees => @shipping, :rate => @rate)
+    else
+      @basket.first.update_attributes(:transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => session[:basket]["transaction_amount"], :paid_currency_id => @wallet_currency.id, :fees => @shipping, :rate => @rate)
+    end 
   end
   
   def process_payment
@@ -44,6 +52,7 @@ class PayMoneyController < ApplicationController
     @password = params[:drake]    
     @error_messages = []
     @success_messages = []
+    @transaction_id = params[:transaction_id]
     @transaction_amount_css = @account_number_css = @password_css = "row-form"       
     @fields = [[@transaction_amount, "montant de la transaction", "transaction_amount_css"], [@account_number, "numéro de compte", "account_number_css"], [@password, "mot de passe", "password_css"]]
     @notified_to_back_office = nil
@@ -59,9 +68,10 @@ class PayMoneyController < ApplicationController
     
     if @error
       render action: 'index'
-    else    
+    else   
+      @basket = Basket.find_by_transaction_id(@transaction_id) 
       # communication with paymoney
-      @request = Typhoeus::Request.new("#{@@url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{@transaction_amount + params[:shipping].to_f}", followlocation: true)     
+      @request = Typhoeus::Request.new("#{@@url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{@basket.transaction_amount + @basket.fees}", followlocation: true)     
       @internal_com_request = "@response = Nokogiri.XML(request.response.body)
       @response.xpath('//status').each do |link|
       @status = link.content
@@ -70,7 +80,7 @@ class PayMoneyController < ApplicationController
       run_typhoeus_request(@request, @internal_com_request)
       
       if @status.to_s.strip == "1"
-        @transaction_id = Time.now.strftime("%Y%m%d%H%M%S%L")
+        
         @basket = Basket.find_by_transaction_id(@transaction_id)
         if @basket.blank?
           @basket = Basket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => session[:basket]["transaction_amount"], :paid_currency_id => @wallet_currency.id, transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"), :fees => @shipping, :rate => @rate)
@@ -87,6 +97,10 @@ class PayMoneyController < ApplicationController
         end
         
         # communication with back office
+        @rate = get_change_rate(params[:cc], "EUR")
+        @basket.update_attributes(compensation_rate: @rate)
+        @amount_for_compensation = ((@basket.paid_transaction_amount + @basket.fees) * @rate).round(2)
+        @fees_for_compensation = (@basket.fees * @rate).round(2)
         @request = Typhoeus::Request.new("#{@@url}/GATEWAY/rest/WS/#{session[:operation].id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/1", followlocation: true)
         
         @internal_com_request = "@response = Nokogiri.XML(request.response.body)
@@ -99,10 +113,7 @@ class PayMoneyController < ApplicationController
         
         if @status.to_s.strip == "1"
           # Conversion du montant débité par le wallet et des frais en euro avant envoi pour notification au back office du hub
-          @rate = get_change_rate(params[:cc], "EUR")
-          @@basket.update_attributes(compensation_rate: @rate)
-          @amount_for_compensation = ((@basket.paid_transaction_amount + @basket.fees) * @rate).round(2)
-          @fees_for_compensation = (@basket.fees * @rate).round(2)
+          
           
           @basket.update_attributes(:notified_to_back_office => true)
           
