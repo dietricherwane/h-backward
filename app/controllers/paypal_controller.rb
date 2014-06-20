@@ -22,16 +22,19 @@ class PaypalController < ApplicationController
   
   # Efface les parmètres du corps de la requête et affiche un friendly url dans le navigateur du client
   def index
+    # récupération du wallet, de la monnaie utilisée par le wallet, du taux de change entre la monnaie envoyée par le ecommerce et celle du wallet, conversion du montant envoyé par le ecommerce en celui supporté par le wallet et affichage des frais de transfert
     @wallet = Wallet.find_by_name("Paypal")
     @wallet_currency = @wallet.currency    
     @rate = get_change_rate(session[:currency].code, @wallet_currency.code)
     session[:basket]["transaction_amount"] = (session[:trs_amount] * @rate).round(2)
     @shipping = get_shipping_fee("Paypal")
     
-    if PaypalBasket.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}' AND notified_to_back_office IS TRUE").blank?
-      @temporary_basket = PaypalBasket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :transaction_amount => (session[:basket]["transaction_amount"].to_f), transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"), :fees => @shipping)
+    # vérifie qu'un numéro panier appartenant à ce service n'existe pas déjà. Si non, on crée un panier temporaire, si oui, on met à jour le montant envoyé par le ecommerce, la monnaie envoyée par celui ci ainsi que le montant, la monnaie et les frais à envoyer au ecommerce
+    @basket = PaypalBasket.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'")
+    if @basket.blank?
+      @basket = PaypalBasket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => session[:basket]["transaction_amount"], :paid_currency_id => @wallet_currency.id, transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"), :fees => @shipping, :rate => @rate)
     else
-      @temporary_basket = PaypalBasket.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}' AND notified_to_back_office IS TRUE").first
+      @basket.first.update_attributes(:transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => session[:basket]["transaction_amount"], :paid_currency_id => @wallet_currency.id, :fees => @shipping, :rate => @rate)
     end    
   end
   
@@ -86,15 +89,15 @@ class PaypalController < ApplicationController
   
   # Lorsque l'utilisateur finit son achat sur paypal, il est redirigé vers cette fonction pour authentifier  la transaction, l'historiser et envoyer le reporting au back end
   def payment_result_listener
+    # On vérifie que les données reçues par le listener proviennent bien de paypal
     @error_messages = []
     @status = ""
     @request = Typhoeus::Request.new("https://www.sandbox.paypal.com/cgi-bin/webscr", method: :post, params: {cmd: "_notify-sync", tx: "#{params[:tx]}", at: "wc9rbATkeBqy488jdxnQeXHsv9ya8Sh6Pq_DST3BihQ4oV2-De3epJilfKG"})
     @request.run
     @response = @request.response
+    
     if(params[:st] == "Completed")
-      #@basket = PaypalBasket.find_by_transaction_id(params[:cm].to_s)
       @basket = PaypalBasket.find_by_transaction_id(params[:cm])
-      #.where("transaction_id = '#{params[:cm].to_s}' AND transaction_amount = #{params[:amt].to_f}")
       if !@basket.blank? and (params[:amt].to_f + params[:tax].to_f) == (@basket.transaction_amount + @basket.fees) 
         # Le panier a été payé
         if @basket.payment_status == true
