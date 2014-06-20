@@ -34,7 +34,7 @@
 	        <div class = "input-append">
 		        <div class = "span9">
 			        <%= text_field_tag "magellan", session[:basket]["transaction_amount"], :readonly => true %>
-			        <button class = "btn btn-info" type = "button">CFA</button>
+			        <button class = "btn btn-info" type = "button"><%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
 		        </div>
 		      </div>
 	      </div>
@@ -42,7 +42,7 @@
 	        <div class = "input-append">
 		        <div class = "span9">
 			        <%= text_field_tag "Frais", "#{@shipping}", :readonly => true %>
-			        <button class = "btn btn-info" type = "button">Frais [Shipping] (CFA)</button>
+			        <button class = "btn btn-info" type = "button">Frais [Shipping] <%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
 		        </div>
 		      </div>
 	      </div>
