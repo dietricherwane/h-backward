@@ -27,13 +27,13 @@ class PayMoneyController < ApplicationController
   end
   
   # Efface les parmètres du corps de la requête et affiche un friendly url dans le navigateur du client
-  def index
-    @shipping = get_shipping_fee("Paymoney")
+  def index    
     @transaction_amount_css = @account_number_css = @password_css = "row-form"
     @wallet = Wallet.find_by_name("Paymoney")
     @wallet_currency = @wallet.currency
     @rate = get_change_rate(session[:currency].code, @wallet_currency.code)
     session[:basket]["transaction_amount"] = (session[:trs_amount] * @rate).round(2)
+    @shipping = get_shipping_fee("Paymoney")
   end
   
   def process_payment
