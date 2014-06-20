@@ -49,15 +49,19 @@ class PaypalController < ApplicationController
     @request.run
     @response = @request.response
     if @response.body == "VERIFIED"
-      @basket = PaypalBasket.where("transaction_id = '#{params[:custom].to_s}' AND transaction_amount = #{@gross.to_f}")
-      if !@basket.blank?
-        @basket = PaypalBasket.find_by_transaction_id(params[:custom].to_s)
+      @basket = PaypalBasket.find_by_transaction_id(params[:custom].to_s)
+      if !@basket.blank?       
         if @basket.payment_status != true
           @basket.update_attributes(:payment_status => true) 
         end
         if @basket.notified_to_back_office != true
-          # Notification au back office du HUB
-          notify_to_back_office(@basket, "#{@@url}/GATEWAY/rest/WS/#{@basket.operation_id}/#{@basket.number}/#{@basket.transaction_id}/#{@gross.to_f + @basket.fees}/#{@basket.fees}/2")
+          @rate = get_change_rate(params[:cc], "EUR")
+          @@basket.update_attributes(compensation_rate: @rate)
+          @amount_for_compensation = ((@basket.paid_transaction_amount + @basket.fees) * @rate).round(2)
+          @fees_for_compensation = (@basket.fees * @rate).round(2)
+          
+          # Notification au back office du hub
+          notify_to_back_office(@basket, "#{@@url}/GATEWAY/rest/WS/#{session[:operation].id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2") 
         end
         # Notification au back office du ecommerce
         if @basket.notified_to_ecommerce != true
@@ -96,30 +100,39 @@ class PaypalController < ApplicationController
     @request.run
     @response = @request.response
     
+    # On vérifie que la transaction a été effectuée
     if(params[:st] == "Completed")
       @basket = PaypalBasket.find_by_transaction_id(params[:cm])
-      if !@basket.blank? and (params[:amt].to_f + params[:tax].to_f) == (@basket.transaction_amount + @basket.fees) 
-        # Le panier a été payé
-        if @basket.payment_status == true
-          if @basket.notified_to_back_office != true
-            notify_to_back_office(@basket, "#{@@url}/GATEWAY/rest/WS/#{session[:operation].id}/#{session[:basket]['basket_number']}/#{session[:basket]['basket_number']}/#{params[:amt].to_f + params[:tax].to_f}/#{params[:tax].to_f}/2")         
-          end
-          @basket.update_attributes(:payment_status => true)
-          redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paypal&transaction_amount=#{@basket.transaction_amount}"
-          #redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1"
+      # On vérifie que la panier existe
+      if !@basket.blank?
+        # On vérifie que le montant ainsi que les frais payés et la monnaie correspondent à ceux stockés dans la base de données
+        if (@basket.paid_transaction_amount + @basket.fees) == params[:amt].to_f  and @basket.currency.code.upcase == params[:cc].upcase
+          @basket.update_attributes(:payment_status => true)  
+          
+          # Conversion du montant débité par le wallet et des frais en euro avant envoi pour notification au back office du hub
+          @rate = get_change_rate(params[:cc], "EUR")
+          @@basket.update_attributes(compensation_rate: @rate)
+          @amount_for_compensation = ((@basket.paid_transaction_amount + @basket.fees) * @rate).round(2)
+          @fees_for_compensation = (@basket.fees * @rate).round(2)
+          
+          # Notification au back office du hub
+          notify_to_back_office(@basket, "#{@@url}/GATEWAY/rest/WS/#{session[:operation].id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")    
+          
+          # Redirection vers le site marchand                 
+          redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paypal&transaction_amount=#{@basket.transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
         else
-          @basket.update_attributes(:payment_status => true)
-          notify_to_back_office(@basket, "#{@@url}/GATEWAY/rest/WS/#{session[:operation].id}/#{session[:basket]['basket_number']}/#{session[:basket]['basket_number']}/#{params[:amt].to_f + params[:tax].to_f}/#{params[:tax].to_f}/2")
-              
-          redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paypal&transaction_amount=#{@basket.transaction_amount}"
-          #redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1"
-          #redirect_to "https://www.wimboo.net/payments/ipn.php?order_id=#{params[:cm]}&statut_id=2"
+          (params[:cc].length > 3) ? params[:cc][0,3] : false
+          # Le montant payé ou la monnaie n'est pas celui ou celle envoyé au wallet pour ce panier
+          @basket.update_attributes(:conflictual_transaction_amount => params[:amt].to_f, :conflictual_currency => params[:cc].upcase)
+          redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=paypal&transaction_amount=#{@basket.transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}"
         end
       else
+        # On vérifie que le panier existe
         redirect_to error_page_path
         #redirect_to "#{session[:service].url_on_error}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0"
       end
     else
+      # L'origine de la transaction n'a pas pu être vérifiée
       redirect_to error_page_path
       #redirect_to "#{session[:service].url_on_error}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0"
     end    
