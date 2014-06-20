@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140620105057) do
+ActiveRecord::Schema.define(version: 20140620152824) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,9 @@ ActiveRecord::Schema.define(version: 20140620105057) do
     t.float    "paid_transaction_amount"
     t.integer  "paid_currency_id"
     t.float    "rate"
+    t.float    "conflictual_transaction_amout"
+    t.string   "conflictual_currency",          limit: 3
+    t.float    "compensation_rate"
   end
 
   add_index "baskets", ["number"], name: "index_baskets_on_number", using: :btree
@@ -111,6 +114,9 @@ ActiveRecord::Schema.define(version: 20140620105057) do
     t.float    "paid_transaction_amount"
     t.integer  "paid_currency_id"
     t.float    "rate"
+    t.float    "conflictual_transaction_amout"
+    t.string   "conflictual_currency",          limit: 3
+    t.float    "compensation_rate"
   end
 
   create_table "products", force: true do |t|
