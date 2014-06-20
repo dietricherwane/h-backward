@@ -29,7 +29,8 @@
     
     <!------------------------------------------ Data-fluid ----------------------------------->
 		<div class = "data-fluid" >
-		  <%= form_tag ("/PayMoney/ProcessPayment") do %>       
+		  <%= form_tag ("/PayMoney/ProcessPayment") do %>  
+		    <%= hidden_field_tag "transaction_id", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>     
 	      <div class = "<%= @transaction_amount_css %>">
 	        <div class = "input-append">
 		        <div class = "span9">
