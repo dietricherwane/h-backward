@@ -23,10 +23,10 @@ class PaypalController < ApplicationController
   # Efface les parmètres du corps de la requête et affiche un friendly url dans le navigateur du client
   def index
     @wallet = Wallet.find_by_name("Paypal")
-    @wallet_currency = @wallet.currency
-    @shipping = get_shipping_fee("Paypal")
+    @wallet_currency = @wallet.currency    
     @rate = get_change_rate(session[:currency].code, @wallet_currency.code)
     session[:basket]["transaction_amount"] = (session[:trs_amount] * @rate).round(2)
+    @shipping = get_shipping_fee("Paypal")
     
     if PaypalBasket.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}' AND notified_to_back_office IS TRUE").blank?
       @temporary_basket = PaypalBasket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :transaction_amount => (session[:basket]["transaction_amount"].to_f), transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"), :fees => @shipping)

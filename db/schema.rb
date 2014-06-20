@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140619133116) do
+ActiveRecord::Schema.define(version: 20140620101355) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,8 @@ ActiveRecord::Schema.define(version: 20140619133116) do
     t.boolean  "notified_to_ecommerce"
     t.float    "fees"
     t.integer  "currency_id"
+    t.float    "paid_transaction_amount"
+    t.integer  "paid_currency_id"
   end
 
   add_index "baskets", ["number"], name: "index_baskets_on_number", using: :btree
@@ -105,6 +107,8 @@ ActiveRecord::Schema.define(version: 20140619133116) do
     t.boolean  "notified_to_ecommerce"
     t.float    "fees"
     t.integer  "currency_id"
+    t.float    "paid_transaction_amount"
+    t.integer  "paid_currency_id"
   end
 
   create_table "products", force: true do |t|
