@@ -122,4 +122,6 @@ HubsBackOffice::Application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+  get '*rogue_url', :to => 'errors#routing'
+  post '*rogue_url', :to => 'errors#routing'
 end
