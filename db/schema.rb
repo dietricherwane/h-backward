@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140623112430) do
+ActiveRecord::Schema.define(version: 20140623142304) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,6 +91,7 @@ ActiveRecord::Schema.define(version: 20140623112430) do
     t.string   "second_origin_url"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "paymoney_url"
   end
 
   create_table "payment_way_fees", force: true do |t|
