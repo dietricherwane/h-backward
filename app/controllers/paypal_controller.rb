@@ -1,5 +1,5 @@
 class PaypalController < ApplicationController
-  @@url = Parameter.first.second_origin_url
+  @@second_origin_url = Parameter.first.second_origin_url
   # Only for guard action, we check if service_id exists and initialize a session variable containing transaction_data
   #before_action :only => :guard do |s| s.get_service(params[:service_id], params[:operation_id], params[:basket_number], params[:transaction_amount]) end
   # Only for guard action, we check if the session varable is initialized, if the operation_id is initialized and if transaction_amount is a number
@@ -60,7 +60,7 @@ class PaypalController < ApplicationController
           @fees_for_compensation = (@basket.fees * @rate).round(2)
           
           # Notification au back office du hub
-          notify_to_back_office(@basket, "#{@@url}/GATEWAY/rest/WS/#{session[:operation].id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2") 
+          notify_to_back_office(@basket, "#{@@second_origin_url}/GATEWAY/rest/WS/#{session[:operation].id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2") 
         end
         # Notification au back office du ecommerce
         if @basket.notified_to_ecommerce != true
@@ -115,7 +115,7 @@ class PaypalController < ApplicationController
           @fees_for_compensation = (@basket.fees * @rate).round(2)
           
           # Notification au back office du hub
-          notify_to_back_office(@basket, "#{@@url}/GATEWAY/rest/WS/#{session[:operation].id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")    
+          notify_to_back_office(@basket, "#{@@second_origin_url}/GATEWAY/rest/WS/#{session[:operation].id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")    
           
           # Redirection vers le site marchand                 
           redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paypal&transaction_amount=#{@basket.transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"

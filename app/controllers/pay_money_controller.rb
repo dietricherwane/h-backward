@@ -1,7 +1,7 @@
 class PayMoneyController < ApplicationController
   
-  #@@url = "http://localhost:8080"
-  @@url = Parameter.first.second_origin_url
+  @@second_origin_url = Parameter.first.second_origin_url
+  @@paymoney_url = Parameter.first.paymoney_url
   # Only for guard action, we check if service_id exists and initialize a session variable containing transaction_data
   #before_action :only => :guard do |s| s.get_service(params[:service_id], params[:operation_id], params[:basket_number], params[:transaction_amount]) end
   # Only for guard action, we check if the session varable is initialized, if the operation_id is initialized and if transaction_amount is a number
@@ -78,9 +78,8 @@ class PayMoneyController < ApplicationController
     if @error
       render action: 'index'
     else   
-      @error_url = "#{@@url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{session[:basket]["transaction_amount"] + @basket.fees}"
       # communication with paymoney
-      @request = Typhoeus::Request.new("#{@@url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{session[:basket]["transaction_amount"] + @basket.fees}", followlocation: true)     
+      @request = Typhoeus::Request.new("#{@@paymoney_url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{session[:basket]["transaction_amount"] + @basket.fees}", followlocation: true)     
       @internal_com_request = "@response = Nokogiri.XML(request.response.body)
       @response.xpath('//status').each do |link|
       @status = link.content
@@ -110,7 +109,7 @@ class PayMoneyController < ApplicationController
         @basket.update_attributes(compensation_rate: @rate)
         @amount_for_compensation = ((@basket.paid_transaction_amount + @basket.fees) * @rate).round(2)
         @fees_for_compensation = (@basket.fees * @rate).round(2)
-        @request = Typhoeus::Request.new("#{@@url}/GATEWAY/rest/WS/#{session[:operation].id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/1", followlocation: true)
+        @request = Typhoeus::Request.new("#{@@second_origin_url}/GATEWAY/rest/WS/#{session[:operation].id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/1", followlocation: true)
         
         @internal_com_request = "@response = Nokogiri.XML(request.response.body)
         @response.xpath('//status').each do |link|
@@ -207,7 +206,7 @@ class PayMoneyController < ApplicationController
     if(@error)
           
     else
-      @request = Typhoeus::Request.new("#{@@url}/PAYMONEY-NGSER/rest/CompteService/CreateCompte/#{@firstname}/#{@lastname}/#{@age}/#{@phone_number}/#{@email}", followlocation: true)
+      @request = Typhoeus::Request.new("#{@@paymoney_url}/PAYMONEY-NGSER/rest/CompteService/CreateCompte/#{@firstname}/#{@lastname}/#{@age}/#{@phone_number}/#{@email}", followlocation: true)
       
       @internal_com_request = "@response = Nokogiri.XML(request.response.body)"
       
@@ -260,7 +259,7 @@ class PayMoneyController < ApplicationController
       
     else
       # Envoi d'une requête à la plateforme EVD pour vérifier la validité du PIN
-      @request = Typhoeus::Request.new("#{@@url}/GATEWAY/rest/ES/VerifyPin/#{@pin}", followlocation: true)
+      @request = Typhoeus::Request.new("#{@@paymoney_url}/GATEWAY/rest/ES/VerifyPin/#{@pin}", followlocation: true)
         
       @internal_com_request = "@response = Nokogiri.XML(request.response.body)"
       run_typhoeus_request(@request, @internal_com_request)
@@ -271,7 +270,7 @@ class PayMoneyController < ApplicationController
         if @pin_status == "1"
           # Envoi de la requête de rechargement de compte
           @amount = @response.xpath('//pin').at("pinMontant").text
-          @request = Typhoeus::Request.new("#{@@url}/PAYMONEY-NGSER/rest/OperationService/CreditOperation/1/#{@account}/#{@amount.to_i.abs}", followlocation: true)
+          @request = Typhoeus::Request.new("#{@@paymoney_url}/PAYMONEY-NGSER/rest/OperationService/CreditOperation/1/#{@account}/#{@amount.to_i.abs}", followlocation: true)
           #@request = Typhoeus::Request.new("#{@@url}/PAYMONEY-NGSER/rest/OperationService/CreditOperation/1/#{@account}/#{@password}/#{@amount.to_i.abs}", followlocation: true)
         
           @internal_com_request = "@response = Nokogiri.XML(request.response.body)"
@@ -280,7 +279,7 @@ class PayMoneyController < ApplicationController
           if(!@response.blank? and @response.xpath('//status').at("idStatus").text == "1")
             @success = true
             @success_messages << "Le compte #{@account} a été crédité de #{@amount.to_i.abs} unités"
-            @request = Typhoeus::Request.new("#{@@url}/GATEWAY/rest/ES/ChangeStatus/#{@pin}", followlocation: true)
+            @request = Typhoeus::Request.new("#{@@paymoney_url}/GATEWAY/rest/ES/ChangeStatus/#{@pin}", followlocation: true)
         
             @internal_com_request = "@response = Nokogiri.XML(request.response.body)"
             run_typhoeus_request(@request, @internal_com_request)
