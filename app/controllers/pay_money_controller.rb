@@ -78,7 +78,7 @@ class PayMoneyController < ApplicationController
     if @error
       render action: 'index'
     else   
-      @error_url = "#{@@url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{@basket.transaction_amount + @basket.fees}"
+      @error_url = "#{@@url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{session[:basket]["transaction_amount"] + @basket.fees}"
       # communication with paymoney
       @request = Typhoeus::Request.new("#{@@url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{session[:basket]["transaction_amount"] + @basket.fees}", followlocation: true)     
       @internal_com_request = "@response = Nokogiri.XML(request.response.body)
