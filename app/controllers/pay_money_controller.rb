@@ -45,6 +45,10 @@ class PayMoneyController < ApplicationController
   end
   
   def process_payment
+    @wallet = Wallet.find_by_name("Paymoney")
+    @wallet_currency = @wallet.currency
+    @shipping = get_shipping_fee("Paymoney")
+    
     @transaction_status = "7"
     @transaction_amount = params[:magellan].to_f 
     @account_number = params[:colomb]
