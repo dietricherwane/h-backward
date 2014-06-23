@@ -61,6 +61,8 @@ class PayMoneyController < ApplicationController
     @fields = [[@transaction_amount, "montant de la transaction", "transaction_amount_css"], [@account_number, "numéro de compte", "account_number_css"], [@password, "mot de passe", "password_css"]]
     @notified_to_back_office = nil
     
+    @basket = Basket.find_by_transaction_id(@transaction_id)
+    
     @fields.each do |field|
       if field[0].blank?
         @error_messages << "Veuillez entrer le #{field[1]}."
@@ -73,7 +75,7 @@ class PayMoneyController < ApplicationController
     if @error
       render action: 'index'
     else   
-      @basket = Basket.find_by_transaction_id(@transaction_id) 
+       
       # communication with paymoney
       @request = Typhoeus::Request.new("#{@@url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{@basket.transaction_amount + @basket.fees}", followlocation: true)     
       @internal_com_request = "@response = Nokogiri.XML(request.response.body)
