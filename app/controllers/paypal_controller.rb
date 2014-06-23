@@ -110,7 +110,7 @@ class PaypalController < ApplicationController
           
           # Conversion du montant débité par le wallet et des frais en euro avant envoi pour notification au back office du hub
           @rate = get_change_rate(params[:cc], "EUR")
-          @@basket.update_attributes(compensation_rate: @rate)
+          @basket.update_attributes(compensation_rate: @rate)
           @amount_for_compensation = ((@basket.paid_transaction_amount + @basket.fees) * @rate).round(2)
           @fees_for_compensation = (@basket.fees * @rate).round(2)
           

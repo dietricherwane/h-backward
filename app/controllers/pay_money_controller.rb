@@ -105,7 +105,7 @@ class PayMoneyController < ApplicationController
         end
         
         # communication with back office
-        @rate = get_change_rate(params[:cc], "EUR")
+        @rate = get_change_rate(@wallet_currency.code, "EUR")
         @basket.update_attributes(compensation_rate: @rate)
         @amount_for_compensation = ((@basket.paid_transaction_amount + @basket.fees) * @rate).round(2)
         @fees_for_compensation = (@basket.fees * @rate).round(2)
