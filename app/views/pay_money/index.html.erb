@@ -42,7 +42,7 @@
 	      <div class = "row-form">
 	        <div class = "input-append">
 		        <div class = "span9">
-			        <%= text_field_tag "Frais", "#{@shipping}", :readonly => true %>
+			        <%= text_field_tag "Frais", @shipping, :readonly => true %>
 			        <button class = "btn btn-info" type = "button">Frais [Shipping] <%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
 		        </div>
 		      </div>
