@@ -1,1 +1,1 @@
-59 16 * * * /bin/bash -l -c 'cd /home/erwan/workshop/HubsBackOffice && source /home/erwan/.rvm/environments/ruby-2.0.0-p195@rails4.0.0 && RAILS_ENV=development /home/erwan/.rvm/gems/ruby-2.0.0-p195@rails4.0.0/bin/rake currencies:get_changes --silent >> /home/erwan/workshop/cron_log.log 2>&1'
+01 06 * * * /bin/bash -l -c 'cd /var/www/html/HubsBackOffice && source /home/erwan/.rvm/environments/ruby-2.0.0-p195@rails4.0.0 && RAILS_ENV=development /home/erwan/.rvm/gems/ruby-2.0.0-p195@rails4.0.0/bin/rake currencies:get_changes --silent >> /home/erwan/cron_log.log 2>&1'
