@@ -15,9 +15,9 @@ namespace :currencies do
               unless @response.blank? 
                 @change_exists = ActiveRecord::Base.connection.execute("SELECT * FROM currencies_matches WHERE first_code = '#{from}' AND second_code = '#{to}'")
                 if @change_exists.blank? or @change_exists.count == 0
-                  ActiveRecord::Base.connection.execute("INSERT INTO currencies_matches(first_code, second_code, rate) VALUES('#{from}', '#{to}', #{@response["rate"].to_f})")
+                  ActiveRecord::Base.connection.execute("INSERT INTO currencies_matches(first_code, second_code, rate) VALUES('#{from}', '#{to}', #{@response["rate"].to_f * 0.98})")
                 else
-                  ActiveRecord::Base.connection.execute("UPDATE currencies_matches SET rate = #{@response["rate"].to_f} WHERE first_code = '#{from}' AND second_code = '#{to}'")
+                  ActiveRecord::Base.connection.execute("UPDATE currencies_matches SET rate = #{@response["rate"].to_f * 0.98} WHERE first_code = '#{from}' AND second_code = '#{to}'")
                 end
               end
             end
