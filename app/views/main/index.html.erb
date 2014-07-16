@@ -55,7 +55,7 @@
 <div class="container">
   <!-- Top Navigation -->
 	<div class="codrops-top clearfix">
-		[ <%= session[:service].name %> ~ <%= session[:operation].comment %> ] : <span class = "price"><%= "#{session[:trs_amount]} USD ($)" %></span></b>
+		[ <%= session[:service].name %> ~ <%= session[:operation].comment %> ] : <span class = "price"><%= "#{session[:trs_amount]} #{session[:currency].symbol} (#{session[:currency].code})" %></span></b>
 	</div>
 	
   <h2>

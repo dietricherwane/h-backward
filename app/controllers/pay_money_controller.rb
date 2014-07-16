@@ -1,17 +1,17 @@
 class PayMoneyController < ApplicationController
   
-  #@@url = "http://localhost:8080"
-  @@url = "http://41.189.40.193:8080"
+  @@second_origin_url = Parameter.first.second_origin_url
+  @@paymoney_url = Parameter.first.paymoney_url
   # Only for guard action, we check if service_id exists and initialize a session variable containing transaction_data
-  before_action :only => :guard do |s| s.get_service(params[:service_id], params[:operation_id], params[:basket_number], params[:transaction_amount]) end
+  #before_action :only => :guard do |s| s.get_service(params[:service_id], params[:operation_id], params[:basket_number], params[:transaction_amount]) end
   # Only for guard action, we check if the session varable is initialized, if the operation_id is initialized and if transaction_amount is a number
   before_action :only => :guard do |o| o.filter_connections end
   #before_action :only => :guard do |r| r.authenticate_incoming_request(params[:operation_id], params[:basket_number], params[:transaction_amount]) end
   # Vérifie que le panier n'a pas déjà été payé via paymoney
-  before_action :only => :guard do |s| s.basket_already_paid?(params[:basket_number]) end
+  #before_action :only => :guard do |s| s.basket_already_paid?(params[:basket_number]) end
   # Vérifie pour toutes les actions que la variable de session existe
   before_action :session_exists?, :except => [:create_account, :account, :credit_account, :add_credit, :transaction_acknowledgement] 
-  before_action :only => :process_payment do |s| s.basket_already_paid?(session[:service]['basket_number']) end
+  #before_action :only => :process_payment do |s| s.basket_already_paid?(session[:service]['basket_number']) end
   before_action :except => [:create_account, :account, :credit_account, :add_credit, :transaction_acknowledgement] do |s| s.session_authenticated? end 
 
   layout "payMoney"  
@@ -27,24 +27,44 @@ class PayMoneyController < ApplicationController
   end
   
   # Efface les parmètres du corps de la requête et affiche un friendly url dans le navigateur du client
-  def index
-    @shipping = get_shipping_fee("Paymoney")
+  def index    
     @transaction_amount_css = @account_number_css = @password_css = "row-form"
     @wallet = Wallet.find_by_name("Paymoney")
-    session[:basket]["transaction_amount"] = (session[:trs_amount] * 470).round(2)
+    @wallet_currency = @wallet.currency
+    @rate = get_change_rate(session[:currency].code, @wallet_currency.code)
+    session[:basket]["transaction_amount"] = (session[:trs_amount] * @rate).round(2)
+    @shipping = get_shipping_fee("Paymoney")
+    
+    # vérifie qu'un numéro panier appartenant à ce service n'existe pas déjà. Si non, on crée un panier temporaire, si oui, on met à jour le montant envoyé par le ecommerce, la monnaie envoyée par celui ci ainsi que le montant, la monnaie et les frais à envoyer au ecommerce
+    @basket = Basket.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'")
+    if @basket.blank?
+      @basket = Basket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => session[:basket]["transaction_amount"], :paid_currency_id => @wallet_currency.id, transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"), :fees => @shipping, :rate => @rate)
+    else
+      @basket.first.update_attributes(:transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => session[:basket]["transaction_amount"], :paid_currency_id => @wallet_currency.id, :fees => @shipping, :rate => @rate)
+    end 
   end
   
   def process_payment
+    @wallet = Wallet.find_by_name("Paymoney")
+    @wallet_currency = @wallet.currency
+    
+    
     @transaction_status = "7"
     @transaction_amount = params[:magellan].to_f 
     @account_number = params[:colomb]
-    @shipping = params[:shipping]
+    
+    @shipping = get_shipping_fee("Paymoney")
+    params[:Frais] = @shipping
+    #@shipping = params[:shipping]
     @password = params[:drake]    
     @error_messages = []
     @success_messages = []
+    @transaction_id = params[:transaction_id]
     @transaction_amount_css = @account_number_css = @password_css = "row-form"       
     @fields = [[@transaction_amount, "montant de la transaction", "transaction_amount_css"], [@account_number, "numéro de compte", "account_number_css"], [@password, "mot de passe", "password_css"]]
     @notified_to_back_office = nil
+    
+    @basket = Basket.find_by_transaction_id(@transaction_id)
     
     @fields.each do |field|
       if field[0].blank?
@@ -57,21 +77,25 @@ class PayMoneyController < ApplicationController
     
     if @error
       render action: 'index'
-    else    
+    else   
       # communication with paymoney
-      @request = Typhoeus::Request.new("#{@@url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{@transaction_amount + params[:shipping].to_f}", followlocation: true)
-      
+      @request = Typhoeus::Request.new("#{@@paymoney_url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{session[:basket]["transaction_amount"] + @basket.fees}", followlocation: true)     
+      @duke = "#{@@paymoney_url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{session[:basket]["transaction_amount"] + @basket.fees}"
       @internal_com_request = "@response = Nokogiri.XML(request.response.body)
       @response.xpath('//status').each do |link|
       @status = link.content
       end
-      "
-      
+      "      
       run_typhoeus_request(@request, @internal_com_request)
       
       if @status.to_s.strip == "1"
-        @transaction_id = Time.now.strftime("%Y%m%d%H%M%S%L")
-        @basket = Basket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :payment_status => true, :operation_id => session[:operation].id, :transaction_amount => session[:basket]["transaction_amount"].to_f, transaction_id: @transaction_id, :fees => @shipping.to_f)
+        
+        @basket = Basket.find_by_transaction_id(@transaction_id)
+        if @basket.blank?
+          @basket = Basket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => session[:basket]["transaction_amount"], :paid_currency_id => @wallet_currency.id, transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"), :fees => @shipping, :rate => @rate)
+        else
+          @basket.update_attributes(:transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => session[:basket]["transaction_amount"], :paid_currency_id => @wallet_currency.id, :fees => @shipping, :rate => @rate)
+        end
         
         # Notification to ecommerce IPN
         Thread.new do
@@ -82,7 +106,11 @@ class PayMoneyController < ApplicationController
         end
         
         # communication with back office
-        @request = Typhoeus::Request.new("#{@@url}/GATEWAY/rest/WS/#{session[:operation].code}/#{session[:basket]['basket_number']}/#{@transaction_id}/#{@transaction_amount.to_f + @shipping.to_f}/#{@shipping.to_f}/1", followlocation: true)
+        @rate = get_change_rate(@wallet_currency.code, "EUR")
+        @basket.update_attributes(compensation_rate: @rate)
+        @amount_for_compensation = ((@basket.paid_transaction_amount + @basket.fees) * @rate).round(2)
+        @fees_for_compensation = (@basket.fees * @rate).round(2)
+        @request = Typhoeus::Request.new("#{@@second_origin_url}/GATEWAY/rest/WS/#{session[:operation].id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/1", followlocation: true)
         
         @internal_com_request = "@response = Nokogiri.XML(request.response.body)
         @response.xpath('//status').each do |link|
@@ -93,16 +121,17 @@ class PayMoneyController < ApplicationController
         run_typhoeus_request(@request, @internal_com_request)
         
         if @status.to_s.strip == "1"
+          # Conversion du montant débité par le wallet et des frais en euro avant envoi pour notification au back office du hub
+          
+          
           @basket.update_attributes(:notified_to_back_office => true)
+          
+          # Redirection vers le site marchand                 
+          redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paypal&transaction_amount=#{@basket.transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
+        else
+          #@basket.update_attributes(:conflictual_transaction_amount => params[:amt].to_f, :conflictual_currency => params[:cc].upcase)
+          redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=paypal&transaction_amount=#{@basket.transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}"
         end
-        
-        #redirect_to success_page_path
-        redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paymoney&transaction_amount=#{@basket.transaction_amount}"
-        #redirect_to "https://www.wimboo.net/payments/ipn.php?order_id=#{session[:basket]['basket_number']}&statut_id=#{@transaction_status}"
-#redirect_to "#{session[:service].url_on_success}?order_id=#{session[:basket]['basket_number']}&statut_id=2"
-        #Typhoeus.get(session[:service]["url_on_success"] << "?order_id=" << session[:service]["basket_number"] << "&statut_id=2")
-        #render action: 'index'
-        
       else
         @error = true
         @error_messages << "La transaction n'a pas abouti. Veuillez vérifier votre solde, votre numéro de compte et votre mot de passe."
@@ -113,13 +142,13 @@ class PayMoneyController < ApplicationController
   
   def ipn(basket)
     @service = Service.find_by_id(basket.service_id)
-    @request = Typhoeus::Request.new("#{@service.url_to_ipn}?transaction_id=#{basket.transaction_id}&order_id=#{basket.number}&status_id=1&wallet=paymoney&transaction_amount=#{@basket.transaction_amount}", followlocation: true, method: :post)
+    @request = Typhoeus::Request.new("#{@service.url_to_ipn}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paypal&transaction_amount=#{@basket.transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}", followlocation: true, method: :post)
     # wallet=05ccd7ba3d
     @request.run
     @response = @request.response
-    if @response.to_s == "200" and @response.body.blank?
+    #if @response.to_s == "200" and @response.body.blank?
       basket.update_attributes(:notified_to_ecommerce => true)
-    end
+    #end
   end
   
   def transaction_acknowledgement
@@ -178,7 +207,7 @@ class PayMoneyController < ApplicationController
     if(@error)
           
     else
-      @request = Typhoeus::Request.new("#{@@url}/PAYMONEY-NGSER/rest/CompteService/CreateCompte/#{@firstname}/#{@lastname}/#{@age}/#{@phone_number}/#{@email}", followlocation: true)
+      @request = Typhoeus::Request.new("#{@@paymoney_url}/PAYMONEY-NGSER/rest/CompteService/CreateCompte/#{@firstname}/#{@lastname}/#{@age}/#{@phone_number}/#{@email}", followlocation: true)
       
       @internal_com_request = "@response = Nokogiri.XML(request.response.body)"
       
@@ -231,7 +260,7 @@ class PayMoneyController < ApplicationController
       
     else
       # Envoi d'une requête à la plateforme EVD pour vérifier la validité du PIN
-      @request = Typhoeus::Request.new("#{@@url}/GATEWAY/rest/ES/VerifyPin/#{@pin}", followlocation: true)
+      @request = Typhoeus::Request.new("#{@@paymoney_url}/GATEWAY/rest/ES/VerifyPin/#{@pin}", followlocation: true)
         
       @internal_com_request = "@response = Nokogiri.XML(request.response.body)"
       run_typhoeus_request(@request, @internal_com_request)
@@ -242,7 +271,7 @@ class PayMoneyController < ApplicationController
         if @pin_status == "1"
           # Envoi de la requête de rechargement de compte
           @amount = @response.xpath('//pin').at("pinMontant").text
-          @request = Typhoeus::Request.new("#{@@url}/PAYMONEY-NGSER/rest/OperationService/CreditOperation/1/#{@account}/#{@amount.to_i.abs}", followlocation: true)
+          @request = Typhoeus::Request.new("#{@@paymoney_url}/PAYMONEY-NGSER/rest/OperationService/CreditOperation/1/#{@account}/#{@amount.to_i.abs}", followlocation: true)
           #@request = Typhoeus::Request.new("#{@@url}/PAYMONEY-NGSER/rest/OperationService/CreditOperation/1/#{@account}/#{@password}/#{@amount.to_i.abs}", followlocation: true)
         
           @internal_com_request = "@response = Nokogiri.XML(request.response.body)"
@@ -251,7 +280,7 @@ class PayMoneyController < ApplicationController
           if(!@response.blank? and @response.xpath('//status').at("idStatus").text == "1")
             @success = true
             @success_messages << "Le compte #{@account} a été crédité de #{@amount.to_i.abs} unités"
-            @request = Typhoeus::Request.new("#{@@url}/GATEWAY/rest/ES/ChangeStatus/#{@pin}", followlocation: true)
+            @request = Typhoeus::Request.new("#{@@paymoney_url}/GATEWAY/rest/ES/ChangeStatus/#{@pin}", followlocation: true)
         
             @internal_com_request = "@response = Nokogiri.XML(request.response.body)"
             run_typhoeus_request(@request, @internal_com_request)

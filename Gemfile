@@ -58,7 +58,7 @@ gem "nokogiri"
 gem 'protected_attributes'
 
 # stores session variables into database
-gem 'activerecord-session_store', github: 'rails/activerecord-session_store'
+gem 'activerecord-session_store'#, github: 'rails/activerecord-session_store'
 
 # 
 gem 'bundler-audit'

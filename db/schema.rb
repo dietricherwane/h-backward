@@ -11,7 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20140620122233) do
+=======
+ActiveRecord::Schema.define(version: 20140623142304) do
+>>>>>>> 7356301377cfd256493e78659d4e620a88f6d58f
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +32,13 @@ ActiveRecord::Schema.define(version: 20140620122233) do
     t.string   "transaction_id"
     t.boolean  "notified_to_ecommerce"
     t.float    "fees"
+    t.integer  "currency_id"
+    t.float    "paid_transaction_amount"
+    t.integer  "paid_currency_id"
+    t.float    "rate"
+    t.float    "conflictual_transaction_amout"
+    t.string   "conflictual_currency",          limit: 3
+    t.float    "compensation_rate"
   end
 
   add_index "baskets", ["number"], name: "index_baskets_on_number", using: :btree
@@ -39,6 +50,21 @@ ActiveRecord::Schema.define(version: 20140620122233) do
     t.boolean  "published"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "currencies", force: true do |t|
+    t.string   "name",       limit: 64
+    t.string   "code",       limit: 3
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "published"
+    t.string   "symbol",     limit: 7
+  end
+
+  create_table "currencies_matches", id: false, force: true do |t|
+    t.string "first_code",  limit: 3
+    t.string "second_code", limit: 3
+    t.float  "rate"
   end
 
   create_table "delayed_payments", force: true do |t|
@@ -65,6 +91,13 @@ ActiveRecord::Schema.define(version: 20140620122233) do
     t.string   "authentication_token"
   end
 
+  create_table "parameters", force: true do |t|
+    t.string   "second_origin_url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "paymoney_url"
+  end
+
   create_table "payment_way_fees", force: true do |t|
     t.string   "code"
     t.string   "name"
@@ -88,6 +121,13 @@ ActiveRecord::Schema.define(version: 20140620122233) do
     t.string   "transaction_id"
     t.boolean  "notified_to_ecommerce"
     t.float    "fees"
+    t.integer  "currency_id"
+    t.float    "paid_transaction_amount"
+    t.integer  "paid_currency_id"
+    t.float    "rate"
+    t.float    "conflictual_transaction_amout"
+    t.string   "conflictual_currency",          limit: 3
+    t.float    "compensation_rate"
   end
 
   create_table "products", force: true do |t|
@@ -149,8 +189,7 @@ ActiveRecord::Schema.define(version: 20140620122233) do
     t.integer  "country_id"
     t.boolean  "published"
     t.string   "authentication_token"
-    t.string   "currency"
-    t.float    "currency_amount"
+    t.integer  "currency_id"
   end
 
 end

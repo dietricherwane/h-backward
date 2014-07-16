@@ -29,18 +29,18 @@
     
     <!------------------------------------------ Data-fluid ----------------------------------->				
 		<div class = "data-fluid" >
-		  <form method="post" action="https://www.sandbox.paypal.com/cgi-bin/webscr" class = "paypal-button" target="_top" style="opacity: 1;">
-		  <!--<form method="post" action="https://www.paypal.com/cgi-bin/webscr" class = "paypal-button" target="_top" style="opacity: 1;">-->
+		  <!--<form method="post" action="https://www.sandbox.paypal.com/cgi-bin/webscr" class = "paypal-button" target="_top" style="opacity: 1;">-->
+		  <form method="post" action="https://www.paypal.com/cgi-bin/webscr" class = "paypal-button" target="_top" style="opacity: 1;">
 		    <input type="hidden" name="button" value="buynow">
-		    <input type="hidden" name="business" value="6XLW4P3YQCASY">
-		    <!--<input type="hidden" name="business" value="92ZE9QH5KHPHY">-->
+		    <!--<input type="hidden" name="business" value="6XLW4P3YQCASY">-->
+		    <input type="hidden" name="business" value="92ZE9QH5KHPHY">
 		    <%= hidden_field_tag "item_name", "#{session[:service].name}" %>
 		    <input type="hidden" name="quantity" value="1">
 		    <div class = "row-form">
 	        <div class = "input-append">
 		        <div class = "span9">
 			        <%= text_field_tag "amount", session[:basket]["transaction_amount"], :readonly => true %>
-			        <button class = "btn btn-info" type = "button">USD ($)</button>
+			        <button class = "btn btn-info" type = "button"><%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
 		        </div>
 		      </div>
 	      </div>
@@ -53,11 +53,11 @@
 	        <div class = "input-append">
 		        <div class = "span9">
 			        <%= text_field_tag "tax", "#{@shipping}", :readonly => true %>
-			        <button class = "btn btn-info" type = "button">Shipping [Frais] USD ($)</button>
+			        <button class = "btn btn-info" type = "button">Shipping [Frais] <%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
 		        </div>
 		      </div>
 	      </div>
-		    <%= hidden_field_tag "custom", "#{@temporary_basket.transaction_id}" %>
+		    <%= hidden_field_tag "custom", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
 		    <br />
 		    <div class="span12">
 		      <button class="btn">

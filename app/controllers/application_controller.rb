@@ -4,7 +4,10 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session#:exception
   
   # Initialise la variable de session contenant les informations sur la transaction
-  def get_service_by_token(service_token, operation_token, order, transaction_amount)
+  def get_service_by_token(currency, service_token, operation_token, order, transaction_amount)
+    # si la devise envoyee n'existe pas, on renvoie la page d'erreur
+    currency_exists?(currency)
+    session[:currency] = @currency.first
     @service = Service.where("authentication_token = '#{service_token}' AND published IS NOT FALSE")
     unless @service.blank?
       @service = @service.first
@@ -21,6 +24,14 @@ class ApplicationController < ActionController::Base
     end   
   end
   
+  # Verifie que la devise existe dans la base de donnees
+  def currency_exists?(currency)
+    @currency = Currency.where("code = '#{currency.upcase}' AND published IS TRUE")
+    if @currency.blank?
+      redirect_to error_page_path
+    end
+  end
+  
   # Initialise la variable de session contenant les informations sur la transaction
   def get_service(service_id, operation_id, basket_number, transaction_amount)
     @service = Service.find_by_code(service_id)
@@ -34,6 +45,18 @@ class ApplicationController < ActionController::Base
         end
       end
     end   
+  end
+  
+  def get_change_rate(from, to)
+    @from = from
+    @to = to
+    @rate = 0  
+    if @from ==@to
+      @rate = 1
+    else
+      @rate = ActiveRecord::Base.connection.execute("SELECT * FROM currencies_matches WHERE first_code = '#{@from}' AND second_code = '#{@to}'").first["rate"].to_f
+    end
+    @rate
   end
 
   # S'assure que la variable de session existe

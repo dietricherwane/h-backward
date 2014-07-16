@@ -10,4 +10,7 @@ class ErrorsHandlingController < ApplicationController
     @title = "Succès"
   end
 
+  def home_page
+    redirect_to "http://37.59.18.41:3759"
+  end
 end
