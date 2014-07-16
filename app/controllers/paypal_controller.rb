@@ -111,7 +111,9 @@ class PaypalController < ApplicationController
         else
           @basket.update_attributes(:payment_status => true)
           notify_to_back_office(@basket, "#{@@url}/GATEWAY/rest/WS/#{session[:operation].id}/#{session[:basket]['basket_number']}/#{session[:basket]['basket_number']}/#{params[:amt].to_f + params[:tax].to_f}/#{params[:tax].to_f}/2")
-              
+          
+          
+    
           redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paypal&transaction_amount=#{@basket.transaction_amount}"
           #redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1"
           #redirect_to "https://www.wimboo.net/payments/ipn.php?order_id=#{params[:cm]}&statut_id=2"
