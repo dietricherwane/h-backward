@@ -11,6 +11,6 @@ class ErrorsHandlingController < ApplicationController
   end
 
   def home_page
-    redirect_to "http://pay-money.net:3759/"
+    redirect_to "http://pay-money.net"
   end
 end
