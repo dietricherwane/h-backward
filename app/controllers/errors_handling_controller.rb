@@ -11,6 +11,6 @@ class ErrorsHandlingController < ApplicationController
   end
 
   def home_page
-    redirect_to "http://37.59.18.41:3759"
+    redirect_to "http://pay-money.net"
   end
 end
