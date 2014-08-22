@@ -32,6 +32,9 @@ HubsBackOffice::Application.routes.draw do
   post "paypal/ipn" => "paypal#ipn" 
   post "paypal/transaction_acknowledgement" => "paypal#transaction_acknowledgement"
   
+  get "OrangeMoneyCI/PaymentResultListener" => "orange_money_ci#payment_result_listener"
+  post "OrangeMoneyCI/ipn" => "orange_money_ci#ipn" 
+  
   get "PayPal/PaymentValidation" => "paypal_payment_validation#my_queue"
   
   get "delayed_payments/:service_id/:operation_id/:basket_number/:transaction_amount" => "delayed_payments#guard"
