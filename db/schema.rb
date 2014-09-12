@@ -11,11 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema.define(version: 20140620122233) do
-=======
-ActiveRecord::Schema.define(version: 20140623142304) do
->>>>>>> 7356301377cfd256493e78659d4e620a88f6d58f
+ActiveRecord::Schema.define(version: 20140908101031) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,6 +35,7 @@ ActiveRecord::Schema.define(version: 20140623142304) do
     t.float    "conflictual_transaction_amout"
     t.string   "conflictual_currency",          limit: 3
     t.float    "compensation_rate"
+    t.integer  "acknowledgement_count"
   end
 
   add_index "baskets", ["number"], name: "index_baskets_on_number", using: :btree
@@ -89,6 +86,34 @@ ActiveRecord::Schema.define(version: 20140623142304) do
     t.datetime "updated_at"
     t.boolean  "published"
     t.string   "authentication_token"
+  end
+
+  create_table "orange_money_ci_baskets", force: true do |t|
+    t.string   "number"
+    t.string   "service_id"
+    t.boolean  "payment_status"
+    t.string   "operation_id"
+    t.float    "transaction_amount"
+    t.boolean  "notified_to_back_office"
+    t.string   "transaction_id"
+    t.float    "fees"
+    t.integer  "currency_id"
+    t.float    "paid_transaction_amount"
+    t.integer  "paid_currency_id"
+    t.float    "rate"
+    t.float    "conflictual_transaction_amount"
+    t.string   "conflictual_currency",           limit: 3
+    t.float    "compensation_rate"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "ompay_token"
+    t.string   "ompay_clientid"
+    t.string   "ompay_cname"
+    t.string   "ompay_payid"
+    t.string   "ompay_date"
+    t.string   "ompay_time"
+    t.string   "ompay_ipaddr"
+    t.string   "ompay_signature"
   end
 
   create_table "parameters", force: true do |t|

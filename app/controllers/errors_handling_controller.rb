@@ -11,6 +11,7 @@ class ErrorsHandlingController < ApplicationController
   end
 
   def home_page
-    redirect_to "http://pay-money.net"
+    #redirect_to "http://pay-money.net"
+    render :file => "#{Rails.root}/public/404.html", :status => 404, :layout => false
   end
 end
