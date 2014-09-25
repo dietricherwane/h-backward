@@ -122,9 +122,8 @@ class PayMoneyController < ApplicationController
         
         if @status.to_s.strip == "1"
           # Conversion du montant débité par le wallet et des frais en euro avant envoi pour notification au back office du hub
-          
-          
-          @basket.update_attributes(:notified_to_back_office => true)
+                    
+          @basket.update_attributes(:notified_to_back_office => true, :payment_status => true)
           
           # Redirection vers le site marchand                 
           redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paymoney&transaction_amount=#{@basket.transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"

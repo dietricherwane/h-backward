@@ -1,14 +1,5 @@
 <script type="text/javascript" language="JavaScript">
-  /*function loadAccordion() {
-    $('#wallets').vaccordion({
-		  expandedHeight	: 450,
-		  animSpeed		: 500,
-		  animEasing		: 'easeInOutBack',
-		  animOpacity		: 0.4//,
-		  //visibleSlices	: 3
-	  });
-  } */
-  
+ 
   $.fn.get_wallets = function(country_id) {           
     $.ajax({   
       url: "<%= url_for :action => 'get_wallets', :controller => 'wallets' %>",

@@ -32,8 +32,12 @@ HubsBackOffice::Application.routes.draw do
   post "paypal/ipn" => "paypal#ipn" 
   post "paypal/transaction_acknowledgement" => "paypal#transaction_acknowledgement"
   
+  get "orange_money_ci/:service_id/:operation_id/:basket_number/:transaction_amount" => "orange_money_ci#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
+  get "OrangeMoneyCI" => "orange_money_ci#index"
+  post "/OrangeMoneyCI/ProcessPayment" => "orange_money_ci#redirect_to_billing_platform"
   get "OrangeMoneyCI/PaymentResultListener" => "orange_money_ci#payment_result_listener"
   post "OrangeMoneyCI/ipn" => "orange_money_ci#ipn" 
+  get "om" => "orange_money_ci#initialize_session"
   
   get "PayPal/PaymentValidation" => "paypal_payment_validation#my_queue"
   
@@ -43,6 +47,8 @@ HubsBackOffice::Application.routes.draw do
   #get "Delayed_Payment/PaymentResult" => "paypal#paypal_display"
   #post "Paypal/ProcessPayment" => "paypal#process_payment"
   #get "Paypal/PaymentResultListener" => "paypal#payment_result_listener"
+  
+  get "flooz" => "moov_flooz_ci#index"
   
   get "Wimboo/Reports/Operations" => "reports#wimboo_operations"
   post "Wimboo/FilterOperations" => "reports#filter_wimboo_operations"  
