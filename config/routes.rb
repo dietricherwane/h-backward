@@ -35,7 +35,7 @@ HubsBackOffice::Application.routes.draw do
   get "orange_money_ci/:service_id/:operation_id/:basket_number/:transaction_amount" => "orange_money_ci#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "OrangeMoneyCI" => "orange_money_ci#index"
   post "/OrangeMoneyCI/ProcessPayment" => "orange_money_ci#redirect_to_billing_platform"
-  get "OrangeMoneyCI/PaymentResultListener" => "orange_money_ci#payment_result_listener"
+  post "OrangeMoneyCI/PaymentResultListener" => "orange_money_ci#payment_result_listener"
   post "OrangeMoneyCI/ipn" => "orange_money_ci#ipn" 
   get "om" => "orange_money_ci#initialize_session"
   
