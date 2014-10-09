@@ -26,14 +26,13 @@
 	  <div class = "block">
 	    
     <!------------------------------------------ Data-fluid ----------------------------------->
-		<div class = "data-fluid" >  
-		  <form accept-charset="UTF-8" enctype = "application/x-www-form-urlencoded" action="https://ompay.orange.ci/e-commerce_test_gw/" method="post"> 
-		    <%= hidden_field_tag "merchantid", "1f3e745c66347bc2cc9492d8526bfe040519396d7c98ad199f4211f39dfd6365" %>  
-		    <%= hidden_field_tag "amount", "#{session[:basket]["transaction_amount"] + (@basket.fees.ceil rescue @basket.first.fees.ceil)}" %>  
-		    <%= hidden_field_tag "sessionid", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>  
-		    <%= hidden_field_tag "purchaseref", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %> 
-		    <%= hidden_field_tag "token", "#{@session_id}" %>     
-	      <div class = "<%= @transaction_amount_css %>">
+		<div class = "data-fluid" >
+		  <form action="http://teamqplus.qashservices.com:700/API_PAIEMENT.aspx" method="post"> 
+		    <%= hidden_field_tag "REF_COMMERCE", "HFraCS07DA4" %>  
+		    <%= hidden_field_tag "MONTANT", "#{session[:basket]["transaction_amount"] + (@basket.fees.ceil rescue @basket.first.fees.ceil)}" %>  
+		    <%= hidden_field_tag "ID_OPERATION", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>  
+		    <%= hidden_field_tag "DEVISE", "CFA" %>     
+	      <div class = "row-form">
 	        <div class = "input-append">
 		        <div class = "span9">
 			        <%= text_field_tag "magellan", session[:basket]["transaction_amount"], :readonly => true %>
@@ -52,7 +51,7 @@
 	      <br />
         <div class="span12">
 		      <button class="btn">
-			      Payer avec Orange Money <div class="icon-arrow-next icon-white"></div>  	
+			      Payer avec Qash <div class="icon-arrow-next icon-white"></div>  	
 		      </button>
 	      </div>
       <%# end %>

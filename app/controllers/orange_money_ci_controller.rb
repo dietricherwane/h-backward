@@ -1,8 +1,8 @@
 class OrangeMoneyCiController < ApplicationController
   ##before_action :only => :guard do |o| o.filter_connections end
-  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :initialize_session, :session_initialized]
+  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :initialize_session, :session_initialized, :payment_result_listener]
   # Si l'utilisateur ne s'est pas connecté en passant par main#guard, on le rejette
-  before_action :except => [:ipn, :transaction_acknowledgement, :initialize_session, :initialize_session] do |s| s.session_authenticated? end
+  before_action :except => [:ipn, :transaction_acknowledgement, :initialize_session, :initialize_session, :payment_result_listener] do |s| s.session_authenticated? end
   
   layout "orange_money_ci"
   
@@ -17,7 +17,7 @@ class OrangeMoneyCiController < ApplicationController
     @wallet_currency = @wallet.currency    
     @rate = get_change_rate(session[:currency].code, @wallet_currency.code)
     session[:basket]["transaction_amount"] = (session[:trs_amount].to_f.ceil * @rate).ceil
-    @shipping = get_shipping_fee("Orange Money CI")
+    @shipping = get_shipping_fee("Orange Money CI").ceil
     @parameter = Parameter.first
     
     # vérifie qu'un numéro panier appartenant à ce service n'existe pas déjà. Si non, on crée un panier temporaire, si oui, on met à jour le montant envoyé par le ecommerce, la monnaie envoyée par celui ci ainsi que le montant, la monnaie et les frais à envoyer au ecommerce
@@ -35,7 +35,71 @@ class OrangeMoneyCiController < ApplicationController
   end
   
   def payment_result_listener
-    render text: params.except(:controller, :action)
+    @transaction_id = params[:purchaseref]
+    @token = params[:token]
+    @clientid = params[:clientid]
+    @transaction_amount = params[:amount]
+    @status = params[:status]
+    @payid = params[:payid]
+        
+    if valid_result_parameters
+      if valid_transaction
+        @basket = OrangeMoneyCiBasket.find_by_transaction_id(@transaction_id)
+        if @basket
+          if (@basket.paid_transaction_amount + @basket.fees) == @transaction_amount.to_f
+                        
+            # Conversion du montant débité par le wallet et des frais en euro avant envoi pour notification au back office du hub
+            @rate = get_change_rate("XAF", "EUR")
+
+            @basket.update_attributes(payment_status: true, ompay_token: @token, ompay_client_id: @clientid, ompay_id: @payid, compensation_rate: @rate)
+            
+            @amount_for_compensation = ((@basket.paid_transaction_amount + @basket.fees) * @rate).round(2)
+            @fees_for_compensation = (@basket.fees * @rate).round(2)
+            
+            # Notification au back office du hub
+            notify_to_back_office(@basket, "#{@@second_origin_url}/GATEWAY/rest/WS/#{@basket.operation.id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")    
+            
+            # Redirection vers le site marchand                 
+            redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=orange_money_ci&transaction_amount=#{@basket.transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
+          else
+            @basket.update_attributes(:conflictual_transaction_amount => @transaction_amount.to_f, :conflictual_currency => "XAF")
+            redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=orange_money_ci&transaction_amount=#{@basket.transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}"
+          end 
+        else
+          redirect_to "http://gmail.com"#error_page_path
+        end
+      else
+        redirect_to "http://google.fr"#error_page_path
+      end
+    else
+      redirect_to "http://yahoo.fr"#error_page_path
+    end
+  end
+  
+  def valid_result_parameters
+    if !@transaction_id.blank? && !@token.blank? && !@clientid.blank? && !@transaction_amount.blank? && (!@status.blank? && @status.to_s.strip == "0") 
+      #&& !@payid.blank?
+      return true
+    else
+      return false
+    end
+  end
+  
+  def valid_transaction
+     parameter = Parameter.first
+    request = Typhoeus::Request.new(parameter.orange_money_ci_verify_url, body: "merchantid=1f3e745c66347bc2cc9492d8526bfe040519396d7c98ad199f4211f39dfd6365&token=#{@token}", headers: {:'Content-Type'=> "application/x-www-form-urlencoded"}, followlocation: true, method: :post)
+
+    request.on_complete do |response|
+      if response.success?
+        @result = response.body.strip rescue nil
+      else
+        @result = nil
+      end
+    end
+
+    request.run
+    
+    /status=.*;/.match(@result).to_s.sub("status=", "").sub(";", "") == "0" ? true : false
   end
   
   def ipn
@@ -46,7 +110,7 @@ class OrangeMoneyCiController < ApplicationController
     def initialize_session
       @parameter = Parameter.first
       #@basket = OrangeMoneyCiBasket.find_by_transaction_id(@transaction_id)
-      request = Typhoeus::Request.new(@parameter.orange_money_ci_initialization_url, followlocation: true, method: :post, body: "merchantid=1f3e745c66347bc2cc9492d8526bfe040519396d7c98ad199f4211f39dfd6365&amount=#{session[:basket]["transaction_amount"] + (@basket.fees.ceil rescue @basket.first.fees.ceil)}&sessionid=#{@basket.transaction_id rescue nil}&purchaseref=#{session[:basket]["basket_number"]}", headers: {:'Content-Type'=> "application/x-www-form-urlencoded"})
+      request = Typhoeus::Request.new(@parameter.orange_money_ci_initialization_url, followlocation: true, method: :post, body: "merchantid=1f3e745c66347bc2cc9492d8526bfe040519396d7c98ad199f4211f39dfd6365&amount=#{session[:basket]["transaction_amount"] + (@basket.fees.ceil rescue @basket.first.fees.ceil)}&sessionid=#{@basket.transaction_id rescue nil}&purchaseref=#{@basket.transaction_id rescue nil}", headers: {:'Content-Type'=> "application/x-www-form-urlencoded"})
 
       request.on_complete do |response|
         if response.success?
@@ -65,5 +129,22 @@ class OrangeMoneyCiController < ApplicationController
     
     def session_initialized
       (@session_id != "access denied" && @session_id.length > 30) ? true : false
+    end
+    
+    def notify_to_back_office(basket, url)
+      #if basket.payment_status != true
+        #basket.update_attributes(:payment_status => true)  
+      #end           
+      @request = Typhoeus::Request.new(url, followlocation: true)
+      @internal_com_request = "@response = Nokogiri.XML(request.response.body)
+      @response.xpath('//status').each do |link|
+      @status = link.content
+      end
+      "   
+      run_typhoeus_request(@request, @internal_com_request)
+      
+      if @status.to_s.strip == "1"
+        basket.update_attributes(:notified_to_back_office => true)
+      end
     end
 end

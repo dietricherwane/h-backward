@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140924092750) do
+ActiveRecord::Schema.define(version: 20141009153713) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -123,6 +123,10 @@ ActiveRecord::Schema.define(version: 20140924092750) do
     t.string   "paymoney_url"
     t.string   "orange_money_ci_initialization_url"
     t.string   "orange_money_ci_url"
+    t.string   "qash_url"
+    t.string   "qash_merchant_id"
+    t.string   "qash_verify_url"
+    t.string   "orange_money_ci_verify_url"
   end
 
   create_table "payment_way_fees", force: true do |t|
@@ -164,6 +168,27 @@ ActiveRecord::Schema.define(version: 20140924092750) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "published"
+  end
+
+  create_table "qash_baskets", force: true do |t|
+    t.string   "number"
+    t.string   "service_id"
+    t.boolean  "payment_status"
+    t.string   "operation_id"
+    t.float    "transaction_amount"
+    t.boolean  "notified_to_back_office"
+    t.string   "transaction_id"
+    t.float    "fees"
+    t.integer  "currency_id"
+    t.float    "paid_transaction_amount"
+    t.integer  "paid_currency_id"
+    t.float    "rate"
+    t.float    "conflictual_transaction_amount"
+    t.string   "conflictual_currency",           limit: 3
+    t.float    "compensation_rate"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "qash_transaction_id"
   end
 
   create_table "services", force: true do |t|
