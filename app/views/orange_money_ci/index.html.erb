@@ -30,7 +30,7 @@
 		  <form accept-charset="UTF-8" enctype = "application/x-www-form-urlencoded" action="https://ompay.orange.ci/e-commerce_test_gw/" method="post"> 
 		    <%= hidden_field_tag "merchantid", "1f3e745c66347bc2cc9492d8526bfe040519396d7c98ad199f4211f39dfd6365" %>  
 		    <%= hidden_field_tag "amount", "#{session[:basket]["transaction_amount"] + (@basket.fees.ceil rescue @basket.first.fees.ceil)}" %>  
-		    <%= hidden_field_tag "sessionid", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>  
+		    <%= hidden_field_tag "sessionid", "#{@basket.number rescue @basket.first.number}" %>  
 		    <%= hidden_field_tag "purchaseref", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %> 
 		    <%= hidden_field_tag "token", "#{@session_id}" %>     
 	      <div class = "<%= @transaction_amount_css %>">
