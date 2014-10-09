@@ -110,7 +110,7 @@ class OrangeMoneyCiController < ApplicationController
     def initialize_session
       @parameter = Parameter.first
       #@basket = OrangeMoneyCiBasket.find_by_transaction_id(@transaction_id)
-      request = Typhoeus::Request.new(@parameter.orange_money_ci_initialization_url, followlocation: true, method: :post, body: "merchantid=1f3e745c66347bc2cc9492d8526bfe040519396d7c98ad199f4211f39dfd6365&amount=#{session[:basket]["transaction_amount"] + (@basket.fees.ceil rescue @basket.first.fees.ceil)}&sessionid=#{@basket.transaction_id rescue nil}&purchaseref=#{@basket.transaction_id rescue nil}", headers: {:'Content-Type'=> "application/x-www-form-urlencoded"})
+      request = Typhoeus::Request.new(@parameter.orange_money_ci_initialization_url, followlocation: true, method: :post, body: "merchantid=1f3e745c66347bc2cc9492d8526bfe040519396d7c98ad199f4211f39dfd6365&amount=#{session[:basket]["transaction_amount"] + (@basket.fees.ceil rescue @basket.first.fees.ceil)}&sessionid=#{@basket.number rescue @basket.first.number}&purchaseref=#{@basket.transaction_id rescue nil}", headers: {:'Content-Type'=> "application/x-www-form-urlencoded"})
 
       request.on_complete do |response|
         if response.success?
