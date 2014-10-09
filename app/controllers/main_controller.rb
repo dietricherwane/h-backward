@@ -5,7 +5,7 @@ class MainController < ApplicationController
   before_action :only => :guard do |o| o.filter_connections end
   #before_action :only => :guard do |r| r.authenticate_incoming_request(params[:operation_id], params[:basket_number], params[:transaction_amount]) end
   # Vérifie que le panier n'a pas déjà été payé via paypal
-  before_action :only => :guard do |s| s.basket_already_paid?(params[:basket_number]) end
+  before_action :only => :guard do |s| s.basket_already_paid?(session[:basket]["basket_number"]) end
   # Vérifie pour toutes les actions que la variable de session existe
   before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement]
   # Si l'utilisateur ne s'est pas connecté en passant par guard, on le rejette

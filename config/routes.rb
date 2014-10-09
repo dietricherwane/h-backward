@@ -39,6 +39,10 @@ HubsBackOffice::Application.routes.draw do
   post "OrangeMoneyCI/ipn" => "orange_money_ci#ipn" 
   get "om" => "orange_money_ci#initialize_session"
   
+  get "qash/:service_id/:operation_id/:basket_number/:transaction_amount" => "qash_baskets#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
+  get "Qash" => "qash_baskets#index"
+  get "/Qash/PaymentResultListener" => "qash_baskets#payment_result_listener"
+  
   get "PayPal/PaymentValidation" => "paypal_payment_validation#my_queue"
   
   get "delayed_payments/:service_id/:operation_id/:basket_number/:transaction_amount" => "delayed_payments#guard"

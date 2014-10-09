@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :null_session#:exception
+  protect_from_forgery with: :exception
   
   # Initialise la variable de session contenant les informations sur la transaction
   def get_service_by_token(currency, service_token, operation_token, order, transaction_amount)
@@ -90,9 +90,10 @@ class ApplicationController < ActionController::Base
       @basket = session[:service].baskets.where("number = '#{basket_number}' AND operation_id = '#{session[:operation].id}'")
       @paypal_basket = session[:service].paypal_baskets.where("number = '#{basket_number}' AND operation_id = '#{session[:operation].id}'")
       @orange_money_ci_basket = session[:service].orange_money_ci_baskets.where("number = '#{basket_number}' AND operation_id = '#{session[:operation].id}'")
+      @qash_basket = session[:service].qash_baskets.where("number = '#{basket_number}' AND operation_id = '#{session[:operation].id}'")
       @delayed_payment = session[:service].delayed_payments.where("number = '#{basket_number}' AND operation_id = '#{session[:operation].id}'")
       #session[:service_id] = @service.id
-      if ((!@basket.blank? and @basket.first.payment_status.eql?(true)) or (!@paypal_basket and @paypal_basket.first.payment_status.eql?(true)) or (!@delayed_payment and @delayed_payment.first.payment_status.eql?(true)) or (!@orange_money_ci_basket and @orange_money_ci_basket.first.payment_status.eql?(true)))
+      if ((!@basket.blank? and @basket.first.payment_status.eql?(true)) or (!@paypal_basket.blank? and @paypal_basket.first.payment_status.eql?(true)) or (!@delayed_payment.blank? and @delayed_payment.first.payment_status.eql?(true)) or (!@orange_money_ci_basket.blank? and @orange_money_ci_basket.first.payment_status.eql?(true)) or (!@qash_basket.blank? and @qash_basket.first.payment_status.eql?(true)))
         redirect_to "#{session[:service].url_on_basket_already_paid}?status_id=2"
         #redirect_to error_page_path
       end
@@ -106,6 +107,7 @@ class ApplicationController < ActionController::Base
   end
   
   def run_typhoeus_request(request, code_on_success)
+    @error_messages = []
     request.on_complete do |response|
       if response.success?
         eval(code_on_success)         
