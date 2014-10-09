@@ -1,8 +1,8 @@
 class OrangeMoneyCiController < ApplicationController
   ##before_action :only => :guard do |o| o.filter_connections end
-  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :initialize_session, :session_initialized]
+  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :initialize_session, :session_initialized, :payment_result_listener]
   # Si l'utilisateur ne s'est pas connecté en passant par main#guard, on le rejette
-  before_action :except => [:ipn, :transaction_acknowledgement, :initialize_session, :initialize_session] do |s| s.session_authenticated? end
+  before_action :except => [:ipn, :transaction_acknowledgement, :initialize_session, :initialize_session, :payment_result_listener] do |s| s.session_authenticated? end
   
   layout "orange_money_ci"
   
