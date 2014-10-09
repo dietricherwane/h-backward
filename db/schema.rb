@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141009153713) do
+ActiveRecord::Schema.define(version: 20141009181620) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 20141009153713) do
     t.string   "conflictual_currency",          limit: 3
     t.float    "compensation_rate"
     t.integer  "acknowledgement_count"
+    t.string   "original_transaction_amount"
   end
 
   add_index "baskets", ["number"], name: "index_baskets_on_number", using: :btree
@@ -114,6 +115,7 @@ ActiveRecord::Schema.define(version: 20141009153713) do
     t.string   "ompay_time"
     t.string   "ompay_ipaddr"
     t.string   "ompay_signature"
+    t.string   "original_transaction_amount"
   end
 
   create_table "parameters", force: true do |t|
@@ -159,6 +161,7 @@ ActiveRecord::Schema.define(version: 20141009153713) do
     t.float    "conflictual_transaction_amout"
     t.string   "conflictual_currency",          limit: 3
     t.float    "compensation_rate"
+    t.string   "original_transaction_amount"
   end
 
   create_table "products", force: true do |t|
@@ -189,6 +192,7 @@ ActiveRecord::Schema.define(version: 20141009153713) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "qash_transaction_id"
+    t.string   "original_transaction_amount"
   end
 
   create_table "services", force: true do |t|
