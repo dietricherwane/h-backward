@@ -41,6 +41,7 @@ class OrangeMoneyCiController < ApplicationController
     @transaction_amount = params[:amount]
     @status = params[:status]
     @payid = params[:payid]
+    OmLog.create(log_rl: params.to_s) rescue nil
         
     if valid_result_parameters
       if valid_transaction
@@ -99,6 +100,7 @@ class OrangeMoneyCiController < ApplicationController
 
     request.run
     
+    OmLog.first.update_attributes(log_tv: @result.to_s) rescue nil
     /status=.*;/.match(@result).to_s.sub("status=", "").sub(";", "") == "0" ? true : false
   end
   
