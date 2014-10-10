@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141009181620) do
+ActiveRecord::Schema.define(version: 20141010092451) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,6 +78,13 @@ ActiveRecord::Schema.define(version: 20141009181620) do
     t.boolean  "notified_to_ecommerce"
   end
 
+  create_table "om_logs", force: true do |t|
+    t.text     "log_rl"
+    t.text     "log_tv"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "operations", force: true do |t|
     t.string   "code"
     t.string   "name"
@@ -116,6 +123,8 @@ ActiveRecord::Schema.define(version: 20141009181620) do
     t.string   "ompay_ipaddr"
     t.string   "ompay_signature"
     t.string   "original_transaction_amount"
+    t.text     "log_rl"
+    t.text     "log_tv"
   end
 
   create_table "parameters", force: true do |t|
