@@ -66,13 +66,13 @@ class OrangeMoneyCiController < ApplicationController
             redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=orange_money_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}"
           end 
         else
-          redirect_to "http://gmail.com"#error_page_path
+          render text: "La transaction n'existe pas - H"#redirect_to error_page_path
         end
       else
-        redirect_to "http://google.fr"#error_page_path
+        render text: "La transaction n'existe pas - O"#redirect_to error_page_path
       end
     else
-      redirect_to "http://yahoo.fr"#error_page_path
+      render text: "Les paramètres que vous avez envoyé sont invalides"#redirect_to error_page_path
     end
   end
   
