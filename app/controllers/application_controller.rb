@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+  protect_from_forgery with: :null_session
   
   # Initialise la variable de session contenant les informations sur la transaction
   def get_service_by_token(currency, service_token, operation_token, order, transaction_amount)

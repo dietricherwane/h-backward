@@ -1,4 +1,5 @@
 class OrangeMoneyCiController < ApplicationController
+  @@second_origin_url = Parameter.first.second_origin_url
   ##before_action :only => :guard do |o| o.filter_connections end
   before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :initialize_session, :session_initialized, :payment_result_listener]
   # Si l'utilisateur ne s'est pas connecté en passant par main#guard, on le rejette
@@ -52,7 +53,7 @@ class OrangeMoneyCiController < ApplicationController
             # Conversion du montant débité par le wallet et des frais en euro avant envoi pour notification au back office du hub
             @rate = get_change_rate("XAF", "EUR")
 
-            @basket.update_attributes(payment_status: true, ompay_token: @token, ompay_client_id: @clientid, ompay_id: @payid, compensation_rate: @rate)
+            @basket.update_attributes(payment_status: true, ompay_token: @token, ompay_clientid: @clientid, ompay_payid: @payid, compensation_rate: @rate)
             
             @amount_for_compensation = ((@basket.paid_transaction_amount + @basket.fees) * @rate).round(2)
             @fees_for_compensation = (@basket.fees * @rate).round(2)
@@ -101,7 +102,7 @@ class OrangeMoneyCiController < ApplicationController
     request.run
     
     OmLog.first.update_attributes(log_tv: @result.to_s) rescue nil
-    /status=.*;/.match(@result).to_s.sub("status=", "").sub(";", "") == "0" ? true : false
+    /status=.*;/.match(@result).to_s.sub("status=", "")[0..0] == "0" ? true : false
   end
   
   def ipn
