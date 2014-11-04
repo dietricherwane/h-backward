@@ -51,7 +51,7 @@ class PaypalController < ApplicationController
     @response = @request.response
     if @response.body == "VERIFIED"
       @basket = PaypalBasket.find_by_transaction_id(params[:custom].to_s)
-      if ( !@basket.blank? && params[:payment_status] == "Completed" || params[:payment_status] == "Processed" || (params[:payment_status] == "Pending" && ["address", "authorization", "multi-currency"].include?(params[:pending_reason])))
+      if ( !@basket.blank? && (params[:payment_status] == "Completed" || params[:payment_status] == "Processed" || (params[:payment_status] == "Pending" && ["address", "authorization", "multi-currency"].include?(params[:pending_reason]))))
         if @basket.payment_status != true
           @basket.update_attributes(:payment_status => true)
         end
