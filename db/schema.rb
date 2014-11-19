@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141010092451) do
+ActiveRecord::Schema.define(version: 20141118171304) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -149,6 +149,7 @@ ActiveRecord::Schema.define(version: 20141010092451) do
     t.datetime "updated_at"
     t.boolean  "published"
     t.boolean  "enabled"
+    t.integer  "wallet_id"
   end
 
   create_table "paypal_baskets", force: true do |t|
@@ -255,6 +256,8 @@ ActiveRecord::Schema.define(version: 20141010092451) do
     t.boolean  "published"
     t.string   "authentication_token"
     t.integer  "currency_id"
+    t.float    "fee"
+    t.boolean  "percentage"
   end
 
 end

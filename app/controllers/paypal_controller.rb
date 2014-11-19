@@ -21,12 +21,7 @@ class PaypalController < ApplicationController
 
   # Efface les parmètres du corps de la requête et affiche un friendly url dans le navigateur du client
   def index
-    # récupération du wallet, de la monnaie utilisée par le wallet, du taux de change entre la monnaie envoyée par le ecommerce et celle du wallet, conversion du montant envoyé par le ecommerce en celui supporté par le wallet et affichage des frais de transfert
-    @wallet = Wallet.find_by_name("Paypal")
-    @wallet_currency = @wallet.currency
-    @rate = get_change_rate(session[:currency].code, @wallet_currency.code)
-    session[:basket]["transaction_amount"] = (session[:trs_amount] * @rate).round(2)
-    @shipping = get_shipping_fee("Paypal")
+    initialize_customer_view("e6da96e284", "unceiled_transaction_amount", "unceiled_shipping_fee")
 
     # vérifie qu'un numéro panier appartenant à ce service n'existe pas déjà. Si non, on crée un panier temporaire, si oui, on met à jour le montant envoyé par le ecommerce, la monnaie envoyée par celui ci ainsi que le montant, la monnaie et les frais à envoyer au ecommerce
     @basket = PaypalBasket.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'")
@@ -79,17 +74,9 @@ class PaypalController < ApplicationController
     end
   end
 
+  # Returns 0 or 1 depending on the status of the transaction
   def transaction_acknowledgement
-    @status = "0"
-    @basket = PaypalBasket.find_by_transaction_id(params[:transaction_id])
-    if !@basket.blank?
-      if @basket.payment_status == true
-        @status = "1"
-      end
-    else
-      @status = "0"
-    end
-    render :text => @status
+    generic_transaction_acknowledgement(PaypalBasket, params[:transaction_id])
   end
 
   # Lorsque l'utilisateur finit son achat sur paypal, il est redirigé vers cette fonction pour authentifier  la transaction, l'historiser et envoyer le reporting au back end
