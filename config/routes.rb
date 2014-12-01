@@ -6,6 +6,15 @@ HubsBackOffice::Application.routes.draw do
 
   get "get_wallets" => "wallets#get_wallets"
 
+  # Upload wallets logos
+  get "bfaad58e15f671064fd87277/wallets/edit/:authentication_token" => "wallets#edit"
+  post "bfaad58e15f671064fd87277/wallets/update/:authentication_token" => "wallets#update", as: :update_wallet
+  post "wallets/available" => "wallets#available"
+  post "available_wallet/enable_disable" => "available_wallets#enable_disable"
+  post "wallets/used_per_country/:token" => "wallets#used_wallets_per_country"
+  post "wallet/successful_transactions/:service_token/:wallet_token" => "wallets#successful_transactions_per_service"
+  post "wallet/failed_transactions/:service_token/:wallet_token" => "wallets#failed_transactions_per_service"
+
   get "paymoney/:service_id/:operation_id/:basket_number/:transaction_amount" => "pay_money#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "PayMoney" => "pay_money#index"
   post "PayMoney/ProcessPayment" => "pay_money#process_payment"
@@ -67,6 +76,8 @@ HubsBackOffice::Application.routes.draw do
   get "service/update" => "services#update"
   get "service/disable" => "services#disable"
   get "service/enable" => "services#enable"
+  post "service/qualify" => "services#qualify"
+  post "service/enable_disable" => "services#enable_disable"
 
   get "operation/create" => "operations#create"
   get "operation/update" => "operations#update"

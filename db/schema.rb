@@ -11,10 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141118171304) do
+ActiveRecord::Schema.define(version: 20141129090319) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "available_wallets", force: true do |t|
+    t.integer  "service_id"
+    t.integer  "wallet_id"
+    t.boolean  "published"
+    t.integer  "unpublished_by"
+    t.datetime "unpublished_at"
+    t.integer  "published_by"
+    t.datetime "published_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "wallet_used"
+    t.integer  "succeed_transactions"
+    t.integer  "failed_transactions"
+  end
 
   create_table "baskets", force: true do |t|
     t.string   "number"
@@ -32,11 +47,11 @@ ActiveRecord::Schema.define(version: 20141118171304) do
     t.float    "paid_transaction_amount"
     t.integer  "paid_currency_id"
     t.float    "rate"
-    t.float    "conflictual_transaction_amout"
-    t.string   "conflictual_currency",          limit: 3
+    t.string   "conflictual_currency",           limit: 3
     t.float    "compensation_rate"
     t.integer  "acknowledgement_count"
     t.string   "original_transaction_amount"
+    t.float    "conflictual_transaction_amount"
   end
 
   add_index "baskets", ["number"], name: "index_baskets_on_number", using: :btree
@@ -44,10 +59,11 @@ ActiveRecord::Schema.define(version: 20141118171304) do
   add_index "baskets", ["service_id"], name: "index_baskets_on_service_id", using: :btree
 
   create_table "countries", force: true do |t|
-    t.string   "name"
     t.boolean  "published"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "code",       limit: 3
+    t.string   "name",       limit: 45
   end
 
   create_table "currencies", force: true do |t|
@@ -138,6 +154,8 @@ ActiveRecord::Schema.define(version: 20141118171304) do
     t.string   "qash_merchant_id"
     t.string   "qash_verify_url"
     t.string   "orange_money_ci_verify_url"
+    t.string   "front_office_url",                   limit: 100
+    t.string   "back_office_url",                    limit: 100
   end
 
   create_table "payment_way_fees", force: true do |t|
@@ -168,10 +186,10 @@ ActiveRecord::Schema.define(version: 20141118171304) do
     t.float    "paid_transaction_amount"
     t.integer  "paid_currency_id"
     t.float    "rate"
-    t.float    "conflictual_transaction_amout"
-    t.string   "conflictual_currency",          limit: 3
+    t.string   "conflictual_currency",           limit: 3
     t.float    "compensation_rate"
     t.string   "original_transaction_amount"
+    t.float    "conflictual_transaction_amount"
   end
 
   create_table "products", force: true do |t|
@@ -222,6 +240,11 @@ ActiveRecord::Schema.define(version: 20141118171304) do
     t.string   "url_on_basket_already_paid"
     t.string   "url_to_ipn"
     t.boolean  "published"
+    t.string   "logo_file_name"
+    t.string   "logo_content_type"
+    t.integer  "logo_file_size"
+    t.datetime "logo_updated_at"
+    t.string   "token",                      limit: 100
   end
 
   add_index "services", ["code"], name: "index_services_on_code", using: :btree
@@ -249,7 +272,6 @@ ActiveRecord::Schema.define(version: 20141118171304) do
   create_table "wallets", force: true do |t|
     t.string   "name"
     t.string   "url"
-    t.string   "logo"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "country_id"
@@ -258,6 +280,11 @@ ActiveRecord::Schema.define(version: 20141118171304) do
     t.integer  "currency_id"
     t.float    "fee"
     t.boolean  "percentage"
+    t.string   "logo_file_name"
+    t.string   "logo_content_type"
+    t.integer  "logo_file_size"
+    t.datetime "logo_updated_at"
+    t.string   "table_name",           limit: 100
   end
 
 end

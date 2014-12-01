@@ -177,11 +177,11 @@ class ApplicationController < ActionController::Base
   end
 
   def ceiled_transaction_amount
-    session[:basket]["transaction_amount"] = (session[:trs_amount].to_f.ceil * @rate).ceil
+    @transaction_amount = (session[:trs_amount].to_f.ceil * @rate).ceil
   end
 
   def unceiled_transaction_amount
-    session[:basket]["transaction_amount"] = (session[:trs_amount] * @rate).round(2)
+    @transaction_amount = (session[:trs_amount] * @rate).round(2)
   end
 
   def ceiled_shipping_fee
@@ -198,12 +198,41 @@ class ApplicationController < ActionController::Base
 
     if @wallet
       if(@wallet.percentage)
-        @fee = (((session[:basket]["transaction_amount"]).to_f * @wallet.fee) / 100).round(2)
+        @fee = (((@transaction_amount).to_f * @wallet.fee) / 100).round(2)
       else
         @fee = @wallet.fee
       end
     end
     return @fee
+  end
+
+  def get_service_logo(token)
+    parameters = Parameter.first
+    request = Typhoeus::Request.new("#{parameters.front_office_url}/ecommerce/get_logo/#{token}", method: :get, followlocation: true)
+    request.run
+    response = request.response
+
+    #if response.success?
+      @service_logo = "#{parameters.front_office_url}#{response.body}"
+    #else
+      #@service_logo = "/images/medium/missing.png"
+    #end
+  end
+
+  # Use authentication_token to update wallet used
+  def update_wallet_used(basket, authentication_token)
+    @available_wallet = basket.service.available_wallets.where(wallet_id: Wallet.find_by_authentication_token(authentication_token).id).first rescue nil
+    @available_wallet.update_attribute(:wallet_used, true) rescue nil
+  end
+
+  # Update in available_wallet the number of successful transactions
+  def update_number_of_succeed_transactions
+    @available_wallet.update_attribute(:succeed_transactions,  (@available_wallet.succeed_transactions.to_i + 1)) rescue nil
+  end
+
+  # Update in available_wallet the number of failed transactions
+  def update_number_of_failed_transactions
+    @available_wallet.update_attribute(:failed_transactions,  (@available_wallet.failed_transactions.to_i + 1)) rescue nil
   end
 
 end

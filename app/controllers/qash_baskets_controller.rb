@@ -15,13 +15,14 @@ class QashBasketsController < ApplicationController
 
   def index
     initialize_customer_view("936166e255", "ceiled_transaction_amount", "ceiled_shipping_fee")
+    get_service_logo(session[:service].token)
 
     # vérifie qu'un numéro panier appartenant à ce service n'existe pas déjà. Si non, on crée un panier temporaire, si oui, on met à jour le montant envoyé par le ecommerce, la monnaie envoyée par celui ci ainsi que le montant, la monnaie et les frais à envoyer au ecommerce
     @basket = QashBasket.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'")
     if @basket.blank?
-      @basket = QashBasket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :original_transaction_amount => session[:trs_amount], :transaction_amount => session[:trs_amount].to_f.ceil, :currency_id => session[:currency].id, :paid_transaction_amount => session[:basket]["transaction_amount"], :paid_currency_id => @wallet_currency.id, transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"), :fees => @shipping, :rate => @rate)
+      @basket = QashBasket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :original_transaction_amount => session[:trs_amount], :transaction_amount => session[:trs_amount].to_f.ceil, :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"), :fees => @shipping, :rate => @rate)
     else
-      @basket.first.update_attributes(:transaction_amount => session[:trs_amount].to_f.ceil, :original_transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => session[:basket]["transaction_amount"], :paid_currency_id => @wallet_currency.id, :fees => @shipping, :rate => @rate)
+      @basket.first.update_attributes(:transaction_amount => session[:trs_amount].to_f.ceil, :original_transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, :fees => @shipping, :rate => @rate)
     end
   end
 
@@ -38,8 +39,12 @@ class QashBasketsController < ApplicationController
       if valid_transaction
         @basket = QashBasket.find_by_transaction_id(@transaction_id)
         if @basket
+
+          # Use Qash authentication_token
+          update_wallet_used(@basket, "936166e255")
+
           @devise.to_s.upcase.strip == "CFA" ? (@devise = "XAF") : (@devise = nil)
-          if (@basket.paid_transaction_amount + @basket.fees) == @transaction_amount.to_f  && @basket.currency.code.upcase == @devise.upcase
+          if (@basket.paid_transaction_amount + @basket.fees) == @transaction_amount.to_f  && (Currency.find_by_code(@basket.paid_currency_id).code.upcase rescue "") == @devise.upcase
 
             # Conversion du montant débité par le wallet et des frais en euro avant envoi pour notification au back office du hub
             @rate = get_change_rate(@devise, "EUR")
@@ -52,10 +57,17 @@ class QashBasketsController < ApplicationController
             # Notification au back office du hub
             notify_to_back_office(@basket, "#{@@second_origin_url}/GATEWAY/rest/WS/#{@basket.operation.id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")
 
+            # Update in available_wallet the number of successful_transactions
+            update_number_of_succeed_transactions
+
             # Redirection vers le site marchand
             redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=qash_services&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
           else
             @basket.update_attributes(:conflictual_transaction_amount => @transaction_amount.to_f, :conflictual_currency => @devise.to_s[0..2].upcase)
+
+            # Update in available_wallet the number of failed_transactions
+            update_number_of_failed_transactions
+
             redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=qash_services&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}"
           end
         else

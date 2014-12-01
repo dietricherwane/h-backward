@@ -1,0 +1,2 @@
+module AvailableWalletsHelper
+end

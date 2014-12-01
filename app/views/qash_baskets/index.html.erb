@@ -1,63 +1,79 @@
-<div class="page-header">
-    <div class="icon">
-        <span class="ico-arrow-right"></span>
-    </div>
-    <h1><%= session[:operation].name %><small><%= session[:operation].comment %></small></h1>
+<div class = "row-fluid login-logo">
+  <div class = "span6">
+    <%= image_tag(@wallet.logo.url(:medium)) %>
+  </div>
+
+  <div class = "span6">
+    <%= image_tag(@service_logo) %>
+  </div>
 </div>
-<div class = "row-fluid">
-	<div class = "span12">
-	  <%#= render 'layouts/flash_messages' %>
-	  <% if @error %>  
-      <div class = "alert alert-error">         
-        <ul>
-        <% @error_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-        </ul>
-      </div>
-    <% end %>
-    <% if @success %>  
-      <div class = "alert alert-success">         
-        <% @success_messages.each do |msg| %>
-          <%= msg %>
-        <% end %>
-      </div>
-    <% end %>
-	  <div class = "block">
-	    
-    <!------------------------------------------ Data-fluid ----------------------------------->
-		<div class = "data-fluid" >
-		  <form action="http://teamqplus.qashservices.com:700/API_PAIEMENT.aspx" method="post"> 
-		    <%= hidden_field_tag "REF_COMMERCE", "HFraCS07DA4" %>  
-		    <%= hidden_field_tag "MONTANT", "#{session[:basket]["transaction_amount"] + (@basket.fees.ceil rescue @basket.first.fees.ceil)}" %>  
-		    <%= hidden_field_tag "ID_OPERATION", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>  
-		    <%= hidden_field_tag "DEVISE", "CFA" %>     
-	      <div class = "row-form">
-	        <div class = "input-append">
-		        <div class = "span9">
-			        <%= text_field_tag "magellan", session[:basket]["transaction_amount"], :readonly => true %>
-			        <button class = "btn btn-info" type = "button"><%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+
+<!-- Login -->
+<div class = "login">
+  <div class="page-header">
+      <a href = "javascript:history.go(-1);">
+        <div class="icon">
+            <span class="ico-arrow-right"></span>
+        </div>
+      </a>
+      <h1><%= session[:service].name %></h1>
+  </div>
+  <div class = "row-fluid">
+	  <div class = "span12">
+	    <%#= render 'layouts/flash_messages' %>
+	    <% if @error %>
+        <div class = "alert alert-error">
+          <ul>
+          <% @error_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+          </ul>
+        </div>
+      <% end %>
+      <% if @success %>
+        <div class = "alert alert-success">
+          <% @success_messages.each do |msg| %>
+            <%= msg %>
+          <% end %>
+        </div>
+      <% end %>
+	    <div class = "block">
+
+      <!------------------------------------------ Data-fluid ----------------------------------->
+		  <div class = "data-fluid" >
+		    <form action="http://teamqplus.qashservices.com:700/API_PAIEMENT.aspx" method="post">
+		      <%= hidden_field_tag "REF_COMMERCE", "HFraCS07DA4" %>
+		      <%= hidden_field_tag "MONTANT", "#{session[:basket]["transaction_amount"] + (@basket.fees.ceil rescue @basket.first.fees.ceil)}" %>
+		      <%= hidden_field_tag "ID_OPERATION", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
+		      <%= hidden_field_tag "DEVISE", "CFA" %>
+	        <div class = "row-form">
+	          <div class = "input-append">
+		          <div class = "span9">
+			          <%= text_field_tag "magellan", @transaction_amount, :readonly => true %>
+			          <button class = "btn btn-info" type = "button"><%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+		          </div>
 		        </div>
-		      </div>
-	      </div>
-	      <div class = "row-form">
-	        <div class = "input-append">
-		        <div class = "span9">
-			        <%= text_field_tag "Frais", @shipping, :readonly => true %>
-			        <button class = "btn btn-info" type = "button">Frais [Shipping] <%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+	        </div>
+	        <div class = "row-form">
+	          <div class = "input-append">
+		          <div class = "span9">
+			          <%= text_field_tag "Frais", @shipping, :readonly => true %>
+			          <button class = "btn btn-info" type = "button">Frais [Shipping] <%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+		          </div>
 		        </div>
-		      </div>
-	      </div>
-	      <br />
-        <div class="span12">
-		      <button class="btn">
-			      Payer avec Qash <div class="icon-arrow-next icon-white"></div>  	
-		      </button>
-	      </div>
-      <%# end %>
-      </form>
-		</div>
-	  <!------------------------------------------ Data-fluid ----------------------------------->
-	  </div>	
-	</div>
+	        </div>
+	        <br />
+          <div class="span12">
+		        <button class="btn">
+			        Payer avec Qash <div class="icon-arrow-next icon-white"></div>
+		        </button>
+	        </div>
+        <%# end %>
+        </form>
+		  </div>
+	    <!------------------------------------------ Data-fluid ----------------------------------->
+	    </div>
+	  </div>
+  </div>
 </div>
+<!-- END Login -->

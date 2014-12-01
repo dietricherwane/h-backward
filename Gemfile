@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 #gem 'rails', '4.0.4'
-#gem 'rails', :git => 'git://github.com/rails/rails.git' 
+#gem 'rails', :git => 'git://github.com/rails/rails.git'
 gem 'rails', '4.0.0'
 
 ruby '2.0.0'
@@ -60,14 +60,17 @@ gem 'protected_attributes'
 # stores session variables into database
 gem 'activerecord-session_store'#, github: 'rails/activerecord-session_store'
 
-# 
+#
 gem 'bundler-audit'
 
-# 
+#
 gem 'brakeman'
 
 #
 gem 'rack-attack'
+
+# Handling file upload
+gem "paperclip", "~> 4.2"
 
 #gem "rails_12factor", group: :production
 

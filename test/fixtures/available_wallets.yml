@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  service_id: 1
+  wallet_id: 1
+  published: false
+  unpublished_by: 1
+  unpublished_at: 2014-11-19 09:27:38
+  published_by: 1
+  published_at: 2014-11-19 09:27:38
+
+two:
+  service_id: 1
+  wallet_id: 1
+  published: false
+  unpublished_by: 1
+  unpublished_at: 2014-11-19 09:27:38
+  published_by: 1
+  published_at: 2014-11-19 09:27:38
