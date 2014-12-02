@@ -91,8 +91,8 @@ class PaypalController < ApplicationController
 
     OmLog.create(log_rl: params.to_s) rescue nil
 
-    #@request = Typhoeus::Request.new("https://www.sandbox.paypal.com/cgi-bin/webscr", method: :post, params: {cmd: "_notify-sync", tx: "#{params[:tx]}", at: "wc9rbATkeBqy488jdxnQeXHsv9ya8Sh6Pq_DST3BihQ4oV2-De3epJilfKG"})
-    @request = Typhoeus::Request.new("https://www.paypal.com/cgi-bin/webscr", method: :post, params: {cmd: "_notify-sync", tx: "#{params[:tx]}", at: "xGmhRanXxEiDPNYldQAjQA_uC5plNzWVCCJFb_n_Tbxk5ncfm_vlsYXls1C"})
+    @request = Typhoeus::Request.new("https://www.sandbox.paypal.com/cgi-bin/webscr", method: :post, params: {cmd: "_notify-sync", tx: "#{params[:tx]}", at: "wc9rbATkeBqy488jdxnQeXHsv9ya8Sh6Pq_DST3BihQ4oV2-De3epJilfKG"})
+    #@request = Typhoeus::Request.new("https://www.paypal.com/cgi-bin/webscr", method: :post, params: {cmd: "_notify-sync", tx: "#{params[:tx]}", at: "xGmhRanXxEiDPNYldQAjQA_uC5plNzWVCCJFb_n_Tbxk5ncfm_vlsYXls1C"})
     @request.run
     @response = @request.response
 
