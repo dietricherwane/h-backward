@@ -1,6 +1,6 @@
 class Wallet < ActiveRecord::Base
   # Accessible fields
-  attr_accessible :name, :country_id, :url, :logo, :published, :authentication_token, :currency, :currency_amount, :currency_id, :fee, :percentage, :logo, :published, :table_name
+  attr_accessible :name, :country_id, :url, :logo, :published, :authentication_token, :currency, :currency_amount, :currency_id, :fee, :percentage, :logo, :published, :table_name, :collector_id
 
   # Paperclip config
   has_attached_file :logo, :styles => { :medium => "200x200>", :thumb => "100x100>" }, :default_url => "/images/:style/missing.png"

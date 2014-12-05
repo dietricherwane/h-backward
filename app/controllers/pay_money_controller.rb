@@ -14,6 +14,9 @@ class PayMoneyController < ApplicationController
   #before_action :only => :process_payment do |s| s.basket_already_paid?(session[:service]['basket_number']) end
   before_action :except => [:create_account, :account, :credit_account, :add_credit, :transaction_acknowledgement] do |s| s.session_authenticated? end
 
+  # Set transaction amount for GUCE requests
+  before_action :only => :index do |o| o.guce_request? end
+
   layout "payMoney"
   # Inclure une sécurité au niveau de la fonction index basée sur l'adresse IP entrante. S'ssurer qu'elle correspond aux IP des services agréés (Les insérer dans une base de données locale ou externe?)
 
@@ -43,19 +46,23 @@ class PayMoneyController < ApplicationController
   def process_payment
     @wallet = Wallet.find_by_name("Paymoney")
     @wallet_currency = @wallet.currency
+    get_service_logo(session[:service].token)
 
+    @transaction_id = params[:transaction_id]
 
-    @transaction_status = "7"
+    @basket = Basket.find_by_transaction_id(@transaction_id)
+
+    #@transaction_status = "7"
     @transaction_amount = params[:magellan].to_f
     @account_number = params[:colomb]
 
-    @shipping = get_shipping_fee("Paymoney")
-    params[:Frais] = @shipping
+    #@shipping = get_shipping_fee("Paymoney")
+    params[:Frais] = @basket.fees
     #@shipping = params[:shipping]
     @password = params[:drake]
     @error_messages = []
     @success_messages = []
-    @transaction_id = params[:transaction_id]
+
     @transaction_amount_css = @account_number_css = @password_css = "row-form"
     @fields = [[@transaction_amount, "montant de la transaction", "transaction_amount_css"], [@account_number, "numéro de compte", "account_number_css"], [@password, "mot de passe", "password_css"]]
     @notified_to_back_office = nil
@@ -75,8 +82,8 @@ class PayMoneyController < ApplicationController
       render action: 'index'
     else
       # communication with paymoney
-      @request = Typhoeus::Request.new("#{@@paymoney_url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{session[:basket]["transaction_amount"] + @basket.fees}", followlocation: true)
-      @duke = "#{@@paymoney_url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{session[:basket]["transaction_amount"] + @basket.fees}"
+      @request = Typhoeus::Request.new("#{@@paymoney_url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{session[:basket]["transaction_amount"]}", followlocation: true)
+      #@duke = "#{@@paymoney_url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{session[:basket]["transaction_amount"] + @basket.fees}"
       @internal_com_request = "@response = Nokogiri.XML(request.response.body)
       @response.xpath('//status').each do |link|
       @status = link.content
@@ -85,13 +92,11 @@ class PayMoneyController < ApplicationController
       run_typhoeus_request(@request, @internal_com_request)
 
       if @status.to_s.strip == "1"
-
-        @basket = Basket.find_by_transaction_id(@transaction_id)
-        if @basket.blank?
-          @basket = Basket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => session[:basket]["transaction_amount"], :paid_currency_id => @wallet_currency.id, transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"), :fees => @shipping, :rate => @rate)
-        else
-          @basket.update_attributes(:transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => session[:basket]["transaction_amount"], :paid_currency_id => @wallet_currency.id, :fees => @shipping, :rate => @rate)
-        end
+        #if @basket.blank?
+          #@basket = Basket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => session[:basket]["transaction_amount"], :paid_currency_id => @wallet_currency.id, transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"), :fees => @shipping, :rate => @rate)
+        #else
+          @basket.update_attributes(:paid_transaction_amount => session[:basket]["transaction_amount"], :paid_currency_id => @wallet_currency.id, :fees => @shipping, :rate => @rate)
+        #end
 
         # Notification to ecommerce IPN
         Thread.new do
@@ -126,6 +131,11 @@ class PayMoneyController < ApplicationController
           # Update in available_wallet the number of successful_transactions
           update_number_of_succeed_transactions
 
+          @status_id = 1
+
+          # Handle GUCE notifications
+          guce_request_payment?(@basket.service.authentication_token, 'QRTM9DZ')
+
           # Redirection vers le site marchand
           redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paymoney&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
         else
@@ -138,7 +148,9 @@ class PayMoneyController < ApplicationController
         end
       else
         @error = true
-        @error_messages << "La transaction n'a pas abouti. Veuillez vérifier votre solde, votre numéro de compte et votre mot de passe."
+        if @error_messages.blank?
+          @error_messages << "La transaction n'a pas abouti. Veuillez vérifier votre solde, votre numéro de compte et votre mot de passe."
+        end
         render action: 'index'
       end
     end

@@ -11,7 +11,7 @@
 <!-- Login -->
 <div class = "login">
   <div class="page-header">
-      <a href = "javascript:history.go(-1);">
+      <a href = "<%= main_path %>">
         <div class="icon">
             <span class="ico-arrow-right"></span>
         </div>
@@ -21,6 +21,13 @@
   <div class = "row-fluid">
 	  <div class = "span12">
 	    <%#= render 'layouts/flash_messages' %>
+	    <% if @guce_notice %>
+	      <div class = "alert alert-notice">
+          <ul>
+            <li><%= @guce_notice %></li>
+          </ul>
+        </div>
+	    <% end %>
 	    <% if @error %>
         <div class = "alert alert-error">
           <ul>

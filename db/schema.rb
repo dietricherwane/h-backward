@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141129090319) do
+ActiveRecord::Schema.define(version: 20141205115552) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -156,6 +156,8 @@ ActiveRecord::Schema.define(version: 20141129090319) do
     t.string   "orange_money_ci_verify_url"
     t.string   "front_office_url",                   limit: 100
     t.string   "back_office_url",                    limit: 100
+    t.string   "guce_back_office_url"
+    t.string   "guce_payment_url"
   end
 
   create_table "payment_way_fees", force: true do |t|
@@ -285,6 +287,7 @@ ActiveRecord::Schema.define(version: 20141129090319) do
     t.integer  "logo_file_size"
     t.datetime "logo_updated_at"
     t.string   "table_name",           limit: 100
+    t.string   "collector_id"
   end
 
 end

@@ -12,6 +12,9 @@ class PaypalController < ApplicationController
   # Si l'utilisateur ne s'est pas connecté en passant par main#guard, on le rejette
   before_action :except => [:ipn, :transaction_acknowledgement] do |s| s.session_authenticated? end
 
+  # Set transaction amount for GUCE requests
+  before_action :only => :index do |o| o.guce_request? end
+
   layout "paypal"
 
   # Reçoit les requêtes venant des différents services
@@ -121,8 +124,13 @@ class PaypalController < ApplicationController
           # Update in available_wallet the number of successful_transactions
           update_number_of_succeed_transactions
 
+          @status_id = 1
+
+          # Handle GUCE notifications
+          guce_request_payment?(@basket.service.authentication_token, 'QRT2LS1')
+
           # Redirection vers le site marchand
-          redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
+          redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
         else
           (params[:cc].length > 3) ? params[:cc][0,3] : false
           # Le montant payé ou la monnaie n'est pas celui ou celle envoyé au wallet pour ce panier

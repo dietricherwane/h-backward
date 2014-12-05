@@ -115,10 +115,10 @@ class ApplicationController < ActionController::Base
         @error_messages << "Délai d'attente de la demande dépassé. Veuillez contacter l'administrateur."
         @error = true
       elsif response.code == 0
-        @error_messages << "L'URL demandé n'existe pas. Veuillez contacter l'administrateur."
+        #@error_messages << "L'URL demandé n'existe pas. Veuillez contacter l'administrateur."
         @error = true
       else
-        @error_messages << "Une erreur s'est produite. Veuillez contacter l'administrateur"
+        #@error_messages << "Une erreur s'est produite. Veuillez contacter l'administrateur"
         @error = true
       end
     end
@@ -233,6 +233,89 @@ class ApplicationController < ActionController::Base
   # Update in available_wallet the number of failed transactions
   def update_number_of_failed_transactions
     @available_wallet.update_attribute(:failed_transactions,  (@available_wallet.failed_transactions.to_i + 1)) rescue nil
+  end
+
+  # Handle GUCE requests
+  # Is the current request incoming from the GUCE
+  def guce_request?
+    if session[:service].authentication_token == '57813dc7992fbdc721ca5f6b0d02d559'
+      set_guce_transaction_amount
+    end
+  end
+
+  # Make a request to the back office to get the last transaction amount
+  def set_guce_transaction_amount
+    parameters = Parameter.first
+
+#=begin
+      request = Typhoeus::Request.new("#{parameters.guce_back_office_url}/GPG_GUCE/rest/Mob_Mon/Check/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}", method: :get, followlocation: true)
+      request.run
+
+      response = (Nokogiri.XML(request.response.body) rescue nil)
+#=end
+=begin
+      response = Nokogiri.XML(%Q{<ns3:response xmlns= "epayment/common" xmlns:ns2= "epayment/common-response"
+xmlns:ns3= "epayment/check-response" xmlns:ns4= "epayment/common-request" >
+<ns2:header>
+<message_id>GOOD</message_id>
+<ns2:result>0</ns2:result>
+</ns2:header>
+<bill>
+<date>2014-11-01T00:00:00.000</date>
+<type>SAD</type>
+<number>SAD201400000030</number>
+<amount>150000.0</amount>
+<document_no>14</document_no>
+<document_date>2013-12-31T12:00:00.000</document_date>
+<company_code>0317739P</company_code>
+<company_name_address>KOUASSI LOUKOU</company_name_address>
+<declarant_code>C50013</declarant_code>
+<declarant_name_address>CMB - ABIDJAN</declarant_name_address>
+</bill>
+</ns3:response>/})
+=end
+    @order_id = (response.xpath('//ns3:response').at('bill').at('number').content rescue nil)
+    @amount = (response.xpath('//ns3:response').at('bill').at('amount').content rescue nil)
+
+    if valid_guce_params?
+      new_transaction_amount = @amount.to_f.round(2)
+      if new_transaction_amount != session[:trs_amount]
+        @guce_notice = "Le montant de la transaction a changé. Il est passé de: #{session[:trs_amount]} #{session[:currency].symbol} à #{new_transaction_amount} #{session[:currency].symbol}"
+      end
+      session[:trs_amount] = new_transaction_amount
+      session[:basket]['transaction_amount'] = new_transaction_amount
+    else
+      redirect_to error_page_path
+    end
+  end
+
+  # Make sure the order id is not null and amount is a number
+  def valid_guce_params?
+    if @order_id == nil || @amount == nil || not_a_number?(@amount)
+      return false
+    else
+      return true
+    end
+  end
+
+  def guce_request_payment?(authentication_token, collector_id)
+    if authentication_token == '57813dc7992fbdc721ca5f6b0d02d559'
+      request = Typhoeus::Request.new("#{parameters.guce_payment_url}/GPG_GUCE/rest/Mob_Mon_Pay/pay/#{@basket.number}/#{@basket.original_transaction_amount}/ELNPAY4/#{collector_id}", method: :get, followlocation: true)
+      request.run
+
+      response = (Nokogiri.XML(request.response.body) rescue nil)
+
+      status = (response.xpath('//ns2:result').text rescue nil)
+
+      case status
+        when '0'
+          @status_id = '1'
+        when '1'
+          @status_id = '2'
+        when nil
+          @status_id = 3
+        end
+    end
   end
 
 end

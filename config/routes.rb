@@ -2,7 +2,7 @@ HubsBackOffice::Application.routes.draw do
   root 'errors_handling#home_page'
 
   get "order/:currency/:service_token/:operation_token/:order/:transaction_amount" => "main#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
-  get "Main" => "main#index"
+  get "/Main" => "main#index", as: :main
 
   get "get_wallets" => "wallets#get_wallets"
 
@@ -87,6 +87,7 @@ HubsBackOffice::Application.routes.draw do
   get "payment_way_fee/create" => "payment_way_fees#create"
   get "payment_way_fee/update" => "payment_way_fees#update"
 
+  get 'guce' => 'products#guce'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
