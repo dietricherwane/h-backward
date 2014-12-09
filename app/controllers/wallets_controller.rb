@@ -131,7 +131,7 @@ class WalletsController < ApplicationController
 
     transactions.each do |transaction|
       wallet_currency = Currency.find_by_id(transaction['paid_currency_id'])
-      my_transactions << transaction.merge!({full_transaction_amount: "#{transaction['transaction_amount']} #{Currency.find_by_id(transaction['currency_id']).symbol}", full_fee: "#{transaction['fees']} #{wallet_currency.symbol}", full_paid_transaction_amount: "#{transaction['paid_transaction_amount']} #{wallet_currency.symbol}"}).to_json << ","
+      my_transactions << transaction.merge!({full_transaction_amount: "#{transaction['transaction_amount']} #{(Currency.find_by_id(transaction['currency_id']).symbol rescue nil)}", full_fee: "#{transaction['fees']} #{(wallet_currency.symbol rescue nil)}", full_paid_transaction_amount: "#{transaction['paid_transaction_amount']} #{(wallet_currency.symbol rescue nil)}"}).to_json << ","
     end
     my_transactions.chop!
     my_transactions =  "[" + my_transactions + "]"
