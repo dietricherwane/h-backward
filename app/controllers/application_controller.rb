@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :null_session
-  
+
   # Initialise la variable de session contenant les informations sur la transaction
   def get_service_by_token(currency, service_token, operation_token, order, transaction_amount)
     # si la devise envoyee n'existe pas, on renvoie la page d'erreur
@@ -21,9 +21,9 @@ class ApplicationController < ActionController::Base
           session[:basket] = {"basket_number" => "#{order}", "transaction_amount" => "#{transaction_amount.to_f.round(2)}"}
         end
       end
-    end   
+    end
   end
-  
+
   # Verifie que la devise existe dans la base de donnees
   def currency_exists?(currency)
     @currency = Currency.where("code = '#{currency.upcase}' AND published IS TRUE")
@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
       redirect_to error_page_path
     end
   end
-  
+
   # Initialise la variable de session contenant les informations sur la transaction
   def get_service(service_id, operation_id, basket_number, transaction_amount)
     @service = Service.find_by_code(service_id)
@@ -44,13 +44,13 @@ class ApplicationController < ActionController::Base
           session[:basket] = {"basket_number" => "#{basket_number}", "transaction_amount" => "#{transaction_amount.to_f}"}
         end
       end
-    end   
+    end
   end
-  
+
   def get_change_rate(from, to)
     @from = from
     @to = to
-    @rate = 0  
+    @rate = 0
     if @from ==@to
       @rate = 1
     else
@@ -66,13 +66,13 @@ class ApplicationController < ActionController::Base
       redirect_to error_page_path
     end
   end
-  
+
   def session_authenticated?
     if session[:b83eff1c1b3fdbb26153075044297e91].blank?
       redirect_to error_page_path
     end
   end
-  
+
   # Vérifie que la variable de session existe, que l'opération demandée existe, que le montant de la transaction est numérique
   def filter_connections
     if session[:service].blank? or session[:operation].blank? or session[:basket].blank? or not_a_number?(session[:basket]["transaction_amount"])
@@ -80,7 +80,7 @@ class ApplicationController < ActionController::Base
       redirect_to error_page_path
     end
   end
-  
+
   # Vérifie que le panier n'a pas déjà été payé
   def basket_already_paid?(basket_number)
     if session[:service].blank?
@@ -99,71 +99,225 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-  
+
   def generate_url(url, params = {})
     uri = URI(url)
     uri.query = params.to_query
     uri.to_s
   end
-  
+
   def run_typhoeus_request(request, code_on_success)
     @error_messages = []
     request.on_complete do |response|
       if response.success?
-        eval(code_on_success)         
+        eval(code_on_success)
       elsif response.timed_out?
         @error_messages << "Délai d'attente de la demande dépassé. Veuillez contacter l'administrateur."
         @error = true
       elsif response.code == 0
-        @error_messages << "L'URL demandé n'existe pas. Veuillez contacter l'administrateur."
+        #@error_messages << "L'URL demandé n'existe pas. Veuillez contacter l'administrateur."
         @error = true
       else
-        @error_messages << "Une erreur s'est produite. Veuillez contacter l'administrateur"
+        #@error_messages << "Une erreur s'est produite. Veuillez contacter l'administrateur"
         @error = true
-      end      
-    end     
-    hydra = Typhoeus::Hydra.hydra
-	  hydra.queue(request)
-	  hydra.run	
-  end
-  
-  # Récupère les frais de transaction en fonction du moyen de paiement ("Paypal", "Paymoney")
-  def get_shipping_fee(payment_way_name)
-      @fee = 0
-      @payment_way = PaymentWayFee.find_by_name(payment_way_name)
-      if !@payment_way.blank?
-        if(@payment_way.percentage)
-          @fee = (((session[:basket]["transaction_amount"]).to_f * @payment_way.fee) / 100).round(2)
-        else
-          @fee = @payment_way.fee
-        end
-      end  
-      @fee   
-    end
-    
-    def authenticate_incoming_request(operation_id, basket_number, transaction_amount)
-      @request = Typhoeus::Request.new(session[:service]["url_to_authenticate_incoming_request"], method: :post, params: {operation_id: "#{operation_id}", basket_number: "#{basket_number}", transaction_amount: "#{transaction_amount}"})
-      @request.run
-      @response = @request.response
-      if(params[:status] != session[:service]["authentication_token"])
-        redirect_to error_page_path
       end
     end
-    
-    def not_a_number?(n)
-    	n.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? true : false 
-	  end
-	  
-	  def name_correct?(name)
-	    if(name.blank? or name.length == 1)
-	      false
-	    else
-	      true
-	    end
-	  end
-	  
-	  def valid_email?(email)
-	    /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i.match(email).blank? ? false : true	    
-	  end
-  
+    hydra = Typhoeus::Hydra.hydra
+	  hydra.queue(request)
+	  hydra.run
+  end
+
+
+
+  def authenticate_incoming_request(operation_id, basket_number, transaction_amount)
+    @request = Typhoeus::Request.new(session[:service]["url_to_authenticate_incoming_request"], method: :post, params: {operation_id: "#{operation_id}", basket_number: "#{basket_number}", transaction_amount: "#{transaction_amount}"})
+    @request.run
+    @response = @request.response
+    if(params[:status] != session[:service]["authentication_token"])
+      redirect_to error_page_path
+    end
+  end
+
+  def not_a_number?(n)
+  	n.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? true : false
+  end
+
+  def name_correct?(name)
+    if(name.blank? or name.length == 1)
+      false
+    else
+      true
+    end
+  end
+
+  def valid_email?(email)
+    /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i.match(email).blank? ? false : true
+  end
+
+  # Manages transaction acknowledgements fo all wallets
+  def generic_transaction_acknowledgement(my_model, transaction_id)
+    status = "0"
+    order = my_model.find_by_transaction_id(transaction_id)
+    if order
+      if order.payment_status == true
+        status = "1"
+      end
+    end
+    render :text => status
+  end
+
+  # Initialize mandatory variables before displaying the payment validation form to the user
+  # récupération du wallet, de la monnaie utilisée par le wallet, du taux de change entre la monnaie envoyée par le ecommerce et celle du wallet, conversion du montant envoyé par le ecommerce en celui supporté par le wallet et affichage des frais de transfert
+  def initialize_customer_view(wallet_authentication_token, set_transaction_amount, set_shipping_fee)
+    @wallet = Wallet.find_by_authentication_token(wallet_authentication_token)
+    @wallet_currency = @wallet.currency
+    @rate = get_change_rate(session[:currency].code, @wallet_currency.code)
+    send(set_transaction_amount)
+    @shipping = send(set_shipping_fee)
+  end
+
+  def ceiled_transaction_amount
+    @transaction_amount = (session[:trs_amount].to_f.ceil * @rate).ceil
+  end
+
+  def unceiled_transaction_amount
+    @transaction_amount = (session[:trs_amount] * @rate).round(2)
+  end
+
+  def ceiled_shipping_fee
+    return get_shipping_fee.ceil
+  end
+
+  def unceiled_shipping_fee
+    return get_shipping_fee
+  end
+
+  # Récupère les frais de transaction en fonction du wallet
+  def get_shipping_fee
+    @fee = 0
+
+    if @wallet
+      if(@wallet.percentage)
+        @fee = (((@transaction_amount).to_f * @wallet.fee) / 100).round(2)
+      else
+        @fee = @wallet.fee
+      end
+    end
+    return @fee
+  end
+
+  def get_service_logo(token)
+    parameters = Parameter.first
+    request = Typhoeus::Request.new("#{parameters.front_office_url}/ecommerce/get_logo/#{token}", method: :get, followlocation: true)
+    request.run
+    response = request.response
+
+    #if response.success?
+      @service_logo = "#{parameters.front_office_url}#{response.body}"
+    #else
+      #@service_logo = "/images/medium/missing.png"
+    #end
+  end
+
+  # Use authentication_token to update wallet used
+  def update_wallet_used(basket, authentication_token)
+    @available_wallet = basket.service.available_wallets.where(wallet_id: Wallet.find_by_authentication_token(authentication_token).id).first rescue nil
+    @available_wallet.update_attribute(:wallet_used, true) rescue nil
+  end
+
+  # Update in available_wallet the number of successful transactions
+  def update_number_of_succeed_transactions
+    @available_wallet.update_attribute(:succeed_transactions,  (@available_wallet.succeed_transactions.to_i + 1)) rescue nil
+  end
+
+  # Update in available_wallet the number of failed transactions
+  def update_number_of_failed_transactions
+    @available_wallet.update_attribute(:failed_transactions,  (@available_wallet.failed_transactions.to_i + 1)) rescue nil
+  end
+
+  # Handle GUCE requests
+  # Is the current request incoming from the GUCE
+  def guce_request?
+    if session[:service].authentication_token == '57813dc7992fbdc721ca5f6b0d02d559'
+      set_guce_transaction_amount
+    end
+  end
+
+  # Make a request to the back office to get the last transaction amount
+  def set_guce_transaction_amount
+    parameters = Parameter.first
+
+#=begin
+      request = Typhoeus::Request.new("#{parameters.guce_back_office_url}/GPG_GUCE/rest/Mob_Mon/Check/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}", method: :get, followlocation: true)
+      request.run
+
+      response = (Nokogiri.XML(request.response.body) rescue nil)
+#=end
+=begin
+      response = Nokogiri.XML(%Q{<ns3:response xmlns= "epayment/common" xmlns:ns2= "epayment/common-response"
+xmlns:ns3= "epayment/check-response" xmlns:ns4= "epayment/common-request" >
+<ns2:header>
+<message_id>GOOD</message_id>
+<ns2:result>0</ns2:result>
+</ns2:header>
+<bill>
+<date>2014-11-01T00:00:00.000</date>
+<type>SAD</type>
+<number>SAD201400000030</number>
+<amount>150000.0</amount>
+<document_no>14</document_no>
+<document_date>2013-12-31T12:00:00.000</document_date>
+<company_code>0317739P</company_code>
+<company_name_address>KOUASSI LOUKOU</company_name_address>
+<declarant_code>C50013</declarant_code>
+<declarant_name_address>CMB - ABIDJAN</declarant_name_address>
+</bill>
+</ns3:response>/})
+=end
+    @order_id = (response.xpath('//ns3:response').at('bill').at('number').content rescue nil)
+    @amount = (response.xpath('//ns3:response').at('bill').at('amount').content rescue nil)
+
+    if valid_guce_params?
+      new_transaction_amount = @amount.to_f.round(2)
+      if new_transaction_amount != session[:trs_amount]
+        @guce_notice = "Le montant de la transaction a changé. Il est passé de: #{session[:trs_amount]} #{session[:currency].symbol} à #{new_transaction_amount} #{session[:currency].symbol}"
+      end
+      session[:trs_amount] = new_transaction_amount
+      session[:basket]['transaction_amount'] = new_transaction_amount
+    else
+      redirect_to error_page_path
+    end
+  end
+
+  # Make sure the order id is not null and amount is a number
+  def valid_guce_params?
+    if @order_id == nil || @amount == nil || not_a_number?(@amount)
+      return false
+    else
+      return true
+    end
+  end
+
+  def guce_request_payment?(authentication_token, collector_id)
+    parameters = Parameter.first
+
+    if authentication_token == '57813dc7992fbdc721ca5f6b0d02d559'
+      request = Typhoeus::Request.new("#{parameters.guce_payment_url}/GPG_GUCE/rest/Mob_Mon_Pay/pay/#{@basket.number}/#{@basket.original_transaction_amount}/ELNPAY4/#{collector_id}", method: :get, followlocation: true)
+      request.run
+
+      response = (Nokogiri.XML(request.response.body) rescue nil)
+
+      status = (response.xpath('//ns2:result').text rescue nil)
+
+      case status
+        when '0'
+          @status_id = '1'
+        when '1'
+          @status_id = '2'
+        when nil
+          @status_id = 3
+        end
+    end
+  end
+
 end

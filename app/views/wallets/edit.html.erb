@@ -1,0 +1,10 @@
+<%= form_for @wallet, url: update_wallet_path, method: :post do |f| %>
+  <%= hidden_field_tag "authentication_token", value: @wallet.authentication_token %>
+  <%= f.file_field :logo %>
+
+  <%= f.submit "Valider" %>
+<% end %>
+
+<p>
+  <%= image_tag @wallet.logo.url(:medium) %>
+</p>
