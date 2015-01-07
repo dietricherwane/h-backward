@@ -41,7 +41,7 @@ end
 gem 'magic_encoding'
 
 # Used to make http requests
-gem 'typhoeus'
+gem 'typhoeus', '0.6.9'
 
 # Used to connect to heroku
 gem 'heroku'
