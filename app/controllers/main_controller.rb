@@ -11,7 +11,17 @@ class MainController < ApplicationController
   # Si l'utilisateur ne s'est pas connecté en passant par guard, on le rejette
   before_action :except => :guard do |s| s.session_authenticated? end
 
-  layout "main"
+  #layout "main"
+
+  layout :select_layout
+
+  def select_layout
+    if session[:service].authentication_token == '57813dc7992fbdc721ca5f6b0d02d559'
+      return "guce"
+    else
+      return "main"
+    end
+  end
 
   # Reçoit les requêtes venant des différents services
   def guard

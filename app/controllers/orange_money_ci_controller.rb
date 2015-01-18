@@ -8,7 +8,17 @@ class OrangeMoneyCiController < ApplicationController
   # Set transaction amount for GUCE requests
   before_action :only => :index do |o| o.guce_request? end
 
-  layout "orange_money_ci"
+  #layout "orange_money_ci"
+
+  layout :select_layout
+
+  def select_layout
+    if session[:service].authentication_token == '57813dc7992fbdc721ca5f6b0d02d559'
+      return "guce"
+    else
+      return "orange_money_ci"
+    end
+  end
 
   # Reçoit les requêtes venant des différents services
   def guard

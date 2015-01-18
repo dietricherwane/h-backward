@@ -1,3 +1,5 @@
+<% if session[:service].authentication_token != '57813dc7992fbdc721ca5f6b0d02d559' %>
+
 <div class = "row-fluid login-logo">
   <div class = "span6">
     <%= image_tag(@wallet.logo.url(:medium)) %>
@@ -94,3 +96,99 @@
   </div>
 </div>
 <!-- END Login -->
+
+<% else %>
+
+<div class="row payment-fields paymoney">
+
+  <div class="login">
+
+    <div class="page-header">
+      <a href="/Main">
+        <div class="icon">
+          <span class="ico-arrow-right"></span>
+        </div>
+      </a>
+      <%= image_tag(@wallet.logo.url(:medium)) %>
+    </div>
+
+<!-- Begin row -->
+    <div class="row">
+	    <div class="col-xs-5">
+  <!-- Begin block -->
+	      <div class="block">
+	        <% if @guce_notice %>
+	          <div class = "alert alert-notice" style = "text-align: justify; color: blue;">
+              <p><%= @guce_notice %></p>
+            </div>
+	        <% end %>
+	        <% if @error %>
+            <div class = "alert alert-error" style = "text-align: justify; color: red;">
+              <% @error_messages.each do |msg| %>
+                <p><%= msg %></p>
+              <% end %>
+            </div>
+          <% end %>
+          <% if @success %>
+            <div class = "alert alert-success">
+              <% @success_messages.each do |msg| %>
+                <%= msg %>
+              <% end %>
+            </div>
+          <% end %>
+
+          <%= form_tag ("/PayMoney/ProcessPayment") do %>
+		        <%= hidden_field_tag "transaction_id", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
+            <div class="form-group">
+              <div class="input-group">
+                <%= text_field_tag "magellan", @transaction_amount, :readonly => true, class: "form-control input-sm" %>
+                <span class="input-group-btn">
+                  <button type="submit" class="btn btn-sm"><%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+                </span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="input-group">
+                <%= text_field_tag "Frais", (@basket.fees rescue @basket.first.fees), :readonly => true, class: "form-control input-sm" %>
+                <span class="input-group-btn">
+                  <button type="submit" class="btn btn-sm">Frais [Shipping] <%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+                </span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <%= text_field_tag "colomb", params[:colomb], placeholder: 'Numéro de compte', :autocomplete => :off, class: "form-control input-sm" %>
+            </div>
+
+            <div class="form-group">
+              <%= password_field_tag "drake", params[:drake], placeholder: 'Mot de passe', class: "form-control input-sm" %>
+            </div>
+
+            <div class="form-group">
+              <button class="btn btn-info btn-sm">
+                Payer avec Paymoney <div class="glyphicon glyphicon-circle-arrow-right"></div>
+              </button>
+            </div>
+          <% end %>
+        </div>
+  <!-- End block -->
+
+	      </div>
+
+	      <% if false %>
+        	<div class="col-xs-12 small">
+            <a href="/PayMoney/Account">Créer un compte</a> | <a href="/PayMoney/CreditAccount">Créditer un compte</a>
+          </div>
+        <% end %>
+
+	    </div>
+    </div>
+<!-- End row -->
+
+  </div>
+
+
+</div>
+
+<% end %>
