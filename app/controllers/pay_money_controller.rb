@@ -17,7 +17,18 @@ class PayMoneyController < ApplicationController
   # Set transaction amount for GUCE requests
   before_action :only => :index do |o| o.guce_request? end
 
-  layout "payMoney"
+  #layout "payMoney"
+
+  layout :select_layout
+
+  def select_layout
+    if session[:service].authentication_token == '57813dc7992fbdc721ca5f6b0d02d559'
+      return "guce"
+    else
+      return "payMoney"
+    end
+  end
+
   # Inclure une sécurité au niveau de la fonction index basée sur l'adresse IP entrante. S'ssurer qu'elle correspond aux IP des services agréés (Les insérer dans une base de données locale ou externe?)
 
   # params[:transaction_amount] = params[:magellan]

@@ -15,7 +15,17 @@ class PaypalController < ApplicationController
   # Set transaction amount for GUCE requests
   before_action :only => :index do |o| o.guce_request? end
 
-  layout "paypal"
+  #layout "paypal"
+
+  layout :select_layout
+
+  def select_layout
+    if session[:service].authentication_token == '57813dc7992fbdc721ca5f6b0d02d559'
+      return "guce"
+    else
+      return "paypal"
+    end
+  end
 
   # Reçoit les requêtes venant des différents services
   def guard
@@ -92,10 +102,10 @@ class PaypalController < ApplicationController
     @error_messages = []
     @status = ""
 
-    OmLog.create(log_rl: params.to_s) rescue nil
+    #OmLog.create(log_rl: params.to_s) rescue nil
 
-    @request = Typhoeus::Request.new("https://www.sandbox.paypal.com/cgi-bin/webscr", method: :post, params: {cmd: "_notify-sync", tx: "#{params[:tx]}", at: "wc9rbATkeBqy488jdxnQeXHsv9ya8Sh6Pq_DST3BihQ4oV2-De3epJilfKG"})
-    #@request = Typhoeus::Request.new("https://www.paypal.com/cgi-bin/webscr", method: :post, params: {cmd: "_notify-sync", tx: "#{params[:tx]}", at: "xGmhRanXxEiDPNYldQAjQA_uC5plNzWVCCJFb_n_Tbxk5ncfm_vlsYXls1C"})
+    #@request = Typhoeus::Request.new("https://www.sandbox.paypal.com/cgi-bin/webscr", method: :post, params: {cmd: "_notify-sync", tx: "#{params[:tx]}", at: "wc9rbATkeBqy488jdxnQeXHsv9ya8Sh6Pq_DST3BihQ4oV2-De3epJilfKG"})
+    @request = Typhoeus::Request.new("https://www.paypal.com/cgi-bin/webscr", method: :post, params: {cmd: "_notify-sync", tx: "#{params[:tx]}", at: "xGmhRanXxEiDPNYldQAjQA_uC5plNzWVCCJFb_n_Tbxk5ncfm_vlsYXls1C"})
     @request.run
     @response = @request.response
 
