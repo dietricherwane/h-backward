@@ -119,7 +119,7 @@ class PaypalController < ApplicationController
         # Use authentication_token to update wallet used
         update_wallet_used(@basket, "e6da96e284")
 
-        if (@basket.paid_transaction_amount + @basket.fees) == params[:amt].to_f  and (Currency.find_by_code(@basket.paid_currency_id).code.upcase rescue "") == params[:cc].upcase
+        if (@basket.paid_transaction_amount + @basket.fees) == params[:amt].to_f  and (Currency.find_by_id(@basket.paid_currency_id).code.upcase rescue "") == params[:cc].upcase
           @basket.update_attributes(:payment_status => true)
 
           # Conversion du montant débité par le wallet et des frais en euro avant envoi pour notification au back office du hub
