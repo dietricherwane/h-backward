@@ -23,6 +23,7 @@ HubsBackOffice::Application.routes.draw do
   get "PayMoney/CreditAccount" => "pay_money#credit_account"
   post "PayMoney/Account/AddCredit" => "pay_money#add_credit"
   post "paymoney/ipn" => "pay_money#ipn"
+  post "paymoney/transaction_acknowledgement" => "pay_money#transaction_acknowledgement"
   post "paymoney/transaction_acknowledgement/:transaction_id" => "pay_money#transaction_acknowledgement"
   get "paymoney/transaction_acknowledgement/:transaction_id" => "pay_money#transaction_acknowledgement"
 
@@ -32,6 +33,7 @@ HubsBackOffice::Application.routes.draw do
   post "Paypal/ProcessPayment" => "paypal#process_payment"
   get "Paypal/PaymentResultListener" => "paypal#payment_result_listener"
   post "paypal/ipn" => "paypal#ipn"
+  post "Paypal/transaction_acknowledgement" => "paypal#transaction_acknowledgement"
   get "Paypal/transaction_acknowledgement/:transaction_id" => "paypal#transaction_acknowledgement"
   post "Paypal/transaction_acknowledgement/:transaction_id" => "paypal#transaction_acknowledgement"
 
@@ -41,13 +43,22 @@ HubsBackOffice::Application.routes.draw do
   post "OrangeMoneyCI/PaymentResultListener" => "orange_money_ci#payment_result_listener"
   post "OrangeMoneyCI/ipn" => "orange_money_ci#ipn"
   get "om" => "orange_money_ci#initialize_session"
+  post "OrangeMoneyCI/transaction_acknowledgement" => "orange_money_ci#transaction_acknowledgement"
   post "OrangeMoneyCI/transaction_acknowledgement/:transaction_id" => "orange_money_ci#transaction_acknowledgement"
   get "OrangeMoneyCI/transaction_acknowledgement/:transaction_id" => "orange_money_ci#transaction_acknowledgement"
+
+  get "novapay/:service_id/:operation_id/:basket_number/:transaction_amount" => "novapays#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
+  get "NovaPay" => "novapays#index"
+  get "/NovaPay/PaymentResultListener" => "novapays#payment_result_listener"
+  post "NovaPay/transaction_acknowledgement" => "novapays#transaction_acknowledgement"
+  post "NovaPay/transaction_acknowledgement/:transaction_id" => "novapays#transaction_acknowledgement"
+  get "NovaPay/transaction_acknowledgement/:transaction_id" => "novapays#transaction_acknowledgement"
 
   get "qash/:service_id/:operation_id/:basket_number/:transaction_amount" => "qash_baskets#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "Qash" => "qash_baskets#index"
   get "/Qash/PaymentResultListener" => "qash_baskets#payment_result_listener"
   #get "PayPal/PaymentValidation" => "paypal_payment_validation#my_queue"
+  post "Qash/transaction_acknowledgement" => "qash_baskets#transaction_acknowledgement"
   post "Qash/transaction_acknowledgement/:transaction_id" => "qash_baskets#transaction_acknowledgement"
   get "Qash/transaction_acknowledgement/:transaction_id" => "qash_baskets#transaction_acknowledgement"
 
