@@ -47,6 +47,13 @@ HubsBackOffice::Application.routes.draw do
   post "OrangeMoneyCI/transaction_acknowledgement/:transaction_id" => "orange_money_ci#transaction_acknowledgement"
   get "OrangeMoneyCI/transaction_acknowledgement/:transaction_id" => "orange_money_ci#transaction_acknowledgement"
 
+  get "novapay/:service_id/:operation_id/:basket_number/:transaction_amount" => "novapays#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
+  get "NovaPay" => "novapays#index"
+  get "/NovaPay/PaymentResultListener" => "novapays#payment_result_listener"
+  post "NovaPay/transaction_acknowledgement" => "novapays#transaction_acknowledgement"
+  post "NovaPay/transaction_acknowledgement/:transaction_id" => "novapays#transaction_acknowledgement"
+  get "NovaPay/transaction_acknowledgement/:transaction_id" => "novapays#transaction_acknowledgement"
+
   get "qash/:service_id/:operation_id/:basket_number/:transaction_amount" => "qash_baskets#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "Qash" => "qash_baskets#index"
   get "/Qash/PaymentResultListener" => "qash_baskets#payment_result_listener"

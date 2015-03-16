@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141205115552) do
+ActiveRecord::Schema.define(version: 20150316193828) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -92,6 +92,28 @@ ActiveRecord::Schema.define(version: 20141205115552) do
     t.datetime "updated_at"
     t.string   "transaction_id"
     t.boolean  "notified_to_ecommerce"
+  end
+
+  create_table "novapays", force: true do |t|
+    t.string   "number"
+    t.integer  "service_id"
+    t.integer  "operation_id"
+    t.boolean  "payment_status"
+    t.float    "transaction_amount"
+    t.boolean  "notified_to_back_office"
+    t.string   "transaction_id"
+    t.float    "fees"
+    t.integer  "currency_id"
+    t.float    "paid_transaction_amount"
+    t.integer  "paid_currency_id"
+    t.float    "rate"
+    t.float    "conflictual_transaction_amount"
+    t.string   "conflictual_currency",           limit: 3
+    t.float    "compensation_rate"
+    t.string   "refoper"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.float    "original_transaction_amount"
   end
 
   create_table "om_logs", force: true do |t|

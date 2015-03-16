@@ -94,7 +94,11 @@ class PayMoneyController < ApplicationController
     else
       # communication with paymoney
       @request = Typhoeus::Request.new("#{@@paymoney_url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{session[:basket]["transaction_amount"]}", followlocation: true)
+<<<<<<< HEAD
       @duke = "#{@@paymoney_url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{session[:basket]["transaction_amount"]}"
+=======
+      @duke = "#{@@paymoney_url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{session[:basket]["transaction_amount"].to_f + @basket.fees.to_f}"
+>>>>>>> aa30f3175976b6b9477dfaa5af7d066040b8791e
       @internal_com_request = "@response = Nokogiri.XML(request.response.body)
       @response.xpath('//status').each do |link|
       @status = link.content
