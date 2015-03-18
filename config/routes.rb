@@ -49,6 +49,7 @@ HubsBackOffice::Application.routes.draw do
 
   get "novapay/:service_id/:operation_id/:basket_number/:transaction_amount" => "novapays#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "NovaPay" => "novapays#index"
+  post "novapay/process_payment" => "novapays#process_payment"
   get "/NovaPay/PaymentResultListener" => "novapays#payment_result_listener"
   post "NovaPay/transaction_acknowledgement" => "novapays#transaction_acknowledgement"
   post "NovaPay/transaction_acknowledgement/:transaction_id" => "novapays#transaction_acknowledgement"

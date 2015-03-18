@@ -1,3 +1,5 @@
+require 'net/http'
+
 class NovapaysController < ApplicationController
   @@second_origin_url = Parameter.first.second_origin_url
 
@@ -37,30 +39,35 @@ class NovapaysController < ApplicationController
     end
   end
 
+  # Redirect to NovaPay platform
+  def process_payment
+    request = Typhoeus::Request.new("https://novaplus.ci/novapay.awp", method: :post, params: { _refact: params[:_refact], _prix: params[:_prix], _descprod: "#{session[:service].name}" }, headers: { 'QUERY_STRING' => %Q[_identify="3155832361",_password="#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')}",_dateheure="#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}"], followlocation: true })
+
+    request.run
+    response = request.response
+
+    render text: response.body
+  end
+
   def payment_result_listener
-    @qash_transaction_id = params[:TXN_ID]
-    @transaction_id = params[:ID_OPERATION]
-    @merchant_id = params[:REF_COMMERCE]
-    @transaction_amount = params[:MONTANT]
-    @devise = params[:DEVISE]
-    @status = params[:ETAT]
-    @name = params[:NOM_PREN]
+    @refact = params[:refac]
+    @refoper = params[:refoper]
+    @status = params[:status]
 
     if valid_result_parameters
-      if valid_transaction
-        @basket = Novapay.find_by_transaction_id(@transaction_id)
+
+        @basket = Novapay.find_by_transaction_id(@refac)
         if @basket
 
-          # Use Qash authentication_token
-          update_wallet_used(@basket, "936166e255")
+          # Use NovaPay authentication_token
+          update_wallet_used(@basket, "77e26b3cbd")
 
-          @devise.to_s.upcase.strip == "CFA" ? (@devise = "XAF") : (@devise = nil)
-          if (@basket.paid_transaction_amount + @basket.fees) == @transaction_amount.to_f  && (Currency.find_by_code(@basket.paid_currency_id).code.upcase rescue "") == @devise.upcase
+          if (@status.downcase.strip == "1" || @status.downcase.strip == "succes")
 
             # Conversion du montant débité par le wallet et des frais en euro avant envoi pour notification au back office du hub
-            @rate = get_change_rate(@devise, "EUR")
+            @rate = get_change_rate("XAF", "EUR")
 
-            @basket.update_attributes(payment_status: true, qash_transaction_id: @qash_transaction_id, compensation_rate: @rate)
+            @basket.update_attributes(payment_status: true, refoper: @refoper, compensation_rate: @rate)
 
             @amount_for_compensation = ((@basket.paid_transaction_amount + @basket.fees) * @rate).round(2)
             @fees_for_compensation = (@basket.fees * @rate).round(2)
@@ -77,49 +84,29 @@ class NovapaysController < ApplicationController
             guce_request_payment?(@basket.service.authentication_token, 'QRT52EC')
 
             # Redirection vers le site marchand
-            redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=qash_services&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
+            redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=novapay&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
           else
-            @basket.update_attributes(:conflictual_transaction_amount => @transaction_amount.to_f, :conflictual_currency => @devise.to_s[0..2].upcase)
 
             # Update in available_wallet the number of failed_transactions
             update_number_of_failed_transactions
 
-            redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=qash_services&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}"
+            redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=novapay&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}"
           end
         else
           redirect_to error_page_path
         end
-      else
-        redirect_to error_page_path
-      end
+
     else
       redirect_to error_page_path
     end
   end
 
   def valid_result_parameters
-    if !@qash_transaction_id.blank? && !@transaction_id.blank? && !@transaction_amount.blank? && !@devise.blank? && !@status.blank? && !@name.blank? && !@merchant_id.blank?
+    if !@refact.blank? && !@refoper.blank? && !@status.blank? && (@status.downcase.strip == "1" || @status.downcase.strip == "succes")
       return true
     else
       return false
     end
-  end
-
-  def valid_transaction
-     parameter = Parameter.first
-    request = Typhoeus::Request.new("#{parameter.qash_verify_url}TXN_ID=#{@qash_transaction_id}&ID_OPERATION=#{@transaction_id}&REF_COMMERCE=#{@merchant_id}&MONTANT=#{@transaction_amount}&DEVISE=#{@devise}&ETAT=#{@status}&NOM_PREN=#{@name}", followlocation: true, method: :get)
-
-    request.on_complete do |response|
-      if response.success?
-        @result = response.body.strip rescue nil
-      else
-        @result = nil
-      end
-    end
-
-    request.run
-
-    @result == "VERIFIED" ? true : false
   end
 
   def ipn
