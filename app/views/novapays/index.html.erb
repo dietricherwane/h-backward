@@ -1,3 +1,32 @@
+<script>
+  /*$(document).ready(function() {
+    $("#submit_n").click(function()
+    {
+      $.ajax({
+        url: "https://novaplus.ci/novapay.awp",
+        type: "post",
+        data: {
+          _refact: "GGDG89dFDF",
+          _prix: "500"
+        },
+        crossDomain: true,
+        headers: {
+          QUERY_STRING: "_identify='3155832361',_password='b1bad9eee66ff67d80735cd2d693d7ae',_dateheure='20150318164400332'"
+        },
+        error: function(xhr, textStatus, errorThrown){
+        	alert("Une erreur s'est produite: " + xhr.status);
+        },
+        success: function(response, response_status, xhr) {
+          alert(response);
+          /*$(target_tag).children().remove();
+          $(response).appendTo(target_tag);
+        }
+      });
+    });
+  });*/
+
+</script>
+
 <% if session[:service].authentication_token != '57813dc7992fbdc721ca5f6b0d02d559' %>
 
 <div class = "row-fluid login-logo">
@@ -22,7 +51,6 @@
   </div>
   <div class = "row-fluid">
 	  <div class = "span12">
-	    <%#= render 'layouts/flash_messages' %>
 	    <% if @guce_notice %>
 	      <div class = "alert alert-notice">
           <ul>
@@ -50,7 +78,7 @@
 
       <!------------------------------------------ Data-fluid ----------------------------------->
 		  <div class = "data-fluid" >
-		    <form authorization = "<%= %Q[_identify='2876543210',_password='#{Digest::MD5.hexdigest('2876543210' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '7845')}',_dateheure='#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}'] %>" action="https://novaplus.ci/novapay.awp" method="post">
+		    <%= form_tag ("/novapay/process_payment") do %>
 		      <%= hidden_field_tag "_refact", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
 		      <%= hidden_field_tag "_prix", "#{@transaction_amount + @shipping}" %>
 	        <div class = "<%= @transaction_amount_css %>">
@@ -71,11 +99,11 @@
 	        </div>
 	        <br />
           <div class="span12">
-		        <button class="btn">
+		        <button class="btn" id = "submit_n">
 			        Payer avec NovaPay <div class="icon-arrow-next icon-white"></div>
 		        </button>
 	        </div>
-        </form>
+        <% end %>
 		  </div>
 	    <!------------------------------------------ Data-fluid ----------------------------------->
 	    </div>
@@ -123,7 +151,7 @@
             </div>
           <% end %>
 
-          <form authorization = "<%= %Q[_identify='2876543210',_password='#{Digest::MD5.hexdigest('2876543210' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '7845')}',_dateheure='#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}'] %>" action="https://novaplus.ci/novapay.awp" method="post">
+        <%= form_tag ("/novapay/process_payment") do %>
 		      <%= hidden_field_tag "_refact", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
 		      <%= hidden_field_tag "_prix", "#{@transaction_amount + @shipping}" %>
 	        <div class = "<%= @transaction_amount_css %>">
@@ -148,7 +176,7 @@
 			        Payer avec NovaPay <div class="icon-arrow-next icon-white"></div>
 		        </button>
 	        </div>
-        </form>
+        <% end %>
         </div>
   <!-- End block -->
 
