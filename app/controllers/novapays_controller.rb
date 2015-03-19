@@ -41,7 +41,7 @@ class NovapaysController < ApplicationController
 
   # Redirect to NovaPay platform
   def process_payment
-    request = Typhoeus::Request.new("https://novaplus.ci/novapay.awp", method: :post, params: { _refact: params[:_refact], _prix: params[:_prix], _descprod: "#{session[:service].name}" }, headers: { 'QUERY_STRING' => %Q[_identify="3155832361",_password="#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')}",_dateheure="#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}"], followlocation: true })
+    request = Typhoeus::Request.new("https://novaplus.ci/novapay.awp", method: :post, params: { _refact: params[:_refact], _prix: params[:_prix], _descprod: "#{session[:service].name}" }, headers: { 'QUERY_STRING' => %Q[_identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}], followlocation: true })
 
     request.run
     response = request.response
