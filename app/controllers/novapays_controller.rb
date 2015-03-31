@@ -4,9 +4,9 @@ class NovapaysController < ApplicationController
   @@second_origin_url = Parameter.first.second_origin_url
 
   ##before_action :only => :guard do |o| o.filter_connections end
-  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :payment_result_listener]
+  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :payment_result_listener, :valid_result_parameters]
   # Si l'utilisateur ne s'est pas connecté en passant par main#guard, on le rejette
-  before_action :except => [:ipn, :transaction_acknowledgement, :payment_result_listener] do |s| s.session_authenticated? end
+  before_action :except => [:ipn, :transaction_acknowledgement, :payment_result_listener, :valid_result_parameters] do |s| s.session_authenticated? end
 
   # Set transaction amount for GUCE requests
   before_action :only => :index do |o| o.guce_request? end
@@ -50,13 +50,13 @@ class NovapaysController < ApplicationController
   end
 
   def payment_result_listener
-    @refact = params[:refac]
-    @refoper = params[:refoper]
-    @status = params[:status]
-
+    @refact = params[:refac].strip
+    @refoper = params[:refoper].strip
+    @status = params[:status].strip
+    OmLog.create(log_rl: params.to_s) rescue nil
     if valid_result_parameters
 
-        @basket = Novapay.find_by_transaction_id(@refac)
+        @basket = Novapay.find_by_transaction_id(@refact)
         if @basket
 
           # Use NovaPay authentication_token
@@ -95,7 +95,6 @@ class NovapaysController < ApplicationController
         else
           redirect_to error_page_path
         end
-
     else
       redirect_to error_page_path
     end
