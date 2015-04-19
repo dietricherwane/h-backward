@@ -189,6 +189,7 @@ DEPENDENCIES
   heroku
   jbuilder (~> 1.2)
   jquery-rails
+  json
   magic_encoding
   nokogiri
   paperclip (~> 4.2)

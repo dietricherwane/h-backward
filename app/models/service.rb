@@ -11,6 +11,7 @@ class Service < ActiveRecord::Base
   has_many :paypal_baskets
   has_many :orange_money_ci_baskets
   has_many :qash_baskets
+  has_many :novapays
   has_many :delayed_payments
   has_many :operations
   has_many :available_wallets

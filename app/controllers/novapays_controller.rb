@@ -41,7 +41,7 @@ class NovapaysController < ApplicationController
 
   # Redirect to NovaPay platform
   def process_payment
-    request = Typhoeus::Request.new("https://novaplus.ci/novapay.awp", method: :post, body: %Q[{"_descprod": "#{session[:service].name}", "_refact": "#{params[:_refact]}", "_prix": "#{params[:_prix]}" }], headers: { 'QUERY_STRING' => %Q[_identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}], followlocation: true })
+    request = Typhoeus::Request.new("https://novaplus.ci/NOVAPAY_WEB/FR/novapay.awp", method: :post, body: %Q[{"_descprod": "#{session[:service].name}", "_refact": "#{params[:_refact]}", "_prix": "#{params[:_prix]}" }], headers: { 'QUERY_STRING' => %Q[_identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}], followlocation: true })
     #, params: { _refact: params[:_refact], _prix: params[:_prix], _descprod: "#{session[:service].name}" }
     request.run
     response = request.response
@@ -53,55 +53,80 @@ class NovapaysController < ApplicationController
     @refact = params[:refac].strip
     @refoper = params[:refoper].strip
     @status = params[:status].strip
+    @mtnt = params[:mtnt].strip
     OmLog.create(log_rl: params.to_s) rescue nil
+    valid_transaction
     if valid_result_parameters
-
+      if valid_transaction
         @basket = Novapay.find_by_transaction_id(@refact)
         if @basket
 
           # Use NovaPay authentication_token
           update_wallet_used(@basket, "77e26b3cbd")
 
-          if (@status.downcase.strip == "1" || @status.downcase.strip == "succes")
+          if (@status.to_s.downcase.strip == "1" || @status.to_s.downcase.strip == "succes")
 
             # Conversion du montant débité par le wallet et des frais en euro avant envoi pour notification au back office du hub
             @rate = get_change_rate("XAF", "EUR")
-
-            @basket.update_attributes(payment_status: true, refoper: @refoper, compensation_rate: @rate)
-
+            if request.post?
+              @basket.update_attributes(payment_status: true, refoper: @refoper, compensation_rate: @rate)
+            end
             @amount_for_compensation = ((@basket.paid_transaction_amount + @basket.fees) * @rate).round(2)
             @fees_for_compensation = (@basket.fees * @rate).round(2)
 
-            # Notification au back office du hub
-            notify_to_back_office(@basket, "#{@@second_origin_url}/GATEWAY/rest/WS/#{@basket.operation.id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")
+            if request.post?
+              # Notification au back office du hub
+              notify_to_back_office(@basket, "#{@@second_origin_url}/GATEWAY/rest/WS/#{@basket.operation.id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")
 
-            # Update in available_wallet the number of successful_transactions
-            update_number_of_succeed_transactions
-
-            @status_id = 1
-
-            # Handle GUCE notifications
-            guce_request_payment?(@basket.service.authentication_token, 'QRT52EC')
-
-            # Redirection vers le site marchand
-            redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=novapay&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
+              # Update in available_wallet the number of successful_transactions
+              update_number_of_succeed_transactions
+                     
+              # Handle GUCE notifications
+              guce_request_payment?(@basket.service.authentication_token, 'QRTGH78')
+              render text: "0"
+            else
+              # Redirection vers le site marchand
+              redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=biao&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
+            end
           else
+            if request.post?
+              @basket.update_attributes(payment_status: false, refoper: @refoper)
 
-            # Update in available_wallet the number of failed_transactions
-            update_number_of_failed_transactions
-
-            redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=novapay&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}"
+              # Update in available_wallet the number of failed_transactions
+              update_number_of_failed_transactions
+              render text: "1"
+            else
+              redirect_to "#{@basket.service.url_on_error}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=biao&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}"
+            end
           end
         else
-          redirect_to error_page_path
+          if request.post?
+            render text: "2"#"order id not found" + @refac
+          else
+            #redirect_to error_page_path
+            render text: "order id not found" + @refac
+          end
         end
+      else
+        if request.post?
+          render text: "3"#"transaction non trouvée: " + @result
+        else
+          #redirect_to error_page_path
+          render text: "transaction non trouvée: " + @result
+        end
+      end
     else
-      redirect_to error_page_path
+      if request.post?
+        render text: "4"#"invalid parameters" + params.to_s
+      else
+        #redirect_to error_page_path 
+        render text: "invalid parameters" + params.to_s
+      end
     end
   end
 
   def valid_result_parameters
-    if !@refact.blank? && !@refoper.blank? && !@status.blank? && (@status.downcase.strip == "1" || @status.downcase.strip == "succes")
+    if !@refact.blank? && !@refoper.blank? && !@status.blank?
       return true
     else
       return false
@@ -110,6 +135,23 @@ class NovapaysController < ApplicationController
 
   def ipn
     render text: params.except(:controller, :action)
+  end
+
+  def valid_transaction
+    request = Typhoeus::Request.new("https://novaplus.ci/NOVAPAY_WEB/FR/paycheck.awp", method: :post, body: %Q[{"_refact": "#{@refact}", "_prix": "#{@mtnt}", "_nooper": "#{@refoper}" }], headers: { 'QUERY_STRING' => %Q[_identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}]}, followlocation: true, method: :get)
+    @result = nil
+
+    request.on_complete do |response|
+      if response.success?
+        @result = response.body.strip
+      end
+    end
+
+    request.run
+
+    OmLog.create(log_rl: "Paramètres de vérification de paiement: " + @result)
+
+    (JSON.parse(@result)["_statut"].downcase rescue nil) == 'succes' ? true : false
   end
 
   def notify_to_back_office(basket, url)

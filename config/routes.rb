@@ -51,6 +51,7 @@ HubsBackOffice::Application.routes.draw do
   get "NovaPay" => "novapays#index"
   post "novapay/process_payment" => "novapays#process_payment"
   get "/NovaPay/script" => "novapays#payment_result_listener"
+  post "/NovaPay/ipn" => "novapays#payment_result_listener"
   post "NovaPay/transaction_acknowledgement" => "novapays#transaction_acknowledgement"
   post "NovaPay/transaction_acknowledgement/:transaction_id" => "novapays#transaction_acknowledgement"
   get "NovaPay/transaction_acknowledgement/:transaction_id" => "novapays#transaction_acknowledgement"
