@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Erreur</title>
+  <%#= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+  <%= stylesheet_link_tag    "stylesheets", media: "all", "data-turbolinks-track" => true %>
+  <%#= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/jquery/jquery-1.9.1.min", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/jquery/jquery-ui-1.10.1.custom.min", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/jquery/jquery-migrate-1.1.1.min", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/jquery/globalize", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/other/excanvas", "data-turbolinks-track" => true %>
+  
+  <%= javascript_include_tag "plugins/other/jquery.mousewheel.min", "data-turbolinks-track" => true %>
+  
+  <%= javascript_include_tag "plugins/bootstrap/bootstrap.min", "data-turbolinks-track" => true %>    
+  
+  <%= javascript_include_tag "plugins/cookies/jquery.cookies.2.2.0.min", "data-turbolinks-track" => true %>  
+  
+  <%#= javascript_include_tag "plugins/animatedprogressbar/animated_progressbar", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/jflot/jquery.flot", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/jflot/jquery.flot.stack", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/jflot/jquery.flot.pie", "data-turbolinks-track" => true %>
+  
+  <%= javascript_include_tag "plugins/sparklines/jquery.sparkline.min", "data-turbolinks-track" => true %>
+  
+  <%= javascript_include_tag "plugins/mcustomscrollbar/jquery.mCustomScrollbar.min", "data-turbolinks-track" => true %>
+  
+  <%= javascript_include_tag "plugins/uniform/jquery.uniform.min", "data-turbolinks-track" => true %>
+  
+  <%= javascript_include_tag "plugins/shbrush/XRegExp", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/shbrush/shCore", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/shbrush/shBrushXml", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/shbrush/shBrushJScript", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/shbrush/shBrushCss", "data-turbolinks-track" => true %>   
+  
+  <%= javascript_include_tag "plugins", "data-turbolinks-track" => true %> 
+  <%= javascript_include_tag "charts", "data-turbolinks-track" => true %> 
+  
+  <%= javascript_include_tag "actions", "data-turbolinks-track" => true %> 
+  <%= csrf_meta_tags %>
+</head>
+
+<body>
+  <%= yield %> 
+</body>
+</html>

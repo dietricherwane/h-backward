@@ -1,0 +1,34 @@
+  [1m[36mActiveRecord::SchemaMigration Load (40.5ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to CreateMtnCis (20150419181548)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (427.3ms)[0m  [1mCREATE TABLE "mtn_cis" ("id" serial primary key, "number" character varying(255), "service_id" integer, "operation_id" integer, "payment_status" boolean, "transaction_amount" float, "notified_to_back_office" boolean, "transaction_id" character varying(255), "fees" float, "currency_id" integer, "paid_transaction_amount" float, "paid_currency_id" integer, "rate" float, "conflictual_transaction_amount" float, "conflictual_currency" character varying(3), "compensation_rate" float, "original_transaction_amount" float, "refoper" character varying(255), "created_at" timestamp, "updated_at" timestamp) [0m
+  [1m[35mSQL (2.5ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20150419181548"]]
+  [1m[36m (18.4ms)[0m  [1mCOMMIT[0m
+Migrating to AddLoginIdToBaskets (20150420005745)
+  [1m[35m (0.7ms)[0m  BEGIN
+  [1m[36m (11.9ms)[0m  [1mALTER TABLE "baskets" ADD COLUMN "login_id" character varying(255)[0m
+  [1m[35mSQL (1.3ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20150420005745"]]
+  [1m[36m (12.2ms)[0m  [1mCOMMIT[0m
+Migrating to AddLoginIdToNovapays (20150420005808)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (1.2ms)[0m  [1mALTER TABLE "novapays" ADD COLUMN "login_id" character varying(255)[0m
+  [1m[35mSQL (1.4ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20150420005808"]]
+  [1m[36m (11.0ms)[0m  [1mCOMMIT[0m
+Migrating to AddLoginIdToOrangeMoneyCiBasketss (20150420005842)
+  [1m[36mActiveRecord::SchemaMigration Load (1.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddLoginIdToOrangeMoneyCiBaskets (20150420005842)
+  [1m[35m (0.7ms)[0m  BEGIN
+  [1m[36m (18.5ms)[0m  [1mALTER TABLE "orange_money_ci_baskets" ADD COLUMN "login_id" character varying(255)[0m
+  [1m[35mSQL (2.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20150420005842"]]
+  [1m[36m (12.3ms)[0m  [1mCOMMIT[0m
+Migrating to AddLoginIdToPaypalBaskets (20150420005924)
+  [1m[35m (0.7ms)[0m  BEGIN
+  [1m[36m (1.6ms)[0m  [1mALTER TABLE "paypal_baskets" ADD COLUMN "login_id" character varying(255)[0m
+  [1m[35mSQL (1.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20150420005924"]]
+  [1m[36m (10.9ms)[0m  [1mCOMMIT[0m
+Migrating to AddLoginIdToQashBaskets (20150420005939)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (1.4ms)[0m  [1mALTER TABLE "qash_baskets" ADD COLUMN "login_id" character varying(255)[0m
+  [1m[35mSQL (1.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20150420005939"]]
+  [1m[36m (11.1ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.9ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"

@@ -1,0 +1,121 @@
+
+<div class="page-header">
+    <div class="icon">
+        <span class="ico-arrow-right"></span>
+    </div>
+    <h1>E-Kiosk<small>Liste des opérations</small></h1>
+</div>
+
+<div class = "row-fluid">
+	<div class = "span12">
+	  <div class = "block">   
+		  <div class = "head green" >
+		    <div class = "icon" >
+		      <span class = "ico-pen-2"></span>		      
+		    </div>  
+		    <h2>Liste des opérations des différents ayants droit</h2>
+		  </div>
+		  <div class = "data-fluid">
+		    <%= form_tag ("/Wimboo/FilterOperations") do %>      
+		      <div class = "row-form">
+		        <div class = "span2" style = "width:85px;">Date de début:</div>
+		        <div class = "span4" style = "width:120px;">		          
+		          <%= text_field_tag "begin_date", @begin_date, :style => "width:100px;", :class => "datepicker", :readonly => true %>
+		        </div>
+		        <div class = "span2" style = "width:70px;">Date de fin:</div>
+		        <div class = "span4" style = "width:120px;margin-right:50px;">
+		          <%= text_field_tag "end_date", @end_date, :style => "width:100px;margin-right:50px;", :class => "datepicker", :readonly => true %>
+		        </div>
+		        <button class="btn">
+			        Filtrer <div class="icon-arrow-next icon-white"></div>  	
+		        </button>
+		      </div>	      
+		    <% end %>
+		       
+        <% @inheritors_array = [] %>
+        <% @colum_number = 6 %>
+        <% if !@compenses.blank? %>
+          <% @compenses.at("Compense").xpath("Ayant_droits").each do |ayant_droits| %>
+            <% ayant_droits.xpath("Ayant_droit").each do |ayant_droit| %>
+              <% if ayant_droit.xpath("Status").text.eql?("1") %>
+                <% @inheritors_array << ayant_droit.xpath("Nom").text %> 
+              <% else %>
+                <% @partial = true %>
+                <% @colum_number = 4 %>
+              <% end %>
+            <% end %>
+          <% end %> 
+        <% end %>
+        <% @table_column_width = (100/(@colum_number + @inheritors_array.length)).to_i %>                   
+        		    
+		    <table cellpadding = "0" cellspacing = "0" widht = "100%" class = "table table-hover">
+		      <thead>
+		        <tr>
+		          <th width = "<%= @table_column_width %>%">
+		            Id
+		          </th>
+		          <th width = "<%= @table_column_width %>%">
+		            Id panier
+		          </th>
+		          <th width = "<%= @table_column_width %>%">
+		            Date
+		          </th>
+		          <th width = "<%= @table_column_width %>%">
+		            Heure
+		          </th>
+		          <% if @partial %>
+		            <th width = "<%= @table_column_width %>%">
+		              Ayant droit
+		            </th>
+		            <th width = "<%= @table_column_width %>%">
+		              Solde
+		            </th>
+		          <% end %>
+		          <% @inheritors_array.each do |inheritor| %>
+	              <th width = "<%= @table_column_width %>%">
+	                <%= inheritor %>
+	              </th>
+		          <% end %>
+		        </tr>
+		      </thead>
+		      <tbody>
+		        <% if @compenses.nil? %>
+			        <tr>
+			          <td colspan = "5">Aucun résultat à afficher</td>
+			        </tr>
+			      <% else %>
+		          <% @compenses.each do |compense| %>
+		            <tr>
+		              <td><%= compense.xpath("IdOperation").text %></td>
+		              <td><%= compense.xpath("Numero_Panier").text %></td>
+		              <td><%= DateTime.parse(compense.xpath("Date").text).strftime("%d/%m/%y") %></td>
+		              <td><%= DateTime.parse(compense.xpath("Date").text).strftime("%H:%M:%S") %></td>
+		              <% compense.xpath("Ayant_droits").each do |ayant_droits| %>
+	                  <% ayant_droits.xpath("Ayant_droit").each do |ayant_droit| %>
+                      <% if ayant_droit.xpath("Status").text.eql?("4") %>
+                        <td><%= ayant_droit.xpath("Nom").text %></td>
+                        <td><%= ayant_droit.xpath("Solde").text %></td> 
+                      <% end %>
+                    <% end %>
+	                <% end %>
+	                <% @inheritors_array.each do |inheritor| %>
+		                <td>
+		                  <% compense.xpath("Ayant_droits").each do |ayant_droits| %>
+	                      <% ayant_droits.xpath("Ayant_droit").each do |ayant_droit| %>
+	                        <% if ayant_droit.xpath("Nom").text == inheritor %>
+	                          <%= ayant_droit.xpath("Solde").text %>
+	                        <% end %>
+	                      <% end %>
+	                    <% end %>
+		                </td>
+		              <% end %>
+		            </tr>
+		          <% end %>
+			      <% end %>
+		      </tbody>
+		    </table>
+		  </div>
+	  </div>	
+	  
+	</div>
+</div>     

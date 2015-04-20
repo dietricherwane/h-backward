@@ -1,0 +1,115 @@
+<script type="text/javascript" language="JavaScript">
+  $.fn.get_wallets = function(country_id) {
+    $.ajax({
+      url: "<%= url_for :action => 'get_wallets', :controller => 'wallets' %>",
+      data: {country_id: country_id},
+      dataType: "text",
+      error: function(xhr, textStatus, errorThrown){
+      	alert("Votre session a expiré. Veuillez refaire vos achats sur le site marchand et effectuer le paiement dans les 10 minutes suivantes." + errorThrown);
+      },
+      success: function(response, response_status, xhr) {
+        if(response == "Il n'y a aucun moyen de paiement pour ce pays."){
+          $("#wallets_list").html(response);
+        }
+        else{
+          $("#wallets_list").html(response);
+        }
+      }
+    });
+  }
+
+  $(document).on('ready page:load', function(){
+		$("#country_country_id").on('change',function() {
+      var country_id = this.options[this.selectedIndex].value;
+      $(this).get_wallets(country_id)
+    });
+  });
+</script>
+
+<% if session[:service].authentication_token != '57813dc7992fbdc721ca5f6b0d02d559' %>
+  <div class="wrapper">
+
+      <div class="container">
+        <section style = "color: #00897B">
+            <h4>Raison sociale: <span style = "color: #4C4C33;"><%= session[:service].name %></span></h4>
+            <br />
+            <h4>Montant: <span style = "color: #4C4C33;"><%= "#{session[:basket]['transaction_amount']} #{session[:currency].symbol}" %></span></h4>
+            <br />
+            <h4>Devise: <span style = "color: #4C4C33;"><%= session[:currency].code %></span></h4>
+            <br />
+        </section>
+
+        <section>
+          <h3>
+            Choisir un pays: <%= collection_select(:country, :country_id, @countries, :id, :name, :selected => @international.id) %>
+          </h3>
+        </section>
+
+        <section>
+            <span id = "wallets_list">
+              <% @available_wallets.each do |available_wallet| %>
+                <% @url = "#{available_wallet.wallet.url}/#{session[:service].code}/#{session[:operation].code}/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}" %>
+                <%= link_to image_tag(available_wallet.wallet.logo.url(:medium)), @url %>
+              <% end %>
+            </span>
+        </section>
+  
+        <section id="aws" class="aws-section">
+          <div class="container">
+            <div class="bg-animation">
+              <%= image_tag('cloud-1.png', class: 'cloud cloud-1', width: '300px') %>
+              <%= image_tag('cloud-2.png', class: 'cloud cloud-2', width: '347px') %>
+              <%= image_tag('cloud-3.png', class: 'cloud cloud-3', width: '470px') %>
+              <%= image_tag('cloud-4.png', class: 'cloud cloud-4', width: '762px') %>
+              <%= image_tag('cloud-5.png', class: 'cloud cloud-5', width: '587px') %>
+              <%= image_tag('cloud-6.png', class: 'cloud cloud-6', width: '857px') %>
+            </div>
+            <div class="content">
+              <h2>Artisans<br> d'un Monde Meilleur.</h2>
+            </div>
+          </div>
+        </section>
+      </div>
+
+    <div class="push"></div>
+  </div>
+<% else %>
+  <div class="row payment-fields">
+    <div class="col-xs-6">
+      <div class="row">
+        <div class="col-xs-5"><label>Raison sociale :</label></div>
+        <div class="col-xs-7"><%= session[:service].name %></div>
+      </div>
+      <div class="row">
+        <div class="col-xs-5"><label>Montant :</label></div>
+        <div class="col-xs-7"><%= "#{session[:basket]['transaction_amount']} #{session[:currency].symbol}" %></div>
+      </div>
+      <div class="row">
+        <div class="col-xs-5"><label>Devise :</label></div>
+        <div class="col-xs-7"><%= session[:currency].code %></div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+
+      <div class="row">
+        <div class="col-xs-6 pays">
+          <label>Choisir un pays :</label>
+        </div>
+        <div class="col-xs-6">
+        	<%= collection_select(:country, :country_id, @countries, :id, :name, :selected => @international.id) %>
+        </div>
+        <div class="col-xs-12 paymethod">
+          <span id = "wallets_list">
+            <% @available_wallets.each do |available_wallet| %>
+              <% @url = "#{available_wallet.wallet.url}/#{session[:service].code}/#{session[:operation].code}/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}" %>
+              <%= link_to image_tag(available_wallet.wallet.logo.url(:medium)), @url %>
+            <% end %>
+          </span>
+
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,186 @@
+<% if session[:service].authentication_token != '57813dc7992fbdc721ca5f6b0d02d559' %>
+<div class = "row-fluid login-logo">
+  <div class = "span6">
+    <%= image_tag(@wallet.logo.url(:medium)) %>
+  </div>
+
+  <div class = "span6">
+    <%= image_tag(@service_logo) %>
+  </div>
+</div>
+
+<!-- Login -->
+<div class = "login">
+  <div class="page-header">
+      <a href = "<%= main_path %>">
+        <div class="icon">
+            <span class="ico-arrow-right"></span>
+        </div>
+      </a>
+      <h1><%= session[:service].name %></h1>
+  </div>
+  <div class = "row-fluid">
+	  <div class = "span12">
+	    <% if @guce_notice %>
+	      <div class = "alert alert-notice">
+          <ul>
+            <li><%= @guce_notice %></li>
+          </ul>
+        </div>
+	    <% end %>
+	    <% if @error %>
+        <div class = "alert alert-error">
+          <ul>
+          <% @error_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+          </ul>
+        </div>
+      <% end %>
+      <% if @success %>
+        <div class = "alert alert-success">
+          <% @success_messages.each do |msg| %>
+            <%= msg %>
+          <% end %>
+        </div>
+      <% end %>
+	    <div class = "block">
+
+
+
+      <!------------------------------------------ Data-fluid ----------------------------------->
+		  <div class = "data-fluid" >
+		    <!--<form method="post" action="https://www.sandbox.paypal.com/cgi-bin/webscr" class = "paypal-button" target="_top" style="opacity: 1;">-->
+		    <form method="post" action="https://www.paypal.com/cgi-bin/webscr" class = "paypal-button" target="_top" style="opacity: 1;">
+		      <input type="hidden" name="button" value="buynow">
+		      <!--<input type="hidden" name="business" value="6XLW4P3YQCASY">-->
+		      <input type="hidden" name="business" value="92ZE9QH5KHPHY">
+		      <%= hidden_field_tag "item_name", "#{session[:service].name}" %>
+		      <input type="hidden" name="quantity" value="1">
+		      <div class = "row-form">
+	          <div class = "input-append">
+		          <div class = "span9">
+			          <%= text_field_tag "amount", @transaction_amount, :readonly => true %>
+			          <button class = "btn btn-info" type = "button"><%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+		          </div>
+		        </div>
+	        </div>
+		      <input type="hidden" name="currency_code" value="USD">
+		      <input type="hidden" name="notify_url" value="">
+		      <input type="hidden" name="cmd" value="_xclick">
+		      <input type="hidden" name="bn" value="JavaScriptButton_buynow">
+		      <input type="hidden" name="env" value="www">
+		      <div class = "row-form">
+	          <div class = "input-append">
+		          <div class = "span9">
+			          <%= text_field_tag "tax", "#{@shipping}", :readonly => true %>
+			          <button class = "btn btn-info" type = "button">Shipping [Frais] <%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+		          </div>
+		        </div>
+	        </div>
+		      <%= hidden_field_tag "custom", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
+		      <br />
+		      <div class="span12">
+		        <button class="btn">
+			        Payer avec Paypal <div class="icon-arrow-next icon-white"></div>
+		        </button>
+	        </div>
+		    </form>
+		  </div>
+	    <!------------------------------------------ Data-fluid ----------------------------------->
+	    </div>
+
+	  </div>
+  </div>
+</div>
+<!-- END Login -->
+<% else %>
+<div class="row payment-fields paymoney">
+
+  <div class="login">
+
+    <div class="page-header">
+      <a href="/Main">
+        <div class="icon">
+          <span class="ico-arrow-right"></span>
+        </div>
+      </a>
+      <%= image_tag(@wallet.logo.url(:medium)) %>
+    </div>
+
+<!-- Begin row -->
+    <div class="row">
+	    <div class="col-xs-5">
+  <!-- Begin block -->
+	      <div class="block">
+	        <% if @guce_notice %>
+	          <div class = "alert alert-notice" style = "text-align: justify; color: blue;">
+              <p><%= @guce_notice %></p>
+            </div>
+	        <% end %>
+	        <% if @error %>
+            <div class = "alert alert-error" style = "text-align: justify; color: red;">
+              <% @error_messages.each do |msg| %>
+                <p><%= msg %></p>
+              <% end %>
+            </div>
+          <% end %>
+          <% if @success %>
+            <div class = "alert alert-success">
+              <% @success_messages.each do |msg| %>
+                <%= msg %>
+              <% end %>
+            </div>
+          <% end %>
+
+          <form method="post" action="https://www.paypal.com/cgi-bin/webscr" class = "paypal-button" target="_top" style="opacity: 1;">
+		        <input type="hidden" name="button" value="buynow">
+		        <input type="hidden" name="business" value="92ZE9QH5KHPHY">
+		        <%= hidden_field_tag "item_name", "#{session[:service].name}" %>
+            <div class="form-group">
+              <div class="input-group">
+                <%= text_field_tag "amount", @transaction_amount, :readonly => true, class: "form-control input-sm" %>
+                <span class="input-group-btn">
+                  <button type="submit" class="btn btn-sm"><%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+                </span>
+              </div>
+            </div>
+
+            <input type="hidden" name="currency_code" value="USD">
+		        <input type="hidden" name="notify_url" value="">
+		        <input type="hidden" name="cmd" value="_xclick">
+		        <input type="hidden" name="bn" value="JavaScriptButton_buynow">
+		        <input type="hidden" name="env" value="www">
+
+            <div class="form-group">
+              <div class="input-group">
+                <%= text_field_tag "tax", "#{@shipping}", :readonly => true, class: "form-control input-sm" %>
+                <span class="input-group-btn">
+                  <button type="submit" class="btn btn-sm">Frais [Shipping] <%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+                </span>
+              </div>
+            </div>
+
+            <%= hidden_field_tag "custom", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
+
+            <div class="form-group">
+              <button class="btn btn-info btn-sm">
+                Payer avec Paypal <div class="glyphicon glyphicon-circle-arrow-right"></div>
+              </button>
+            </div>
+          </form>
+        </div>
+  <!-- End block -->
+
+	      </div>
+
+	    </div>
+    </div>
+<!-- End row -->
+
+  </div>
+
+
+</div>
+
+<% end %>

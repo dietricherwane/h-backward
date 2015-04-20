@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pay Money</title>
+  <%#= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+  <%= stylesheet_link_tag    "stylesheets", media: "all", "data-turbolinks-track" => true %>
+  <%#= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/jquery/jquery-1.9.1.min", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/jquery/jquery-ui-1.10.1.custom.min", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/jquery/jquery-migrate-1.1.1.min", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/jquery/globalize", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/other/excanvas", "data-turbolinks-track" => true %>
+  
+  <%= javascript_include_tag "plugins/other/jquery.mousewheel.min", "data-turbolinks-track" => true %>
+  
+  <%= javascript_include_tag "plugins/bootstrap/bootstrap.min", "data-turbolinks-track" => true %>    
+  
+  <%= javascript_include_tag "plugins/cookies/jquery.cookies.2.2.0.min", "data-turbolinks-track" => true %>  
+  
+  <%#= javascript_include_tag "plugins/animatedprogressbar/animated_progressbar", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/jflot/jquery.flot", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/jflot/jquery.flot.stack", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/jflot/jquery.flot.pie", "data-turbolinks-track" => true %>
+  
+  <%= javascript_include_tag "plugins/sparklines/jquery.sparkline.min", "data-turbolinks-track" => true %>
+  
+  <%= javascript_include_tag "plugins/mcustomscrollbar/jquery.mCustomScrollbar.min", "data-turbolinks-track" => true %>
+  
+  <%= javascript_include_tag "plugins/uniform/jquery.uniform.min", "data-turbolinks-track" => true %>
+  
+  <%= javascript_include_tag "plugins/shbrush/XRegExp", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/shbrush/shCore", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/shbrush/shBrushXml", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/shbrush/shBrushJScript", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "plugins/shbrush/shBrushCss", "data-turbolinks-track" => true %>   
+  
+  <%= javascript_include_tag "plugins", "data-turbolinks-track" => true %> 
+  <%= javascript_include_tag "charts", "data-turbolinks-track" => true %> 
+  
+  <%= javascript_include_tag "actions", "data-turbolinks-track" => true %> 
+  <%= csrf_meta_tags %>
+</head>
+
+<body>
+	<div class = "wrapper">
+	
+		<!------------------------------------------ Sidebar ----------------------------------->
+		<div class = "sidebar">		
+			<div class="top">
+		    <!--<a href="index-2.html" class="paymoney_logo"></a>-->
+		    <%= link_to "<span class='paymoney_logo'></span>".html_safe, "http://0.0.0.0:3000/PayMoney/1/56/9664" %>
+		    <!--<div class = "logo"><%= image_tag('payment_ways_logos/paymoney.png', height: '100px') %></div>-->
+		    <!--<div class="search">
+		      <div class="input-prepend">
+	          <span class="add-on orange"><span class="icon-search icon-white"></span></span>
+	          <input type="text" placeholder="recherche..." style="width: 189px;">                                                      
+		      </div>            
+		    </div>-->
+		  </div>
+		  <div class="nContainer">                
+        <ul class="navigation bordered">         
+          <li class="active"><a href="index-2.html" class="blblue">Dashboard</a></li>
+          <!--<li>
+            <a href="#" class="blyellow">SMS</a>
+            <div class="open"></div>
+            <ul>
+              <li><%= link_to "Envoi", "#" %></li>
+              <li><%= link_to "Historique", "#" %></li>
+              <li><%= link_to "Statistiques", "#" %></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#" class="blgreen">News</a>
+            <div class="open"></div>
+            <ul>
+              <li><%= link_to "Envoi", "#" %></li>
+		          <li><%= link_to "Historique", "#" %></li>
+		          <li><%= link_to "Statistiques", "#" %></li>
+            </ul>
+          </li>
+                          
+          <li>
+            <a href="#" class="bldblue">Abonnés</a>
+            <div class="open"></div>
+            <ul>
+              <li><a href="tables.html">Suspendre</a></li>
+              <li><a href="tables_dynamic.html">Rechercher</a></li>                    
+            </ul>
+          </li>
+          <li><a href="statistic.html" class="blred">Paramètres</a></li>   -->                 
+        </ul>
+        <a class="close">
+          <span class="ico-remove"></span>
+        </a>
+    	</div>		  
+		</div>
+		<!------------------------------------------ Sidebar ----------------------------------->
+		
+		<!------------------------------------------ Body ----------------------------------->
+		<div class = "body">
+		
+			<!------------------------------------------ Navigation ----------------------------------->
+			
+			<span class="<%= session[:service]["logo_css_class"] %>"></span>
+			
+			
+			<!--<ul class="navigation">
+        <li>
+          <a href="index-2.html" class="button">
+            <div class="icon">
+              <span class="ico-money"></span>
+            </div>                    
+            <div class="name">Dashboard</div>
+          </a>                
+        </li>
+        <!--<li>
+          <a href="#" class="button yellow">
+            <div class="arrow"></div>
+            <div class="icon">
+              <span class="ico-cog-2"></span>
+            </div>                    
+            <div class="name">SMS</div>
+          </a>          
+          <ul class="sub">
+            <li><%= link_to "Envoi", "#" %></li>
+            <li><%= link_to "Historique", "#" %></li>
+            <li><%= link_to "Statistiques", "#" %></li>
+          </ul>
+        </li>                
+        <li>
+          <a href="#" class="button green">
+            <div class="arrow"></div>
+            <div class="icon">
+              <span class="ico-pen-2"></span>
+            </div>                    
+            <div class="name">News</div>
+          </a>                
+          <ul class="sub">
+            <li><%= link_to "Envoi", "#" %></li>
+            <li><%= link_to "Historique", "#" %></li>
+            <li><%= link_to "Statistiques", "#" %></li>
+          </ul>                    
+        </li>                                               
+        <li>
+          <a href="#" class="button dblue">
+            <div class="arrow"></div>
+            <div class="icon">
+              <span class="ico-layout-7"></span>
+            </div>                    
+            <div class="name">Abonnés</div>
+          </a> 
+          <ul class="sub">
+            <li><a href="tables.html">Suspendre</a></li>
+            <li><a href="tables_dynamic.html">Rechercher</a></li>
+          </ul>                                        
+        </li>
+        <li>
+          <a href="statistic.html" class="button red">
+            <div class="icon">
+              <span class="ico-chart-4"></span>
+            </div>                    
+            <div class="name">Paramètres</div>
+          </a>                
+        </li>                                
+        <li>
+          <div class="user">
+            
+            <%= image_tag("examples/users/dmitry_m.jpg", align: "left") %>
+            <a href="#" class="name">
+              <span>John DOE</span>
+              <span class="sm">Administrateur</span>
+            </a>
+          </div>
+          <div class="buttons">
+            <div class="sbutton green navButton">
+              <a href="#"><span class="ico-align-justify"></span></a>
+            </div>
+            <div class="sbutton blue">
+              <a href="#"><span class="ico-cogs"></span></a>              
+            </div>                        
+          </div>
+        </li>                
+      </ul>--> 
+      <!------------------------------------------ Navigation ----------------------------------->
+      
+      <!------------------------------------------ Content ----------------------------------->
+      <div class = "content">
+      	<%= yield %>
+      </div>
+      <!------------------------------------------ Content ----------------------------------->
+      
+		</div>
+		<!------------------------------------------ Body ----------------------------------->
+		  
+	</div>
+		
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  code: MyString
+  name: MyString
+  fee: 1
+  percentage: false
+
+two:
+  code: MyString
+  name: MyString
+  fee: 1
+  percentage: false
