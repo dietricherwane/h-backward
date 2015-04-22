@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 
   # Initialise la variable de session contenant les informations sur la transaction
-  def get_service_by_token(currency, service_token, operation_token, order, transaction_amount)
+  def get_service_by_token(currency, service_token, operation_token, order, transaction_amount, id)
     # si la devise envoyee n'existe pas, on renvoie la page d'erreur
     currency_exists?(currency)
     session[:currency] = @currency.first
@@ -19,6 +19,7 @@ class ApplicationController < ActionController::Base
           session[:operation] = Operation.find_by_authentication_token(operation_token)
           session[:trs_amount] = transaction_amount.to_f.round(2)
           session[:basket] = {"basket_number" => "#{order}", "transaction_amount" => "#{transaction_amount.to_f.round(2)}"}
+          session[:login_id] = id
         end
       end
     end
@@ -292,7 +293,6 @@ CATTA-CI SARL 09 BP 1327 ABIDJAN 09 TREICHVILLE-VGE-IMMEUBLE LA BALANCE
     @amount = (response.xpath('//ns3:response').at('bill').at('amount').content rescue nil)
     @payment_fee = (response.xpath('//ns3:response').at('bill').at('paymentFee').content rescue nil)
     @tob = (response.xpath('//ns3:response').at('bill').at('tob').content rescue nil)
-    @common_payment_login = (response.xpath('//ns3:response').at('bill').at('common:payment_login').content rescue nil)
 
     if valid_guce_params?
       new_transaction_amount = @amount.to_f.round(2)
@@ -320,7 +320,7 @@ CATTA-CI SARL 09 BP 1327 ABIDJAN 09 TREICHVILLE-VGE-IMMEUBLE LA BALANCE
     parameters = Parameter.first
 
     if authentication_token == '57813dc7992fbdc721ca5f6b0d02d559'
-      request = Typhoeus::Request.new("#{parameters.guce_payment_url}/GPG_GUCE/rest/Mob_Mon_Pay/pay/#{@basket.number}/#{@basket.original_transaction_amount}/ELNPAY4/#{collector_id}", method: :get, followlocation: true)
+      request = Typhoeus::Request.new("#{parameters.guce_payment_url}/GPG_GUCE/rest/Mob_Mon_Pay/pay/#{@basket.number}/#{@basket.original_transaction_amount}/ELNPAY4/#{collector_id}/#{(@basket.login_id.blank? ? 'NULL' : @basket.login_id)}", method: :get, followlocation: true)
       request.run
 
       response = (Nokogiri.XML(request.response.body) rescue nil)

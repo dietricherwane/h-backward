@@ -1,14 +1,12 @@
-class OrangeMoneyCiController < ApplicationController
+class MtnCisController < ApplicationController
   @@second_origin_url = Parameter.first.second_origin_url
   ##before_action :only => :guard do |o| o.filter_connections end
-  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :initialize_session, :session_initialized, :payment_result_listener]
+  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :initialize_session, :session_initialized, :payment_result_listener, :duke]
   # Si l'utilisateur ne s'est pas connecté en passant par main#guard, on le rejette
-  before_action :except => [:ipn, :transaction_acknowledgement, :initialize_session, :initialize_session, :payment_result_listener] do |s| s.session_authenticated? end
+  before_action :except => [:ipn, :transaction_acknowledgement, :initialize_session, :initialize_session, :payment_result_listener, :duke] do |s| s.session_authenticated? end
 
   # Set transaction amount for GUCE requests
   before_action :only => :index do |o| o.guce_request? end
-
-  #layout "orange_money_ci"
 
   layout :select_layout
 
@@ -16,7 +14,7 @@ class OrangeMoneyCiController < ApplicationController
     if session[:service].authentication_token == '57813dc7992fbdc721ca5f6b0d02d559'
       return "guce"
     else
-      return "orange_money_ci"
+      return "mtn_ci"
     end
   end
 
@@ -26,13 +24,14 @@ class OrangeMoneyCiController < ApplicationController
   end
 
   def index
-    initialize_customer_view("b005fd07f0", "ceiled_transaction_amount", "ceiled_shipping_fee")
+    initialize_customer_view("73007113fe", "ceiled_transaction_amount", "ceiled_shipping_fee")
+    @phone_number_css = "row-form"
     get_service_logo(session[:service].token)
 
     # vérifie qu'un numéro panier appartenant à ce service n'existe pas déjà. Si non, on crée un panier temporaire, si oui, on met à jour le montant envoyé par le ecommerce, la monnaie envoyée par celui ci ainsi que le montant, la monnaie et les frais à envoyer au ecommerce
-    @basket = OrangeMoneyCiBasket.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'")
+    @basket = MtnCi.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'")
     if @basket.blank?
-      @basket = OrangeMoneyCiBasket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :original_transaction_amount => session[:trs_amount], :transaction_amount => session[:trs_amount].to_f.ceil, :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"), :fees => @shipping, :rate => @rate, :login_id => session[:login_id])
+      @basket = MtnCi.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :original_transaction_amount => session[:trs_amount], :transaction_amount => session[:trs_amount].to_f.ceil, :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"), :fees => @shipping, :rate => @rate, :login_id => session[:login_id])
     else
       @basket.first.update_attributes(:transaction_amount => session[:trs_amount].to_f.ceil, :original_transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, :fees => @shipping, :rate => @rate, :login_id => session[:login_id])
     end
@@ -41,6 +40,29 @@ class OrangeMoneyCiController < ApplicationController
     unless session_initialized
       redirect_to error_page_path
     end
+  end
+
+  def initialize_payment
+    @basket = MtnCi.find_by_transaction_id(params[:transaction_id])
+    @client = Savon.client(wsdl: "#{Rails.root}/lib/mtn_ci/billmanageronlinepayment.wsdl")
+
+    if valid_phone_number?(params[:colomb])
+      @response = @client.call(:process_online_payment, message: { :User => "guce_request", :Password => "956AD14A701F8BE8C94F615572904518D2D3CC6A", :ServiceCode => "GUCE", :SubscriberID => params[:colomb], :Reference => @basket.transaction_id, :Balance => (@basket.transaction_amount + @basket.fees), :TextMessage => "", :Token => "", :ImmediateReply => true})
+      render text: @response.body
+    else
+      initialize_customer_view("73007113fe", "ceiled_transaction_amount", "ceiled_shipping_fee")
+      get_service_logo(session[:service].token)
+      @phone_number_css = "row-form error"
+
+      render :index
+    end
+  end
+
+  def duke
+    @client = Savon.client(wsdl: "http://0.0.0.0:3000/wsdl_mtn/wsdl")
+    @response = @client.call(:get_bill, message: {:Reference => "20150421003051452"})
+
+    render text: @response.body
   end
 
   def payment_result_listener
@@ -54,7 +76,7 @@ class OrangeMoneyCiController < ApplicationController
 
     if valid_result_parameters
       if valid_transaction
-        @basket = OrangeMoneyCiBasket.find_by_transaction_id(@transaction_id)
+        @basket = MtnCi.find_by_transaction_id(@transaction_id)
         if @basket
 
           # Use Orange Money authentication_token
@@ -174,6 +196,16 @@ class OrangeMoneyCiController < ApplicationController
 
   # Returns 0 or 1 depending on the status of the transaction
   def transaction_acknowledgement
-    generic_transaction_acknowledgement(OrangeMoneyCiBasket, params[:transaction_id])
+    generic_transaction_acknowledgement(MtnCi, params[:transaction_id])
+  end
+
+  def valid_phone_number?(phone_number)
+    if phone_number.blank? || not_a_number?(phone_number) || phone_number.length != 8
+      @error = true
+      @error_messages = ["Le numéro de téléphone doit être valide et de 8 chiffres."]
+      return false
+    else
+      return true
+    end
   end
 end

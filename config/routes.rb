@@ -1,10 +1,13 @@
 HubsBackOffice::Application.routes.draw do
   root 'errors_handling#home_page'
 
+  get "order/:currency/:service_token/:operation_token/:order/:transaction_amount/:id" => "main#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "order/:currency/:service_token/:operation_token/:order/:transaction_amount" => "main#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "/Main" => "main#index", as: :main
 
   get "get_wallets" => "wallets#get_wallets"
+
+  get "duke" => "mtn_cis#duke"
 
   # Upload wallets logos
   get "bfaad58e15f671064fd87277/wallets/edit/:authentication_token" => "wallets#edit"
@@ -46,6 +49,19 @@ HubsBackOffice::Application.routes.draw do
   post "OrangeMoneyCI/transaction_acknowledgement" => "orange_money_ci#transaction_acknowledgement"
   post "OrangeMoneyCI/transaction_acknowledgement/:transaction_id" => "orange_money_ci#transaction_acknowledgement"
   get "OrangeMoneyCI/transaction_acknowledgement/:transaction_id" => "orange_money_ci#transaction_acknowledgement"
+
+  get "mtn_ci/:service_id/:operation_id/:basket_number/:transaction_amount" => "mtn_cis#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
+  get "MTNCI" => "mtn_cis#index"
+  post "/MTNCI/InitializePayment" => "mtn_cis#initialize_payment"
+  post "/MTNCI/ProcessPayment" => "mtn_cis#redirect_to_billing_platform"
+  post "MTNCI/PaymentResultListener" => "mtn_cis#payment_result_listener"
+  post "MTNCI/ipn" => "mtn_cis#ipn"
+  get "om" => "mtn_cis#initialize_session"
+  post "MTNCI/transaction_acknowledgement" => "mtn_cis#transaction_acknowledgement"
+  post "MTNCI/transaction_acknowledgement/:transaction_id" => "mtn_cis#transaction_acknowledgement"
+  get "MTNCI/transaction_acknowledgement/:transaction_id" => "mtn_cis#transaction_acknowledgement"
+
+  wash_out :wsdl_mtn
 
   get "novapay/:service_id/:operation_id/:basket_number/:transaction_amount" => "novapays#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "NovaPay" => "novapays#index"
