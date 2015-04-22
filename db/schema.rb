@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150316193828) do
+ActiveRecord::Schema.define(version: 20150420005939) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(version: 20150316193828) do
     t.integer  "acknowledgement_count"
     t.string   "original_transaction_amount"
     t.float    "conflictual_transaction_amount"
+    t.string   "login_id"
   end
 
   add_index "baskets", ["number"], name: "index_baskets_on_number", using: :btree
@@ -94,6 +95,28 @@ ActiveRecord::Schema.define(version: 20150316193828) do
     t.boolean  "notified_to_ecommerce"
   end
 
+  create_table "mtn_cis", force: true do |t|
+    t.string   "number"
+    t.integer  "service_id"
+    t.integer  "operation_id"
+    t.boolean  "payment_status"
+    t.float    "transaction_amount"
+    t.boolean  "notified_to_back_office"
+    t.string   "transaction_id"
+    t.float    "fees"
+    t.integer  "currency_id"
+    t.float    "paid_transaction_amount"
+    t.integer  "paid_currency_id"
+    t.float    "rate"
+    t.float    "conflictual_transaction_amount"
+    t.string   "conflictual_currency",           limit: 3
+    t.float    "compensation_rate"
+    t.float    "original_transaction_amount"
+    t.string   "refoper"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "novapays", force: true do |t|
     t.string   "number"
     t.integer  "service_id"
@@ -114,6 +137,7 @@ ActiveRecord::Schema.define(version: 20150316193828) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.float    "original_transaction_amount"
+    t.string   "login_id"
   end
 
   create_table "om_logs", force: true do |t|
@@ -163,6 +187,7 @@ ActiveRecord::Schema.define(version: 20150316193828) do
     t.string   "original_transaction_amount"
     t.text     "log_rl"
     t.text     "log_tv"
+    t.string   "login_id"
   end
 
   create_table "parameters", force: true do |t|
@@ -214,6 +239,7 @@ ActiveRecord::Schema.define(version: 20150316193828) do
     t.float    "compensation_rate"
     t.string   "original_transaction_amount"
     t.float    "conflictual_transaction_amount"
+    t.string   "login_id"
   end
 
   create_table "products", force: true do |t|
@@ -245,6 +271,7 @@ ActiveRecord::Schema.define(version: 20150316193828) do
     t.datetime "updated_at"
     t.string   "qash_transaction_id"
     t.string   "original_transaction_amount"
+    t.string   "login_id"
   end
 
   create_table "services", force: true do |t|

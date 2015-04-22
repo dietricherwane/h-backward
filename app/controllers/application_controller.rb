@@ -173,7 +173,10 @@ class ApplicationController < ActionController::Base
     @wallet_currency = @wallet.currency
     @rate = get_change_rate(session[:currency].code, @wallet_currency.code)
     send(set_transaction_amount)
-    @shipping = send(set_shipping_fee)
+    # Si la transacation ne provient pas du guce, on calcule les frais normalement.
+    if session[:service].authentication_token != '57813dc7992fbdc721ca5f6b0d02d559'
+      @shipping = send(set_shipping_fee)
+    end
   end
 
   def ceiled_transaction_amount
@@ -254,28 +257,42 @@ class ApplicationController < ActionController::Base
       response = (Nokogiri.XML(request.response.body) rescue nil)
 #=end
 =begin
-      response = Nokogiri.XML(%Q{<ns3:response xmlns= "epayment/common" xmlns:ns2= "epayment/common-response"
-xmlns:ns3= "epayment/check-response" xmlns:ns4= "epayment/common-request" >
+      response = Nokogiri.XML(%Q{<ns3:response xmlns="epayment/common" xmlns:ns2="epayment/common-response" xmlns:ns3="epayment/check-response" xmlns:ns4="epayment/common-request">
 <ns2:header>
 <message_id>GOOD</message_id>
 <ns2:result>0</ns2:result>
 </ns2:header>
 <bill>
-<date>2014-11-01T00:00:00.000</date>
+<date>2015-03-31T16:44:51.464</date>
 <type>SAD</type>
-<number>SAD201400000030</number>
-<amount>150000.0</amount>
-<document_no>14</document_no>
-<document_date>2013-12-31T12:00:00.000</document_date>
-<company_code>0317739P</company_code>
-<company_name_address>KOUASSI LOUKOU</company_name_address>
-<declarant_code>C50013</declarant_code>
-<declarant_name_address>CMB - ABIDJAN</declarant_name_address>
+<number>SAD201500000168</number>
+<amount>24980000</amount>
+<document_no>2015-CIABE-L-290</document_no>
+<document_date>2015-03-31T00:00:00.000</document_date>
+<company_code>0000058J</company_code>
+<company_name_address>
+MANE BUSINESS SERVICE (MBS) 18 BP 1182 ABIDJAN 18 RCI
+</company_name_address>
+<declarant_code>00416J</declarant_code>
+<declarant_name_address>
+CATTA-CI SARL 09 BP 1327 ABIDJAN 09 TREICHVILLE-VGE-IMMEUBLE LA BALANCE
+</declarant_name_address>
+<transaction_id>udgAzxVkpQlN</transaction_id>
+<payment_no>639</payment_no>
+<payment_date>2015-04-01T15:08:52.882</payment_date>
+<payment_mode>ELNPAY4</payment_mode>
+<paymentFee>5000</paymentFee>
+<tob>500.0</tob>
+<collector>QRTGH78</collector>
+<cashier>null</cashier>
 </bill>
 </ns3:response>/})
 =end
     @order_id = (response.xpath('//ns3:response').at('bill').at('number').content rescue nil)
     @amount = (response.xpath('//ns3:response').at('bill').at('amount').content rescue nil)
+    @payment_fee = (response.xpath('//ns3:response').at('bill').at('paymentFee').content rescue nil)
+    @tob = (response.xpath('//ns3:response').at('bill').at('tob').content rescue nil)
+    @common_payment_login = (response.xpath('//ns3:response').at('bill').at('common:payment_login').content rescue nil)
 
     if valid_guce_params?
       new_transaction_amount = @amount.to_f.round(2)
@@ -284,6 +301,7 @@ xmlns:ns3= "epayment/check-response" xmlns:ns4= "epayment/common-request" >
       end
       session[:trs_amount] = new_transaction_amount
       session[:basket]['transaction_amount'] = new_transaction_amount
+      @shipping = @payment_fee.to_i + @tob.to_i
     else
       redirect_to error_page_path
     end
@@ -291,7 +309,7 @@ xmlns:ns3= "epayment/check-response" xmlns:ns4= "epayment/common-request" >
 
   # Make sure the order id is not null and amount is a number
   def valid_guce_params?
-    if @order_id == nil || @amount == nil || not_a_number?(@amount)
+    if @order_id == nil || @amount == nil || not_a_number?(@amount) || @payment_fee == nil || not_a_number?(@payment_fee) || @tob == nil || not_a_number?(@tob)
       return false
     else
       return true

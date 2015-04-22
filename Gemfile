@@ -74,6 +74,12 @@ gem 'rack-attack'
 # Handling file upload
 gem "paperclip", "~> 4.2"
 
+# Create soap server
+gem 'wash_out'
+
+# Create soap client
+gem 'savon', '~> 2.10.0'
+
 #gem "rails_12factor", group: :production
 
 #gem 'rails_log_stdout',           github: 'heroku/rails_log_stdout'
