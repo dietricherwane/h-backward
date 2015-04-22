@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150420005939) do
+ActiveRecord::Schema.define(version: 20150421011021) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -109,12 +109,23 @@ ActiveRecord::Schema.define(version: 20150420005939) do
     t.integer  "paid_currency_id"
     t.float    "rate"
     t.float    "conflictual_transaction_amount"
-    t.string   "conflictual_currency",           limit: 3
+    t.string   "conflictual_currency"
     t.float    "compensation_rate"
     t.float    "original_transaction_amount"
-    t.string   "refoper"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string   "process_online_response_code",    limit: 5
+    t.text     "process_online_response_message"
+    t.string   "process_online_client_number",    limit: 16
+    t.string   "real_time_code"
+    t.string   "real_time_numfacture"
+    t.datetime "real_time_datefacture"
+    t.datetime "real_time_delaipaiement"
+    t.float    "real_time_montant"
+    t.string   "real_time_ch_str_xx"
+    t.integer  "real_time_ch_long_xx",            limit: 8
+    t.datetime "real_time_ch_date_xx"
+    t.float    "real_time_ch_money_xx"
+    t.string   "real_time_transact"
+    t.string   "login_id"
   end
 
   create_table "novapays", force: true do |t|
