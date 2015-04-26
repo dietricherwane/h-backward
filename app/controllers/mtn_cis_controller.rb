@@ -25,7 +25,7 @@ class MtnCisController < ApplicationController
 
   def index
     initialize_customer_view("73007113fe", "ceiled_transaction_amount", "ceiled_shipping_fee")
-    @phone_number_css = "row-form"
+    @phone_number_css  = @token_number_css = "row-form"
     get_service_logo(session[:service].token)
 
     # vérifie qu'un numéro panier appartenant à ce service n'existe pas déjà. Si non, on crée un panier temporaire, si oui, on met à jour le montant envoyé par le ecommerce, la monnaie envoyée par celui ci ainsi que le montant, la monnaie et les frais à envoyer au ecommerce
@@ -47,22 +47,40 @@ class MtnCisController < ApplicationController
     @client = Savon.client(wsdl: "#{Rails.root}/lib/mtn_ci/billmanageronlinepayment.wsdl")
 
     if valid_phone_number?(params[:colomb])
-      @response = @client.call(:process_online_payment, message: { :User => "guce_request", :Password => "956AD14A701F8BE8C94F615572904518D2D3CC6A", :ServiceCode => "GUCE", :SubscriberID => params[:colomb], :Reference => @basket.transaction_id, :Balance => (@basket.transaction_amount + @basket.fees), :TextMessage => "", :Token => "", :ImmediateReply => true})
-      render text: @response.body
-    else
-      initialize_customer_view("73007113fe", "ceiled_transaction_amount", "ceiled_shipping_fee")
-      get_service_logo(session[:service].token)
-      @phone_number_css = "row-form error"
+      response = @client.call(:process_online_payment, message: { :User => "guce_request", :Password => "956AD14A701F8BE8C94F615572904518D2D3CC6A", :ServiceCode => "GUCE", :SubscriberID => params[:colomb], :Reference => @basket.transaction_id, :Balance => (@basket.transaction_amount + @basket.fees), :TextMessage => "", :Token => params[:token], :ImmediateReply => true})
 
-      render :index
+      result = response.body[:process_online_payment_response][:process_online_payment_result] rescue nil
+
+      response_code = (result[:responsecode] rescue nil)
+      response_message = (result[:responsemessage] rescue nil)
+
+      @basket.update_attributes(process_online_client_number: params[:colomb], process_online_response_code: response_code, process_online_response_message: response_message)
+
+      if response_message == "0"
+        @basket.update_attributes(process_online_client_number: params[:colomb], )
+      else
+        @error = true
+        @error_messages = [result[:responsemessage]]
+        init_index
+      end
+    else
+      init_index
     end
+
+    render :index
+  end
+
+  def init_index
+    initialize_customer_view("73007113fe", "ceiled_transaction_amount", "ceiled_shipping_fee")
+    get_service_logo(session[:service].token)
+    @phone_number_css = @token_number_css = "row-form error"
   end
 
   def duke
-    @client = Savon.client(wsdl: "http://0.0.0.0:3000/wsdl_mtn/wsdl")
-    @response = @client.call(:get_bill, message: {:Reference => "20150421003051452"})
+    @client = Savon.client(wsdl: "http://0.0.0.0:3000/wsdl_mtns/wsdl")
+    @response = @client.call(:get_bill, message: {:Reference => "20150421003051452", :Montant => 520})
 
-    render text: @response.body
+    render text: @response.to_xml.to_s
   end
 
   def payment_result_listener
@@ -202,7 +220,7 @@ class MtnCisController < ApplicationController
   def valid_phone_number?(phone_number)
     if phone_number.blank? || not_a_number?(phone_number) || phone_number.length != 8
       @error = true
-      @error_messages = ["Le numéro de téléphone doit être valide et de 8 chiffres."]
+      @error_messages = ["Le numéro de téléphone doit être valide et de 8 chiffres.", "Votre code de sécurité doit être valide."]
       return false
     else
       return true

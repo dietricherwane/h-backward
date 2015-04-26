@@ -4509,3 +4509,1351 @@ Started GET "/wsdl_mtn/wsdl" for 127.0.0.1 at 2015-04-21 21:19:47 +0000
 Processing by WsdlMtnController#_generate_wsdl as HTML
   Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/wsdl.builder (3.9ms)
 Completed 200 OK in 35ms (Views: 33.3ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/wsdl_mtns/wsdl" for 127.0.0.1 at 2015-04-26 08:36:35 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (29.7ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+
+ActionController::RoutingError (uninitialized constant WsdlMtnsController):
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:226:in `const_get'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:226:in `block in constantize'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:224:in `each'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:224:in `inject'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:224:in `constantize'
+  actionpack (4.0.0) lib/action_dispatch/routing/route_set.rb:76:in `controller_reference'
+  actionpack (4.0.0) lib/action_dispatch/routing/route_set.rb:66:in `controller'
+  actionpack (4.0.0) lib/action_dispatch/routing/route_set.rb:44:in `call'
+  actionpack (4.0.0) lib/action_dispatch/journey/router.rb:71:in `block in call'
+  actionpack (4.0.0) lib/action_dispatch/journey/router.rb:59:in `each'
+  actionpack (4.0.0) lib/action_dispatch/journey/router.rb:59:in `call'
+  actionpack (4.0.0) lib/action_dispatch/routing/route_set.rb:655:in `call'
+  rack (1.5.2) lib/rack/etag.rb:23:in `call'
+  rack (1.5.2) lib/rack/conditionalget.rb:25:in `call'
+  rack (1.5.2) lib/rack/head.rb:11:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/params_parser.rb:27:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/flash.rb:241:in `call'
+  rack (1.5.2) lib/rack/session/abstract/id.rb:225:in `context'
+  rack (1.5.2) lib/rack/session/abstract/id.rb:220:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/cookies.rb:486:in `call'
+  activerecord (4.0.0) lib/active_record/query_cache.rb:36:in `call'
+  activerecord (4.0.0) lib/active_record/connection_adapters/abstract/connection_pool.rb:626:in `call'
+  activerecord (4.0.0) lib/active_record/migration.rb:369:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.0.0) lib/active_support/callbacks.rb:373:in `_run__1493012795158338630__call__callbacks'
+  activesupport (4.0.0) lib/active_support/callbacks.rb:80:in `run_callbacks'
+  actionpack (4.0.0) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/reloader.rb:64:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/remote_ip.rb:76:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/debug_exceptions.rb:17:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.0.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.0.0) lib/rails/rack/logger.rb:21:in `block in call'
+  activesupport (4.0.0) lib/active_support/tagged_logging.rb:67:in `block in tagged'
+  activesupport (4.0.0) lib/active_support/tagged_logging.rb:25:in `tagged'
+  activesupport (4.0.0) lib/active_support/tagged_logging.rb:67:in `tagged'
+  railties (4.0.0) lib/rails/rack/logger.rb:21:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.5.2) lib/rack/methodoverride.rb:21:in `call'
+  rack (1.5.2) lib/rack/runtime.rb:17:in `call'
+  activesupport (4.0.0) lib/active_support/cache/strategy/local_cache.rb:83:in `call'
+  rack (1.5.2) lib/rack/lock.rb:17:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/static.rb:64:in `call'
+  railties (4.0.0) lib/rails/engine.rb:511:in `call'
+  railties (4.0.0) lib/rails/application.rb:97:in `call'
+  activerecord (4.0.0) lib/active_record/connection_adapters/abstract/connection_pool.rb:626:in `call'
+  rack (1.5.2) lib/rack/lock.rb:17:in `call'
+  rack (1.5.2) lib/rack/content_length.rb:14:in `call'
+  rack (1.5.2) lib/rack/handler/webrick.rb:60:in `service'
+  /home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/httpserver.rb:138:in `service'
+  /home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/httpserver.rb:94:in `run'
+  /home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/server.rb:295:in `block in start_thread'
+
+
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/_trace.erb (1.3ms)
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/routes/_route.html.erb (13.6ms)
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/routes/_table.html.erb (9.7ms)
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (122.6ms)
+
+
+Started GET "/duke" for 127.0.0.1 at 2015-04-26 08:44:46 +0000
+  [1m[35mParameter Load (41.3ms)[0m  SELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1
+Processing by MtnCisController#duke as HTML
+  Rendered text template (0.1ms)
+Completed 200 OK in 444ms (Views: 36.5ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/duke" for 127.0.0.1 at 2015-04-26 08:45:39 +0000
+Processing by MtnCisController#duke as HTML
+Completed 500 Internal Server Error in 257ms
+
+Savon::HTTPError (HTTP error (500): <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Action Controller: Exception caught</title>
+  <style>
+    body {
+      background-color: #FAFAFA;
+      color: #333;
+      margin: 0px;
+    }
+
+    body, p, ol, ul, td {
+      font-family: helvetica, verdana, arial, sans-serif;
+      font-size:   13px;
+      line-height: 18px;
+    }
+
+    pre {
+      font-size: 11px;
+      white-space: pre-wrap;
+    }
+
+    pre.box {
+      border: 1px solid #EEE;
+      padding: 10px;
+      margin: 0px;
+      width: 958px;
+    }
+
+    header {
+      color: #F0F0F0;
+      background: #C52F24;
+      padding: 0.5em 1.5em;
+    }
+
+    h1 {
+      margin: 0.2em 0;
+      line-height: 1.1em;
+      font-size: 2em;
+    }
+
+    h2 {
+      color: #C52F24;
+      line-height: 25px;
+    }
+
+    .details {
+      border: 1px solid #D0D0D0;
+      border-radius: 4px;
+      margin: 1em 0px;
+      display: block;
+      width: 978px;
+    }
+
+    .summary {
+      padding: 8px 15px;
+      border-bottom: 1px solid #D0D0D0;
+      display: block;
+    }
+
+    .details pre {
+      margin: 5px;
+      border: none;
+    }
+
+    #container {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 0 1.5em;
+    }
+
+    .source * {
+      margin: 0px;
+      padding: 0px;
+    }
+
+    .source {
+      border: 1px solid #D9D9D9;
+      background: #ECECEC;
+      width: 978px;
+    }
+
+    .source pre {
+      padding: 10px 0px;
+      border: none;
+    }
+
+    .source .data {
+      font-size: 80%;
+      overflow: auto;
+      background-color: #FFF;
+    }
+
+    .info {
+      padding: 0.5em;
+    }
+
+    .source .data .line_numbers {
+      background-color: #ECECEC;
+      color: #AAA;
+      padding: 1em .5em;
+      border-right: 1px solid #DDD;
+      text-align: right;
+    }
+
+    .line {
+      padding-left: 10px;
+    }
+
+    .line:hover {
+      background-color: #F6F6F6;
+    }
+
+    .line.active {
+      background-color: #FFCCCC;
+    }
+
+    a { color: #980905; }
+    a:visited { color: #666; }
+    a:hover { color: #C52F24; }
+
+    
+  </style>
+
+  <script>
+    var toggle = function(id) {
+      var s = document.getElementById(id).style;
+      s.display = s.display == 'none' ? 'block' : 'none';
+      return false;
+    }
+    var show = function(id) {
+      document.getElementById(id).style.display = 'block';
+    }
+    var hide = function(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+    var toggleTrace = function() {
+      return toggle('blame_trace');
+    }
+    var toggleSessionDump = function() {
+      return toggle('session_dump');
+    }
+    var toggleEnvDump = function() {
+      return toggle('env_dump');
+    }
+  </script>
+</head>
+<body>
+
+<header>
+  <h1>
+    NoMethodError
+      in WsdlMtnsController#_action
+  </h1>
+</header>
+
+<div id="container">
+  <h2>undefined method `firstname&#39; for nil:NilClass</h2>
+
+  <div class="source">
+<div class="info">
+  Extracted source (around line <strong>#11</strong>):
+</div>
+<div class="data">
+  <table cellpadding="0" cellspacing="0" class="lines">
+      <tr>
+        <td>
+          <pre class="line_numbers">
+<span>9</span>
+<span>10</span>
+<span>11</span>
+<span>12</span>
+<span>13</span>
+          </pre>
+        </td>
+<td width="100%">
+<pre>
+<div class="line">    @bill = Devoted.find_by_firstname(params[:Reference])
+</div><div class="line">
+</div><div class="line active">    render :soap =&gt; @bill.firstname
+</div><div class="line">  end
+</div><div class="line">end
+</div>
+</pre>
+</td>
+    </tr>
+  </table>
+</div>
+</div>
+
+  
+<p><code>Rails.root: /home/dietrich/workshop/Church</code></p>
+
+<div id="traces">
+    <a href="#" onclick="hide(&#39;Framework-Trace&#39;);hide(&#39;Full-Trace&#39;);show(&#39;Application-Trace&#39;);; return false;">Application Trace</a> |
+    <a href="#" onclick="hide(&#39;Application-Trace&#39;);hide(&#39;Full-Trace&#39;);show(&#39;Framework-Trace&#39;);; return false;">Framework Trace</a> |
+    <a href="#" onclick="hide(&#39;Application-Trace&#39;);hide(&#39;Framework-Trace&#39;);show(&#39;Full-Trace&#39;);; return false;">Full Trace</a> 
+
+    <div id="Application-Trace" style="display: block;">
+      <pre><code>app/controllers/wsdl_mtns_controller.rb:11:in `get_bill&#39;</code></pre>
+    </div>
+    <div id="Framework-Trace" style="display: none;">
+      <pre><code>actionpack (4.1.8) lib/action_controller/metal/implicit_render.rb:4:in `send_action&#39;
+actionpack (4.1.8) lib/abstract_controller/base.rb:189:in `process_action&#39;
+actionpack (4.1.8) lib/action_controller/metal/rendering.rb:10:in `process_action&#39;
+actionpack (4.1.8) lib/abstract_controller/callbacks.rb:20:in `block in process_action&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:113:in `call&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:113:in `call&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:149:in `block in halting_and_conditional&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:149:in `call&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:149:in `block in halting_and_conditional&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:299:in `call&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:299:in `block (2 levels) in halting&#39;
+wash_out (0.9.2) lib/wash_out/dispatcher.rb:139:in `_catch_soap_errors&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:424:in `block in make_lambda&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:298:in `call&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:298:in `block in halting&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:229:in `call&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:229:in `block in halting&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:229:in `call&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:229:in `block in halting&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:166:in `call&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:166:in `block in halting&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:166:in `call&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:166:in `block in halting&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:86:in `call&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:86:in `run_callbacks&#39;
+actionpack (4.1.8) lib/abstract_controller/callbacks.rb:19:in `process_action&#39;
+actionpack (4.1.8) lib/action_controller/metal/rescue.rb:29:in `process_action&#39;
+actionpack (4.1.8) lib/action_controller/metal/instrumentation.rb:31:in `block in process_action&#39;
+activesupport (4.1.8) lib/active_support/notifications.rb:159:in `block in instrument&#39;
+activesupport (4.1.8) lib/active_support/notifications/instrumenter.rb:20:in `instrument&#39;
+activesupport (4.1.8) lib/active_support/notifications.rb:159:in `instrument&#39;
+actionpack (4.1.8) lib/action_controller/metal/instrumentation.rb:30:in `process_action&#39;
+actionpack (4.1.8) lib/action_controller/metal/params_wrapper.rb:250:in `process_action&#39;
+activerecord (4.1.8) lib/active_record/railties/controller_runtime.rb:18:in `process_action&#39;
+actionpack (4.1.8) lib/abstract_controller/base.rb:136:in `process&#39;
+actionview (4.1.8) lib/action_view/rendering.rb:30:in `process&#39;
+actionpack (4.1.8) lib/action_controller/metal.rb:196:in `dispatch&#39;
+actionpack (4.1.8) lib/action_controller/metal/rack_delegation.rb:13:in `dispatch&#39;
+actionpack (4.1.8) lib/action_controller/metal.rb:232:in `block in action&#39;
+wash_out (0.9.2) lib/wash_out/router.rb:92:in `call&#39;
+wash_out (0.9.2) lib/wash_out/router.rb:92:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/journey/router.rb:73:in `block in call&#39;
+actionpack (4.1.8) lib/action_dispatch/journey/router.rb:59:in `each&#39;
+actionpack (4.1.8) lib/action_dispatch/journey/router.rb:59:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/routing/route_set.rb:678:in `call&#39;
+warden (1.2.3) lib/warden/manager.rb:35:in `block in call&#39;
+warden (1.2.3) lib/warden/manager.rb:34:in `catch&#39;
+warden (1.2.3) lib/warden/manager.rb:34:in `call&#39;
+rack (1.5.2) lib/rack/etag.rb:23:in `call&#39;
+rack (1.5.2) lib/rack/conditionalget.rb:35:in `call&#39;
+rack (1.5.2) lib/rack/head.rb:11:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/middleware/params_parser.rb:27:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/middleware/flash.rb:254:in `call&#39;
+rack (1.5.2) lib/rack/session/abstract/id.rb:225:in `context&#39;
+rack (1.5.2) lib/rack/session/abstract/id.rb:220:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/middleware/cookies.rb:560:in `call&#39;
+activerecord (4.1.8) lib/active_record/query_cache.rb:36:in `call&#39;
+activerecord (4.1.8) lib/active_record/connection_adapters/abstract/connection_pool.rb:621:in `call&#39;
+activerecord (4.1.8) lib/active_record/migration.rb:380:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:82:in `run_callbacks&#39;
+actionpack (4.1.8) lib/action_dispatch/middleware/callbacks.rb:27:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/middleware/reloader.rb:73:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/middleware/remote_ip.rb:76:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/middleware/debug_exceptions.rb:17:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call&#39;
+railties (4.1.8) lib/rails/rack/logger.rb:38:in `call_app&#39;
+railties (4.1.8) lib/rails/rack/logger.rb:20:in `block in call&#39;
+activesupport (4.1.8) lib/active_support/tagged_logging.rb:68:in `block in tagged&#39;
+activesupport (4.1.8) lib/active_support/tagged_logging.rb:26:in `tagged&#39;
+activesupport (4.1.8) lib/active_support/tagged_logging.rb:68:in `tagged&#39;
+railties (4.1.8) lib/rails/rack/logger.rb:20:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/middleware/request_id.rb:21:in `call&#39;
+rack (1.5.2) lib/rack/methodoverride.rb:21:in `call&#39;
+rack (1.5.2) lib/rack/runtime.rb:17:in `call&#39;
+activesupport (4.1.8) lib/active_support/cache/strategy/local_cache_middleware.rb:26:in `call&#39;
+rack (1.5.2) lib/rack/lock.rb:17:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/middleware/static.rb:84:in `call&#39;
+rack (1.5.2) lib/rack/sendfile.rb:112:in `call&#39;
+railties (4.1.8) lib/rails/engine.rb:514:in `call&#39;
+railties (4.1.8) lib/rails/application.rb:144:in `call&#39;
+rack (1.5.2) lib/rack/lock.rb:17:in `call&#39;
+rack (1.5.2) lib/rack/content_length.rb:14:in `call&#39;
+rack (1.5.2) lib/rack/handler/webrick.rb:60:in `service&#39;
+/home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/httpserver.rb:138:in `service&#39;
+/home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/httpserver.rb:94:in `run&#39;
+/home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/server.rb:295:in `block in start_thread&#39;</code></pre>
+    </div>
+    <div id="Full-Trace" style="display: none;">
+      <pre><code>app/controllers/wsdl_mtns_controller.rb:11:in `get_bill&#39;
+actionpack (4.1.8) lib/action_controller/metal/implicit_render.rb:4:in `send_action&#39;
+actionpack (4.1.8) lib/abstract_controller/base.rb:189:in `process_action&#39;
+actionpack (4.1.8) lib/action_controller/metal/rendering.rb:10:in `process_action&#39;
+actionpack (4.1.8) lib/abstract_controller/callbacks.rb:20:in `block in process_action&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:113:in `call&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:113:in `call&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:149:in `block in halting_and_conditional&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:149:in `call&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:149:in `block in halting_and_conditional&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:299:in `call&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:299:in `block (2 levels) in halting&#39;
+wash_out (0.9.2) lib/wash_out/dispatcher.rb:139:in `_catch_soap_errors&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:424:in `block in make_lambda&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:298:in `call&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:298:in `block in halting&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:229:in `call&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:229:in `block in halting&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:229:in `call&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:229:in `block in halting&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:166:in `call&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:166:in `block in halting&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:166:in `call&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:166:in `block in halting&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:86:in `call&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:86:in `run_callbacks&#39;
+actionpack (4.1.8) lib/abstract_controller/callbacks.rb:19:in `process_action&#39;
+actionpack (4.1.8) lib/action_controller/metal/rescue.rb:29:in `process_action&#39;
+actionpack (4.1.8) lib/action_controller/metal/instrumentation.rb:31:in `block in process_action&#39;
+activesupport (4.1.8) lib/active_support/notifications.rb:159:in `block in instrument&#39;
+activesupport (4.1.8) lib/active_support/notifications/instrumenter.rb:20:in `instrument&#39;
+activesupport (4.1.8) lib/active_support/notifications.rb:159:in `instrument&#39;
+actionpack (4.1.8) lib/action_controller/metal/instrumentation.rb:30:in `process_action&#39;
+actionpack (4.1.8) lib/action_controller/metal/params_wrapper.rb:250:in `process_action&#39;
+activerecord (4.1.8) lib/active_record/railties/controller_runtime.rb:18:in `process_action&#39;
+actionpack (4.1.8) lib/abstract_controller/base.rb:136:in `process&#39;
+actionview (4.1.8) lib/action_view/rendering.rb:30:in `process&#39;
+actionpack (4.1.8) lib/action_controller/metal.rb:196:in `dispatch&#39;
+actionpack (4.1.8) lib/action_controller/metal/rack_delegation.rb:13:in `dispatch&#39;
+actionpack (4.1.8) lib/action_controller/metal.rb:232:in `block in action&#39;
+wash_out (0.9.2) lib/wash_out/router.rb:92:in `call&#39;
+wash_out (0.9.2) lib/wash_out/router.rb:92:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/journey/router.rb:73:in `block in call&#39;
+actionpack (4.1.8) lib/action_dispatch/journey/router.rb:59:in `each&#39;
+actionpack (4.1.8) lib/action_dispatch/journey/router.rb:59:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/routing/route_set.rb:678:in `call&#39;
+warden (1.2.3) lib/warden/manager.rb:35:in `block in call&#39;
+warden (1.2.3) lib/warden/manager.rb:34:in `catch&#39;
+warden (1.2.3) lib/warden/manager.rb:34:in `call&#39;
+rack (1.5.2) lib/rack/etag.rb:23:in `call&#39;
+rack (1.5.2) lib/rack/conditionalget.rb:35:in `call&#39;
+rack (1.5.2) lib/rack/head.rb:11:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/middleware/params_parser.rb:27:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/middleware/flash.rb:254:in `call&#39;
+rack (1.5.2) lib/rack/session/abstract/id.rb:225:in `context&#39;
+rack (1.5.2) lib/rack/session/abstract/id.rb:220:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/middleware/cookies.rb:560:in `call&#39;
+activerecord (4.1.8) lib/active_record/query_cache.rb:36:in `call&#39;
+activerecord (4.1.8) lib/active_record/connection_adapters/abstract/connection_pool.rb:621:in `call&#39;
+activerecord (4.1.8) lib/active_record/migration.rb:380:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call&#39;
+activesupport (4.1.8) lib/active_support/callbacks.rb:82:in `run_callbacks&#39;
+actionpack (4.1.8) lib/action_dispatch/middleware/callbacks.rb:27:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/middleware/reloader.rb:73:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/middleware/remote_ip.rb:76:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/middleware/debug_exceptions.rb:17:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call&#39;
+railties (4.1.8) lib/rails/rack/logger.rb:38:in `call_app&#39;
+railties (4.1.8) lib/rails/rack/logger.rb:20:in `block in call&#39;
+activesupport (4.1.8) lib/active_support/tagged_logging.rb:68:in `block in tagged&#39;
+activesupport (4.1.8) lib/active_support/tagged_logging.rb:26:in `tagged&#39;
+activesupport (4.1.8) lib/active_support/tagged_logging.rb:68:in `tagged&#39;
+railties (4.1.8) lib/rails/rack/logger.rb:20:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/middleware/request_id.rb:21:in `call&#39;
+rack (1.5.2) lib/rack/methodoverride.rb:21:in `call&#39;
+rack (1.5.2) lib/rack/runtime.rb:17:in `call&#39;
+activesupport (4.1.8) lib/active_support/cache/strategy/local_cache_middleware.rb:26:in `call&#39;
+rack (1.5.2) lib/rack/lock.rb:17:in `call&#39;
+actionpack (4.1.8) lib/action_dispatch/middleware/static.rb:84:in `call&#39;
+rack (1.5.2) lib/rack/sendfile.rb:112:in `call&#39;
+railties (4.1.8) lib/rails/engine.rb:514:in `call&#39;
+railties (4.1.8) lib/rails/application.rb:144:in `call&#39;
+rack (1.5.2) lib/rack/lock.rb:17:in `call&#39;
+rack (1.5.2) lib/rack/content_length.rb:14:in `call&#39;
+rack (1.5.2) lib/rack/handler/webrick.rb:60:in `service&#39;
+/home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/httpserver.rb:138:in `service&#39;
+/home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/httpserver.rb:94:in `run&#39;
+/home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/server.rb:295:in `block in start_thread&#39;</code></pre>
+    </div>
+</div>
+
+  
+
+<h2 style="margin-top: 30px">Request</h2>
+<p><b>Parameters</b>:</p> <pre>None</pre>
+
+<div class="details">
+  <div class="summary"><a href="#" onclick="return toggleSessionDump()">Toggle session dump</a></div>
+  <div id="session_dump" style="display:none"><pre></pre></div>
+</div>
+
+<div class="details">
+  <div class="summary"><a href="#" onclick="return toggleEnvDump()">Toggle env dump</a></div>
+  <div id="env_dump" style="display:none"><pre>GATEWAY_INTERFACE: &quot;CGI/1.1&quot;
+REMOTE_ADDR: &quot;127.0.0.1&quot;
+REMOTE_HOST: &quot;127.0.0.1&quot;
+SERVER_NAME: &quot;0.0.0.0&quot;
+SERVER_PROTOCOL: &quot;HTTP/1.1&quot;</pre></div>
+</div>
+
+<h2 style="margin-top: 30px">Response</h2>
+<p><b>Headers</b>:</p> <pre>None</pre>
+
+</div>
+
+
+</body>
+</html>
+):
+  app/controllers/mtn_cis_controller.rb:63:in `duke'
+
+
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/_source.erb (0.8ms)
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/_trace.erb (2.7ms)
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (1.3ms)
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (87.2ms)
+
+
+Started GET "/duke" for 127.0.0.1 at 2015-04-26 08:50:10 +0000
+Processing by MtnCisController#duke as HTML
+  Rendered text template (0.0ms)
+Completed 200 OK in 274ms (Views: 1.2ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/duke" for 127.0.0.1 at 2015-04-26 08:51:12 +0000
+Processing by MtnCisController#duke as HTML
+  Rendered text template (0.0ms)
+Completed 200 OK in 155ms (Views: 0.8ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/duke" for 127.0.0.1 at 2015-04-26 09:04:20 +0000
+  [1m[36mParameter Load (0.5ms)[0m  [1mSELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1[0m
+Processing by MtnCisController#duke as HTML
+  Rendered text template (0.0ms)
+Completed 200 OK in 127ms (Views: 1.2ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/duke" for 127.0.0.1 at 2015-04-26 09:12:05 +0000
+  [1m[35mParameter Load (0.8ms)[0m  SELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1
+Processing by MtnCisController#duke as HTML
+  Rendered text template (0.1ms)
+Completed 200 OK in 77ms (Views: 1.7ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/duke" for 127.0.0.1 at 2015-04-26 09:12:34 +0000
+Processing by MtnCisController#duke as HTML
+  Rendered text template (0.0ms)
+Completed 200 OK in 55ms (Views: 0.9ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/duke" for 127.0.0.1 at 2015-04-26 09:12:48 +0000
+  [1m[36mParameter Load (0.8ms)[0m  [1mSELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1[0m
+Processing by MtnCisController#duke as HTML
+  Rendered text template (0.1ms)
+Completed 200 OK in 69ms (Views: 1.8ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/wsdl_mtn/wsdl" for 127.0.0.1 at 2015-04-26 09:44:43 +0000
+Processing by ErrorsController#routing as HTML
+  Parameters: {"rogue_url"=>"wsdl_mtn/wsdl"}
+  Rendered public/404.html (0.5ms)
+Completed 404 Not Found in 37ms (Views: 36.4ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/wsdl_mtns/wsdl" for 127.0.0.1 at 2015-04-26 09:46:24 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (1.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+
+ActionController::RoutingError (uninitialized constant WsdlMtnsController):
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:226:in `const_get'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:226:in `block in constantize'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:224:in `each'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:224:in `inject'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:224:in `constantize'
+  actionpack (4.0.0) lib/action_dispatch/routing/route_set.rb:76:in `controller_reference'
+  actionpack (4.0.0) lib/action_dispatch/routing/route_set.rb:66:in `controller'
+  actionpack (4.0.0) lib/action_dispatch/routing/route_set.rb:44:in `call'
+  actionpack (4.0.0) lib/action_dispatch/journey/router.rb:71:in `block in call'
+  actionpack (4.0.0) lib/action_dispatch/journey/router.rb:59:in `each'
+  actionpack (4.0.0) lib/action_dispatch/journey/router.rb:59:in `call'
+  actionpack (4.0.0) lib/action_dispatch/routing/route_set.rb:655:in `call'
+  rack (1.5.2) lib/rack/etag.rb:23:in `call'
+  rack (1.5.2) lib/rack/conditionalget.rb:25:in `call'
+  rack (1.5.2) lib/rack/head.rb:11:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/params_parser.rb:27:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/flash.rb:241:in `call'
+  rack (1.5.2) lib/rack/session/abstract/id.rb:225:in `context'
+  rack (1.5.2) lib/rack/session/abstract/id.rb:220:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/cookies.rb:486:in `call'
+  activerecord (4.0.0) lib/active_record/query_cache.rb:36:in `call'
+  activerecord (4.0.0) lib/active_record/connection_adapters/abstract/connection_pool.rb:626:in `call'
+  activerecord (4.0.0) lib/active_record/migration.rb:369:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.0.0) lib/active_support/callbacks.rb:373:in `_run__2083352032455181524__call__callbacks'
+  activesupport (4.0.0) lib/active_support/callbacks.rb:80:in `run_callbacks'
+  actionpack (4.0.0) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/reloader.rb:64:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/remote_ip.rb:76:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/debug_exceptions.rb:17:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.0.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.0.0) lib/rails/rack/logger.rb:21:in `block in call'
+  activesupport (4.0.0) lib/active_support/tagged_logging.rb:67:in `block in tagged'
+  activesupport (4.0.0) lib/active_support/tagged_logging.rb:25:in `tagged'
+  activesupport (4.0.0) lib/active_support/tagged_logging.rb:67:in `tagged'
+  railties (4.0.0) lib/rails/rack/logger.rb:21:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.5.2) lib/rack/methodoverride.rb:21:in `call'
+  rack (1.5.2) lib/rack/runtime.rb:17:in `call'
+  activesupport (4.0.0) lib/active_support/cache/strategy/local_cache.rb:83:in `call'
+  rack (1.5.2) lib/rack/lock.rb:17:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/static.rb:64:in `call'
+  railties (4.0.0) lib/rails/engine.rb:511:in `call'
+  railties (4.0.0) lib/rails/application.rb:97:in `call'
+  activerecord (4.0.0) lib/active_record/connection_adapters/abstract/connection_pool.rb:626:in `call'
+  rack (1.5.2) lib/rack/lock.rb:17:in `call'
+  rack (1.5.2) lib/rack/content_length.rb:14:in `call'
+  rack (1.5.2) lib/rack/handler/webrick.rb:60:in `service'
+  /home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/httpserver.rb:138:in `service'
+  /home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/httpserver.rb:94:in `run'
+  /home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/server.rb:295:in `block in start_thread'
+
+
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/_trace.erb (1.1ms)
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/routes/_route.html.erb (13.0ms)
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/routes/_table.html.erb (4.5ms)
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (131.2ms)
+
+
+Started GET "/wsdl_mtn/wsdl" for 127.0.0.1 at 2015-04-26 09:51:28 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (1.5ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by WsdlMtnController#_generate_wsdl as HTML
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/wsdl.builder (3.2ms)
+Completed 200 OK in 10ms (Views: 8.8ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/wsdl_mtn/action" for 127.0.0.1 at 2015-04-26 09:54:27 +0000
+Processing by WsdlMtnController#get_bill as HTML
+  [1m[35mMtnCi Load (11.6ms)[0m  SELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '20150421003051452' LIMIT 1
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/response.builder (0.9ms)
+Completed 200 OK in 225ms (Views: 2.7ms | ActiveRecord: 16.8ms)
+
+
+Started GET "/wsdl_mtn/wsdl" for 127.0.0.1 at 2015-04-26 09:55:53 +0000
+Processing by WsdlMtnController#_generate_wsdl as HTML
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/wsdl.builder (3.0ms)
+Completed 200 OK in 5ms (Views: 4.9ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/wsdl_mtn/wsdl" for 127.0.0.1 at 2015-04-26 10:02:35 +0000
+Processing by WsdlMtnController#_generate_wsdl as HTML
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/wsdl.builder (2.4ms)
+Completed 200 OK in 5ms (Views: 4.1ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/wsdl_mtn/wsdl" for 127.0.0.1 at 2015-04-26 10:03:08 +0000
+Processing by WsdlMtnController#_generate_wsdl as HTML
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/wsdl.builder (2.4ms)
+Completed 200 OK in 5ms (Views: 4.1ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/wsdl_mtn/wsdl" for 127.0.0.1 at 2015-04-26 10:05:52 +0000
+
+SyntaxError (/home/dietrich/workshop/h-backward-overture/app/controllers/wsdl_mtn_controller.rb:8: syntax error, unexpected tSYMBEG
+  def :GetBill
+       ^
+/home/dietrich/workshop/h-backward-overture/app/controllers/wsdl_mtn_controller.rb:13: syntax error, unexpected keyword_end, expecting end-of-input):
+  activesupport (4.0.0) lib/active_support/dependencies.rb:423:in `load'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:423:in `block in load_file'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:615:in `new_constants_in'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:422:in `load_file'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:323:in `require_or_load'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:462:in `load_missing_constant'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:183:in `const_missing'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:226:in `const_get'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:226:in `block in constantize'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:224:in `each'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:224:in `inject'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:224:in `constantize'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:534:in `get'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:565:in `constantize'
+  actionpack (4.0.0) lib/action_dispatch/routing/route_set.rb:76:in `controller_reference'
+  actionpack (4.0.0) lib/action_dispatch/routing/route_set.rb:66:in `controller'
+  actionpack (4.0.0) lib/action_dispatch/routing/route_set.rb:44:in `call'
+  actionpack (4.0.0) lib/action_dispatch/journey/router.rb:71:in `block in call'
+  actionpack (4.0.0) lib/action_dispatch/journey/router.rb:59:in `each'
+  actionpack (4.0.0) lib/action_dispatch/journey/router.rb:59:in `call'
+  actionpack (4.0.0) lib/action_dispatch/routing/route_set.rb:655:in `call'
+  rack (1.5.2) lib/rack/etag.rb:23:in `call'
+  rack (1.5.2) lib/rack/conditionalget.rb:25:in `call'
+  rack (1.5.2) lib/rack/head.rb:11:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/params_parser.rb:27:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/flash.rb:241:in `call'
+  rack (1.5.2) lib/rack/session/abstract/id.rb:225:in `context'
+  rack (1.5.2) lib/rack/session/abstract/id.rb:220:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/cookies.rb:486:in `call'
+  activerecord (4.0.0) lib/active_record/query_cache.rb:36:in `call'
+  activerecord (4.0.0) lib/active_record/connection_adapters/abstract/connection_pool.rb:626:in `call'
+  activerecord (4.0.0) lib/active_record/migration.rb:369:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.0.0) lib/active_support/callbacks.rb:373:in `_run__2337182329234285980__call__callbacks'
+  activesupport (4.0.0) lib/active_support/callbacks.rb:80:in `run_callbacks'
+  actionpack (4.0.0) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/reloader.rb:64:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/remote_ip.rb:76:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/debug_exceptions.rb:17:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.0.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.0.0) lib/rails/rack/logger.rb:21:in `block in call'
+  activesupport (4.0.0) lib/active_support/tagged_logging.rb:67:in `block in tagged'
+  activesupport (4.0.0) lib/active_support/tagged_logging.rb:25:in `tagged'
+  activesupport (4.0.0) lib/active_support/tagged_logging.rb:67:in `tagged'
+  railties (4.0.0) lib/rails/rack/logger.rb:21:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.5.2) lib/rack/methodoverride.rb:21:in `call'
+  rack (1.5.2) lib/rack/runtime.rb:17:in `call'
+  activesupport (4.0.0) lib/active_support/cache/strategy/local_cache.rb:83:in `call'
+  rack (1.5.2) lib/rack/lock.rb:17:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/static.rb:64:in `call'
+  railties (4.0.0) lib/rails/engine.rb:511:in `call'
+  railties (4.0.0) lib/rails/application.rb:97:in `call'
+  activerecord (4.0.0) lib/active_record/connection_adapters/abstract/connection_pool.rb:626:in `call'
+  rack (1.5.2) lib/rack/lock.rb:17:in `call'
+  rack (1.5.2) lib/rack/content_length.rb:14:in `call'
+  rack (1.5.2) lib/rack/handler/webrick.rb:60:in `service'
+  /home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/httpserver.rb:138:in `service'
+  /home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/httpserver.rb:94:in `run'
+  /home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/server.rb:295:in `block in start_thread'
+
+
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/_source.erb (0.8ms)
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/_trace.erb (1.1ms)
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (1.3ms)
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (18.0ms)
+
+
+Started GET "/wsdl_mtn/wsdl" for 127.0.0.1 at 2015-04-26 10:06:07 +0000
+
+SyntaxError (/home/dietrich/workshop/h-backward-overture/app/controllers/wsdl_mtn_controller.rb:8: syntax error, unexpected tSTRING_BEG
+  def "GetBill"
+       ^
+/home/dietrich/workshop/h-backward-overture/app/controllers/wsdl_mtn_controller.rb:13: syntax error, unexpected keyword_end, expecting end-of-input):
+  activesupport (4.0.0) lib/active_support/dependencies.rb:423:in `load'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:423:in `block in load_file'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:615:in `new_constants_in'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:422:in `load_file'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:323:in `require_or_load'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:462:in `load_missing_constant'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:183:in `const_missing'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:226:in `const_get'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:226:in `block in constantize'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:224:in `each'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:224:in `inject'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:224:in `constantize'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:534:in `get'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:565:in `constantize'
+  actionpack (4.0.0) lib/action_dispatch/routing/route_set.rb:76:in `controller_reference'
+  actionpack (4.0.0) lib/action_dispatch/routing/route_set.rb:66:in `controller'
+  actionpack (4.0.0) lib/action_dispatch/routing/route_set.rb:44:in `call'
+  actionpack (4.0.0) lib/action_dispatch/journey/router.rb:71:in `block in call'
+  actionpack (4.0.0) lib/action_dispatch/journey/router.rb:59:in `each'
+  actionpack (4.0.0) lib/action_dispatch/journey/router.rb:59:in `call'
+  actionpack (4.0.0) lib/action_dispatch/routing/route_set.rb:655:in `call'
+  rack (1.5.2) lib/rack/etag.rb:23:in `call'
+  rack (1.5.2) lib/rack/conditionalget.rb:25:in `call'
+  rack (1.5.2) lib/rack/head.rb:11:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/params_parser.rb:27:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/flash.rb:241:in `call'
+  rack (1.5.2) lib/rack/session/abstract/id.rb:225:in `context'
+  rack (1.5.2) lib/rack/session/abstract/id.rb:220:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/cookies.rb:486:in `call'
+  activerecord (4.0.0) lib/active_record/query_cache.rb:36:in `call'
+  activerecord (4.0.0) lib/active_record/connection_adapters/abstract/connection_pool.rb:626:in `call'
+  activerecord (4.0.0) lib/active_record/migration.rb:369:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.0.0) lib/active_support/callbacks.rb:373:in `_run__2337182329234285980__call__callbacks'
+  activesupport (4.0.0) lib/active_support/callbacks.rb:80:in `run_callbacks'
+  actionpack (4.0.0) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/reloader.rb:64:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/remote_ip.rb:76:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/debug_exceptions.rb:17:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.0.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.0.0) lib/rails/rack/logger.rb:21:in `block in call'
+  activesupport (4.0.0) lib/active_support/tagged_logging.rb:67:in `block in tagged'
+  activesupport (4.0.0) lib/active_support/tagged_logging.rb:25:in `tagged'
+  activesupport (4.0.0) lib/active_support/tagged_logging.rb:67:in `tagged'
+  railties (4.0.0) lib/rails/rack/logger.rb:21:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.5.2) lib/rack/methodoverride.rb:21:in `call'
+  rack (1.5.2) lib/rack/runtime.rb:17:in `call'
+  activesupport (4.0.0) lib/active_support/cache/strategy/local_cache.rb:83:in `call'
+  rack (1.5.2) lib/rack/lock.rb:17:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/static.rb:64:in `call'
+  railties (4.0.0) lib/rails/engine.rb:511:in `call'
+  railties (4.0.0) lib/rails/application.rb:97:in `call'
+  activerecord (4.0.0) lib/active_record/connection_adapters/abstract/connection_pool.rb:626:in `call'
+  rack (1.5.2) lib/rack/lock.rb:17:in `call'
+  rack (1.5.2) lib/rack/content_length.rb:14:in `call'
+  rack (1.5.2) lib/rack/handler/webrick.rb:60:in `service'
+  /home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/httpserver.rb:138:in `service'
+  /home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/httpserver.rb:94:in `run'
+  /home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/server.rb:295:in `block in start_thread'
+
+
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/_source.erb (0.9ms)
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/_trace.erb (1.3ms)
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (1.7ms)
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (86.4ms)
+
+
+Started GET "/wsdl_mtn/wsdl" for 127.0.0.1 at 2015-04-26 10:06:23 +0000
+
+SyntaxError (/home/dietrich/workshop/h-backward-overture/app/controllers/wsdl_mtn_controller.rb:8: syntax error, unexpected '['
+  def [GetBill]
+       ^
+/home/dietrich/workshop/h-backward-overture/app/controllers/wsdl_mtn_controller.rb:13: syntax error, unexpected keyword_end, expecting end-of-input):
+  activesupport (4.0.0) lib/active_support/dependencies.rb:423:in `load'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:423:in `block in load_file'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:615:in `new_constants_in'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:422:in `load_file'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:323:in `require_or_load'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:462:in `load_missing_constant'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:183:in `const_missing'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:226:in `const_get'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:226:in `block in constantize'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:224:in `each'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:224:in `inject'
+  activesupport (4.0.0) lib/active_support/inflector/methods.rb:224:in `constantize'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:534:in `get'
+  activesupport (4.0.0) lib/active_support/dependencies.rb:565:in `constantize'
+  actionpack (4.0.0) lib/action_dispatch/routing/route_set.rb:76:in `controller_reference'
+  actionpack (4.0.0) lib/action_dispatch/routing/route_set.rb:66:in `controller'
+  actionpack (4.0.0) lib/action_dispatch/routing/route_set.rb:44:in `call'
+  actionpack (4.0.0) lib/action_dispatch/journey/router.rb:71:in `block in call'
+  actionpack (4.0.0) lib/action_dispatch/journey/router.rb:59:in `each'
+  actionpack (4.0.0) lib/action_dispatch/journey/router.rb:59:in `call'
+  actionpack (4.0.0) lib/action_dispatch/routing/route_set.rb:655:in `call'
+  rack (1.5.2) lib/rack/etag.rb:23:in `call'
+  rack (1.5.2) lib/rack/conditionalget.rb:25:in `call'
+  rack (1.5.2) lib/rack/head.rb:11:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/params_parser.rb:27:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/flash.rb:241:in `call'
+  rack (1.5.2) lib/rack/session/abstract/id.rb:225:in `context'
+  rack (1.5.2) lib/rack/session/abstract/id.rb:220:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/cookies.rb:486:in `call'
+  activerecord (4.0.0) lib/active_record/query_cache.rb:36:in `call'
+  activerecord (4.0.0) lib/active_record/connection_adapters/abstract/connection_pool.rb:626:in `call'
+  activerecord (4.0.0) lib/active_record/migration.rb:369:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.0.0) lib/active_support/callbacks.rb:373:in `_run__2337182329234285980__call__callbacks'
+  activesupport (4.0.0) lib/active_support/callbacks.rb:80:in `run_callbacks'
+  actionpack (4.0.0) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/reloader.rb:64:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/remote_ip.rb:76:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/debug_exceptions.rb:17:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.0.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.0.0) lib/rails/rack/logger.rb:21:in `block in call'
+  activesupport (4.0.0) lib/active_support/tagged_logging.rb:67:in `block in tagged'
+  activesupport (4.0.0) lib/active_support/tagged_logging.rb:25:in `tagged'
+  activesupport (4.0.0) lib/active_support/tagged_logging.rb:67:in `tagged'
+  railties (4.0.0) lib/rails/rack/logger.rb:21:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.5.2) lib/rack/methodoverride.rb:21:in `call'
+  rack (1.5.2) lib/rack/runtime.rb:17:in `call'
+  activesupport (4.0.0) lib/active_support/cache/strategy/local_cache.rb:83:in `call'
+  rack (1.5.2) lib/rack/lock.rb:17:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/static.rb:64:in `call'
+  railties (4.0.0) lib/rails/engine.rb:511:in `call'
+  railties (4.0.0) lib/rails/application.rb:97:in `call'
+  activerecord (4.0.0) lib/active_record/connection_adapters/abstract/connection_pool.rb:626:in `call'
+  rack (1.5.2) lib/rack/lock.rb:17:in `call'
+  rack (1.5.2) lib/rack/content_length.rb:14:in `call'
+  rack (1.5.2) lib/rack/handler/webrick.rb:60:in `service'
+  /home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/httpserver.rb:138:in `service'
+  /home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/httpserver.rb:94:in `run'
+  /home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/server.rb:295:in `block in start_thread'
+
+
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/_source.erb (0.8ms)
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/_trace.erb (1.2ms)
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (1.1ms)
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (18.1ms)
+
+
+Started GET "/wsdl_mtn/wsdl" for 127.0.0.1 at 2015-04-26 10:06:49 +0000
+Processing by WsdlMtnController#_generate_wsdl as HTML
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/wsdl.builder (2.4ms)
+Completed 200 OK in 5ms (Views: 4.1ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/wsdl_mtn/wsdl" for 127.0.0.1 at 2015-04-26 10:07:17 +0000
+Processing by WsdlMtnController#_generate_wsdl as HTML
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/wsdl.builder (2.5ms)
+Completed 200 OK in 69ms (Views: 4.4ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/wsdl_mtn/wsdl" for 127.0.0.1 at 2015-04-26 15:09:42 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (1.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by WsdlMtnController#_generate_wsdl as HTML
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/wsdl.builder (3.2ms)
+Completed 200 OK in 10ms (Views: 8.7ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/wsdl_mtn/action" for 127.0.0.1 at 2015-04-26 15:13:03 +0000
+
+AbstractController::ActionNotFound (The action 'GetBill' could not be found for WsdlMtnController):
+  actionpack (4.0.0) lib/abstract_controller/base.rb:131:in `process'
+  actionpack (4.0.0) lib/abstract_controller/rendering.rb:44:in `process'
+  actionpack (4.0.0) lib/action_controller/metal.rb:195:in `dispatch'
+  actionpack (4.0.0) lib/action_controller/metal/rack_delegation.rb:13:in `dispatch'
+  actionpack (4.0.0) lib/action_controller/metal.rb:231:in `block in action'
+  wash_out (0.9.2) lib/wash_out/router.rb:92:in `call'
+  wash_out (0.9.2) lib/wash_out/router.rb:92:in `call'
+  actionpack (4.0.0) lib/action_dispatch/journey/router.rb:71:in `block in call'
+  actionpack (4.0.0) lib/action_dispatch/journey/router.rb:59:in `each'
+  actionpack (4.0.0) lib/action_dispatch/journey/router.rb:59:in `call'
+  actionpack (4.0.0) lib/action_dispatch/routing/route_set.rb:655:in `call'
+  rack (1.5.2) lib/rack/etag.rb:23:in `call'
+  rack (1.5.2) lib/rack/conditionalget.rb:35:in `call'
+  rack (1.5.2) lib/rack/head.rb:11:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/params_parser.rb:27:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/flash.rb:241:in `call'
+  rack (1.5.2) lib/rack/session/abstract/id.rb:225:in `context'
+  rack (1.5.2) lib/rack/session/abstract/id.rb:220:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/cookies.rb:486:in `call'
+  activerecord (4.0.0) lib/active_record/query_cache.rb:36:in `call'
+  activerecord (4.0.0) lib/active_record/connection_adapters/abstract/connection_pool.rb:626:in `call'
+  activerecord (4.0.0) lib/active_record/migration.rb:369:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.0.0) lib/active_support/callbacks.rb:373:in `_run__1070498443578413240__call__callbacks'
+  activesupport (4.0.0) lib/active_support/callbacks.rb:80:in `run_callbacks'
+  actionpack (4.0.0) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/reloader.rb:64:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/remote_ip.rb:76:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/debug_exceptions.rb:17:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.0.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.0.0) lib/rails/rack/logger.rb:21:in `block in call'
+  activesupport (4.0.0) lib/active_support/tagged_logging.rb:67:in `block in tagged'
+  activesupport (4.0.0) lib/active_support/tagged_logging.rb:25:in `tagged'
+  activesupport (4.0.0) lib/active_support/tagged_logging.rb:67:in `tagged'
+  railties (4.0.0) lib/rails/rack/logger.rb:21:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.5.2) lib/rack/methodoverride.rb:21:in `call'
+  rack (1.5.2) lib/rack/runtime.rb:17:in `call'
+  activesupport (4.0.0) lib/active_support/cache/strategy/local_cache.rb:83:in `call'
+  rack (1.5.2) lib/rack/lock.rb:17:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/static.rb:64:in `call'
+  railties (4.0.0) lib/rails/engine.rb:511:in `call'
+  railties (4.0.0) lib/rails/application.rb:97:in `call'
+  activerecord (4.0.0) lib/active_record/connection_adapters/abstract/connection_pool.rb:626:in `call'
+  rack (1.5.2) lib/rack/lock.rb:17:in `call'
+  rack (1.5.2) lib/rack/content_length.rb:14:in `call'
+  rack (1.5.2) lib/rack/handler/webrick.rb:60:in `service'
+  /home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/httpserver.rb:138:in `service'
+  /home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/httpserver.rb:94:in `run'
+  /home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/server.rb:295:in `block in start_thread'
+
+
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/unknown_action.erb within rescues/layout (2.4ms)
+
+
+Started GET "/wsdl_mtn/wsdl" for 127.0.0.1 at 2015-04-26 15:13:10 +0000
+Processing by WsdlMtnController#_generate_wsdl as HTML
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/wsdl.builder (2.4ms)
+Completed 200 OK in 4ms (Views: 3.8ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/wsdl_mtn/action" for 127.0.0.1 at 2015-04-26 15:13:42 +0000
+
+AbstractController::ActionNotFound (The action 'GetBill' could not be found for WsdlMtnController):
+  actionpack (4.0.0) lib/abstract_controller/base.rb:131:in `process'
+  actionpack (4.0.0) lib/abstract_controller/rendering.rb:44:in `process'
+  actionpack (4.0.0) lib/action_controller/metal.rb:195:in `dispatch'
+  actionpack (4.0.0) lib/action_controller/metal/rack_delegation.rb:13:in `dispatch'
+  actionpack (4.0.0) lib/action_controller/metal.rb:231:in `block in action'
+  wash_out (0.9.2) lib/wash_out/router.rb:92:in `call'
+  wash_out (0.9.2) lib/wash_out/router.rb:92:in `call'
+  actionpack (4.0.0) lib/action_dispatch/journey/router.rb:71:in `block in call'
+  actionpack (4.0.0) lib/action_dispatch/journey/router.rb:59:in `each'
+  actionpack (4.0.0) lib/action_dispatch/journey/router.rb:59:in `call'
+  actionpack (4.0.0) lib/action_dispatch/routing/route_set.rb:655:in `call'
+  rack (1.5.2) lib/rack/etag.rb:23:in `call'
+  rack (1.5.2) lib/rack/conditionalget.rb:35:in `call'
+  rack (1.5.2) lib/rack/head.rb:11:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/params_parser.rb:27:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/flash.rb:241:in `call'
+  rack (1.5.2) lib/rack/session/abstract/id.rb:225:in `context'
+  rack (1.5.2) lib/rack/session/abstract/id.rb:220:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/cookies.rb:486:in `call'
+  activerecord (4.0.0) lib/active_record/query_cache.rb:36:in `call'
+  activerecord (4.0.0) lib/active_record/connection_adapters/abstract/connection_pool.rb:626:in `call'
+  activerecord (4.0.0) lib/active_record/migration.rb:369:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.0.0) lib/active_support/callbacks.rb:373:in `_run__1070498443578413240__call__callbacks'
+  activesupport (4.0.0) lib/active_support/callbacks.rb:80:in `run_callbacks'
+  actionpack (4.0.0) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/reloader.rb:64:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/remote_ip.rb:76:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/debug_exceptions.rb:17:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.0.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.0.0) lib/rails/rack/logger.rb:21:in `block in call'
+  activesupport (4.0.0) lib/active_support/tagged_logging.rb:67:in `block in tagged'
+  activesupport (4.0.0) lib/active_support/tagged_logging.rb:25:in `tagged'
+  activesupport (4.0.0) lib/active_support/tagged_logging.rb:67:in `tagged'
+  railties (4.0.0) lib/rails/rack/logger.rb:21:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.5.2) lib/rack/methodoverride.rb:21:in `call'
+  rack (1.5.2) lib/rack/runtime.rb:17:in `call'
+  activesupport (4.0.0) lib/active_support/cache/strategy/local_cache.rb:83:in `call'
+  rack (1.5.2) lib/rack/lock.rb:17:in `call'
+  actionpack (4.0.0) lib/action_dispatch/middleware/static.rb:64:in `call'
+  railties (4.0.0) lib/rails/engine.rb:511:in `call'
+  railties (4.0.0) lib/rails/application.rb:97:in `call'
+  activerecord (4.0.0) lib/active_record/connection_adapters/abstract/connection_pool.rb:626:in `call'
+  rack (1.5.2) lib/rack/lock.rb:17:in `call'
+  rack (1.5.2) lib/rack/content_length.rb:14:in `call'
+  rack (1.5.2) lib/rack/handler/webrick.rb:60:in `service'
+  /home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/httpserver.rb:138:in `service'
+  /home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/httpserver.rb:94:in `run'
+  /home/dietrich/.rvm/rubies/ruby-2.0.0-p195/lib/ruby/2.0.0/webrick/server.rb:295:in `block in start_thread'
+
+
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/unknown_action.erb within rescues/layout (0.6ms)
+
+
+Started GET "/wsdl_mtn/wsdl" for 127.0.0.1 at 2015-04-26 15:16:15 +0000
+Processing by WsdlMtnController#_generate_wsdl as HTML
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/wsdl.builder (2.2ms)
+Completed 200 OK in 5ms (Views: 3.7ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/wsdl_mtn/action" for 127.0.0.1 at 2015-04-26 15:16:21 +0000
+Processing by WsdlMtnController#get_bill as HTML
+  [1m[35mMtnCi Load (1.7ms)[0m  SELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '20150421003051452' LIMIT 1
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/response.builder (0.8ms)
+Completed 200 OK in 151ms (Views: 2.4ms | ActiveRecord: 4.7ms)
+  [1m[36mActiveRecord::SchemaMigration Load (1.2ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by WsdlMtnController#_generate_wsdl as HTML
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/wsdl.builder (3.1ms)
+Completed 200 OK in 10ms (Views: 8.6ms | ActiveRecord: 0.0ms)
+Processing by WsdlMtnController#get_bill as HTML
+Reception des parametres: Reference => 20150421003051452, Montant => 520
+  [1m[35mMtnCi Load (2.2ms)[0m  SELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '20150421003051452' LIMIT 1
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/response.builder (0.8ms)
+Completed 200 OK in 156ms (Views: 2.5ms | ActiveRecord: 6.3ms)
+  [1m[36mMtnCi Load (2.8ms)[0m  [1mSELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '20150421003051452' LIMIT 1[0m
+  [1m[35mMtnCi Load (1.6ms)[0m  SELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '20150421003051452' LIMIT 1
+Processing by WsdlMtnController#_generate_wsdl as HTML
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/wsdl.builder (2.4ms)
+Completed 200 OK in 4ms (Views: 3.8ms | ActiveRecord: 0.0ms)
+Processing by WsdlMtnController#get_bill as HTML
+Reception des parametres: Reference => "20150421003051452", Montant => 520
+  [1m[36mMtnCi Load (1.2ms)[0m  [1mSELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '"20150421003051452"' LIMIT 1[0m
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/response.builder (0.5ms)
+Completed 200 OK in 6ms (Views: 2.3ms | ActiveRecord: 1.2ms)
+Processing by WsdlMtnController#_generate_wsdl as HTML
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/wsdl.builder (3.2ms)
+Completed 200 OK in 6ms (Views: 5.6ms | ActiveRecord: 0.0ms)
+Processing by WsdlMtnController#get_bill as HTML
+Reception des parametres: Reference => 20150421003051452, Montant => 520
+  [1m[35mMtnCi Load (1.1ms)[0m  SELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '20150421003051452' LIMIT 1
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/response.builder (1.1ms)
+Completed 200 OK in 7ms (Views: 2.9ms | ActiveRecord: 1.1ms)
+Processing by WsdlMtnController#_generate_wsdl as HTML
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/wsdl.builder (2.3ms)
+Completed 200 OK in 5ms (Views: 4.0ms | ActiveRecord: 0.0ms)
+Processing by WsdlMtnController#get_bill as HTML
+Reception des parametres: Reference => 20150421003051452, Montant => 520
+  [1m[36mMtnCi Load (1.2ms)[0m  [1mSELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '20150421003051452' LIMIT 1[0m
+Montant de transaction en base: 520, Montant recu en parametre: 520
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/response.builder (0.6ms)
+Completed 200 OK in 158ms (Views: 2.3ms | ActiveRecord: 6.0ms)
+Processing by WsdlMtnController#_generate_wsdl as HTML
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/wsdl.builder (2.2ms)
+Completed 200 OK in 4ms (Views: 3.7ms | ActiveRecord: 0.0ms)
+Processing by WsdlMtnController#GetBill as HTML
+Reception des parametres: Reference => 20150421003051452, Montant => 520
+  [1m[35mMtnCi Load (1.0ms)[0m  SELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '20150421003051452' LIMIT 1
+Montant de transaction en base: 520, Montant recu en parametre: 520
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/response.builder (0.5ms)
+Completed 200 OK in 144ms (Views: 2.1ms | ActiveRecord: 4.9ms)
+Processing by WsdlMtnController#_generate_wsdl as HTML
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/wsdl.builder (2.3ms)
+Completed 200 OK in 5ms (Views: 3.7ms | ActiveRecord: 0.0ms)
+Processing by WsdlMtnController#GetBill as HTML
+Reception des parametres: Reference => 20150421003051452, Montant => 520
+  [1m[36mMtnCi Load (0.9ms)[0m  [1mSELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '20150421003051452' LIMIT 1[0m
+Montant de transaction en base: 520, Montant recu en parametre: 520
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/response.builder (0.5ms)
+Completed 200 OK in 146ms (Views: 2.0ms | ActiveRecord: 5.6ms)
+Processing by WsdlMtnController#_generate_wsdl as HTML
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/wsdl.builder (2.1ms)
+Completed 200 OK in 4ms (Views: 3.5ms | ActiveRecord: 0.0ms)
+Processing by WsdlMtnController#GetBill as HTML
+Reception des parametres: Reference => 20150421003051452, Montant => 520
+  [1m[35mMtnCi Load (0.8ms)[0m  SELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '20150421003051452' LIMIT 1
+Montant de transaction en base: 520, Montant recu en parametre: 520
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/response.builder (0.4ms)
+Completed 200 OK in 143ms (Views: 2.0ms | ActiveRecord: 3.4ms)
+Processing by WsdlMtnController#_generate_wsdl as HTML
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/wsdl.builder (2.3ms)
+Completed 200 OK in 5ms (Views: 3.7ms | ActiveRecord: 0.0ms)
+Processing by WsdlMtnController#GetBill as HTML
+Reception des parametres: Reference => 20150421003051452, Montant => 520
+  [1m[36mMtnCi Load (0.8ms)[0m  [1mSELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '20150421003051452' LIMIT 1[0m
+Montant de transaction en base: 520, Montant recu en parametre: 520
+  Rendered text template (0.0ms)
+Completed 200 OK in 87ms (Views: 1.4ms | ActiveRecord: 4.4ms)
+Processing by WsdlMtnController#_generate_wsdl as HTML
+  Rendered /home/dietrich/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/wash_out-0.9.2/app/views/wash_with_soap/rpc/wsdl.builder (2.2ms)
+Completed 200 OK in 4ms (Views: 3.6ms | ActiveRecord: 0.0ms)
+Processing by WsdlMtnController#GetBill as HTML
+Reception des parametres: Reference => 20150421003051452, Montant => 520
+  [1m[35mMtnCi Load (1.1ms)[0m  SELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '20150421003051452' LIMIT 1
+Montant de transaction en base: 520, Montant recu en parametre: 520
+Completed 200 OK in 146ms (Views: 0.2ms | ActiveRecord: 5.7ms)
+Processing by MainController#guard as HTML
+  Parameters: {"currency"=>"xaf", "service_token"=>"ef34523f1196c904c6e09af80e472ac2", "operation_token"=>"535ef2a5-c7bc-48c0-8b4d-d5c73c40b272", "order"=>"gdlololgd5fg588dgd6ghffghfdg", "transaction_amount"=>"500"}
+  [1m[36mCurrency Load (51.5ms)[0m  [1mSELECT "currencies".* FROM "currencies" WHERE (code = 'XAF' AND published IS TRUE)[0m
+  [1m[35mService Load (18.5ms)[0m  SELECT "services".* FROM "services" WHERE (authentication_token = 'ef34523f1196c904c6e09af80e472ac2' AND published IS NOT FALSE)
+  [1m[36mOperation Load (2.9ms)[0m  [1mSELECT "operations".* FROM "operations" WHERE (authentication_token = '535ef2a5-c7bc-48c0-8b4d-d5c73c40b272' AND service_id = 15 AND published IS NOT FALSE)[0m
+  [1m[35mService Load (1.2ms)[0m  SELECT "services".* FROM "services" WHERE "services"."authentication_token" = 'ef34523f1196c904c6e09af80e472ac2' LIMIT 1
+  [1m[36mOperation Load (0.9ms)[0m  [1mSELECT "operations".* FROM "operations" WHERE "operations"."authentication_token" = '535ef2a5-c7bc-48c0-8b4d-d5c73c40b272' LIMIT 1[0m
+  [1m[35mBasket Load (53.3ms)[0m  SELECT "baskets".* FROM "baskets" WHERE "baskets"."service_id" = $1 AND (number = 'gdlololgd5fg588dgd6ghffghfdg' AND operation_id = '1')  [["service_id", 15]]
+  [1m[36mPaypalBasket Load (2.8ms)[0m  [1mSELECT "paypal_baskets".* FROM "paypal_baskets" WHERE "paypal_baskets"."service_id" = $1 AND (number = 'gdlololgd5fg588dgd6ghffghfdg' AND operation_id = '1')[0m  [["service_id", 15]]
+  [1m[35mDelayedPayment Load (2.5ms)[0m  SELECT "delayed_payments".* FROM "delayed_payments" WHERE "delayed_payments"."service_id" = $1 AND (number = 'gdlololgd5fg588dgd6ghffghfdg' AND operation_id = '1')  [["service_id", 15]]
+  [1m[36mOrangeMoneyCiBasket Load (2.2ms)[0m  [1mSELECT "orange_money_ci_baskets".* FROM "orange_money_ci_baskets" WHERE "orange_money_ci_baskets"."service_id" = $1 AND (number = 'gdlololgd5fg588dgd6ghffghfdg' AND operation_id = '1')[0m  [["service_id", 15]]
+  [1m[35mQashBasket Load (2.0ms)[0m  SELECT "qash_baskets".* FROM "qash_baskets" WHERE "qash_baskets"."service_id" = $1 AND (number = 'gdlololgd5fg588dgd6ghffghfdg' AND operation_id = '1')  [["service_id", 15]]
+Redirected to http://0.0.0.0:3001/Main
+Completed 302 Found in 581ms (ActiveRecord: 189.4ms)
+  [1m[36m (0.4ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (176.2ms)[0m  INSERT INTO "sessions" ("created_at", "data", "session_id", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["created_at", Sun, 26 Apr 2015 16:37:25 UTC +00:00], ["data", "BAh7C0kiDWN1cnJlbmN5BjoGRUZvOg1DdXJyZW5jeRY6EEBhdHRyaWJ1dGVz\newxJIgdpZAY7AFRJIggxNTAGOwBUSSIJbmFtZQY7AFRJIjNDb21tdW5hdXTD\nqSBGaW5hbmNpw6hyZSBBZnJpY2FpbmUgQkVBQywgRnJhbmNzBjsAVEkiCWNv\nZGUGOwBUSSIIWEFGBjsAVEkiD2NyZWF0ZWRfYXQGOwBUMEkiD3VwZGF0ZWRf\nYXQGOwBUMEkiDnB1Ymxpc2hlZAY7AFRJIgZ0BjsAVEkiC3N5bWJvbAY7AFRJ\nIglGQ0ZBBjsAVDoSQGNvbHVtbnNfaGFzaHsMSSIHaWQGOwBUbzpGQWN0aXZl\nUmVjb3JkOjpDb25uZWN0aW9uQWRhcHRlcnM6OlBvc3RncmVTUUxBZGFwdGVy\nOjpPSUQ6OkludGVnZXIASSIJbmFtZQY7AFRvOkdBY3RpdmVSZWNvcmQ6OkNv\nbm5lY3Rpb25BZGFwdGVyczo6UG9zdGdyZVNRTEFkYXB0ZXI6Ok9JRDo6SWRl\nbnRpdHkASSIJY29kZQY7AFRAGUkiD2NyZWF0ZWRfYXQGOwBUbzo9QWN0aXZl\nUmVjb3JkOjpBdHRyaWJ1dGVNZXRob2RzOjpUaW1lWm9uZUNvbnZlcnNpb246\nOlR5cGUGOgxAY29sdW1ubzpIQWN0aXZlUmVjb3JkOjpDb25uZWN0aW9uQWRh\ncHRlcnM6OlBvc3RncmVTUUxBZGFwdGVyOjpPSUQ6OlRpbWVzdGFtcABJIg91\ncGRhdGVkX2F0BjsAVG87CwY7DEAdSSIOcHVibGlzaGVkBjsAVG86RkFjdGl2\nZVJlY29yZDo6Q29ubmVjdGlvbkFkYXB0ZXJzOjpQb3N0Z3JlU1FMQWRhcHRl\ncjo6T0lEOjpCb29sZWFuAEkiC3N5bWJvbAY7AFRAGToXQGFnZ3JlZ2F0aW9u\nX2NhY2hlewA6F0Bhc3NvY2lhdGlvbl9jYWNoZXsAOhZAYXR0cmlidXRlc19j\nYWNoZXsAOhhAcHJldmlvdXNseV9jaGFuZ2VkewA6GEBjaGFuZ2VkX2F0dHJp\nYnV0ZXN7ADoOQHJlYWRvbmx5RjoPQGRlc3Ryb3llZEY6HEBtYXJrZWRfZm9y\nX2Rlc3RydWN0aW9uRjoeQGRlc3Ryb3llZF9ieV9hc3NvY2lhdGlvbjA6EEBu\nZXdfcmVjb3JkRjoJQHR4bjA6HkBfc3RhcnRfdHJhbnNhY3Rpb25fc3RhdGV7\nADoXQHRyYW5zYWN0aW9uX3N0YXRlMDoUQHJlZmxlY3RzX3N0YXRlWwZGOh1A\nbWFzc19hc3NpZ25tZW50X29wdGlvbnMwSSIMc2VydmljZQY7AEZvOgxTZXJ2\naWNlFjsHextJIgdpZAY7AFRJIgcxNQY7AFRJIgljb2RlBjsAVEkiJWMwZGRm\nMDE1ODAyYmQ4YzNhMzlmNjE3ZThmNDEzMjlkBjsAVEkiCW5hbWUGOwBUSSIL\nV2ltYm9vBjsAVEkiD2NyZWF0ZWRfYXQGOwBUSSIfMjAxNC0xMi0wMSAxODoz\nMzo0MC44ODEwNTUGOwBUSSIPdXBkYXRlZF9hdAY7AFRJIh8yMDE0LTEyLTAx\nIDE4OjMzOjQwLjg4MTA1NQY7AFRJIg9zYWxlc19hcmVhBjsAVDBJIhN1cmxf\nb25fc3VjY2VzcwY7AFRJIjdodHRwOi8vNDEuMTg5LjQwLjE5Mzo1MDAwL3Zh\nbGlkYXRlX3RyYW5zYWN0aW9uLnBocAY7AFRJIhF1cmxfb25fZXJyb3IGOwBU\nSSI3aHR0cDovLzQxLjE4OS40MC4xOTM6NTAwMC92YWxpZGF0ZV90cmFuc2Fj\ndGlvbi5waHAGOwBUSSIbdXJsX29uX3Nlc3Npb25fZXhwaXJlZAY7AFQwSSIY\ndXJsX29uX2hvbGRfc3VjY2VzcwY7AFQwSSIWdXJsX29uX2hvbGRfZXJyb3IG\nOwBUMEkiGXVybF9vbl9ob2xkX2xpc3RlbmVyBjsAVDBJIhlhdXRoZW50aWNh\ndGlvbl90b2tlbgY7AFRJIiVlZjM0NTIzZjExOTZjOTA0YzZlMDlhZjgwZTQ3\nMmFjMgY7AFRJIgxjb21tZW50BjsAVDBJIh91cmxfb25fYmFza2V0X2FscmVh\nZHlfcGFpZAY7AFRJIjdodHRwOi8vNDEuMTg5LjQwLjE5Mzo1MDAwL3ZhbGlk\nYXRlX3RyYW5zYWN0aW9uLnBocAY7AFRJIg91cmxfdG9faXBuBjsAVEkiN2h0\ndHA6Ly80MS4xODkuNDAuMTkzOjUwMDAvdmFsaWRhdGVfdHJhbnNhY3Rpb24u\ncGhwBjsAVEkiDnB1Ymxpc2hlZAY7AFQwSSITbG9nb19maWxlX25hbWUGOwBU\nMEkiFmxvZ29fY29udGVudF90eXBlBjsAVDBJIhNsb2dvX2ZpbGVfc2l6ZQY7\nAFQwSSIUbG9nb191cGRhdGVkX2F0BjsAVDBJIgp0b2tlbgY7AFRJIhFlNWU3\nNTAyZGUzNDMGOwBUOwh7G0kiB2lkBjsAVEAXSSIJY29kZQY7AFRAGUkiCW5h\nbWUGOwBUQBlJIg9jcmVhdGVkX2F0BjsAVG87CwY7DEAdSSIPdXBkYXRlZF9h\ndAY7AFRvOwsGOwxAHUkiD3NhbGVzX2FyZWEGOwBUQBlJIhN1cmxfb25fc3Vj\nY2VzcwY7AFRAGUkiEXVybF9vbl9lcnJvcgY7AFRAGUkiG3VybF9vbl9zZXNz\naW9uX2V4cGlyZWQGOwBUQBlJIhh1cmxfb25faG9sZF9zdWNjZXNzBjsAVEAZ\nSSIWdXJsX29uX2hvbGRfZXJyb3IGOwBUQBlJIhl1cmxfb25faG9sZF9saXN0\nZW5lcgY7AFRAGUkiGWF1dGhlbnRpY2F0aW9uX3Rva2VuBjsAVEAZSSIMY29t\nbWVudAY7AFRAGUkiH3VybF9vbl9iYXNrZXRfYWxyZWFkeV9wYWlkBjsAVEAZ\nSSIPdXJsX3RvX2lwbgY7AFRAGUkiDnB1Ymxpc2hlZAY7AFRAIUkiE2xvZ29f\nZmlsZV9uYW1lBjsAVEAZSSIWbG9nb19jb250ZW50X3R5cGUGOwBUQBlJIhNs\nb2dvX2ZpbGVfc2l6ZQY7AFRAF0kiFGxvZ29fdXBkYXRlZF9hdAY7AFRvOwsG\nOwxAHUkiCnRva2VuBjsAVEAZOw97ADsQewo6DGJhc2tldHNVOjNBY3RpdmVS\nZWNvcmQ6OkFzc29jaWF0aW9uczo6SGFzTWFueUFzc29jaWF0aW9uWwc7H1sL\nWwc6C0Bvd25lckArWwc6DEBsb2FkZWRGWwc6DEB0YXJnZXRbAFsHOhFAc3Rh\nbGVfc3RhdGUwWwc6F0Bhc3NvY2lhdGlvbl9zY29wZW86OUFjdGl2ZVJlY29y\nZDo6UmVsYXRpb246OkFjdGl2ZVJlY29yZF9SZWxhdGlvbl9CYXNrZXQUOgtA\na2xhc3NjC0Jhc2tldDoLQHRhYmxlbzoQQXJlbDo6VGFibGULOgpAbmFtZUki\nDGJhc2tldHMGOwBUOgxAZW5naW5lQHQ6DUBjb2x1bW5zMDoNQGFsaWFzZXNb\nADoRQHRhYmxlX2FsaWFzMDoRQHByaW1hcnlfa2V5MDoMQHZhbHVlc3sIOg5l\neHRlbmRpbmdbADoJYmluZFsGWwdvOjdBY3RpdmVSZWNvcmQ6OkNvbm5lY3Rp\nb25BZGFwdGVyczo6UG9zdGdyZVNRTENvbHVtbhE6DkBvaWRfdHlwZUAZOgtA\nYXJyYXlGOypJIg9zZXJ2aWNlX2lkBjsAVDoOQHNxbF90eXBlSSIbY2hhcmFj\ndGVyIHZhcnlpbmcoMjU1KQY7AFQ6CkBudWxsVDoLQGxpbWl0aQH/Og9AcHJl\nY2lzaW9uMDoLQHNjYWxlMDoKQHR5cGU6C3N0cmluZzoNQGRlZmF1bHQwOg1A\ncHJpbWFyeTA6C0Bjb2RlcjBpFDoKd2hlcmVbBm86GkFyZWw6Ok5vZGVzOjpF\ncXVhbGl0eQc6CkBsZWZ0UzogQXJlbDo6QXR0cmlidXRlczo6QXR0cmlidXRl\nBzoNcmVsYXRpb25vOykLOypAdjsrYxdBY3RpdmVSZWNvcmQ6OkJhc2U7LDA7\nLVsAOy4wOy8wOgluYW1lSSIPc2VydmljZV9pZAY7AEY6C0ByaWdodElDOhtB\ncmVsOjpOb2Rlczo6QmluZFBhcmFtIgckMQY7AFQ6F0BpbXBsaWNpdF9yZWFk\nb25seTA7IjA6FEBkZWZhdWx0X3Njb3BlZEY6CkBhcmVsbzoYQXJlbDo6U2Vs\nZWN0TWFuYWdlcgg7K0B0OglAY3R4bzocQXJlbDo6Tm9kZXM6OlNlbGVjdENv\ncmUNOgxAc291cmNlbzocQXJlbDo6Tm9kZXM6OkpvaW5Tb3VyY2UHO0JAdTtG\nWwA6CUB0b3AwOhRAc2V0X3F1YW50aWZpZXIwOhFAcHJvamVjdGlvbnNbBlM7\nQwc7REB1O0VJQzocQXJlbDo6Tm9kZXM6OlNxbExpdGVyYWwiBioGOwBUOgxA\nd2hlcmVzWwZvOhVBcmVsOjpOb2Rlczo6QW5kBjoOQGNoaWxkcmVuWwZAAXs6\nDEBncm91cHNbADoMQGhhdmluZzA6DUB3aW5kb3dzWwA6CUBhc3RvOiFBcmVs\nOjpOb2Rlczo6U2VsZWN0U3RhdGVtZW50CzoLQGNvcmVzWwZAAYM6DEBvcmRl\ncnNbADs4MDoKQGxvY2swOgxAb2Zmc2V0MDoKQHdpdGgwOhZAc2NvcGVfZm9y\nX2NyZWF0ZTA6EkBvcmRlcl9jbGF1c2UwOgxAdG9fc3FsMDoKQGxhc3QwOgtA\nZmlyc3QwOhVAam9pbl9kZXBlbmRlbmN5MDoXQHNob3VsZF9lYWdlcl9sb2Fk\nMDoNQHJlY29yZHNbAFsHOgtAcHJveHlvOmJBY3RpdmVSZWNvcmQ6OkFzc29j\naWF0aW9uczo6Q29sbGVjdGlvblByb3h5OjpBY3RpdmVSZWNvcmRfQXNzb2Np\nYXRpb25zX0NvbGxlY3Rpb25Qcm94eV9CYXNrZXQNOhFAYXNzb2NpYXRpb25A\najsnQHQ7KEB1OzB7CjtAWwZAAXs7MlsGQHs6CWZyb20wOglsb2NrMDoScmV2\nZXJzZV9vcmRlcjA7SDA7IkY7SVQ7Sm87Swg7K0B0O0xvO00NO05vO08HO0JA\ndTtGWwA7UDA7UTA7UlsGUztDBztEQHU7RUlDO1MiBioGOwBUO1RbBm87VQY7\nVlsGQAF7O1dbADtYMDtZWwA7Wm87Wws7XFsGQAGYO11bADs4MDteMDtfMDtg\nMDoTcGF5cGFsX2Jhc2tldHNVOyBbBztvWwtbBzshQCtbBzsiRlsHOyNbAFsH\nOyQwWwc7JW86P0FjdGl2ZVJlY29yZDo6UmVsYXRpb246OkFjdGl2ZVJlY29y\nZF9SZWxhdGlvbl9QYXlwYWxCYXNrZXQUOydjEVBheXBhbEJhc2tldDsobzsp\nCzsqSSITcGF5cGFsX2Jhc2tldHMGOwBUOytAAbA7LDA7LVsAOy4wOy8wOzB7\nCDsxWwA7MlsGWwdvOzMROzRAGTs1RjsqSSIPc2VydmljZV9pZAY7AFQ7Nkki\nG2NoYXJhY3RlciB2YXJ5aW5nKDI1NSkGOwBUOzdUOzhpAf87OTA7OjA7Ozs8\nOz0wOz4wOz8waRQ7QFsGbztBBztCUztDBztEbzspCzsqQAGyOytAAX47LDA7\nLVsAOy4wOy8wO0VJIg9zZXJ2aWNlX2lkBjsARjtGSUM7RyIHJDEGOwBUO0gw\nOyIwO0lGO0pvO0sIOytAAbA7TG87TQ07Tm87Twc7QkABsTtGWwA7UDA7UTA7\nUlsGUztDBztEQAGxO0VJQztTIgYqBjsAVDtUWwZvO1UGO1ZbBkABvDtXWwA7\nWDA7WVsAO1pvO1sLO1xbBkABwztdWwA7ODA7XjA7XzA7YDA7YTA7YjA7YzA7\nZDA7ZTA7ZjA7ZzA7aFsAWwc7aW86aEFjdGl2ZVJlY29yZDo6QXNzb2NpYXRp\nb25zOjpDb2xsZWN0aW9uUHJveHk6OkFjdGl2ZVJlY29yZF9Bc3NvY2lhdGlv\nbnNfQ29sbGVjdGlvblByb3h5X1BheXBhbEJhc2tldA07a0ABpjsnQAGwOyhA\nAbE7MHsKO0BbBkABvDsyWwZAAbc7bDA7bTA7bjA7SDA7IkY7SVQ7Sm87Swg7\nK0ABsDtMbztNDTtObztPBztCQAGxO0ZbADtQMDtRMDtSWwZTO0MHO0RAAbE7\nRUlDO1MiBioGOwBUO1RbBm87VQY7VlsGQAG8O1dbADtYMDtZWwA7Wm87Wws7\nXFsGQAHYO11bADs4MDteMDtfMDtgMDocb3JhbmdlX21vbmV5X2NpX2Jhc2tl\ndHNVOyBbBztyWwtbBzshQCtbBzsiRlsHOyNbAFsHOyQwWwc7JW86RkFjdGl2\nZVJlY29yZDo6UmVsYXRpb246OkFjdGl2ZVJlY29yZF9SZWxhdGlvbl9PcmFu\nZ2VNb25leUNpQmFza2V0FDsnYxhPcmFuZ2VNb25leUNpQmFza2V0OyhvOykL\nOypJIhxvcmFuZ2VfbW9uZXlfY2lfYmFza2V0cwY7AFQ7K0AB8DssMDstWwA7\nLjA7LzA7MHsIOzFbADsyWwZbB287MxE7NEAZOzVGOypJIg9zZXJ2aWNlX2lk\nBjsAVDs2SSIbY2hhcmFjdGVyIHZhcnlpbmcoMjU1KQY7AFQ7N1Q7OGkB/zs5\nMDs6MDs7Ozw7PTA7PjA7PzBpFDtAWwZvO0EHO0JTO0MHO0RvOykLOypAAfI7\nK0ABfjssMDstWwA7LjA7LzA7RUkiD3NlcnZpY2VfaWQGOwBGO0ZJQztHIgck\nMQY7AFQ7SDA7IjA7SUY7Sm87Swg7K0AB8DtMbztNDTtObztPBztCQAHxO0Zb\nADtQMDtRMDtSWwZTO0MHO0RAAfE7RUlDO1MiBioGOwBUO1RbBm87VQY7VlsG\nQAH8O1dbADtYMDtZWwA7Wm87Wws7XFsGQAIDATtdWwA7ODA7XjA7XzA7YDA7\nYTA7YjA7YzA7ZDA7ZTA7ZjA7ZzA7aFsAWwc7aW86b0FjdGl2ZVJlY29yZDo6\nQXNzb2NpYXRpb25zOjpDb2xsZWN0aW9uUHJveHk6OkFjdGl2ZVJlY29yZF9B\nc3NvY2lhdGlvbnNfQ29sbGVjdGlvblByb3h5X09yYW5nZU1vbmV5Q2lCYXNr\nZXQNO2tAAeY7J0AB8DsoQAHxOzB7CjtAWwZAAfw7MlsGQAH3O2wwO20wO24w\nO0gwOyJGO0lUO0pvO0sIOytAAfA7TG87TQ07Tm87Twc7QkAB8TtGWwA7UDA7\nUTA7UlsGUztDBztEQAHxO0VJQztTIgYqBjsAVDtUWwZvO1UGO1ZbBkAB/DtX\nWwA7WDA7WVsAO1pvO1sLO1xbBkACGAE7XVsAOzgwO14wO18wO2AwOhFxYXNo\nX2Jhc2tldHNVOyBbBzt1WwtbBzshQCtbBzsiRlsHOyNbAFsHOyQwWwc7JW86\nPUFjdGl2ZVJlY29yZDo6UmVsYXRpb246OkFjdGl2ZVJlY29yZF9SZWxhdGlv\nbl9RYXNoQmFza2V0FDsnYw9RYXNoQmFza2V0OyhvOykLOypJIhFxYXNoX2Jh\nc2tldHMGOwBUOytAAjABOywwOy1bADsuMDsvMDswewg7MVsAOzJbBlsHbzsz\nETs0QBk7NUY7KkkiD3NlcnZpY2VfaWQGOwBUOzZJIhtjaGFyYWN0ZXIgdmFy\neWluZygyNTUpBjsAVDs3VDs4aQH/OzkwOzowOzs7PDs9MDs+MDs/MGkUO0Bb\nBm87QQc7QlM7Qwc7RG87KQs7KkACMgE7K0ABfjssMDstWwA7LjA7LzA7RUki\nD3NlcnZpY2VfaWQGOwBGO0ZJQztHIgckMQY7AFQ7SDA7IjA7SUY7Sm87Swg7\nK0ACMAE7TG87TQ07Tm87Twc7QkACMQE7RlsAO1AwO1EwO1JbBlM7Qwc7REAC\nMQE7RUlDO1MiBioGOwBUO1RbBm87VQY7VlsGQAI8ATtXWwA7WDA7WVsAO1pv\nO1sLO1xbBkACQwE7XVsAOzgwO14wO18wO2AwO2EwO2IwO2MwO2QwO2UwO2Yw\nO2cwO2hbAFsHO2lvOmZBY3RpdmVSZWNvcmQ6OkFzc29jaWF0aW9uczo6Q29s\nbGVjdGlvblByb3h5OjpBY3RpdmVSZWNvcmRfQXNzb2NpYXRpb25zX0NvbGxl\nY3Rpb25Qcm94eV9RYXNoQmFza2V0DTtrQAImATsnQAIwATsoQAIxATswewo7\nQFsGQAI8ATsyWwZAAjcBO2wwO20wO24wO0gwOyJGO0lUO0pvO0sIOytAAjAB\nO0xvO00NO05vO08HO0JAAjEBO0ZbADtQMDtRMDtSWwZTO0MHO0RAAjEBO0VJ\nQztTIgYqBjsAVDtUWwZvO1UGO1ZbBkACPAE7V1sAO1gwO1lbADtabztbCztc\nWwZAAlgBO11bADs4MDteMDtfMDtgMDoVZGVsYXllZF9wYXltZW50c1U7IFsH\nO3hbC1sHOyFAK1sHOyJGWwc7I1sAWwc7JDBbBzslbzpBQWN0aXZlUmVjb3Jk\nOjpSZWxhdGlvbjo6QWN0aXZlUmVjb3JkX1JlbGF0aW9uX0RlbGF5ZWRQYXlt\nZW50FDsnYxNEZWxheWVkUGF5bWVudDsobzspCzsqSSIVZGVsYXllZF9wYXlt\nZW50cwY7AFQ7K0ACcAE7LDA7LVsAOy4wOy8wOzB7CDsxWwA7MlsGWwdvOzMR\nOzRAGTs1RjsqSSIPc2VydmljZV9pZAY7AFQ7NkkiG2NoYXJhY3RlciB2YXJ5\naW5nKDI1NSkGOwBUOzdUOzhpAf87OTA7OjA7Ozs8Oz0wOz4wOz8waRQ7QFsG\nbztBBztCUztDBztEbzspCzsqQAJyATsrQAF+OywwOy1bADsuMDsvMDtFSSIP\nc2VydmljZV9pZAY7AEY7RklDO0ciByQxBjsAVDtIMDsiMDtJRjtKbztLCDsr\nQAJwATtMbztNDTtObztPBztCQAJxATtGWwA7UDA7UTA7UlsGUztDBztEQAJx\nATtFSUM7UyIGKgY7AFQ7VFsGbztVBjtWWwZAAnwBO1dbADtYMDtZWwA7Wm87\nWws7XFsGQAKDATtdWwA7ODA7XjA7XzA7YDA7YTA7YjA7YzA7ZDA7ZTA7ZjA7\nZzA7aFsAWwc7aW86akFjdGl2ZVJlY29yZDo6QXNzb2NpYXRpb25zOjpDb2xs\nZWN0aW9uUHJveHk6OkFjdGl2ZVJlY29yZF9Bc3NvY2lhdGlvbnNfQ29sbGVj\ndGlvblByb3h5X0RlbGF5ZWRQYXltZW50DTtrQAJmATsnQAJwATsoQAJxATsw\newo7QFsGQAJ8ATsyWwZAAncBO2wwO20wO24wO0gwOyJGO0lUO0pvO0sIOytA\nAnABO0xvO00NO05vO08HO0JAAnEBO0ZbADtQMDtRMDtSWwZTO0MHO0RAAnEB\nO0VJQztTIgYqBjsAVDtUWwZvO1UGO1ZbBkACfAE7V1sAO1gwO1lbADtabztb\nCztcWwZAApgBO11bADs4MDteMDtfMDtgMDsRewZJIgdpZAY7AFRpFDsSewA7\nE3sAOxRGOxVGOxZGOxcwOxhGOxkwOxp7ADsbMDscWwZGOx0wSSIOb3BlcmF0\naW9uBjsARm86Dk9wZXJhdGlvbhY7B3sOSSIHaWQGOwBUSSIGMQY7AFRJIglj\nb2RlBjsAVEkiBjEGOwBUSSIJbmFtZQY7AFRJIhZBYm9ubmVtZW50X1dpbWJv\nbwY7AFRJIgxjb21tZW50BjsAVEkiNVMnYWJvbm5lciBldCBiw6luw6lmaWNp\nZXIgZGUgbm9tYnJldXggYXZhbnRhZ2VzLgY7AFRJIg9zZXJ2aWNlX2lkBjsA\nVEkiBjEGOwBUSSIPY3JlYXRlZF9hdAY7AFQwSSIPdXBkYXRlZF9hdAY7AFQw\nSSIOcHVibGlzaGVkBjsAVDBJIhlhdXRoZW50aWNhdGlvbl90b2tlbgY7AFRJ\nIik1MzVlZjJhNS1jN2JjLTQ4YzAtOGI0ZC1kNWM3M2M0MGIyNzIGOwBUOwh7\nDkkiB2lkBjsAVEAXSSIJY29kZQY7AFRAGUkiCW5hbWUGOwBUQBlJIgxjb21t\nZW50BjsAVEAZSSIPc2VydmljZV9pZAY7AFRAF0kiD2NyZWF0ZWRfYXQGOwBU\nbzsLBjsMQB1JIg91cGRhdGVkX2F0BjsAVG87CwY7DEAdSSIOcHVibGlzaGVk\nBjsAVEAhSSIZYXV0aGVudGljYXRpb25fdG9rZW4GOwBUQBk7D3sAOxB7ADsR\newYiB2lkaQY7EnsAOxN7ADsURjsVRjsWRjsXMDsYRjsZMDsaewA7GzA7HFsG\nRjsdMEkiD3Ryc19hbW91bnQGOwBGZgg1ZTJJIgtiYXNrZXQGOwBGewdJIhJi\nYXNrZXRfbnVtYmVyBjsAVEkiIWdkbG9sb2xnZDVmZzU4OGRnZDZnaGZmZ2hm\nZGcGOwBUSSIXdHJhbnNhY3Rpb25fYW1vdW50BjsAVEkiCjUwMC4wBjsARkki\nJWI4M2VmZjFjMWIzZmRiYjI2MTUzMDc1MDQ0Mjk3ZTkxBjsARkkiJTY0ZjY3\nMzBhZGMyNTk5ODY2NWI2NTg4Zjg3ZGEwZmQwBjsARg==\n"], ["session_id", "571ffdde0deb39506bf03f24cacffb62"], ["updated_at", Sun, 26 Apr 2015 16:37:25 UTC +00:00]]
+  [1m[36m (30.8ms)[0m  [1mCOMMIT[0m
+Processing by MainController#index as HTML
+  [1m[35mActiveRecord::SessionStore::Session Load (2.8ms)[0m  SELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = '571ffdde0deb39506bf03f24cacffb62' ORDER BY "sessions"."id" ASC LIMIT 1
+  [1m[36mCountry Load (21.4ms)[0m  [1mSELECT "countries".* FROM "countries" WHERE "countries"."name" = 'International' LIMIT 1[0m
+  [1m[35mWallet Load (43.5ms)[0m  SELECT "wallets".* FROM "wallets" INNER JOIN "available_wallets" ON "wallets"."id" = "available_wallets"."wallet_id" WHERE "available_wallets"."service_id" = $1 AND "wallets"."country_id" = 242  [["service_id", 15]]
+  [1m[36mCountry Load (1.7ms)[0m  [1mSELECT "countries".* FROM "countries" WHERE (published IS TRUE) ORDER BY name ASC[0m
+  [1m[35mAvailableWallet Load (2.0ms)[0m  SELECT "available_wallets".* FROM "available_wallets" WHERE "available_wallets"."service_id" = $1 AND "available_wallets"."published" = 't' AND "available_wallets"."wallet_id" IN (1, 2)  [["service_id", 15]]
+  [1m[36mWallet Load (2.1ms)[0m  [1mSELECT "wallets".* FROM "wallets" WHERE "wallets"."id" = $1 ORDER BY "wallets"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mWallet Load (1.2ms)[0m  SELECT "wallets".* FROM "wallets" WHERE "wallets"."id" = $1 ORDER BY "wallets"."id" ASC LIMIT 1  [["id", 2]]
+  Rendered main/index.html.erb within layouts/main (354.8ms)
+Completed 200 OK in 948ms (Views: 619.6ms | ActiveRecord: 97.4ms)
+  [1m[36m (0.7ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (4.2ms)[0m  UPDATE "sessions" SET "data" = $1, "updated_at" = $2 WHERE "sessions"."id" = 508  [["data", "BAh7C0kiDWN1cnJlbmN5BjoGRUZvOg1DdXJyZW5jeRY6EEBhdHRyaWJ1dGVz\newxJIgdpZAY7AFRJIggxNTAGOwBUSSIJbmFtZQY7AFRJIjNDb21tdW5hdXTD\nqSBGaW5hbmNpw6hyZSBBZnJpY2FpbmUgQkVBQywgRnJhbmNzBjsAVEkiCWNv\nZGUGOwBUSSIIWEFGBjsAVEkiD2NyZWF0ZWRfYXQGOwBUMEkiD3VwZGF0ZWRf\nYXQGOwBUMEkiDnB1Ymxpc2hlZAY7AFRJIgZ0BjsAVEkiC3N5bWJvbAY7AFRJ\nIglGQ0ZBBjsAVDoSQGNvbHVtbnNfaGFzaHsMSSIHaWQGOwBUbzpGQWN0aXZl\nUmVjb3JkOjpDb25uZWN0aW9uQWRhcHRlcnM6OlBvc3RncmVTUUxBZGFwdGVy\nOjpPSUQ6OkludGVnZXIASSIJbmFtZQY7AFRvOkdBY3RpdmVSZWNvcmQ6OkNv\nbm5lY3Rpb25BZGFwdGVyczo6UG9zdGdyZVNRTEFkYXB0ZXI6Ok9JRDo6SWRl\nbnRpdHkASSIJY29kZQY7AFRAGUkiD2NyZWF0ZWRfYXQGOwBUbzo9QWN0aXZl\nUmVjb3JkOjpBdHRyaWJ1dGVNZXRob2RzOjpUaW1lWm9uZUNvbnZlcnNpb246\nOlR5cGUGOgxAY29sdW1ubzpIQWN0aXZlUmVjb3JkOjpDb25uZWN0aW9uQWRh\ncHRlcnM6OlBvc3RncmVTUUxBZGFwdGVyOjpPSUQ6OlRpbWVzdGFtcABJIg91\ncGRhdGVkX2F0BjsAVG87CwY7DEAdSSIOcHVibGlzaGVkBjsAVG86RkFjdGl2\nZVJlY29yZDo6Q29ubmVjdGlvbkFkYXB0ZXJzOjpQb3N0Z3JlU1FMQWRhcHRl\ncjo6T0lEOjpCb29sZWFuAEkiC3N5bWJvbAY7AFRAGToXQGFnZ3JlZ2F0aW9u\nX2NhY2hlewA6F0Bhc3NvY2lhdGlvbl9jYWNoZXsAOhZAYXR0cmlidXRlc19j\nYWNoZXsHIgtzeW1ib2xAFCIJY29kZUAOOhhAcHJldmlvdXNseV9jaGFuZ2Vk\newA6GEBjaGFuZ2VkX2F0dHJpYnV0ZXN7ADoOQHJlYWRvbmx5RjoPQGRlc3Ry\nb3llZEY6HEBtYXJrZWRfZm9yX2Rlc3RydWN0aW9uRjoeQGRlc3Ryb3llZF9i\neV9hc3NvY2lhdGlvbjA6EEBuZXdfcmVjb3JkRjoJQHR4bjA6HkBfc3RhcnRf\ndHJhbnNhY3Rpb25fc3RhdGV7ADoXQHRyYW5zYWN0aW9uX3N0YXRlMDoUQHJl\nZmxlY3RzX3N0YXRlWwZGOh1AbWFzc19hc3NpZ25tZW50X29wdGlvbnMwSSIM\nc2VydmljZQY7AEZvOgxTZXJ2aWNlFjsHextJIgdpZAY7AFRJIgcxNQY7AFRJ\nIgljb2RlBjsAVEkiJWMwZGRmMDE1ODAyYmQ4YzNhMzlmNjE3ZThmNDEzMjlk\nBjsAVEkiCW5hbWUGOwBUSSILV2ltYm9vBjsAVEkiD2NyZWF0ZWRfYXQGOwBU\nSSIfMjAxNC0xMi0wMSAxODozMzo0MC44ODEwNTUGOwBUSSIPdXBkYXRlZF9h\ndAY7AFRJIh8yMDE0LTEyLTAxIDE4OjMzOjQwLjg4MTA1NQY7AFRJIg9zYWxl\nc19hcmVhBjsAVDBJIhN1cmxfb25fc3VjY2VzcwY7AFRJIjdodHRwOi8vNDEu\nMTg5LjQwLjE5Mzo1MDAwL3ZhbGlkYXRlX3RyYW5zYWN0aW9uLnBocAY7AFRJ\nIhF1cmxfb25fZXJyb3IGOwBUSSI3aHR0cDovLzQxLjE4OS40MC4xOTM6NTAw\nMC92YWxpZGF0ZV90cmFuc2FjdGlvbi5waHAGOwBUSSIbdXJsX29uX3Nlc3Np\nb25fZXhwaXJlZAY7AFQwSSIYdXJsX29uX2hvbGRfc3VjY2VzcwY7AFQwSSIW\ndXJsX29uX2hvbGRfZXJyb3IGOwBUMEkiGXVybF9vbl9ob2xkX2xpc3RlbmVy\nBjsAVDBJIhlhdXRoZW50aWNhdGlvbl90b2tlbgY7AFRJIiVlZjM0NTIzZjEx\nOTZjOTA0YzZlMDlhZjgwZTQ3MmFjMgY7AFRJIgxjb21tZW50BjsAVDBJIh91\ncmxfb25fYmFza2V0X2FscmVhZHlfcGFpZAY7AFRJIjdodHRwOi8vNDEuMTg5\nLjQwLjE5Mzo1MDAwL3ZhbGlkYXRlX3RyYW5zYWN0aW9uLnBocAY7AFRJIg91\ncmxfdG9faXBuBjsAVEkiN2h0dHA6Ly80MS4xODkuNDAuMTkzOjUwMDAvdmFs\naWRhdGVfdHJhbnNhY3Rpb24ucGhwBjsAVEkiDnB1Ymxpc2hlZAY7AFQwSSIT\nbG9nb19maWxlX25hbWUGOwBUMEkiFmxvZ29fY29udGVudF90eXBlBjsAVDBJ\nIhNsb2dvX2ZpbGVfc2l6ZQY7AFQwSSIUbG9nb191cGRhdGVkX2F0BjsAVDBJ\nIgp0b2tlbgY7AFRJIhFlNWU3NTAyZGUzNDMGOwBUOwh7G0kiB2lkBjsAVEAX\nSSIJY29kZQY7AFRAGUkiCW5hbWUGOwBUQBlJIg9jcmVhdGVkX2F0BjsAVG87\nCwY7DEAdSSIPdXBkYXRlZF9hdAY7AFRvOwsGOwxAHUkiD3NhbGVzX2FyZWEG\nOwBUQBlJIhN1cmxfb25fc3VjY2VzcwY7AFRAGUkiEXVybF9vbl9lcnJvcgY7\nAFRAGUkiG3VybF9vbl9zZXNzaW9uX2V4cGlyZWQGOwBUQBlJIhh1cmxfb25f\naG9sZF9zdWNjZXNzBjsAVEAZSSIWdXJsX29uX2hvbGRfZXJyb3IGOwBUQBlJ\nIhl1cmxfb25faG9sZF9saXN0ZW5lcgY7AFRAGUkiGWF1dGhlbnRpY2F0aW9u\nX3Rva2VuBjsAVEAZSSIMY29tbWVudAY7AFRAGUkiH3VybF9vbl9iYXNrZXRf\nYWxyZWFkeV9wYWlkBjsAVEAZSSIPdXJsX3RvX2lwbgY7AFRAGUkiDnB1Ymxp\nc2hlZAY7AFRAIUkiE2xvZ29fZmlsZV9uYW1lBjsAVEAZSSIWbG9nb19jb250\nZW50X3R5cGUGOwBUQBlJIhNsb2dvX2ZpbGVfc2l6ZQY7AFRAF0kiFGxvZ29f\ndXBkYXRlZF9hdAY7AFRvOwsGOwxAHUkiCnRva2VuBjsAVEAZOw97ADsQeww6\nDGJhc2tldHNVOjNBY3RpdmVSZWNvcmQ6OkFzc29jaWF0aW9uczo6SGFzTWFu\neUFzc29jaWF0aW9uWwc7H1sLWwc6C0Bvd25lckAtWwc6DEBsb2FkZWRGWwc6\nDEB0YXJnZXRbAFsHOhFAc3RhbGVfc3RhdGUwWwc6F0Bhc3NvY2lhdGlvbl9z\nY29wZW86OUFjdGl2ZVJlY29yZDo6UmVsYXRpb246OkFjdGl2ZVJlY29yZF9S\nZWxhdGlvbl9CYXNrZXQUOgtAa2xhc3NjC0Jhc2tldDoLQHRhYmxlbzoQQXJl\nbDo6VGFibGULOgpAbmFtZUkiDGJhc2tldHMGOwBUOgxAZW5naW5lQHY6DUBj\nb2x1bW5zMDoNQGFsaWFzZXNbADoRQHRhYmxlX2FsaWFzMDoRQHByaW1hcnlf\na2V5MDoMQHZhbHVlc3sIOg5leHRlbmRpbmdbADoJYmluZFsGWwdvOjdBY3Rp\ndmVSZWNvcmQ6OkNvbm5lY3Rpb25BZGFwdGVyczo6UG9zdGdyZVNRTENvbHVt\nbhE6DkBvaWRfdHlwZUAZOgtAYXJyYXlGOypJIg9zZXJ2aWNlX2lkBjsAVDoO\nQHNxbF90eXBlSSIbY2hhcmFjdGVyIHZhcnlpbmcoMjU1KQY7AFQ6CkBudWxs\nVDoLQGxpbWl0aQH/Og9AcHJlY2lzaW9uMDoLQHNjYWxlMDoKQHR5cGU6C3N0\ncmluZzoNQGRlZmF1bHQwOg1AcHJpbWFyeTA6C0Bjb2RlcjBpFDoKd2hlcmVb\nBm86GkFyZWw6Ok5vZGVzOjpFcXVhbGl0eQc6CkBsZWZ0UzogQXJlbDo6QXR0\ncmlidXRlczo6QXR0cmlidXRlBzoNcmVsYXRpb25vOykLOypAeDsrYxdBY3Rp\ndmVSZWNvcmQ6OkJhc2U7LDA7LVsAOy4wOy8wOgluYW1lSSIPc2VydmljZV9p\nZAY7AEY6C0ByaWdodElDOhtBcmVsOjpOb2Rlczo6QmluZFBhcmFtIgckMQY7\nAFQ6F0BpbXBsaWNpdF9yZWFkb25seTA7IjA6FEBkZWZhdWx0X3Njb3BlZEY6\nCkBhcmVsbzoYQXJlbDo6U2VsZWN0TWFuYWdlcgg7K0B2OglAY3R4bzocQXJl\nbDo6Tm9kZXM6OlNlbGVjdENvcmUNOgxAc291cmNlbzocQXJlbDo6Tm9kZXM6\nOkpvaW5Tb3VyY2UHO0JAdztGWwA6CUB0b3AwOhRAc2V0X3F1YW50aWZpZXIw\nOhFAcHJvamVjdGlvbnNbBlM7Qwc7REB3O0VJQzocQXJlbDo6Tm9kZXM6OlNx\nbExpdGVyYWwiBioGOwBUOgxAd2hlcmVzWwZvOhVBcmVsOjpOb2Rlczo6QW5k\nBjoOQGNoaWxkcmVuWwZAAX06DEBncm91cHNbADoMQGhhdmluZzA6DUB3aW5k\nb3dzWwA6CUBhc3RvOiFBcmVsOjpOb2Rlczo6U2VsZWN0U3RhdGVtZW50CzoL\nQGNvcmVzWwZAAYU6DEBvcmRlcnNbADs4MDoKQGxvY2swOgxAb2Zmc2V0MDoK\nQHdpdGgwOhZAc2NvcGVfZm9yX2NyZWF0ZTA6EkBvcmRlcl9jbGF1c2UwOgxA\ndG9fc3FsMDoKQGxhc3QwOgtAZmlyc3QwOhVAam9pbl9kZXBlbmRlbmN5MDoX\nQHNob3VsZF9lYWdlcl9sb2FkMDoNQHJlY29yZHNbAFsHOgtAcHJveHlvOmJB\nY3RpdmVSZWNvcmQ6OkFzc29jaWF0aW9uczo6Q29sbGVjdGlvblByb3h5OjpB\nY3RpdmVSZWNvcmRfQXNzb2NpYXRpb25zX0NvbGxlY3Rpb25Qcm94eV9CYXNr\nZXQNOhFAYXNzb2NpYXRpb25AbDsnQHY7KEB3OzB7CjtAWwZAAX07MlsGQH06\nCWZyb20wOglsb2NrMDoScmV2ZXJzZV9vcmRlcjA7SDA7IkY7SVQ7Sm87Swg7\nK0B2O0xvO00NO05vO08HO0JAdztGWwA7UDA7UTA7UlsGUztDBztEQHc7RUlD\nO1MiBioGOwBUO1RbBm87VQY7VlsGQAF9O1dbADtYMDtZWwA7Wm87Wws7XFsG\nQAGaO11bADs4MDteMDtfMDtgMDoTcGF5cGFsX2Jhc2tldHNVOyBbBztvWwtb\nBzshQC1bBzsiRlsHOyNbAFsHOyQwWwc7JW86P0FjdGl2ZVJlY29yZDo6UmVs\nYXRpb246OkFjdGl2ZVJlY29yZF9SZWxhdGlvbl9QYXlwYWxCYXNrZXQUOydj\nEVBheXBhbEJhc2tldDsobzspCzsqSSITcGF5cGFsX2Jhc2tldHMGOwBUOytA\nAbI7LDA7LVsAOy4wOy8wOzB7CDsxWwA7MlsGWwdvOzMROzRAGTs1RjsqSSIP\nc2VydmljZV9pZAY7AFQ7NkkiG2NoYXJhY3RlciB2YXJ5aW5nKDI1NSkGOwBU\nOzdUOzhpAf87OTA7OjA7Ozs8Oz0wOz4wOz8waRQ7QFsGbztBBztCUztDBztE\nbzspCzsqQAG0OytAAYA7LDA7LVsAOy4wOy8wO0VJIg9zZXJ2aWNlX2lkBjsA\nRjtGSUM7RyIHJDEGOwBUO0gwOyIwO0lGO0pvO0sIOytAAbI7TG87TQ07Tm87\nTwc7QkABsztGWwA7UDA7UTA7UlsGUztDBztEQAGzO0VJQztTIgYqBjsAVDtU\nWwZvO1UGO1ZbBkABvjtXWwA7WDA7WVsAO1pvO1sLO1xbBkABxTtdWwA7ODA7\nXjA7XzA7YDA7YTA7YjA7YzA7ZDA7ZTA7ZjA7ZzA7aFsAWwc7aW86aEFjdGl2\nZVJlY29yZDo6QXNzb2NpYXRpb25zOjpDb2xsZWN0aW9uUHJveHk6OkFjdGl2\nZVJlY29yZF9Bc3NvY2lhdGlvbnNfQ29sbGVjdGlvblByb3h5X1BheXBhbEJh\nc2tldA07a0ABqDsnQAGyOyhAAbM7MHsKO0BbBkABvjsyWwZAAbk7bDA7bTA7\nbjA7SDA7IkY7SVQ7Sm87Swg7K0ABsjtMbztNDTtObztPBztCQAGzO0ZbADtQ\nMDtRMDtSWwZTO0MHO0RAAbM7RUlDO1MiBioGOwBUO1RbBm87VQY7VlsGQAG+\nO1dbADtYMDtZWwA7Wm87Wws7XFsGQAHaO11bADs4MDteMDtfMDtgMDocb3Jh\nbmdlX21vbmV5X2NpX2Jhc2tldHNVOyBbBztyWwtbBzshQC1bBzsiRlsHOyNb\nAFsHOyQwWwc7JW86RkFjdGl2ZVJlY29yZDo6UmVsYXRpb246OkFjdGl2ZVJl\nY29yZF9SZWxhdGlvbl9PcmFuZ2VNb25leUNpQmFza2V0FDsnYxhPcmFuZ2VN\nb25leUNpQmFza2V0OyhvOykLOypJIhxvcmFuZ2VfbW9uZXlfY2lfYmFza2V0\ncwY7AFQ7K0AB8jssMDstWwA7LjA7LzA7MHsIOzFbADsyWwZbB287MxE7NEAZ\nOzVGOypJIg9zZXJ2aWNlX2lkBjsAVDs2SSIbY2hhcmFjdGVyIHZhcnlpbmco\nMjU1KQY7AFQ7N1Q7OGkB/zs5MDs6MDs7Ozw7PTA7PjA7PzBpFDtAWwZvO0EH\nO0JTO0MHO0RvOykLOypAAfQ7K0ABgDssMDstWwA7LjA7LzA7RUkiD3NlcnZp\nY2VfaWQGOwBGO0ZJQztHIgckMQY7AFQ7SDA7IjA7SUY7Sm87Swg7K0AB8jtM\nbztNDTtObztPBztCQAHzO0ZbADtQMDtRMDtSWwZTO0MHO0RAAfM7RUlDO1Mi\nBioGOwBUO1RbBm87VQY7VlsGQAH+O1dbADtYMDtZWwA7Wm87Wws7XFsGQAIF\nATtdWwA7ODA7XjA7XzA7YDA7YTA7YjA7YzA7ZDA7ZTA7ZjA7ZzA7aFsAWwc7\naW86b0FjdGl2ZVJlY29yZDo6QXNzb2NpYXRpb25zOjpDb2xsZWN0aW9uUHJv\neHk6OkFjdGl2ZVJlY29yZF9Bc3NvY2lhdGlvbnNfQ29sbGVjdGlvblByb3h5\nX09yYW5nZU1vbmV5Q2lCYXNrZXQNO2tAAeg7J0AB8jsoQAHzOzB7CjtAWwZA\nAf47MlsGQAH5O2wwO20wO24wO0gwOyJGO0lUO0pvO0sIOytAAfI7TG87TQ07\nTm87Twc7QkAB8ztGWwA7UDA7UTA7UlsGUztDBztEQAHzO0VJQztTIgYqBjsA\nVDtUWwZvO1UGO1ZbBkAB/jtXWwA7WDA7WVsAO1pvO1sLO1xbBkACGgE7XVsA\nOzgwO14wO18wO2AwOhFxYXNoX2Jhc2tldHNVOyBbBzt1WwtbBzshQC1bBzsi\nRlsHOyNbAFsHOyQwWwc7JW86PUFjdGl2ZVJlY29yZDo6UmVsYXRpb246OkFj\ndGl2ZVJlY29yZF9SZWxhdGlvbl9RYXNoQmFza2V0FDsnYw9RYXNoQmFza2V0\nOyhvOykLOypJIhFxYXNoX2Jhc2tldHMGOwBUOytAAjIBOywwOy1bADsuMDsv\nMDswewg7MVsAOzJbBlsHbzszETs0QBk7NUY7KkkiD3NlcnZpY2VfaWQGOwBU\nOzZJIhtjaGFyYWN0ZXIgdmFyeWluZygyNTUpBjsAVDs3VDs4aQH/OzkwOzow\nOzs7PDs9MDs+MDs/MGkUO0BbBm87QQc7QlM7Qwc7RG87KQs7KkACNAE7K0AB\ngDssMDstWwA7LjA7LzA7RUkiD3NlcnZpY2VfaWQGOwBGO0ZJQztHIgckMQY7\nAFQ7SDA7IjA7SUY7Sm87Swg7K0ACMgE7TG87TQ07Tm87Twc7QkACMwE7RlsA\nO1AwO1EwO1JbBlM7Qwc7REACMwE7RUlDO1MiBioGOwBUO1RbBm87VQY7VlsG\nQAI+ATtXWwA7WDA7WVsAO1pvO1sLO1xbBkACRQE7XVsAOzgwO14wO18wO2Aw\nO2EwO2IwO2MwO2QwO2UwO2YwO2cwO2hbAFsHO2lvOmZBY3RpdmVSZWNvcmQ6\nOkFzc29jaWF0aW9uczo6Q29sbGVjdGlvblByb3h5OjpBY3RpdmVSZWNvcmRf\nQXNzb2NpYXRpb25zX0NvbGxlY3Rpb25Qcm94eV9RYXNoQmFza2V0DTtrQAIo\nATsnQAIyATsoQAIzATswewo7QFsGQAI+ATsyWwZAAjkBO2wwO20wO24wO0gw\nOyJGO0lUO0pvO0sIOytAAjIBO0xvO00NO05vO08HO0JAAjMBO0ZbADtQMDtR\nMDtSWwZTO0MHO0RAAjMBO0VJQztTIgYqBjsAVDtUWwZvO1UGO1ZbBkACPgE7\nV1sAO1gwO1lbADtabztbCztcWwZAAloBO11bADs4MDteMDtfMDtgMDoVZGVs\nYXllZF9wYXltZW50c1U7IFsHO3hbC1sHOyFALVsHOyJGWwc7I1sAWwc7JDBb\nBzslbzpBQWN0aXZlUmVjb3JkOjpSZWxhdGlvbjo6QWN0aXZlUmVjb3JkX1Jl\nbGF0aW9uX0RlbGF5ZWRQYXltZW50FDsnYxNEZWxheWVkUGF5bWVudDsobzsp\nCzsqSSIVZGVsYXllZF9wYXltZW50cwY7AFQ7K0ACcgE7LDA7LVsAOy4wOy8w\nOzB7CDsxWwA7MlsGWwdvOzMROzRAGTs1RjsqSSIPc2VydmljZV9pZAY7AFQ7\nNkkiG2NoYXJhY3RlciB2YXJ5aW5nKDI1NSkGOwBUOzdUOzhpAf87OTA7OjA7\nOzs8Oz0wOz4wOz8waRQ7QFsGbztBBztCUztDBztEbzspCzsqQAJ0ATsrQAGA\nOywwOy1bADsuMDsvMDtFSSIPc2VydmljZV9pZAY7AEY7RklDO0ciByQxBjsA\nVDtIMDsiMDtJRjtKbztLCDsrQAJyATtMbztNDTtObztPBztCQAJzATtGWwA7\nUDA7UTA7UlsGUztDBztEQAJzATtFSUM7UyIGKgY7AFQ7VFsGbztVBjtWWwZA\nAn4BO1dbADtYMDtZWwA7Wm87Wws7XFsGQAKFATtdWwA7ODA7XjA7XzA7YDA7\nYTA7YjA7YzA7ZDA7ZTA7ZjA7ZzA7aFsAWwc7aW86akFjdGl2ZVJlY29yZDo6\nQXNzb2NpYXRpb25zOjpDb2xsZWN0aW9uUHJveHk6OkFjdGl2ZVJlY29yZF9B\nc3NvY2lhdGlvbnNfQ29sbGVjdGlvblByb3h5X0RlbGF5ZWRQYXltZW50DTtr\nQAJoATsnQAJyATsoQAJzATswewo7QFsGQAJ+ATsyWwZAAnkBO2wwO20wO24w\nO0gwOyJGO0lUO0pvO0sIOytAAnIBO0xvO00NO05vO08HO0JAAnMBO0ZbADtQ\nMDtRMDtSWwZTO0MHO0RAAnMBO0VJQztTIgYqBjsAVDtUWwZvO1UGO1ZbBkAC\nfgE7V1sAO1gwO1lbADtabztbCztcWwZAApoBO11bADs4MDteMDtfMDtgMDoW\nYXZhaWxhYmxlX3dhbGxldHNVOyBbBzt7WwtbBzshQC1bBzsiRlsHOyNbAFsH\nOyQwWwc7JW86QkFjdGl2ZVJlY29yZDo6UmVsYXRpb246OkFjdGl2ZVJlY29y\nZF9SZWxhdGlvbl9BdmFpbGFibGVXYWxsZXQUOydjFEF2YWlsYWJsZVdhbGxl\ndDsobzspCzsqSSIWYXZhaWxhYmxlX3dhbGxldHMGOwBUOytAArIBOywwOy1b\nADsuMDsvMDswewg7MVsAOzJbBlsHbzszETs0bzsJADs1RjsqSSIPc2Vydmlj\nZV9pZAY7AFQ7NkkiDGludGVnZXIGOwBUOzdUOzgwOzkwOzowOzs6DGludGVn\nZXI7PTA7PjA7PzBpFDtAWwZvO0EHO0JTO0MHO0RvOykLOypAArQBOytAAYA7\nLDA7LVsAOy4wOy8wO0VJIg9zZXJ2aWNlX2lkBjsARjtGSUM7RyIHJDEGOwBU\nO0gwOyIwO0lGO0pvO0sIOytAArIBO0xvO00NO05vO08HO0JAArMBO0ZbADtQ\nMDtRMDtSWwZTO0MHO0RAArMBO0VJQztTIgYqBjsAVDtUWwZvO1UGO1ZbBkAC\nvwE7V1sAO1gwO1lbADtabztbCztcWwZAAsYBO11bADs4MDteMDtfMDtgMDth\nMDtiMDtjMDtkMDtlMDtmMDtnMDtoWwBbBztpbzprQWN0aXZlUmVjb3JkOjpB\nc3NvY2lhdGlvbnM6OkNvbGxlY3Rpb25Qcm94eTo6QWN0aXZlUmVjb3JkX0Fz\nc29jaWF0aW9uc19Db2xsZWN0aW9uUHJveHlfQXZhaWxhYmxlV2FsbGV0DTtr\nQAKoATsnQAKyATsoQAKzATswewo7QFsGQAK/ATsyWwZAArkBO2wwO20wO24w\nO0gwOyJGO0lUO0pvO0sIOytAArIBO0xvO00NO05vO08HO0JAArMBO0ZbADtQ\nMDtRMDtSWwZTO0MHO0RAArMBO0VJQztTIgYqBjsAVDtUWwZvO1UGO1ZbBkAC\nvwE7V1sAO1gwO1lbADtabztbCztcWwZAAtsBO11bADs4MDteMDtfMDtgMDoM\nd2FsbGV0c1U6OkFjdGl2ZVJlY29yZDo6QXNzb2NpYXRpb25zOjpIYXNNYW55\nVGhyb3VnaEFzc29jaWF0aW9uWwc7f1sNWwc7IUAtWwc7IkZbBzsjWwBbBzsk\nMFsHOyVvOjlBY3RpdmVSZWNvcmQ6OlJlbGF0aW9uOjpBY3RpdmVSZWNvcmRf\nUmVsYXRpb25fV2FsbGV0FDsnYwtXYWxsZXQ7KG87KQs7KkkiDHdhbGxldHMG\nOwBUOytAAvMBOywwOy1bADsuMDsvMDswewk7MVsAOgpqb2luc1sGbzobQXJl\nbDo6Tm9kZXM6OklubmVySm9pbgc7Qm87KQs7KkACtAE7K0ABgDssMDstWwA7\nLjA7LzA7Rm86FEFyZWw6Ok5vZGVzOjpPbgY6CkBleHBybztBBztCUztDBztE\nbzspCzsqQAL1ATsrQAGAOywwOy1bADsuMDsvMDtFSSIHaWQGOwBUO0ZTO0MH\nO0RAAvsBO0VJIg53YWxsZXRfaWQGOwBGOzJbBlsHQAK6AWkUO0BbBm87QQc7\nQlM7Qwc7REAC+wE7RUACwwE7RklDO0ciByQxBjsAVDtIMDsiMDtJRjtKbztL\nCDsrQALzATtMbztNDTtObztPBztCQAL0ATtGWwZAAvoBO1AwO1EwO1JbBlM7\nQwc7REAC9AE7RUlDO1MiBioGOwBUO1RbBm87VQY7VlsGQAIIAjtXWwA7WDA7\nWVsAO1pvO1sLO1xbBkACDAI7XVsAOzgwO14wO18wO2AwO2EwO2IwO2MwO2Qw\nO2UwO2YwO2cwO2hbAFsHOhVAdGhyb3VnaF9yZWNvcmRzewBbBzoZQHRocm91\nZ2hfYXNzb2NpYXRpb24wWwc7aW86YkFjdGl2ZVJlY29yZDo6QXNzb2NpYXRp\nb25zOjpDb2xsZWN0aW9uUHJveHk6OkFjdGl2ZVJlY29yZF9Bc3NvY2lhdGlv\nbnNfQ29sbGVjdGlvblByb3h5X1dhbGxldA07a0AC6QE7J0AC8wE7KEAC9AE7\nMHsLO0BbBkACCAI7MlsGQAIGAjtsMDttMDtuMDsBfVsGQAL6ATtIMDsiRjtJ\nVDtKbztLCDsrQALzATtMbztNDTtObztPBztCQAL0ATtGWwZAAvoBO1AwO1Ew\nO1JbBlM7Qwc7REAC9AE7RUlDO1MiBioGOwBUO1RbBm87VQY7VlsGQAIIAjtX\nWwA7WDA7WVsAO1pvO1sLO1xbBkACJQI7XVsAOzgwO14wO18wO2AwOxF7CUki\nB2lkBjsAVGkUIhlhdXRoZW50aWNhdGlvbl90b2tlbkBDIgluYW1lQDQiCWNv\nZGVAMjsSewA7E3sAOxRGOxVGOxZGOxcwOxhGOxkwOxp7ADsbMDscWwZGOx0w\nSSIOb3BlcmF0aW9uBjsARm86Dk9wZXJhdGlvbhY7B3sOSSIHaWQGOwBUSSIG\nMQY7AFRJIgljb2RlBjsAVEkiBjEGOwBUSSIJbmFtZQY7AFRJIhZBYm9ubmVt\nZW50X1dpbWJvbwY7AFRJIgxjb21tZW50BjsAVEkiNVMnYWJvbm5lciBldCBi\nw6luw6lmaWNpZXIgZGUgbm9tYnJldXggYXZhbnRhZ2VzLgY7AFRJIg9zZXJ2\naWNlX2lkBjsAVEkiBjEGOwBUSSIPY3JlYXRlZF9hdAY7AFQwSSIPdXBkYXRl\nZF9hdAY7AFQwSSIOcHVibGlzaGVkBjsAVDBJIhlhdXRoZW50aWNhdGlvbl90\nb2tlbgY7AFRJIik1MzVlZjJhNS1jN2JjLTQ4YzAtOGI0ZC1kNWM3M2M0MGIy\nNzIGOwBUOwh7DkkiB2lkBjsAVEAXSSIJY29kZQY7AFRAGUkiCW5hbWUGOwBU\nQBlJIgxjb21tZW50BjsAVEAZSSIPc2VydmljZV9pZAY7AFRAF0kiD2NyZWF0\nZWRfYXQGOwBUbzsLBjsMQB1JIg91cGRhdGVkX2F0BjsAVG87CwY7DEAdSSIO\ncHVibGlzaGVkBjsAVEAhSSIZYXV0aGVudGljYXRpb25fdG9rZW4GOwBUQBk7\nD3sAOxB7ADsRewciB2lkaQYiCWNvZGVAAkICOxJ7ADsTewA7FEY7FUY7FkY7\nFzA7GEY7GTA7GnsAOxswOxxbBkY7HTBJIg90cnNfYW1vdW50BjsARmYINWUy\nSSILYmFza2V0BjsARnsHSSISYmFza2V0X251bWJlcgY7AFRJIiFnZGxvbG9s\nZ2Q1Zmc1ODhkZ2Q2Z2hmZmdoZmRnBjsAVEkiF3RyYW5zYWN0aW9uX2Ftb3Vu\ndAY7AFRJIgo1MDAuMAY7AEZJIiViODNlZmYxYzFiM2ZkYmIyNjE1MzA3NTA0\nNDI5N2U5MQY7AEZJIiU2NGY2NzMwYWRjMjU5OTg2NjViNjU4OGY4N2RhMGZk\nMAY7AEY=\n"], ["updated_at", Sun, 26 Apr 2015 16:37:26 UTC +00:00]]
+  [1m[36m (12.8ms)[0m  [1mCOMMIT[0m
+Processing by WalletsController#get_wallets as TEXT
+  Parameters: {"country_id"=>"110"}
+  [1m[35mActiveRecord::SessionStore::Session Load (2.1ms)[0m  SELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = '571ffdde0deb39506bf03f24cacffb62' ORDER BY "sessions"."id" ASC LIMIT 1
+  [1m[36mCountry Load (0.8ms)[0m  [1mSELECT "countries".* FROM "countries" WHERE (id = 110 AND published IS TRUE)[0m
+  [1m[35mWallet Load (1.5ms)[0m  SELECT "wallets".* FROM "wallets" INNER JOIN "available_wallets" ON "wallets"."id" = "available_wallets"."wallet_id" WHERE "available_wallets"."service_id" = $1 AND "wallets"."country_id" = 110  [["service_id", 15]]
+  [1m[36mAvailableWallet Load (1.3ms)[0m  [1mSELECT "available_wallets".* FROM "available_wallets" WHERE "available_wallets"."service_id" = $1 AND "available_wallets"."published" = 't' AND "available_wallets"."wallet_id" IN (3, 6, 8)[0m  [["service_id", 15]]
+  [1m[35mWallet Load (0.8ms)[0m  SELECT "wallets".* FROM "wallets" WHERE "wallets"."id" = $1 ORDER BY "wallets"."id" ASC LIMIT 1  [["id", 3]]
+  [1m[36mWallet Load (1.1ms)[0m  [1mSELECT "wallets".* FROM "wallets" WHERE "wallets"."id" = $1 ORDER BY "wallets"."id" ASC LIMIT 1[0m  [["id", 8]]
+  Rendered text template (0.1ms)
+Completed 200 OK in 21ms (Views: 1.4ms | ActiveRecord: 7.6ms)
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36m (0.5ms)[0m  [1mCOMMIT[0m
+  [1m[35mParameter Load (1.8ms)[0m  SELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1
+Processing by MtnCisController#guard as HTML
+  Parameters: {"service_id"=>"c0ddf015802bd8c3a39f617e8f41329d", "operation_id"=>"1", "basket_number"=>"gdlololgd5fg588dgd6ghffghfdg", "transaction_amount"=>"500.0"}
+  [1m[36mActiveRecord::SessionStore::Session Load (1.5ms)[0m  [1mSELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = '571ffdde0deb39506bf03f24cacffb62' ORDER BY "sessions"."id" ASC LIMIT 1[0m
+Redirected to http://0.0.0.0:3001/MTNCI
+Completed 302 Found in 6ms (ActiveRecord: 1.5ms)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (0.6ms)[0m  [1mCOMMIT[0m
+Processing by MtnCisController#index as HTML
+  [1m[35mActiveRecord::SessionStore::Session Load (2.2ms)[0m  SELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = '571ffdde0deb39506bf03f24cacffb62' ORDER BY "sessions"."id" ASC LIMIT 1
+  [1m[36mWallet Load (1.2ms)[0m  [1mSELECT "wallets".* FROM "wallets" WHERE "wallets"."authentication_token" = '73007113fe' LIMIT 1[0m
+  [1m[35mCurrency Load (1.6ms)[0m  SELECT "currencies".* FROM "currencies" WHERE "currencies"."id" = $1 ORDER BY "currencies"."id" ASC LIMIT 1  [["id", 150]]
+  [1m[36mParameter Load (1.0ms)[0m  [1mSELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1[0m
+  [1m[35mMtnCi Load (1.4ms)[0m  SELECT "mtn_cis".* FROM "mtn_cis" WHERE (number = 'gdlololgd5fg588dgd6ghffghfdg' AND service_id = '15' AND operation_id = '1')
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (11.8ms)[0m  INSERT INTO "mtn_cis" ("currency_id", "fees", "number", "operation_id", "original_transaction_amount", "paid_currency_id", "paid_transaction_amount", "rate", "service_id", "transaction_amount", "transaction_id") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING "id"  [["currency_id", 150], ["fees", 20.0], ["number", "gdlololgd5fg588dgd6ghffghfdg"], ["operation_id", 1], ["original_transaction_amount", 500.0], ["paid_currency_id", 150], ["paid_transaction_amount", 500.0], ["rate", 1.0], ["service_id", 15], ["transaction_amount", 500.0], ["transaction_id", "20150426163735516"]]
+  [1m[36m (25.0ms)[0m  [1mCOMMIT[0m
+  [1m[35mParameter Load (1.2ms)[0m  SELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1
+  Rendered mtn_cis/index.html.erb within layouts/mtn_ci (7.2ms)
+Completed 200 OK in 4759ms (Views: 1101.2ms | ActiveRecord: 52.1ms)
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (2.8ms)[0m  UPDATE "sessions" SET "data" = $1, "updated_at" = $2 WHERE "sessions"."id" = 508  [["data", "BAh7DEkiDWN1cnJlbmN5BjoGRUZvOg1DdXJyZW5jeRY6EEBhdHRyaWJ1dGVz\newxJIgdpZAY7AFRJIggxNTAGOwBUSSIJbmFtZQY7AFRJIjNDb21tdW5hdXTD\nqSBGaW5hbmNpw6hyZSBBZnJpY2FpbmUgQkVBQywgRnJhbmNzBjsAVEkiCWNv\nZGUGOwBUSSIIWEFGBjsAVEkiD2NyZWF0ZWRfYXQGOwBUMEkiD3VwZGF0ZWRf\nYXQGOwBUMEkiDnB1Ymxpc2hlZAY7AFRJIgZ0BjsAVEkiC3N5bWJvbAY7AFRJ\nIglGQ0ZBBjsAVDoSQGNvbHVtbnNfaGFzaHsMSSIHaWQGOwBUbzpGQWN0aXZl\nUmVjb3JkOjpDb25uZWN0aW9uQWRhcHRlcnM6OlBvc3RncmVTUUxBZGFwdGVy\nOjpPSUQ6OkludGVnZXIASSIJbmFtZQY7AFRvOkdBY3RpdmVSZWNvcmQ6OkNv\nbm5lY3Rpb25BZGFwdGVyczo6UG9zdGdyZVNRTEFkYXB0ZXI6Ok9JRDo6SWRl\nbnRpdHkASSIJY29kZQY7AFRAGUkiD2NyZWF0ZWRfYXQGOwBUbzo9QWN0aXZl\nUmVjb3JkOjpBdHRyaWJ1dGVNZXRob2RzOjpUaW1lWm9uZUNvbnZlcnNpb246\nOlR5cGUGOgxAY29sdW1ubzpIQWN0aXZlUmVjb3JkOjpDb25uZWN0aW9uQWRh\ncHRlcnM6OlBvc3RncmVTUUxBZGFwdGVyOjpPSUQ6OlRpbWVzdGFtcABJIg91\ncGRhdGVkX2F0BjsAVG87CwY7DEAdSSIOcHVibGlzaGVkBjsAVG86RkFjdGl2\nZVJlY29yZDo6Q29ubmVjdGlvbkFkYXB0ZXJzOjpQb3N0Z3JlU1FMQWRhcHRl\ncjo6T0lEOjpCb29sZWFuAEkiC3N5bWJvbAY7AFRAGToXQGFnZ3JlZ2F0aW9u\nX2NhY2hlewA6F0Bhc3NvY2lhdGlvbl9jYWNoZXsAOhZAYXR0cmlidXRlc19j\nYWNoZXsIIgtzeW1ib2xAFCIJY29kZUAOIgdpZGkBljoYQHByZXZpb3VzbHlf\nY2hhbmdlZHsAOhhAY2hhbmdlZF9hdHRyaWJ1dGVzewA6DkByZWFkb25seUY6\nD0BkZXN0cm95ZWRGOhxAbWFya2VkX2Zvcl9kZXN0cnVjdGlvbkY6HkBkZXN0\ncm95ZWRfYnlfYXNzb2NpYXRpb24wOhBAbmV3X3JlY29yZEY6CUB0eG4wOh5A\nX3N0YXJ0X3RyYW5zYWN0aW9uX3N0YXRlewA6F0B0cmFuc2FjdGlvbl9zdGF0\nZTA6FEByZWZsZWN0c19zdGF0ZVsGRjodQG1hc3NfYXNzaWdubWVudF9vcHRp\nb25zMEkiDHNlcnZpY2UGOwBGbzoMU2VydmljZRY7B3sbSSIHaWQGOwBUSSIH\nMTUGOwBUSSIJY29kZQY7AFRJIiVjMGRkZjAxNTgwMmJkOGMzYTM5ZjYxN2U4\nZjQxMzI5ZAY7AFRJIgluYW1lBjsAVEkiC1dpbWJvbwY7AFRJIg9jcmVhdGVk\nX2F0BjsAVEkiHzIwMTQtMTItMDEgMTg6MzM6NDAuODgxMDU1BjsAVEkiD3Vw\nZGF0ZWRfYXQGOwBUSSIfMjAxNC0xMi0wMSAxODozMzo0MC44ODEwNTUGOwBU\nSSIPc2FsZXNfYXJlYQY7AFQwSSITdXJsX29uX3N1Y2Nlc3MGOwBUSSI3aHR0\ncDovLzQxLjE4OS40MC4xOTM6NTAwMC92YWxpZGF0ZV90cmFuc2FjdGlvbi5w\naHAGOwBUSSIRdXJsX29uX2Vycm9yBjsAVEkiN2h0dHA6Ly80MS4xODkuNDAu\nMTkzOjUwMDAvdmFsaWRhdGVfdHJhbnNhY3Rpb24ucGhwBjsAVEkiG3VybF9v\nbl9zZXNzaW9uX2V4cGlyZWQGOwBUMEkiGHVybF9vbl9ob2xkX3N1Y2Nlc3MG\nOwBUMEkiFnVybF9vbl9ob2xkX2Vycm9yBjsAVDBJIhl1cmxfb25faG9sZF9s\naXN0ZW5lcgY7AFQwSSIZYXV0aGVudGljYXRpb25fdG9rZW4GOwBUSSIlZWYz\nNDUyM2YxMTk2YzkwNGM2ZTA5YWY4MGU0NzJhYzIGOwBUSSIMY29tbWVudAY7\nAFQwSSIfdXJsX29uX2Jhc2tldF9hbHJlYWR5X3BhaWQGOwBUSSI3aHR0cDov\nLzQxLjE4OS40MC4xOTM6NTAwMC92YWxpZGF0ZV90cmFuc2FjdGlvbi5waHAG\nOwBUSSIPdXJsX3RvX2lwbgY7AFRJIjdodHRwOi8vNDEuMTg5LjQwLjE5Mzo1\nMDAwL3ZhbGlkYXRlX3RyYW5zYWN0aW9uLnBocAY7AFRJIg5wdWJsaXNoZWQG\nOwBUMEkiE2xvZ29fZmlsZV9uYW1lBjsAVDBJIhZsb2dvX2NvbnRlbnRfdHlw\nZQY7AFQwSSITbG9nb19maWxlX3NpemUGOwBUMEkiFGxvZ29fdXBkYXRlZF9h\ndAY7AFQwSSIKdG9rZW4GOwBUSSIRZTVlNzUwMmRlMzQzBjsAVDsIextJIgdp\nZAY7AFRAF0kiCWNvZGUGOwBUQBlJIgluYW1lBjsAVEAZSSIPY3JlYXRlZF9h\ndAY7AFRvOwsGOwxAHUkiD3VwZGF0ZWRfYXQGOwBUbzsLBjsMQB1JIg9zYWxl\nc19hcmVhBjsAVEAZSSITdXJsX29uX3N1Y2Nlc3MGOwBUQBlJIhF1cmxfb25f\nZXJyb3IGOwBUQBlJIht1cmxfb25fc2Vzc2lvbl9leHBpcmVkBjsAVEAZSSIY\ndXJsX29uX2hvbGRfc3VjY2VzcwY7AFRAGUkiFnVybF9vbl9ob2xkX2Vycm9y\nBjsAVEAZSSIZdXJsX29uX2hvbGRfbGlzdGVuZXIGOwBUQBlJIhlhdXRoZW50\naWNhdGlvbl90b2tlbgY7AFRAGUkiDGNvbW1lbnQGOwBUQBlJIh91cmxfb25f\nYmFza2V0X2FscmVhZHlfcGFpZAY7AFRAGUkiD3VybF90b19pcG4GOwBUQBlJ\nIg5wdWJsaXNoZWQGOwBUQCFJIhNsb2dvX2ZpbGVfbmFtZQY7AFRAGUkiFmxv\nZ29fY29udGVudF90eXBlBjsAVEAZSSITbG9nb19maWxlX3NpemUGOwBUQBdJ\nIhRsb2dvX3VwZGF0ZWRfYXQGOwBUbzsLBjsMQB1JIgp0b2tlbgY7AFRAGTsP\newA7EHsMOgxiYXNrZXRzVTozQWN0aXZlUmVjb3JkOjpBc3NvY2lhdGlvbnM6\nOkhhc01hbnlBc3NvY2lhdGlvblsHOx9bC1sHOgtAb3duZXJALlsHOgxAbG9h\nZGVkRlsHOgxAdGFyZ2V0WwBbBzoRQHN0YWxlX3N0YXRlMFsHOhdAYXNzb2Np\nYXRpb25fc2NvcGVvOjlBY3RpdmVSZWNvcmQ6OlJlbGF0aW9uOjpBY3RpdmVS\nZWNvcmRfUmVsYXRpb25fQmFza2V0FDoLQGtsYXNzYwtCYXNrZXQ6C0B0YWJs\nZW86EEFyZWw6OlRhYmxlCzoKQG5hbWVJIgxiYXNrZXRzBjsAVDoMQGVuZ2lu\nZUB3Og1AY29sdW1uczA6DUBhbGlhc2VzWwA6EUB0YWJsZV9hbGlhczA6EUBw\ncmltYXJ5X2tleTA6DEB2YWx1ZXN7CDoOZXh0ZW5kaW5nWwA6CWJpbmRbBlsH\nbzo3QWN0aXZlUmVjb3JkOjpDb25uZWN0aW9uQWRhcHRlcnM6OlBvc3RncmVT\nUUxDb2x1bW4ROg5Ab2lkX3R5cGVAGToLQGFycmF5RjsqSSIPc2VydmljZV9p\nZAY7AFQ6DkBzcWxfdHlwZUkiG2NoYXJhY3RlciB2YXJ5aW5nKDI1NSkGOwBU\nOgpAbnVsbFQ6C0BsaW1pdGkB/zoPQHByZWNpc2lvbjA6C0BzY2FsZTA6CkB0\neXBlOgtzdHJpbmc6DUBkZWZhdWx0MDoNQHByaW1hcnkwOgtAY29kZXIwaRQ6\nCndoZXJlWwZvOhpBcmVsOjpOb2Rlczo6RXF1YWxpdHkHOgpAbGVmdFM6IEFy\nZWw6OkF0dHJpYnV0ZXM6OkF0dHJpYnV0ZQc6DXJlbGF0aW9ubzspCzsqQHk7\nK2MXQWN0aXZlUmVjb3JkOjpCYXNlOywwOy1bADsuMDsvMDoJbmFtZUkiD3Nl\ncnZpY2VfaWQGOwBGOgtAcmlnaHRJQzobQXJlbDo6Tm9kZXM6OkJpbmRQYXJh\nbSIHJDEGOwBUOhdAaW1wbGljaXRfcmVhZG9ubHkwOyIwOhRAZGVmYXVsdF9z\nY29wZWRGOgpAYXJlbG86GEFyZWw6OlNlbGVjdE1hbmFnZXIIOytAdzoJQGN0\neG86HEFyZWw6Ok5vZGVzOjpTZWxlY3RDb3JlDToMQHNvdXJjZW86HEFyZWw6\nOk5vZGVzOjpKb2luU291cmNlBztCQHg7RlsAOglAdG9wMDoUQHNldF9xdWFu\ndGlmaWVyMDoRQHByb2plY3Rpb25zWwZTO0MHO0RAeDtFSUM6HEFyZWw6Ok5v\nZGVzOjpTcWxMaXRlcmFsIgYqBjsAVDoMQHdoZXJlc1sGbzoVQXJlbDo6Tm9k\nZXM6OkFuZAY6DkBjaGlsZHJlblsGQAF+OgxAZ3JvdXBzWwA6DEBoYXZpbmcw\nOg1Ad2luZG93c1sAOglAYXN0bzohQXJlbDo6Tm9kZXM6OlNlbGVjdFN0YXRl\nbWVudAs6C0Bjb3Jlc1sGQAGGOgxAb3JkZXJzWwA7ODA6CkBsb2NrMDoMQG9m\nZnNldDA6CkB3aXRoMDoWQHNjb3BlX2Zvcl9jcmVhdGUwOhJAb3JkZXJfY2xh\ndXNlMDoMQHRvX3NxbDA6CkBsYXN0MDoLQGZpcnN0MDoVQGpvaW5fZGVwZW5k\nZW5jeTA6F0BzaG91bGRfZWFnZXJfbG9hZDA6DUByZWNvcmRzWwBbBzoLQHBy\nb3h5bzpiQWN0aXZlUmVjb3JkOjpBc3NvY2lhdGlvbnM6OkNvbGxlY3Rpb25Q\ncm94eTo6QWN0aXZlUmVjb3JkX0Fzc29jaWF0aW9uc19Db2xsZWN0aW9uUHJv\neHlfQmFza2V0DToRQGFzc29jaWF0aW9uQG07J0B3OyhAeDswewo7QFsGQAF+\nOzJbBkB+Oglmcm9tMDoJbG9jazA6EnJldmVyc2Vfb3JkZXIwO0gwOyJGO0lU\nO0pvO0sIOytAdztMbztNDTtObztPBztCQHg7RlsAO1AwO1EwO1JbBlM7Qwc7\nREB4O0VJQztTIgYqBjsAVDtUWwZvO1UGO1ZbBkABfjtXWwA7WDA7WVsAO1pv\nO1sLO1xbBkABmztdWwA7ODA7XjA7XzA7YDA6E3BheXBhbF9iYXNrZXRzVTsg\nWwc7b1sLWwc7IUAuWwc7IkZbBzsjWwBbBzskMFsHOyVvOj9BY3RpdmVSZWNv\ncmQ6OlJlbGF0aW9uOjpBY3RpdmVSZWNvcmRfUmVsYXRpb25fUGF5cGFsQmFz\na2V0FDsnYxFQYXlwYWxCYXNrZXQ7KG87KQs7KkkiE3BheXBhbF9iYXNrZXRz\nBjsAVDsrQAGzOywwOy1bADsuMDsvMDswewg7MVsAOzJbBlsHbzszETs0QBk7\nNUY7KkkiD3NlcnZpY2VfaWQGOwBUOzZJIhtjaGFyYWN0ZXIgdmFyeWluZygy\nNTUpBjsAVDs3VDs4aQH/OzkwOzowOzs7PDs9MDs+MDs/MGkUO0BbBm87QQc7\nQlM7Qwc7RG87KQs7KkABtTsrQAGBOywwOy1bADsuMDsvMDtFSSIPc2Vydmlj\nZV9pZAY7AEY7RklDO0ciByQxBjsAVDtIMDsiMDtJRjtKbztLCDsrQAGzO0xv\nO00NO05vO08HO0JAAbQ7RlsAO1AwO1EwO1JbBlM7Qwc7REABtDtFSUM7UyIG\nKgY7AFQ7VFsGbztVBjtWWwZAAb87V1sAO1gwO1lbADtabztbCztcWwZAAcY7\nXVsAOzgwO14wO18wO2AwO2EwO2IwO2MwO2QwO2UwO2YwO2cwO2hbAFsHO2lv\nOmhBY3RpdmVSZWNvcmQ6OkFzc29jaWF0aW9uczo6Q29sbGVjdGlvblByb3h5\nOjpBY3RpdmVSZWNvcmRfQXNzb2NpYXRpb25zX0NvbGxlY3Rpb25Qcm94eV9Q\nYXlwYWxCYXNrZXQNO2tAAak7J0ABszsoQAG0OzB7CjtAWwZAAb87MlsGQAG6\nO2wwO20wO24wO0gwOyJGO0lUO0pvO0sIOytAAbM7TG87TQ07Tm87Twc7QkAB\ntDtGWwA7UDA7UTA7UlsGUztDBztEQAG0O0VJQztTIgYqBjsAVDtUWwZvO1UG\nO1ZbBkABvztXWwA7WDA7WVsAO1pvO1sLO1xbBkAB2ztdWwA7ODA7XjA7XzA7\nYDA6HG9yYW5nZV9tb25leV9jaV9iYXNrZXRzVTsgWwc7clsLWwc7IUAuWwc7\nIkZbBzsjWwBbBzskMFsHOyVvOkZBY3RpdmVSZWNvcmQ6OlJlbGF0aW9uOjpB\nY3RpdmVSZWNvcmRfUmVsYXRpb25fT3JhbmdlTW9uZXlDaUJhc2tldBQ7J2MY\nT3JhbmdlTW9uZXlDaUJhc2tldDsobzspCzsqSSIcb3JhbmdlX21vbmV5X2Np\nX2Jhc2tldHMGOwBUOytAAfM7LDA7LVsAOy4wOy8wOzB7CDsxWwA7MlsGWwdv\nOzMROzRAGTs1RjsqSSIPc2VydmljZV9pZAY7AFQ7NkkiG2NoYXJhY3RlciB2\nYXJ5aW5nKDI1NSkGOwBUOzdUOzhpAf87OTA7OjA7Ozs8Oz0wOz4wOz8waRQ7\nQFsGbztBBztCUztDBztEbzspCzsqQAH1OytAAYE7LDA7LVsAOy4wOy8wO0VJ\nIg9zZXJ2aWNlX2lkBjsARjtGSUM7RyIHJDEGOwBUO0gwOyIwO0lGO0pvO0sI\nOytAAfM7TG87TQ07Tm87Twc7QkAB9DtGWwA7UDA7UTA7UlsGUztDBztEQAH0\nO0VJQztTIgYqBjsAVDtUWwZvO1UGO1ZbBkAB/ztXWwA7WDA7WVsAO1pvO1sL\nO1xbBkACBgE7XVsAOzgwO14wO18wO2AwO2EwO2IwO2MwO2QwO2UwO2YwO2cw\nO2hbAFsHO2lvOm9BY3RpdmVSZWNvcmQ6OkFzc29jaWF0aW9uczo6Q29sbGVj\ndGlvblByb3h5OjpBY3RpdmVSZWNvcmRfQXNzb2NpYXRpb25zX0NvbGxlY3Rp\nb25Qcm94eV9PcmFuZ2VNb25leUNpQmFza2V0DTtrQAHpOydAAfM7KEAB9Dsw\newo7QFsGQAH/OzJbBkAB+jtsMDttMDtuMDtIMDsiRjtJVDtKbztLCDsrQAHz\nO0xvO00NO05vO08HO0JAAfQ7RlsAO1AwO1EwO1JbBlM7Qwc7REAB9DtFSUM7\nUyIGKgY7AFQ7VFsGbztVBjtWWwZAAf87V1sAO1gwO1lbADtabztbCztcWwZA\nAhsBO11bADs4MDteMDtfMDtgMDoRcWFzaF9iYXNrZXRzVTsgWwc7dVsLWwc7\nIUAuWwc7IkZbBzsjWwBbBzskMFsHOyVvOj1BY3RpdmVSZWNvcmQ6OlJlbGF0\naW9uOjpBY3RpdmVSZWNvcmRfUmVsYXRpb25fUWFzaEJhc2tldBQ7J2MPUWFz\naEJhc2tldDsobzspCzsqSSIRcWFzaF9iYXNrZXRzBjsAVDsrQAIzATssMDst\nWwA7LjA7LzA7MHsIOzFbADsyWwZbB287MxE7NEAZOzVGOypJIg9zZXJ2aWNl\nX2lkBjsAVDs2SSIbY2hhcmFjdGVyIHZhcnlpbmcoMjU1KQY7AFQ7N1Q7OGkB\n/zs5MDs6MDs7Ozw7PTA7PjA7PzBpFDtAWwZvO0EHO0JTO0MHO0RvOykLOypA\nAjUBOytAAYE7LDA7LVsAOy4wOy8wO0VJIg9zZXJ2aWNlX2lkBjsARjtGSUM7\nRyIHJDEGOwBUO0gwOyIwO0lGO0pvO0sIOytAAjMBO0xvO00NO05vO08HO0JA\nAjQBO0ZbADtQMDtRMDtSWwZTO0MHO0RAAjQBO0VJQztTIgYqBjsAVDtUWwZv\nO1UGO1ZbBkACPwE7V1sAO1gwO1lbADtabztbCztcWwZAAkYBO11bADs4MDte\nMDtfMDtgMDthMDtiMDtjMDtkMDtlMDtmMDtnMDtoWwBbBztpbzpmQWN0aXZl\nUmVjb3JkOjpBc3NvY2lhdGlvbnM6OkNvbGxlY3Rpb25Qcm94eTo6QWN0aXZl\nUmVjb3JkX0Fzc29jaWF0aW9uc19Db2xsZWN0aW9uUHJveHlfUWFzaEJhc2tl\ndA07a0ACKQE7J0ACMwE7KEACNAE7MHsKO0BbBkACPwE7MlsGQAI6ATtsMDtt\nMDtuMDtIMDsiRjtJVDtKbztLCDsrQAIzATtMbztNDTtObztPBztCQAI0ATtG\nWwA7UDA7UTA7UlsGUztDBztEQAI0ATtFSUM7UyIGKgY7AFQ7VFsGbztVBjtW\nWwZAAj8BO1dbADtYMDtZWwA7Wm87Wws7XFsGQAJbATtdWwA7ODA7XjA7XzA7\nYDA6FWRlbGF5ZWRfcGF5bWVudHNVOyBbBzt4WwtbBzshQC5bBzsiRlsHOyNb\nAFsHOyQwWwc7JW86QUFjdGl2ZVJlY29yZDo6UmVsYXRpb246OkFjdGl2ZVJl\nY29yZF9SZWxhdGlvbl9EZWxheWVkUGF5bWVudBQ7J2MTRGVsYXllZFBheW1l\nbnQ7KG87KQs7KkkiFWRlbGF5ZWRfcGF5bWVudHMGOwBUOytAAnMBOywwOy1b\nADsuMDsvMDswewg7MVsAOzJbBlsHbzszETs0QBk7NUY7KkkiD3NlcnZpY2Vf\naWQGOwBUOzZJIhtjaGFyYWN0ZXIgdmFyeWluZygyNTUpBjsAVDs3VDs4aQH/\nOzkwOzowOzs7PDs9MDs+MDs/MGkUO0BbBm87QQc7QlM7Qwc7RG87KQs7KkAC\ndQE7K0ABgTssMDstWwA7LjA7LzA7RUkiD3NlcnZpY2VfaWQGOwBGO0ZJQztH\nIgckMQY7AFQ7SDA7IjA7SUY7Sm87Swg7K0ACcwE7TG87TQ07Tm87Twc7QkAC\ndAE7RlsAO1AwO1EwO1JbBlM7Qwc7REACdAE7RUlDO1MiBioGOwBUO1RbBm87\nVQY7VlsGQAJ/ATtXWwA7WDA7WVsAO1pvO1sLO1xbBkAChgE7XVsAOzgwO14w\nO18wO2AwO2EwO2IwO2MwO2QwO2UwO2YwO2cwO2hbAFsHO2lvOmpBY3RpdmVS\nZWNvcmQ6OkFzc29jaWF0aW9uczo6Q29sbGVjdGlvblByb3h5OjpBY3RpdmVS\nZWNvcmRfQXNzb2NpYXRpb25zX0NvbGxlY3Rpb25Qcm94eV9EZWxheWVkUGF5\nbWVudA07a0ACaQE7J0ACcwE7KEACdAE7MHsKO0BbBkACfwE7MlsGQAJ6ATts\nMDttMDtuMDtIMDsiRjtJVDtKbztLCDsrQAJzATtMbztNDTtObztPBztCQAJ0\nATtGWwA7UDA7UTA7UlsGUztDBztEQAJ0ATtFSUM7UyIGKgY7AFQ7VFsGbztV\nBjtWWwZAAn8BO1dbADtYMDtZWwA7Wm87Wws7XFsGQAKbATtdWwA7ODA7XjA7\nXzA7YDA6FmF2YWlsYWJsZV93YWxsZXRzVTsgWwc7e1sLWwc7IUAuWwc7IkZb\nBzsjWwBbBzskMFsHOyVvOkJBY3RpdmVSZWNvcmQ6OlJlbGF0aW9uOjpBY3Rp\ndmVSZWNvcmRfUmVsYXRpb25fQXZhaWxhYmxlV2FsbGV0FDsnYxRBdmFpbGFi\nbGVXYWxsZXQ7KG87KQs7KkkiFmF2YWlsYWJsZV93YWxsZXRzBjsAVDsrQAKz\nATssMDstWwA7LjA7LzA7MHsIOzFbADsyWwZbB287MxE7NG87CQA7NUY7Kkki\nD3NlcnZpY2VfaWQGOwBUOzZJIgxpbnRlZ2VyBjsAVDs3VDs4MDs5MDs6MDs7\nOgxpbnRlZ2VyOz0wOz4wOz8waRQ7QFsGbztBBztCUztDBztEbzspCzsqQAK1\nATsrQAGBOywwOy1bADsuMDsvMDtFSSIPc2VydmljZV9pZAY7AEY7RklDO0ci\nByQxBjsAVDtIMDsiMDtJRjtKbztLCDsrQAKzATtMbztNDTtObztPBztCQAK0\nATtGWwA7UDA7UTA7UlsGUztDBztEQAK0ATtFSUM7UyIGKgY7AFQ7VFsGbztV\nBjtWWwZAAsABO1dbADtYMDtZWwA7Wm87Wws7XFsGQALHATtdWwA7ODA7XjA7\nXzA7YDA7YTA7YjA7YzA7ZDA7ZTA7ZjA7ZzA7aFsAWwc7aW86a0FjdGl2ZVJl\nY29yZDo6QXNzb2NpYXRpb25zOjpDb2xsZWN0aW9uUHJveHk6OkFjdGl2ZVJl\nY29yZF9Bc3NvY2lhdGlvbnNfQ29sbGVjdGlvblByb3h5X0F2YWlsYWJsZVdh\nbGxldA07a0ACqQE7J0ACswE7KEACtAE7MHsKO0BbBkACwAE7MlsGQAK6ATts\nMDttMDtuMDtIMDsiRjtJVDtKbztLCDsrQAKzATtMbztNDTtObztPBztCQAK0\nATtGWwA7UDA7UTA7UlsGUztDBztEQAK0ATtFSUM7UyIGKgY7AFQ7VFsGbztV\nBjtWWwZAAsABO1dbADtYMDtZWwA7Wm87Wws7XFsGQALcATtdWwA7ODA7XjA7\nXzA7YDA6DHdhbGxldHNVOjpBY3RpdmVSZWNvcmQ6OkFzc29jaWF0aW9uczo6\nSGFzTWFueVRocm91Z2hBc3NvY2lhdGlvblsHO39bDVsHOyFALlsHOyJGWwc7\nI1sAWwc7JDBbBzslbzo5QWN0aXZlUmVjb3JkOjpSZWxhdGlvbjo6QWN0aXZl\nUmVjb3JkX1JlbGF0aW9uX1dhbGxldBQ7J2MLV2FsbGV0OyhvOykLOypJIgx3\nYWxsZXRzBjsAVDsrQAL0ATssMDstWwA7LjA7LzA7MHsJOzFbADoKam9pbnNb\nBm86G0FyZWw6Ok5vZGVzOjpJbm5lckpvaW4HO0JvOykLOypAArUBOytAAYE7\nLDA7LVsAOy4wOy8wO0ZvOhRBcmVsOjpOb2Rlczo6T24GOgpAZXhwcm87QQc7\nQlM7Qwc7RG87KQs7KkAC9gE7K0ABgTssMDstWwA7LjA7LzA7RUkiB2lkBjsA\nVDtGUztDBztEQAL8ATtFSSIOd2FsbGV0X2lkBjsARjsyWwZbB0ACuwFpFDtA\nWwZvO0EHO0JTO0MHO0RAAvwBO0VAAsQBO0ZJQztHIgckMQY7AFQ7SDA7IjA7\nSUY7Sm87Swg7K0AC9AE7TG87TQ07Tm87Twc7QkAC9QE7RlsGQAL7ATtQMDtR\nMDtSWwZTO0MHO0RAAvUBO0VJQztTIgYqBjsAVDtUWwZvO1UGO1ZbBkACCQI7\nV1sAO1gwO1lbADtabztbCztcWwZAAg0CO11bADs4MDteMDtfMDtgMDthMDti\nMDtjMDtkMDtlMDtmMDtnMDtoWwBbBzoVQHRocm91Z2hfcmVjb3Jkc3sAWwc6\nGUB0aHJvdWdoX2Fzc29jaWF0aW9uMFsHO2lvOmJBY3RpdmVSZWNvcmQ6OkFz\nc29jaWF0aW9uczo6Q29sbGVjdGlvblByb3h5OjpBY3RpdmVSZWNvcmRfQXNz\nb2NpYXRpb25zX0NvbGxlY3Rpb25Qcm94eV9XYWxsZXQNO2tAAuoBOydAAvQB\nOyhAAvUBOzB7CztAWwZAAgkCOzJbBkACBwI7bDA7bTA7bjA7AX1bBkAC+wE7\nSDA7IkY7SVQ7Sm87Swg7K0AC9AE7TG87TQ07Tm87Twc7QkAC9QE7RlsGQAL7\nATtQMDtRMDtSWwZTO0MHO0RAAvUBO0VJQztTIgYqBjsAVDtUWwZvO1UGO1Zb\nBkACCQI7V1sAO1gwO1lbADtabztbCztcWwZAAiYCO11bADs4MDteMDtfMDtg\nMDsRewpJIgdpZAY7AFRpFCIZYXV0aGVudGljYXRpb25fdG9rZW5ARCIJbmFt\nZUA1Igljb2RlQDMiCnRva2VuQFA7EnsAOxN7ADsURjsVRjsWRjsXMDsYRjsZ\nMDsaewA7GzA7HFsGRjsdMEkiDm9wZXJhdGlvbgY7AEZvOg5PcGVyYXRpb24W\nOwd7DkkiB2lkBjsAVEkiBjEGOwBUSSIJY29kZQY7AFRJIgYxBjsAVEkiCW5h\nbWUGOwBUSSIWQWJvbm5lbWVudF9XaW1ib28GOwBUSSIMY29tbWVudAY7AFRJ\nIjVTJ2Fib25uZXIgZXQgYsOpbsOpZmljaWVyIGRlIG5vbWJyZXV4IGF2YW50\nYWdlcy4GOwBUSSIPc2VydmljZV9pZAY7AFRJIgYxBjsAVEkiD2NyZWF0ZWRf\nYXQGOwBUMEkiD3VwZGF0ZWRfYXQGOwBUMEkiDnB1Ymxpc2hlZAY7AFQwSSIZ\nYXV0aGVudGljYXRpb25fdG9rZW4GOwBUSSIpNTM1ZWYyYTUtYzdiYy00OGMw\nLThiNGQtZDVjNzNjNDBiMjcyBjsAVDsIew5JIgdpZAY7AFRAF0kiCWNvZGUG\nOwBUQBlJIgluYW1lBjsAVEAZSSIMY29tbWVudAY7AFRAGUkiD3NlcnZpY2Vf\naWQGOwBUQBdJIg9jcmVhdGVkX2F0BjsAVG87CwY7DEAdSSIPdXBkYXRlZF9h\ndAY7AFRvOwsGOwxAHUkiDnB1Ymxpc2hlZAY7AFRAIUkiGWF1dGhlbnRpY2F0\naW9uX3Rva2VuBjsAVEAZOw97ADsQewA7EXsHIgdpZGkGIgljb2RlQAJEAjsS\newA7E3sAOxRGOxVGOxZGOxcwOxhGOxkwOxp7ADsbMDscWwZGOx0wSSIPdHJz\nX2Ftb3VudAY7AEZmCDVlMkkiC2Jhc2tldAY7AEZ7B0kiEmJhc2tldF9udW1i\nZXIGOwBUSSIhZ2Rsb2xvbGdkNWZnNTg4ZGdkNmdoZmZnaGZkZwY7AFRJIhd0\ncmFuc2FjdGlvbl9hbW91bnQGOwBUSSIKNTAwLjAGOwBGSSIlYjgzZWZmMWMx\nYjNmZGJiMjYxNTMwNzUwNDQyOTdlOTEGOwBGSSIlNjRmNjczMGFkYzI1OTk4\nNjY1YjY1ODhmODdkYTBmZDAGOwBGSSIQX2NzcmZfdG9rZW4GOwBGSSIxNitB\nU1RqMlBLdEEvOWU2eTZ5NlF4NGpBUFpzU0g2TTJXdnE1OXZKbklBcz0GOwBG\n"], ["updated_at", Sun, 26 Apr 2015 16:37:37 UTC +00:00]]
+  [1m[36m (7.6ms)[0m  [1mCOMMIT[0m
+  [1m[35mParameter Load (0.8ms)[0m  SELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1
+Processing by MtnCisController#index as HTML
+  [1m[36mActiveRecord::SessionStore::Session Load (2.7ms)[0m  [1mSELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = '571ffdde0deb39506bf03f24cacffb62' ORDER BY "sessions"."id" ASC LIMIT 1[0m
+  [1m[35mWallet Load (1.0ms)[0m  SELECT "wallets".* FROM "wallets" WHERE "wallets"."authentication_token" = '73007113fe' LIMIT 1
+  [1m[36mCurrency Load (0.9ms)[0m  [1mSELECT "currencies".* FROM "currencies" WHERE "currencies"."id" = $1 ORDER BY "currencies"."id" ASC LIMIT 1[0m  [["id", 150]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1
+  [1m[36mMtnCi Load (1.5ms)[0m  [1mSELECT "mtn_cis".* FROM "mtn_cis" WHERE (number = 'gdlololgd5fg588dgd6ghffghfdg' AND service_id = '15' AND operation_id = '1')[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (0.5ms)[0m  [1mCOMMIT[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1
+  Rendered mtn_cis/index.html.erb within layouts/mtn_ci (5.5ms)
+Completed 200 OK in 1001ms (Views: 87.6ms | ActiveRecord: 33.9ms)
+  [1m[36m (0.6ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.7ms)[0m  COMMIT
+Processing by MtnCisController#initialize_payment as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"6+ASTj2PKtA/9e6y6y6Qx4jAPZsSH6M2Wvq59vJnIAs=", "transaction_id"=>"20150426163735516", "magellan"=>"500", "Frais"=>"20.0", "colomb"=>"", "token"=>""}
+  [1m[36mActiveRecord::SessionStore::Session Load (1.4ms)[0m  [1mSELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = '571ffdde0deb39506bf03f24cacffb62' ORDER BY "sessions"."id" ASC LIMIT 1[0m
+  [1m[35mMtnCi Load (1.1ms)[0m  SELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '20150426163735516' LIMIT 1
+  [1m[36mWallet Load (0.7ms)[0m  [1mSELECT "wallets".* FROM "wallets" WHERE "wallets"."authentication_token" = '73007113fe' LIMIT 1[0m
+  [1m[35mCurrency Load (0.9ms)[0m  SELECT "currencies".* FROM "currencies" WHERE "currencies"."id" = $1 ORDER BY "currencies"."id" ASC LIMIT 1  [["id", 150]]
+  [1m[36mParameter Load (1.2ms)[0m  [1mSELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1[0m
+  Rendered mtn_cis/index.html.erb within layouts/mtn_ci (2.3ms)
+Completed 200 OK in 102ms (Views: 18.8ms | ActiveRecord: 5.2ms)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (0.6ms)[0m  [1mCOMMIT[0m
+  [1m[35mParameter Load (0.9ms)[0m  SELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1
+Processing by MtnCisController#initialize_payment as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"6+ASTj2PKtA/9e6y6y6Qx4jAPZsSH6M2Wvq59vJnIAs=", "transaction_id"=>"20150426163735516", "magellan"=>"500", "Frais"=>"20.0", "colomb"=>"", "token"=>""}
+  [1m[36mActiveRecord::SessionStore::Session Load (1.5ms)[0m  [1mSELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = '571ffdde0deb39506bf03f24cacffb62' ORDER BY "sessions"."id" ASC LIMIT 1[0m
+  [1m[35mMtnCi Load (0.9ms)[0m  SELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '20150426163735516' LIMIT 1
+  [1m[36mWallet Load (1.0ms)[0m  [1mSELECT "wallets".* FROM "wallets" WHERE "wallets"."authentication_token" = '73007113fe' LIMIT 1[0m
+  [1m[35mCurrency Load (1.1ms)[0m  SELECT "currencies".* FROM "currencies" WHERE "currencies"."id" = $1 ORDER BY "currencies"."id" ASC LIMIT 1  [["id", 150]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1[0m
+  Rendered mtn_cis/index.html.erb within layouts/mtn_ci (4.4ms)
+Completed 200 OK in 591ms (Views: 21.1ms | ActiveRecord: 32.0ms)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (0.6ms)[0m  [1mCOMMIT[0m
+Processing by MtnCisController#initialize_payment as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"6+ASTj2PKtA/9e6y6y6Qx4jAPZsSH6M2Wvq59vJnIAs=", "transaction_id"=>"20150426163735516", "magellan"=>"500", "Frais"=>"20.0", "colomb"=>"58908957", "token"=>"hbhghjghj"}
+  [1m[35mActiveRecord::SessionStore::Session Load (1.3ms)[0m  SELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = '571ffdde0deb39506bf03f24cacffb62' ORDER BY "sessions"."id" ASC LIMIT 1
+  [1m[36mMtnCi Load (1.0ms)[0m  [1mSELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '20150426163735516' LIMIT 1[0m
+  Rendered text template (0.1ms)
+Completed 200 OK in 2244ms (Views: 1.3ms | ActiveRecord: 2.3ms)
+  [1m[35m (0.7ms)[0m  BEGIN
+  [1m[36m (0.6ms)[0m  [1mCOMMIT[0m
+  [1m[35mParameter Load (1.3ms)[0m  SELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1
+Processing by MtnCisController#initialize_payment as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"6+ASTj2PKtA/9e6y6y6Qx4jAPZsSH6M2Wvq59vJnIAs=", "transaction_id"=>"20150426163735516", "magellan"=>"500", "Frais"=>"20.0", "colomb"=>"58908957", "token"=>"ykghjghj"}
+  [1m[36mActiveRecord::SessionStore::Session Load (1.5ms)[0m  [1mSELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = '571ffdde0deb39506bf03f24cacffb62' ORDER BY "sessions"."id" ASC LIMIT 1[0m
+  [1m[35mMtnCi Load (1.3ms)[0m  SELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '20150426163735516' LIMIT 1
+  Rendered text template (0.1ms)
+Completed 200 OK in 1358ms (Views: 1.4ms | ActiveRecord: 19.8ms)
+  [1m[36m (0.7ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.6ms)[0m  COMMIT
+  [1m[36mParameter Load (0.6ms)[0m  [1mSELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1[0m
+Processing by MtnCisController#initialize_payment as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"6+ASTj2PKtA/9e6y6y6Qx4jAPZsSH6M2Wvq59vJnIAs=", "transaction_id"=>"20150426163735516", "magellan"=>"500", "Frais"=>"20.0", "colomb"=>"58908957", "token"=>"lpkùmklmkmlkml"}
+  [1m[35mActiveRecord::SessionStore::Session Load (1.4ms)[0m  SELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = '571ffdde0deb39506bf03f24cacffb62' ORDER BY "sessions"."id" ASC LIMIT 1
+  [1m[36mMtnCi Load (1.0ms)[0m  [1mSELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '20150426163735516' LIMIT 1[0m
+  Rendered text template (0.1ms)
+Completed 200 OK in 909ms (Views: 1.4ms | ActiveRecord: 18.8ms)
+  [1m[35m (0.7ms)[0m  BEGIN
+  [1m[36m (0.7ms)[0m  [1mCOMMIT[0m
+  [1m[35mParameter Load (0.7ms)[0m  SELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1
+Processing by MtnCisController#initialize_payment as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"6+ASTj2PKtA/9e6y6y6Qx4jAPZsSH6M2Wvq59vJnIAs=", "transaction_id"=>"20150426163735516", "magellan"=>"500", "Frais"=>"20.0", "colomb"=>"58908957", "token"=>"fyugfyufu"}
+  [1m[36mActiveRecord::SessionStore::Session Load (2.2ms)[0m  [1mSELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = '571ffdde0deb39506bf03f24cacffb62' ORDER BY "sessions"."id" ASC LIMIT 1[0m
+  [1m[35mMtnCi Load (1.1ms)[0m  SELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '20150426163735516' LIMIT 1
+  Rendered text template (0.1ms)
+Completed 200 OK in 942ms (Views: 1.5ms | ActiveRecord: 21.4ms)
+  [1m[36m (0.6ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.6ms)[0m  COMMIT
+  [1m[36mParameter Load (1.3ms)[0m  [1mSELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1[0m
+Processing by MtnCisController#initialize_payment as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"6+ASTj2PKtA/9e6y6y6Qx4jAPZsSH6M2Wvq59vJnIAs=", "transaction_id"=>"20150426163735516", "magellan"=>"500", "Frais"=>"20.0", "colomb"=>"58908957", "token"=>"jklmjlj"}
+  [1m[35mActiveRecord::SessionStore::Session Load (1.1ms)[0m  SELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = '571ffdde0deb39506bf03f24cacffb62' ORDER BY "sessions"."id" ASC LIMIT 1
+  [1m[36mMtnCi Load (1.0ms)[0m  [1mSELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '20150426163735516' LIMIT 1[0m
+  Rendered text template (0.1ms)
+Completed 200 OK in 920ms (Views: 1.5ms | ActiveRecord: 19.3ms)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (0.6ms)[0m  [1mCOMMIT[0m
+  [1m[35mParameter Load (0.7ms)[0m  SELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1
+Processing by MtnCisController#initialize_payment as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"6+ASTj2PKtA/9e6y6y6Qx4jAPZsSH6M2Wvq59vJnIAs=", "transaction_id"=>"20150426163735516", "magellan"=>"500", "Frais"=>"20.0", "colomb"=>"58908957", "token"=>"hjkhjkhjk"}
+  [1m[36mActiveRecord::SessionStore::Session Load (1.4ms)[0m  [1mSELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = '571ffdde0deb39506bf03f24cacffb62' ORDER BY "sessions"."id" ASC LIMIT 1[0m
+  [1m[35mMtnCi Load (1.1ms)[0m  SELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '20150426163735516' LIMIT 1
+  Rendered text template (0.1ms)
+Completed 200 OK in 925ms (Views: 1.9ms | ActiveRecord: 18.7ms)
+  [1m[36m (0.7ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.7ms)[0m  COMMIT
+  [1m[36mParameter Load (1.0ms)[0m  [1mSELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1[0m
+Processing by MtnCisController#initialize_payment as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"6+ASTj2PKtA/9e6y6y6Qx4jAPZsSH6M2Wvq59vJnIAs=", "transaction_id"=>"20150426163735516", "magellan"=>"500", "Frais"=>"20.0", "colomb"=>"58908957", "token"=>"hughjkhjkhk"}
+  [1m[35mActiveRecord::SessionStore::Session Load (0.9ms)[0m  SELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = '571ffdde0deb39506bf03f24cacffb62' ORDER BY "sessions"."id" ASC LIMIT 1
+  [1m[36mMtnCi Load (1.0ms)[0m  [1mSELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '20150426163735516' LIMIT 1[0m
+  Rendered text template (0.1ms)
+Completed 200 OK in 932ms (Views: 1.6ms | ActiveRecord: 17.4ms)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (0.6ms)[0m  [1mCOMMIT[0m
+Processing by MainController#index as HTML
+Redirected to http://0.0.0.0:3001/error
+Filter chain halted as #<Proc:0x00000003a2a050@/home/dietrich/workshop/h-backward-overture/app/controllers/main_controller.rb:5> rendered or redirected
+Completed 302 Found in 2ms (ActiveRecord: 0.0ms)
+Processing by ErrorsHandlingController#error_page as HTML
+  Rendered errors_handling/error_page.html.erb within layouts/errors_success (0.9ms)
+Completed 200 OK in 30ms (Views: 29.1ms | ActiveRecord: 0.0ms)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36mSQL (2.1ms)[0m  [1mINSERT INTO "sessions" ("created_at", "data", "session_id", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["created_at", Sun, 26 Apr 2015 16:58:50 UTC +00:00], ["data", "BAh7BkkiEF9jc3JmX3Rva2VuBjoGRUZJIjFOc1FFN1JOY045VjZYZGpGYmxO\nRXBGZ2tQVGtKcmlhdHRaZCt4djhsTEJVPQY7AEY=\n"], ["session_id", "ca551fd936eb3a086f97a496aedb0089"], ["updated_at", Sun, 26 Apr 2015 16:58:50 UTC +00:00]]
+  [1m[35m (11.5ms)[0m  COMMIT
+Processing by MainController#guard as HTML
+  Parameters: {"currency"=>"xaf", "service_token"=>"ef34523f1196c904c6e09af80e472ac2", "operation_token"=>"535ef2a5-c7bc-48c0-8b4d-d5c73c40b272", "order"=>"gdlololgd5fg588dgd6ghffghfdg", "transaction_amount"=>"500"}
+  [1m[36mActiveRecord::SessionStore::Session Load (0.6ms)[0m  [1mSELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = 'ca551fd936eb3a086f97a496aedb0089' ORDER BY "sessions"."id" ASC LIMIT 1[0m
+  [1m[35mCurrency Load (0.9ms)[0m  SELECT "currencies".* FROM "currencies" WHERE (code = 'XAF' AND published IS TRUE)
+  [1m[36mService Load (1.4ms)[0m  [1mSELECT "services".* FROM "services" WHERE (authentication_token = 'ef34523f1196c904c6e09af80e472ac2' AND published IS NOT FALSE)[0m
+  [1m[35mOperation Load (1.3ms)[0m  SELECT "operations".* FROM "operations" WHERE (authentication_token = '535ef2a5-c7bc-48c0-8b4d-d5c73c40b272' AND service_id = 15 AND published IS NOT FALSE)
+  [1m[36mService Load (1.2ms)[0m  [1mSELECT "services".* FROM "services" WHERE "services"."authentication_token" = 'ef34523f1196c904c6e09af80e472ac2' LIMIT 1[0m
+  [1m[35mOperation Load (1.0ms)[0m  SELECT "operations".* FROM "operations" WHERE "operations"."authentication_token" = '535ef2a5-c7bc-48c0-8b4d-d5c73c40b272' LIMIT 1
+  [1m[36mBasket Load (1.7ms)[0m  [1mSELECT "baskets".* FROM "baskets" WHERE "baskets"."service_id" = $1 AND (number = 'gdlololgd5fg588dgd6ghffghfdg' AND operation_id = '1')[0m  [["service_id", 15]]
+  [1m[35mPaypalBasket Load (1.2ms)[0m  SELECT "paypal_baskets".* FROM "paypal_baskets" WHERE "paypal_baskets"."service_id" = $1 AND (number = 'gdlololgd5fg588dgd6ghffghfdg' AND operation_id = '1')  [["service_id", 15]]
+  [1m[36mDelayedPayment Load (1.2ms)[0m  [1mSELECT "delayed_payments".* FROM "delayed_payments" WHERE "delayed_payments"."service_id" = $1 AND (number = 'gdlololgd5fg588dgd6ghffghfdg' AND operation_id = '1')[0m  [["service_id", 15]]
+  [1m[35mOrangeMoneyCiBasket Load (1.7ms)[0m  SELECT "orange_money_ci_baskets".* FROM "orange_money_ci_baskets" WHERE "orange_money_ci_baskets"."service_id" = $1 AND (number = 'gdlololgd5fg588dgd6ghffghfdg' AND operation_id = '1')  [["service_id", 15]]
+  [1m[36mQashBasket Load (1.4ms)[0m  [1mSELECT "qash_baskets".* FROM "qash_baskets" WHERE "qash_baskets"."service_id" = $1 AND (number = 'gdlololgd5fg588dgd6ghffghfdg' AND operation_id = '1')[0m  [["service_id", 15]]
+Redirected to http://0.0.0.0:3001/Main
+Completed 302 Found in 289ms (ActiveRecord: 36.7ms)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (3.7ms)[0m  [1mUPDATE "sessions" SET "data" = $1, "updated_at" = $2 WHERE "sessions"."id" = 509[0m  [["data", "BAh7DEkiEF9jc3JmX3Rva2VuBjoGRUZJIjFOc1FFN1JOY045VjZYZGpGYmxO\nRXBGZ2tQVGtKcmlhdHRaZCt4djhsTEJVPQY7AEZJIg1jdXJyZW5jeQY7AEZv\nOg1DdXJyZW5jeRY6EEBhdHRyaWJ1dGVzewxJIgdpZAY7AFRJIggxNTAGOwBU\nSSIJbmFtZQY7AFRJIjNDb21tdW5hdXTDqSBGaW5hbmNpw6hyZSBBZnJpY2Fp\nbmUgQkVBQywgRnJhbmNzBjsAVEkiCWNvZGUGOwBUSSIIWEFGBjsAVEkiD2Ny\nZWF0ZWRfYXQGOwBUMEkiD3VwZGF0ZWRfYXQGOwBUMEkiDnB1Ymxpc2hlZAY7\nAFRJIgZ0BjsAVEkiC3N5bWJvbAY7AFRJIglGQ0ZBBjsAVDoSQGNvbHVtbnNf\naGFzaHsMSSIHaWQGOwBUbzpGQWN0aXZlUmVjb3JkOjpDb25uZWN0aW9uQWRh\ncHRlcnM6OlBvc3RncmVTUUxBZGFwdGVyOjpPSUQ6OkludGVnZXIASSIJbmFt\nZQY7AFRvOkdBY3RpdmVSZWNvcmQ6OkNvbm5lY3Rpb25BZGFwdGVyczo6UG9z\ndGdyZVNRTEFkYXB0ZXI6Ok9JRDo6SWRlbnRpdHkASSIJY29kZQY7AFRAG0ki\nD2NyZWF0ZWRfYXQGOwBUbzo9QWN0aXZlUmVjb3JkOjpBdHRyaWJ1dGVNZXRo\nb2RzOjpUaW1lWm9uZUNvbnZlcnNpb246OlR5cGUGOgxAY29sdW1ubzpIQWN0\naXZlUmVjb3JkOjpDb25uZWN0aW9uQWRhcHRlcnM6OlBvc3RncmVTUUxBZGFw\ndGVyOjpPSUQ6OlRpbWVzdGFtcABJIg91cGRhdGVkX2F0BjsAVG87CwY7DEAf\nSSIOcHVibGlzaGVkBjsAVG86RkFjdGl2ZVJlY29yZDo6Q29ubmVjdGlvbkFk\nYXB0ZXJzOjpQb3N0Z3JlU1FMQWRhcHRlcjo6T0lEOjpCb29sZWFuAEkiC3N5\nbWJvbAY7AFRAGzoXQGFnZ3JlZ2F0aW9uX2NhY2hlewA6F0Bhc3NvY2lhdGlv\nbl9jYWNoZXsAOhZAYXR0cmlidXRlc19jYWNoZXsAOhhAcHJldmlvdXNseV9j\naGFuZ2VkewA6GEBjaGFuZ2VkX2F0dHJpYnV0ZXN7ADoOQHJlYWRvbmx5RjoP\nQGRlc3Ryb3llZEY6HEBtYXJrZWRfZm9yX2Rlc3RydWN0aW9uRjoeQGRlc3Ry\nb3llZF9ieV9hc3NvY2lhdGlvbjA6EEBuZXdfcmVjb3JkRjoJQHR4bjA6HkBf\nc3RhcnRfdHJhbnNhY3Rpb25fc3RhdGV7ADoXQHRyYW5zYWN0aW9uX3N0YXRl\nMDoUQHJlZmxlY3RzX3N0YXRlWwZGOh1AbWFzc19hc3NpZ25tZW50X29wdGlv\nbnMwSSIMc2VydmljZQY7AEZvOgxTZXJ2aWNlFjsHextJIgdpZAY7AFRJIgcx\nNQY7AFRJIgljb2RlBjsAVEkiJWMwZGRmMDE1ODAyYmQ4YzNhMzlmNjE3ZThm\nNDEzMjlkBjsAVEkiCW5hbWUGOwBUSSILV2ltYm9vBjsAVEkiD2NyZWF0ZWRf\nYXQGOwBUSSIfMjAxNC0xMi0wMSAxODozMzo0MC44ODEwNTUGOwBUSSIPdXBk\nYXRlZF9hdAY7AFRJIh8yMDE0LTEyLTAxIDE4OjMzOjQwLjg4MTA1NQY7AFRJ\nIg9zYWxlc19hcmVhBjsAVDBJIhN1cmxfb25fc3VjY2VzcwY7AFRJIjdodHRw\nOi8vNDEuMTg5LjQwLjE5Mzo1MDAwL3ZhbGlkYXRlX3RyYW5zYWN0aW9uLnBo\ncAY7AFRJIhF1cmxfb25fZXJyb3IGOwBUSSI3aHR0cDovLzQxLjE4OS40MC4x\nOTM6NTAwMC92YWxpZGF0ZV90cmFuc2FjdGlvbi5waHAGOwBUSSIbdXJsX29u\nX3Nlc3Npb25fZXhwaXJlZAY7AFQwSSIYdXJsX29uX2hvbGRfc3VjY2VzcwY7\nAFQwSSIWdXJsX29uX2hvbGRfZXJyb3IGOwBUMEkiGXVybF9vbl9ob2xkX2xp\nc3RlbmVyBjsAVDBJIhlhdXRoZW50aWNhdGlvbl90b2tlbgY7AFRJIiVlZjM0\nNTIzZjExOTZjOTA0YzZlMDlhZjgwZTQ3MmFjMgY7AFRJIgxjb21tZW50BjsA\nVDBJIh91cmxfb25fYmFza2V0X2FscmVhZHlfcGFpZAY7AFRJIjdodHRwOi8v\nNDEuMTg5LjQwLjE5Mzo1MDAwL3ZhbGlkYXRlX3RyYW5zYWN0aW9uLnBocAY7\nAFRJIg91cmxfdG9faXBuBjsAVEkiN2h0dHA6Ly80MS4xODkuNDAuMTkzOjUw\nMDAvdmFsaWRhdGVfdHJhbnNhY3Rpb24ucGhwBjsAVEkiDnB1Ymxpc2hlZAY7\nAFQwSSITbG9nb19maWxlX25hbWUGOwBUMEkiFmxvZ29fY29udGVudF90eXBl\nBjsAVDBJIhNsb2dvX2ZpbGVfc2l6ZQY7AFQwSSIUbG9nb191cGRhdGVkX2F0\nBjsAVDBJIgp0b2tlbgY7AFRJIhFlNWU3NTAyZGUzNDMGOwBUOwh7G0kiB2lk\nBjsAVEAZSSIJY29kZQY7AFRAG0kiCW5hbWUGOwBUQBtJIg9jcmVhdGVkX2F0\nBjsAVG87CwY7DEAfSSIPdXBkYXRlZF9hdAY7AFRvOwsGOwxAH0kiD3NhbGVz\nX2FyZWEGOwBUQBtJIhN1cmxfb25fc3VjY2VzcwY7AFRAG0kiEXVybF9vbl9l\ncnJvcgY7AFRAG0kiG3VybF9vbl9zZXNzaW9uX2V4cGlyZWQGOwBUQBtJIhh1\ncmxfb25faG9sZF9zdWNjZXNzBjsAVEAbSSIWdXJsX29uX2hvbGRfZXJyb3IG\nOwBUQBtJIhl1cmxfb25faG9sZF9saXN0ZW5lcgY7AFRAG0kiGWF1dGhlbnRp\nY2F0aW9uX3Rva2VuBjsAVEAbSSIMY29tbWVudAY7AFRAG0kiH3VybF9vbl9i\nYXNrZXRfYWxyZWFkeV9wYWlkBjsAVEAbSSIPdXJsX3RvX2lwbgY7AFRAG0ki\nDnB1Ymxpc2hlZAY7AFRAI0kiE2xvZ29fZmlsZV9uYW1lBjsAVEAbSSIWbG9n\nb19jb250ZW50X3R5cGUGOwBUQBtJIhNsb2dvX2ZpbGVfc2l6ZQY7AFRAGUki\nFGxvZ29fdXBkYXRlZF9hdAY7AFRvOwsGOwxAH0kiCnRva2VuBjsAVEAbOw97\nADsQewo6DGJhc2tldHNVOjNBY3RpdmVSZWNvcmQ6OkFzc29jaWF0aW9uczo6\nSGFzTWFueUFzc29jaWF0aW9uWwc7H1sLWwc6C0Bvd25lckAtWwc6DEBsb2Fk\nZWRGWwc6DEB0YXJnZXRbAFsHOhFAc3RhbGVfc3RhdGUwWwc6F0Bhc3NvY2lh\ndGlvbl9zY29wZW86OUFjdGl2ZVJlY29yZDo6UmVsYXRpb246OkFjdGl2ZVJl\nY29yZF9SZWxhdGlvbl9CYXNrZXQUOgtAa2xhc3NjC0Jhc2tldDoLQHRhYmxl\nbzoQQXJlbDo6VGFibGULOgpAbmFtZUkiDGJhc2tldHMGOwBUOgxAZW5naW5l\nQHY6DUBjb2x1bW5zMDoNQGFsaWFzZXNbADoRQHRhYmxlX2FsaWFzMDoRQHBy\naW1hcnlfa2V5MDoMQHZhbHVlc3sIOg5leHRlbmRpbmdbADoJYmluZFsGWwdv\nOjdBY3RpdmVSZWNvcmQ6OkNvbm5lY3Rpb25BZGFwdGVyczo6UG9zdGdyZVNR\nTENvbHVtbhE6DkBvaWRfdHlwZUAbOgtAYXJyYXlGOypJIg9zZXJ2aWNlX2lk\nBjsAVDoOQHNxbF90eXBlSSIbY2hhcmFjdGVyIHZhcnlpbmcoMjU1KQY7AFQ6\nCkBudWxsVDoLQGxpbWl0aQH/Og9AcHJlY2lzaW9uMDoLQHNjYWxlMDoKQHR5\ncGU6C3N0cmluZzoNQGRlZmF1bHQwOg1AcHJpbWFyeTA6C0Bjb2RlcjBpFDoK\nd2hlcmVbBm86GkFyZWw6Ok5vZGVzOjpFcXVhbGl0eQc6CkBsZWZ0UzogQXJl\nbDo6QXR0cmlidXRlczo6QXR0cmlidXRlBzoNcmVsYXRpb25vOykLOypAeDsr\nYxdBY3RpdmVSZWNvcmQ6OkJhc2U7LDA7LVsAOy4wOy8wOgluYW1lSSIPc2Vy\ndmljZV9pZAY7AEY6C0ByaWdodElDOhtBcmVsOjpOb2Rlczo6QmluZFBhcmFt\nIgckMQY7AFQ6F0BpbXBsaWNpdF9yZWFkb25seTA7IjA6FEBkZWZhdWx0X3Nj\nb3BlZEY6CkBhcmVsbzoYQXJlbDo6U2VsZWN0TWFuYWdlcgg7K0B2OglAY3R4\nbzocQXJlbDo6Tm9kZXM6OlNlbGVjdENvcmUNOgxAc291cmNlbzocQXJlbDo6\nTm9kZXM6OkpvaW5Tb3VyY2UHO0JAdztGWwA6CUB0b3AwOhRAc2V0X3F1YW50\naWZpZXIwOhFAcHJvamVjdGlvbnNbBlM7Qwc7REB3O0VJQzocQXJlbDo6Tm9k\nZXM6OlNxbExpdGVyYWwiBioGOwBUOgxAd2hlcmVzWwZvOhVBcmVsOjpOb2Rl\nczo6QW5kBjoOQGNoaWxkcmVuWwZAAX06DEBncm91cHNbADoMQGhhdmluZzA6\nDUB3aW5kb3dzWwA6CUBhc3RvOiFBcmVsOjpOb2Rlczo6U2VsZWN0U3RhdGVt\nZW50CzoLQGNvcmVzWwZAAYU6DEBvcmRlcnNbADs4MDoKQGxvY2swOgxAb2Zm\nc2V0MDoKQHdpdGgwOhZAc2NvcGVfZm9yX2NyZWF0ZTA6EkBvcmRlcl9jbGF1\nc2UwOgxAdG9fc3FsMDoKQGxhc3QwOgtAZmlyc3QwOhVAam9pbl9kZXBlbmRl\nbmN5MDoXQHNob3VsZF9lYWdlcl9sb2FkMDoNQHJlY29yZHNbAFsHOgtAcHJv\neHlvOmJBY3RpdmVSZWNvcmQ6OkFzc29jaWF0aW9uczo6Q29sbGVjdGlvblBy\nb3h5OjpBY3RpdmVSZWNvcmRfQXNzb2NpYXRpb25zX0NvbGxlY3Rpb25Qcm94\neV9CYXNrZXQNOhFAYXNzb2NpYXRpb25AbDsnQHY7KEB3OzB7CjtAWwZAAX07\nMlsGQH06CWZyb20wOglsb2NrMDoScmV2ZXJzZV9vcmRlcjA7SDA7IkY7SVQ7\nSm87Swg7K0B2O0xvO00NO05vO08HO0JAdztGWwA7UDA7UTA7UlsGUztDBztE\nQHc7RUlDO1MiBioGOwBUO1RbBm87VQY7VlsGQAF9O1dbADtYMDtZWwA7Wm87\nWws7XFsGQAGaO11bADs4MDteMDtfMDtgMDoTcGF5cGFsX2Jhc2tldHNVOyBb\nBztvWwtbBzshQC1bBzsiRlsHOyNbAFsHOyQwWwc7JW86P0FjdGl2ZVJlY29y\nZDo6UmVsYXRpb246OkFjdGl2ZVJlY29yZF9SZWxhdGlvbl9QYXlwYWxCYXNr\nZXQUOydjEVBheXBhbEJhc2tldDsobzspCzsqSSITcGF5cGFsX2Jhc2tldHMG\nOwBUOytAAbI7LDA7LVsAOy4wOy8wOzB7CDsxWwA7MlsGWwdvOzMROzRAGzs1\nRjsqSSIPc2VydmljZV9pZAY7AFQ7NkkiG2NoYXJhY3RlciB2YXJ5aW5nKDI1\nNSkGOwBUOzdUOzhpAf87OTA7OjA7Ozs8Oz0wOz4wOz8waRQ7QFsGbztBBztC\nUztDBztEbzspCzsqQAG0OytAAYA7LDA7LVsAOy4wOy8wO0VJIg9zZXJ2aWNl\nX2lkBjsARjtGSUM7RyIHJDEGOwBUO0gwOyIwO0lGO0pvO0sIOytAAbI7TG87\nTQ07Tm87Twc7QkABsztGWwA7UDA7UTA7UlsGUztDBztEQAGzO0VJQztTIgYq\nBjsAVDtUWwZvO1UGO1ZbBkABvjtXWwA7WDA7WVsAO1pvO1sLO1xbBkABxTtd\nWwA7ODA7XjA7XzA7YDA7YTA7YjA7YzA7ZDA7ZTA7ZjA7ZzA7aFsAWwc7aW86\naEFjdGl2ZVJlY29yZDo6QXNzb2NpYXRpb25zOjpDb2xsZWN0aW9uUHJveHk6\nOkFjdGl2ZVJlY29yZF9Bc3NvY2lhdGlvbnNfQ29sbGVjdGlvblByb3h5X1Bh\neXBhbEJhc2tldA07a0ABqDsnQAGyOyhAAbM7MHsKO0BbBkABvjsyWwZAAbk7\nbDA7bTA7bjA7SDA7IkY7SVQ7Sm87Swg7K0ABsjtMbztNDTtObztPBztCQAGz\nO0ZbADtQMDtRMDtSWwZTO0MHO0RAAbM7RUlDO1MiBioGOwBUO1RbBm87VQY7\nVlsGQAG+O1dbADtYMDtZWwA7Wm87Wws7XFsGQAHaO11bADs4MDteMDtfMDtg\nMDocb3JhbmdlX21vbmV5X2NpX2Jhc2tldHNVOyBbBztyWwtbBzshQC1bBzsi\nRlsHOyNbAFsHOyQwWwc7JW86RkFjdGl2ZVJlY29yZDo6UmVsYXRpb246OkFj\ndGl2ZVJlY29yZF9SZWxhdGlvbl9PcmFuZ2VNb25leUNpQmFza2V0FDsnYxhP\ncmFuZ2VNb25leUNpQmFza2V0OyhvOykLOypJIhxvcmFuZ2VfbW9uZXlfY2lf\nYmFza2V0cwY7AFQ7K0AB8jssMDstWwA7LjA7LzA7MHsIOzFbADsyWwZbB287\nMxE7NEAbOzVGOypJIg9zZXJ2aWNlX2lkBjsAVDs2SSIbY2hhcmFjdGVyIHZh\ncnlpbmcoMjU1KQY7AFQ7N1Q7OGkB/zs5MDs6MDs7Ozw7PTA7PjA7PzBpFDtA\nWwZvO0EHO0JTO0MHO0RvOykLOypAAfQ7K0ABgDssMDstWwA7LjA7LzA7RUki\nD3NlcnZpY2VfaWQGOwBGO0ZJQztHIgckMQY7AFQ7SDA7IjA7SUY7Sm87Swg7\nK0AB8jtMbztNDTtObztPBztCQAHzO0ZbADtQMDtRMDtSWwZTO0MHO0RAAfM7\nRUlDO1MiBioGOwBUO1RbBm87VQY7VlsGQAH+O1dbADtYMDtZWwA7Wm87Wws7\nXFsGQAIFATtdWwA7ODA7XjA7XzA7YDA7YTA7YjA7YzA7ZDA7ZTA7ZjA7ZzA7\naFsAWwc7aW86b0FjdGl2ZVJlY29yZDo6QXNzb2NpYXRpb25zOjpDb2xsZWN0\naW9uUHJveHk6OkFjdGl2ZVJlY29yZF9Bc3NvY2lhdGlvbnNfQ29sbGVjdGlv\nblByb3h5X09yYW5nZU1vbmV5Q2lCYXNrZXQNO2tAAeg7J0AB8jsoQAHzOzB7\nCjtAWwZAAf47MlsGQAH5O2wwO20wO24wO0gwOyJGO0lUO0pvO0sIOytAAfI7\nTG87TQ07Tm87Twc7QkAB8ztGWwA7UDA7UTA7UlsGUztDBztEQAHzO0VJQztT\nIgYqBjsAVDtUWwZvO1UGO1ZbBkAB/jtXWwA7WDA7WVsAO1pvO1sLO1xbBkAC\nGgE7XVsAOzgwO14wO18wO2AwOhFxYXNoX2Jhc2tldHNVOyBbBzt1WwtbBzsh\nQC1bBzsiRlsHOyNbAFsHOyQwWwc7JW86PUFjdGl2ZVJlY29yZDo6UmVsYXRp\nb246OkFjdGl2ZVJlY29yZF9SZWxhdGlvbl9RYXNoQmFza2V0FDsnYw9RYXNo\nQmFza2V0OyhvOykLOypJIhFxYXNoX2Jhc2tldHMGOwBUOytAAjIBOywwOy1b\nADsuMDsvMDswewg7MVsAOzJbBlsHbzszETs0QBs7NUY7KkkiD3NlcnZpY2Vf\naWQGOwBUOzZJIhtjaGFyYWN0ZXIgdmFyeWluZygyNTUpBjsAVDs3VDs4aQH/\nOzkwOzowOzs7PDs9MDs+MDs/MGkUO0BbBm87QQc7QlM7Qwc7RG87KQs7KkAC\nNAE7K0ABgDssMDstWwA7LjA7LzA7RUkiD3NlcnZpY2VfaWQGOwBGO0ZJQztH\nIgckMQY7AFQ7SDA7IjA7SUY7Sm87Swg7K0ACMgE7TG87TQ07Tm87Twc7QkAC\nMwE7RlsAO1AwO1EwO1JbBlM7Qwc7REACMwE7RUlDO1MiBioGOwBUO1RbBm87\nVQY7VlsGQAI+ATtXWwA7WDA7WVsAO1pvO1sLO1xbBkACRQE7XVsAOzgwO14w\nO18wO2AwO2EwO2IwO2MwO2QwO2UwO2YwO2cwO2hbAFsHO2lvOmZBY3RpdmVS\nZWNvcmQ6OkFzc29jaWF0aW9uczo6Q29sbGVjdGlvblByb3h5OjpBY3RpdmVS\nZWNvcmRfQXNzb2NpYXRpb25zX0NvbGxlY3Rpb25Qcm94eV9RYXNoQmFza2V0\nDTtrQAIoATsnQAIyATsoQAIzATswewo7QFsGQAI+ATsyWwZAAjkBO2wwO20w\nO24wO0gwOyJGO0lUO0pvO0sIOytAAjIBO0xvO00NO05vO08HO0JAAjMBO0Zb\nADtQMDtRMDtSWwZTO0MHO0RAAjMBO0VJQztTIgYqBjsAVDtUWwZvO1UGO1Zb\nBkACPgE7V1sAO1gwO1lbADtabztbCztcWwZAAloBO11bADs4MDteMDtfMDtg\nMDoVZGVsYXllZF9wYXltZW50c1U7IFsHO3hbC1sHOyFALVsHOyJGWwc7I1sA\nWwc7JDBbBzslbzpBQWN0aXZlUmVjb3JkOjpSZWxhdGlvbjo6QWN0aXZlUmVj\nb3JkX1JlbGF0aW9uX0RlbGF5ZWRQYXltZW50FDsnYxNEZWxheWVkUGF5bWVu\ndDsobzspCzsqSSIVZGVsYXllZF9wYXltZW50cwY7AFQ7K0ACcgE7LDA7LVsA\nOy4wOy8wOzB7CDsxWwA7MlsGWwdvOzMROzRAGzs1RjsqSSIPc2VydmljZV9p\nZAY7AFQ7NkkiG2NoYXJhY3RlciB2YXJ5aW5nKDI1NSkGOwBUOzdUOzhpAf87\nOTA7OjA7Ozs8Oz0wOz4wOz8waRQ7QFsGbztBBztCUztDBztEbzspCzsqQAJ0\nATsrQAGAOywwOy1bADsuMDsvMDtFSSIPc2VydmljZV9pZAY7AEY7RklDO0ci\nByQxBjsAVDtIMDsiMDtJRjtKbztLCDsrQAJyATtMbztNDTtObztPBztCQAJz\nATtGWwA7UDA7UTA7UlsGUztDBztEQAJzATtFSUM7UyIGKgY7AFQ7VFsGbztV\nBjtWWwZAAn4BO1dbADtYMDtZWwA7Wm87Wws7XFsGQAKFATtdWwA7ODA7XjA7\nXzA7YDA7YTA7YjA7YzA7ZDA7ZTA7ZjA7ZzA7aFsAWwc7aW86akFjdGl2ZVJl\nY29yZDo6QXNzb2NpYXRpb25zOjpDb2xsZWN0aW9uUHJveHk6OkFjdGl2ZVJl\nY29yZF9Bc3NvY2lhdGlvbnNfQ29sbGVjdGlvblByb3h5X0RlbGF5ZWRQYXlt\nZW50DTtrQAJoATsnQAJyATsoQAJzATswewo7QFsGQAJ+ATsyWwZAAnkBO2ww\nO20wO24wO0gwOyJGO0lUO0pvO0sIOytAAnIBO0xvO00NO05vO08HO0JAAnMB\nO0ZbADtQMDtRMDtSWwZTO0MHO0RAAnMBO0VJQztTIgYqBjsAVDtUWwZvO1UG\nO1ZbBkACfgE7V1sAO1gwO1lbADtabztbCztcWwZAApoBO11bADs4MDteMDtf\nMDtgMDsRewZJIgdpZAY7AFRpFDsSewA7E3sAOxRGOxVGOxZGOxcwOxhGOxkw\nOxp7ADsbMDscWwZGOx0wSSIOb3BlcmF0aW9uBjsARm86Dk9wZXJhdGlvbhY7\nB3sOSSIHaWQGOwBUSSIGMQY7AFRJIgljb2RlBjsAVEkiBjEGOwBUSSIJbmFt\nZQY7AFRJIhZBYm9ubmVtZW50X1dpbWJvbwY7AFRJIgxjb21tZW50BjsAVEki\nNVMnYWJvbm5lciBldCBiw6luw6lmaWNpZXIgZGUgbm9tYnJldXggYXZhbnRh\nZ2VzLgY7AFRJIg9zZXJ2aWNlX2lkBjsAVEkiBjEGOwBUSSIPY3JlYXRlZF9h\ndAY7AFQwSSIPdXBkYXRlZF9hdAY7AFQwSSIOcHVibGlzaGVkBjsAVDBJIhlh\ndXRoZW50aWNhdGlvbl90b2tlbgY7AFRJIik1MzVlZjJhNS1jN2JjLTQ4YzAt\nOGI0ZC1kNWM3M2M0MGIyNzIGOwBUOwh7DkkiB2lkBjsAVEAZSSIJY29kZQY7\nAFRAG0kiCW5hbWUGOwBUQBtJIgxjb21tZW50BjsAVEAbSSIPc2VydmljZV9p\nZAY7AFRAGUkiD2NyZWF0ZWRfYXQGOwBUbzsLBjsMQB9JIg91cGRhdGVkX2F0\nBjsAVG87CwY7DEAfSSIOcHVibGlzaGVkBjsAVEAjSSIZYXV0aGVudGljYXRp\nb25fdG9rZW4GOwBUQBs7D3sAOxB7ADsRewYiB2lkaQY7EnsAOxN7ADsURjsV\nRjsWRjsXMDsYRjsZMDsaewA7GzA7HFsGRjsdMEkiD3Ryc19hbW91bnQGOwBG\nZgg1ZTJJIgtiYXNrZXQGOwBGewdJIhJiYXNrZXRfbnVtYmVyBjsAVEkiIWdk\nbG9sb2xnZDVmZzU4OGRnZDZnaGZmZ2hmZGcGOwBUSSIXdHJhbnNhY3Rpb25f\nYW1vdW50BjsAVEkiCjUwMC4wBjsARkkiJWI4M2VmZjFjMWIzZmRiYjI2MTUz\nMDc1MDQ0Mjk3ZTkxBjsARkkiJWI2ZDIwMDBhYTU4NWNjYjFjZTIyNjRjYzQz\nZjgzMGI4BjsARg==\n"], ["updated_at", Sun, 26 Apr 2015 16:58:59 UTC +00:00]]
+  [1m[35m (14.7ms)[0m  COMMIT
+Processing by MainController#index as HTML
+  [1m[36mActiveRecord::SessionStore::Session Load (2.8ms)[0m  [1mSELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = 'ca551fd936eb3a086f97a496aedb0089' ORDER BY "sessions"."id" ASC LIMIT 1[0m
+  [1m[35mCountry Load (1.0ms)[0m  SELECT "countries".* FROM "countries" WHERE "countries"."name" = 'International' LIMIT 1
+  [1m[36mWallet Load (1.3ms)[0m  [1mSELECT "wallets".* FROM "wallets" INNER JOIN "available_wallets" ON "wallets"."id" = "available_wallets"."wallet_id" WHERE "available_wallets"."service_id" = $1 AND "wallets"."country_id" = 242[0m  [["service_id", 15]]
+  [1m[35mCountry Load (1.2ms)[0m  SELECT "countries".* FROM "countries" WHERE (published IS TRUE) ORDER BY name ASC
+  [1m[36mAvailableWallet Load (0.9ms)[0m  [1mSELECT "available_wallets".* FROM "available_wallets" WHERE "available_wallets"."service_id" = $1 AND "available_wallets"."published" = 't' AND "available_wallets"."wallet_id" IN (1, 2)[0m  [["service_id", 15]]
+  [1m[35mWallet Load (1.1ms)[0m  SELECT "wallets".* FROM "wallets" WHERE "wallets"."id" = $1 ORDER BY "wallets"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36mWallet Load (0.9ms)[0m  [1mSELECT "wallets".* FROM "wallets" WHERE "wallets"."id" = $1 ORDER BY "wallets"."id" ASC LIMIT 1[0m  [["id", 2]]
+  Rendered main/index.html.erb within layouts/main (52.0ms)
+Completed 200 OK in 232ms (Views: 51.2ms | ActiveRecord: 22.7ms)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (3.0ms)[0m  [1mUPDATE "sessions" SET "data" = $1, "updated_at" = $2 WHERE "sessions"."id" = 509[0m  [["data", "BAh7DEkiEF9jc3JmX3Rva2VuBjoGRUZJIjFOc1FFN1JOY045VjZYZGpGYmxO\nRXBGZ2tQVGtKcmlhdHRaZCt4djhsTEJVPQY7AEZJIg1jdXJyZW5jeQY7AEZv\nOg1DdXJyZW5jeRY6EEBhdHRyaWJ1dGVzewxJIgdpZAY7AFRJIggxNTAGOwBU\nSSIJbmFtZQY7AFRJIjNDb21tdW5hdXTDqSBGaW5hbmNpw6hyZSBBZnJpY2Fp\nbmUgQkVBQywgRnJhbmNzBjsAVEkiCWNvZGUGOwBUSSIIWEFGBjsAVEkiD2Ny\nZWF0ZWRfYXQGOwBUMEkiD3VwZGF0ZWRfYXQGOwBUMEkiDnB1Ymxpc2hlZAY7\nAFRJIgZ0BjsAVEkiC3N5bWJvbAY7AFRJIglGQ0ZBBjsAVDoSQGNvbHVtbnNf\naGFzaHsMSSIHaWQGOwBUbzpGQWN0aXZlUmVjb3JkOjpDb25uZWN0aW9uQWRh\ncHRlcnM6OlBvc3RncmVTUUxBZGFwdGVyOjpPSUQ6OkludGVnZXIASSIJbmFt\nZQY7AFRvOkdBY3RpdmVSZWNvcmQ6OkNvbm5lY3Rpb25BZGFwdGVyczo6UG9z\ndGdyZVNRTEFkYXB0ZXI6Ok9JRDo6SWRlbnRpdHkASSIJY29kZQY7AFRAG0ki\nD2NyZWF0ZWRfYXQGOwBUbzo9QWN0aXZlUmVjb3JkOjpBdHRyaWJ1dGVNZXRo\nb2RzOjpUaW1lWm9uZUNvbnZlcnNpb246OlR5cGUGOgxAY29sdW1ubzpIQWN0\naXZlUmVjb3JkOjpDb25uZWN0aW9uQWRhcHRlcnM6OlBvc3RncmVTUUxBZGFw\ndGVyOjpPSUQ6OlRpbWVzdGFtcABJIg91cGRhdGVkX2F0BjsAVG87CwY7DEAf\nSSIOcHVibGlzaGVkBjsAVG86RkFjdGl2ZVJlY29yZDo6Q29ubmVjdGlvbkFk\nYXB0ZXJzOjpQb3N0Z3JlU1FMQWRhcHRlcjo6T0lEOjpCb29sZWFuAEkiC3N5\nbWJvbAY7AFRAGzoXQGFnZ3JlZ2F0aW9uX2NhY2hlewA6F0Bhc3NvY2lhdGlv\nbl9jYWNoZXsAOhZAYXR0cmlidXRlc19jYWNoZXsHIgtzeW1ib2xAFiIJY29k\nZUAQOhhAcHJldmlvdXNseV9jaGFuZ2VkewA6GEBjaGFuZ2VkX2F0dHJpYnV0\nZXN7ADoOQHJlYWRvbmx5RjoPQGRlc3Ryb3llZEY6HEBtYXJrZWRfZm9yX2Rl\nc3RydWN0aW9uRjoeQGRlc3Ryb3llZF9ieV9hc3NvY2lhdGlvbjA6EEBuZXdf\ncmVjb3JkRjoJQHR4bjA6HkBfc3RhcnRfdHJhbnNhY3Rpb25fc3RhdGV7ADoX\nQHRyYW5zYWN0aW9uX3N0YXRlMDoUQHJlZmxlY3RzX3N0YXRlWwZGOh1AbWFz\nc19hc3NpZ25tZW50X29wdGlvbnMwSSIMc2VydmljZQY7AEZvOgxTZXJ2aWNl\nFjsHextJIgdpZAY7AFRJIgcxNQY7AFRJIgljb2RlBjsAVEkiJWMwZGRmMDE1\nODAyYmQ4YzNhMzlmNjE3ZThmNDEzMjlkBjsAVEkiCW5hbWUGOwBUSSILV2lt\nYm9vBjsAVEkiD2NyZWF0ZWRfYXQGOwBUSSIfMjAxNC0xMi0wMSAxODozMzo0\nMC44ODEwNTUGOwBUSSIPdXBkYXRlZF9hdAY7AFRJIh8yMDE0LTEyLTAxIDE4\nOjMzOjQwLjg4MTA1NQY7AFRJIg9zYWxlc19hcmVhBjsAVDBJIhN1cmxfb25f\nc3VjY2VzcwY7AFRJIjdodHRwOi8vNDEuMTg5LjQwLjE5Mzo1MDAwL3ZhbGlk\nYXRlX3RyYW5zYWN0aW9uLnBocAY7AFRJIhF1cmxfb25fZXJyb3IGOwBUSSI3\naHR0cDovLzQxLjE4OS40MC4xOTM6NTAwMC92YWxpZGF0ZV90cmFuc2FjdGlv\nbi5waHAGOwBUSSIbdXJsX29uX3Nlc3Npb25fZXhwaXJlZAY7AFQwSSIYdXJs\nX29uX2hvbGRfc3VjY2VzcwY7AFQwSSIWdXJsX29uX2hvbGRfZXJyb3IGOwBU\nMEkiGXVybF9vbl9ob2xkX2xpc3RlbmVyBjsAVDBJIhlhdXRoZW50aWNhdGlv\nbl90b2tlbgY7AFRJIiVlZjM0NTIzZjExOTZjOTA0YzZlMDlhZjgwZTQ3MmFj\nMgY7AFRJIgxjb21tZW50BjsAVDBJIh91cmxfb25fYmFza2V0X2FscmVhZHlf\ncGFpZAY7AFRJIjdodHRwOi8vNDEuMTg5LjQwLjE5Mzo1MDAwL3ZhbGlkYXRl\nX3RyYW5zYWN0aW9uLnBocAY7AFRJIg91cmxfdG9faXBuBjsAVEkiN2h0dHA6\nLy80MS4xODkuNDAuMTkzOjUwMDAvdmFsaWRhdGVfdHJhbnNhY3Rpb24ucGhw\nBjsAVEkiDnB1Ymxpc2hlZAY7AFQwSSITbG9nb19maWxlX25hbWUGOwBUMEki\nFmxvZ29fY29udGVudF90eXBlBjsAVDBJIhNsb2dvX2ZpbGVfc2l6ZQY7AFQw\nSSIUbG9nb191cGRhdGVkX2F0BjsAVDBJIgp0b2tlbgY7AFRJIhFlNWU3NTAy\nZGUzNDMGOwBUOwh7G0kiB2lkBjsAVEAZSSIJY29kZQY7AFRAG0kiCW5hbWUG\nOwBUQBtJIg9jcmVhdGVkX2F0BjsAVG87CwY7DEAfSSIPdXBkYXRlZF9hdAY7\nAFRvOwsGOwxAH0kiD3NhbGVzX2FyZWEGOwBUQBtJIhN1cmxfb25fc3VjY2Vz\ncwY7AFRAG0kiEXVybF9vbl9lcnJvcgY7AFRAG0kiG3VybF9vbl9zZXNzaW9u\nX2V4cGlyZWQGOwBUQBtJIhh1cmxfb25faG9sZF9zdWNjZXNzBjsAVEAbSSIW\ndXJsX29uX2hvbGRfZXJyb3IGOwBUQBtJIhl1cmxfb25faG9sZF9saXN0ZW5l\ncgY7AFRAG0kiGWF1dGhlbnRpY2F0aW9uX3Rva2VuBjsAVEAbSSIMY29tbWVu\ndAY7AFRAG0kiH3VybF9vbl9iYXNrZXRfYWxyZWFkeV9wYWlkBjsAVEAbSSIP\ndXJsX3RvX2lwbgY7AFRAG0kiDnB1Ymxpc2hlZAY7AFRAI0kiE2xvZ29fZmls\nZV9uYW1lBjsAVEAbSSIWbG9nb19jb250ZW50X3R5cGUGOwBUQBtJIhNsb2dv\nX2ZpbGVfc2l6ZQY7AFRAGUkiFGxvZ29fdXBkYXRlZF9hdAY7AFRvOwsGOwxA\nH0kiCnRva2VuBjsAVEAbOw97ADsQeww6DGJhc2tldHNVOjNBY3RpdmVSZWNv\ncmQ6OkFzc29jaWF0aW9uczo6SGFzTWFueUFzc29jaWF0aW9uWwc7H1sLWwc6\nC0Bvd25lckAvWwc6DEBsb2FkZWRGWwc6DEB0YXJnZXRbAFsHOhFAc3RhbGVf\nc3RhdGUwWwc6F0Bhc3NvY2lhdGlvbl9zY29wZW86OUFjdGl2ZVJlY29yZDo6\nUmVsYXRpb246OkFjdGl2ZVJlY29yZF9SZWxhdGlvbl9CYXNrZXQUOgtAa2xh\nc3NjC0Jhc2tldDoLQHRhYmxlbzoQQXJlbDo6VGFibGULOgpAbmFtZUkiDGJh\nc2tldHMGOwBUOgxAZW5naW5lQHg6DUBjb2x1bW5zMDoNQGFsaWFzZXNbADoR\nQHRhYmxlX2FsaWFzMDoRQHByaW1hcnlfa2V5MDoMQHZhbHVlc3sIOg5leHRl\nbmRpbmdbADoJYmluZFsGWwdvOjdBY3RpdmVSZWNvcmQ6OkNvbm5lY3Rpb25B\nZGFwdGVyczo6UG9zdGdyZVNRTENvbHVtbhE6DkBvaWRfdHlwZUAbOgtAYXJy\nYXlGOypJIg9zZXJ2aWNlX2lkBjsAVDoOQHNxbF90eXBlSSIbY2hhcmFjdGVy\nIHZhcnlpbmcoMjU1KQY7AFQ6CkBudWxsVDoLQGxpbWl0aQH/Og9AcHJlY2lz\naW9uMDoLQHNjYWxlMDoKQHR5cGU6C3N0cmluZzoNQGRlZmF1bHQwOg1AcHJp\nbWFyeTA6C0Bjb2RlcjBpFDoKd2hlcmVbBm86GkFyZWw6Ok5vZGVzOjpFcXVh\nbGl0eQc6CkBsZWZ0UzogQXJlbDo6QXR0cmlidXRlczo6QXR0cmlidXRlBzoN\ncmVsYXRpb25vOykLOypAejsrYxdBY3RpdmVSZWNvcmQ6OkJhc2U7LDA7LVsA\nOy4wOy8wOgluYW1lSSIPc2VydmljZV9pZAY7AEY6C0ByaWdodElDOhtBcmVs\nOjpOb2Rlczo6QmluZFBhcmFtIgckMQY7AFQ6F0BpbXBsaWNpdF9yZWFkb25s\neTA7IjA6FEBkZWZhdWx0X3Njb3BlZEY6CkBhcmVsbzoYQXJlbDo6U2VsZWN0\nTWFuYWdlcgg7K0B4OglAY3R4bzocQXJlbDo6Tm9kZXM6OlNlbGVjdENvcmUN\nOgxAc291cmNlbzocQXJlbDo6Tm9kZXM6OkpvaW5Tb3VyY2UHO0JAeTtGWwA6\nCUB0b3AwOhRAc2V0X3F1YW50aWZpZXIwOhFAcHJvamVjdGlvbnNbBlM7Qwc7\nREB5O0VJQzocQXJlbDo6Tm9kZXM6OlNxbExpdGVyYWwiBioGOwBUOgxAd2hl\ncmVzWwZvOhVBcmVsOjpOb2Rlczo6QW5kBjoOQGNoaWxkcmVuWwZAAX86DEBn\ncm91cHNbADoMQGhhdmluZzA6DUB3aW5kb3dzWwA6CUBhc3RvOiFBcmVsOjpO\nb2Rlczo6U2VsZWN0U3RhdGVtZW50CzoLQGNvcmVzWwZAAYc6DEBvcmRlcnNb\nADs4MDoKQGxvY2swOgxAb2Zmc2V0MDoKQHdpdGgwOhZAc2NvcGVfZm9yX2Ny\nZWF0ZTA6EkBvcmRlcl9jbGF1c2UwOgxAdG9fc3FsMDoKQGxhc3QwOgtAZmly\nc3QwOhVAam9pbl9kZXBlbmRlbmN5MDoXQHNob3VsZF9lYWdlcl9sb2FkMDoN\nQHJlY29yZHNbAFsHOgtAcHJveHlvOmJBY3RpdmVSZWNvcmQ6OkFzc29jaWF0\naW9uczo6Q29sbGVjdGlvblByb3h5OjpBY3RpdmVSZWNvcmRfQXNzb2NpYXRp\nb25zX0NvbGxlY3Rpb25Qcm94eV9CYXNrZXQNOhFAYXNzb2NpYXRpb25Abjsn\nQHg7KEB5OzB7CjtAWwZAAX87MlsGQH86CWZyb20wOglsb2NrMDoScmV2ZXJz\nZV9vcmRlcjA7SDA7IkY7SVQ7Sm87Swg7K0B4O0xvO00NO05vO08HO0JAeTtG\nWwA7UDA7UTA7UlsGUztDBztEQHk7RUlDO1MiBioGOwBUO1RbBm87VQY7VlsG\nQAF/O1dbADtYMDtZWwA7Wm87Wws7XFsGQAGcO11bADs4MDteMDtfMDtgMDoT\ncGF5cGFsX2Jhc2tldHNVOyBbBztvWwtbBzshQC9bBzsiRlsHOyNbAFsHOyQw\nWwc7JW86P0FjdGl2ZVJlY29yZDo6UmVsYXRpb246OkFjdGl2ZVJlY29yZF9S\nZWxhdGlvbl9QYXlwYWxCYXNrZXQUOydjEVBheXBhbEJhc2tldDsobzspCzsq\nSSITcGF5cGFsX2Jhc2tldHMGOwBUOytAAbQ7LDA7LVsAOy4wOy8wOzB7CDsx\nWwA7MlsGWwdvOzMROzRAGzs1RjsqSSIPc2VydmljZV9pZAY7AFQ7NkkiG2No\nYXJhY3RlciB2YXJ5aW5nKDI1NSkGOwBUOzdUOzhpAf87OTA7OjA7Ozs8Oz0w\nOz4wOz8waRQ7QFsGbztBBztCUztDBztEbzspCzsqQAG2OytAAYI7LDA7LVsA\nOy4wOy8wO0VJIg9zZXJ2aWNlX2lkBjsARjtGSUM7RyIHJDEGOwBUO0gwOyIw\nO0lGO0pvO0sIOytAAbQ7TG87TQ07Tm87Twc7QkABtTtGWwA7UDA7UTA7UlsG\nUztDBztEQAG1O0VJQztTIgYqBjsAVDtUWwZvO1UGO1ZbBkABwDtXWwA7WDA7\nWVsAO1pvO1sLO1xbBkABxztdWwA7ODA7XjA7XzA7YDA7YTA7YjA7YzA7ZDA7\nZTA7ZjA7ZzA7aFsAWwc7aW86aEFjdGl2ZVJlY29yZDo6QXNzb2NpYXRpb25z\nOjpDb2xsZWN0aW9uUHJveHk6OkFjdGl2ZVJlY29yZF9Bc3NvY2lhdGlvbnNf\nQ29sbGVjdGlvblByb3h5X1BheXBhbEJhc2tldA07a0ABqjsnQAG0OyhAAbU7\nMHsKO0BbBkABwDsyWwZAAbs7bDA7bTA7bjA7SDA7IkY7SVQ7Sm87Swg7K0AB\ntDtMbztNDTtObztPBztCQAG1O0ZbADtQMDtRMDtSWwZTO0MHO0RAAbU7RUlD\nO1MiBioGOwBUO1RbBm87VQY7VlsGQAHAO1dbADtYMDtZWwA7Wm87Wws7XFsG\nQAHcO11bADs4MDteMDtfMDtgMDocb3JhbmdlX21vbmV5X2NpX2Jhc2tldHNV\nOyBbBztyWwtbBzshQC9bBzsiRlsHOyNbAFsHOyQwWwc7JW86RkFjdGl2ZVJl\nY29yZDo6UmVsYXRpb246OkFjdGl2ZVJlY29yZF9SZWxhdGlvbl9PcmFuZ2VN\nb25leUNpQmFza2V0FDsnYxhPcmFuZ2VNb25leUNpQmFza2V0OyhvOykLOypJ\nIhxvcmFuZ2VfbW9uZXlfY2lfYmFza2V0cwY7AFQ7K0AB9DssMDstWwA7LjA7\nLzA7MHsIOzFbADsyWwZbB287MxE7NEAbOzVGOypJIg9zZXJ2aWNlX2lkBjsA\nVDs2SSIbY2hhcmFjdGVyIHZhcnlpbmcoMjU1KQY7AFQ7N1Q7OGkB/zs5MDs6\nMDs7Ozw7PTA7PjA7PzBpFDtAWwZvO0EHO0JTO0MHO0RvOykLOypAAfY7K0AB\ngjssMDstWwA7LjA7LzA7RUkiD3NlcnZpY2VfaWQGOwBGO0ZJQztHIgckMQY7\nAFQ7SDA7IjA7SUY7Sm87Swg7K0AB9DtMbztNDTtObztPBztCQAH1O0ZbADtQ\nMDtRMDtSWwZTO0MHO0RAAfU7RUlDO1MiBioGOwBUO1RbBm87VQY7VlsGQAIA\nATtXWwA7WDA7WVsAO1pvO1sLO1xbBkACBwE7XVsAOzgwO14wO18wO2AwO2Ew\nO2IwO2MwO2QwO2UwO2YwO2cwO2hbAFsHO2lvOm9BY3RpdmVSZWNvcmQ6OkFz\nc29jaWF0aW9uczo6Q29sbGVjdGlvblByb3h5OjpBY3RpdmVSZWNvcmRfQXNz\nb2NpYXRpb25zX0NvbGxlY3Rpb25Qcm94eV9PcmFuZ2VNb25leUNpQmFza2V0\nDTtrQAHqOydAAfQ7KEAB9Tswewo7QFsGQAIAATsyWwZAAfs7bDA7bTA7bjA7\nSDA7IkY7SVQ7Sm87Swg7K0AB9DtMbztNDTtObztPBztCQAH1O0ZbADtQMDtR\nMDtSWwZTO0MHO0RAAfU7RUlDO1MiBioGOwBUO1RbBm87VQY7VlsGQAIAATtX\nWwA7WDA7WVsAO1pvO1sLO1xbBkACHAE7XVsAOzgwO14wO18wO2AwOhFxYXNo\nX2Jhc2tldHNVOyBbBzt1WwtbBzshQC9bBzsiRlsHOyNbAFsHOyQwWwc7JW86\nPUFjdGl2ZVJlY29yZDo6UmVsYXRpb246OkFjdGl2ZVJlY29yZF9SZWxhdGlv\nbl9RYXNoQmFza2V0FDsnYw9RYXNoQmFza2V0OyhvOykLOypJIhFxYXNoX2Jh\nc2tldHMGOwBUOytAAjQBOywwOy1bADsuMDsvMDswewg7MVsAOzJbBlsHbzsz\nETs0QBs7NUY7KkkiD3NlcnZpY2VfaWQGOwBUOzZJIhtjaGFyYWN0ZXIgdmFy\neWluZygyNTUpBjsAVDs3VDs4aQH/OzkwOzowOzs7PDs9MDs+MDs/MGkUO0Bb\nBm87QQc7QlM7Qwc7RG87KQs7KkACNgE7K0ABgjssMDstWwA7LjA7LzA7RUki\nD3NlcnZpY2VfaWQGOwBGO0ZJQztHIgckMQY7AFQ7SDA7IjA7SUY7Sm87Swg7\nK0ACNAE7TG87TQ07Tm87Twc7QkACNQE7RlsAO1AwO1EwO1JbBlM7Qwc7REAC\nNQE7RUlDO1MiBioGOwBUO1RbBm87VQY7VlsGQAJAATtXWwA7WDA7WVsAO1pv\nO1sLO1xbBkACRwE7XVsAOzgwO14wO18wO2AwO2EwO2IwO2MwO2QwO2UwO2Yw\nO2cwO2hbAFsHO2lvOmZBY3RpdmVSZWNvcmQ6OkFzc29jaWF0aW9uczo6Q29s\nbGVjdGlvblByb3h5OjpBY3RpdmVSZWNvcmRfQXNzb2NpYXRpb25zX0NvbGxl\nY3Rpb25Qcm94eV9RYXNoQmFza2V0DTtrQAIqATsnQAI0ATsoQAI1ATswewo7\nQFsGQAJAATsyWwZAAjsBO2wwO20wO24wO0gwOyJGO0lUO0pvO0sIOytAAjQB\nO0xvO00NO05vO08HO0JAAjUBO0ZbADtQMDtRMDtSWwZTO0MHO0RAAjUBO0VJ\nQztTIgYqBjsAVDtUWwZvO1UGO1ZbBkACQAE7V1sAO1gwO1lbADtabztbCztc\nWwZAAlwBO11bADs4MDteMDtfMDtgMDoVZGVsYXllZF9wYXltZW50c1U7IFsH\nO3hbC1sHOyFAL1sHOyJGWwc7I1sAWwc7JDBbBzslbzpBQWN0aXZlUmVjb3Jk\nOjpSZWxhdGlvbjo6QWN0aXZlUmVjb3JkX1JlbGF0aW9uX0RlbGF5ZWRQYXlt\nZW50FDsnYxNEZWxheWVkUGF5bWVudDsobzspCzsqSSIVZGVsYXllZF9wYXlt\nZW50cwY7AFQ7K0ACdAE7LDA7LVsAOy4wOy8wOzB7CDsxWwA7MlsGWwdvOzMR\nOzRAGzs1RjsqSSIPc2VydmljZV9pZAY7AFQ7NkkiG2NoYXJhY3RlciB2YXJ5\naW5nKDI1NSkGOwBUOzdUOzhpAf87OTA7OjA7Ozs8Oz0wOz4wOz8waRQ7QFsG\nbztBBztCUztDBztEbzspCzsqQAJ2ATsrQAGCOywwOy1bADsuMDsvMDtFSSIP\nc2VydmljZV9pZAY7AEY7RklDO0ciByQxBjsAVDtIMDsiMDtJRjtKbztLCDsr\nQAJ0ATtMbztNDTtObztPBztCQAJ1ATtGWwA7UDA7UTA7UlsGUztDBztEQAJ1\nATtFSUM7UyIGKgY7AFQ7VFsGbztVBjtWWwZAAoABO1dbADtYMDtZWwA7Wm87\nWws7XFsGQAKHATtdWwA7ODA7XjA7XzA7YDA7YTA7YjA7YzA7ZDA7ZTA7ZjA7\nZzA7aFsAWwc7aW86akFjdGl2ZVJlY29yZDo6QXNzb2NpYXRpb25zOjpDb2xs\nZWN0aW9uUHJveHk6OkFjdGl2ZVJlY29yZF9Bc3NvY2lhdGlvbnNfQ29sbGVj\ndGlvblByb3h5X0RlbGF5ZWRQYXltZW50DTtrQAJqATsnQAJ0ATsoQAJ1ATsw\newo7QFsGQAKAATsyWwZAAnsBO2wwO20wO24wO0gwOyJGO0lUO0pvO0sIOytA\nAnQBO0xvO00NO05vO08HO0JAAnUBO0ZbADtQMDtRMDtSWwZTO0MHO0RAAnUB\nO0VJQztTIgYqBjsAVDtUWwZvO1UGO1ZbBkACgAE7V1sAO1gwO1lbADtabztb\nCztcWwZAApwBO11bADs4MDteMDtfMDtgMDoWYXZhaWxhYmxlX3dhbGxldHNV\nOyBbBzt7WwtbBzshQC9bBzsiRlsHOyNbAFsHOyQwWwc7JW86QkFjdGl2ZVJl\nY29yZDo6UmVsYXRpb246OkFjdGl2ZVJlY29yZF9SZWxhdGlvbl9BdmFpbGFi\nbGVXYWxsZXQUOydjFEF2YWlsYWJsZVdhbGxldDsobzspCzsqSSIWYXZhaWxh\nYmxlX3dhbGxldHMGOwBUOytAArQBOywwOy1bADsuMDsvMDswewg7MVsAOzJb\nBlsHbzszETs0bzsJADs1RjsqSSIPc2VydmljZV9pZAY7AFQ7NkkiDGludGVn\nZXIGOwBUOzdUOzgwOzkwOzowOzs6DGludGVnZXI7PTA7PjA7PzBpFDtAWwZv\nO0EHO0JTO0MHO0RvOykLOypAArYBOytAAYI7LDA7LVsAOy4wOy8wO0VJIg9z\nZXJ2aWNlX2lkBjsARjtGSUM7RyIHJDEGOwBUO0gwOyIwO0lGO0pvO0sIOytA\nArQBO0xvO00NO05vO08HO0JAArUBO0ZbADtQMDtRMDtSWwZTO0MHO0RAArUB\nO0VJQztTIgYqBjsAVDtUWwZvO1UGO1ZbBkACwQE7V1sAO1gwO1lbADtabztb\nCztcWwZAAsgBO11bADs4MDteMDtfMDtgMDthMDtiMDtjMDtkMDtlMDtmMDtn\nMDtoWwBbBztpbzprQWN0aXZlUmVjb3JkOjpBc3NvY2lhdGlvbnM6OkNvbGxl\nY3Rpb25Qcm94eTo6QWN0aXZlUmVjb3JkX0Fzc29jaWF0aW9uc19Db2xsZWN0\naW9uUHJveHlfQXZhaWxhYmxlV2FsbGV0DTtrQAKqATsnQAK0ATsoQAK1ATsw\newo7QFsGQALBATsyWwZAArsBO2wwO20wO24wO0gwOyJGO0lUO0pvO0sIOytA\nArQBO0xvO00NO05vO08HO0JAArUBO0ZbADtQMDtRMDtSWwZTO0MHO0RAArUB\nO0VJQztTIgYqBjsAVDtUWwZvO1UGO1ZbBkACwQE7V1sAO1gwO1lbADtabztb\nCztcWwZAAt0BO11bADs4MDteMDtfMDtgMDoMd2FsbGV0c1U6OkFjdGl2ZVJl\nY29yZDo6QXNzb2NpYXRpb25zOjpIYXNNYW55VGhyb3VnaEFzc29jaWF0aW9u\nWwc7f1sNWwc7IUAvWwc7IkZbBzsjWwBbBzskMFsHOyVvOjlBY3RpdmVSZWNv\ncmQ6OlJlbGF0aW9uOjpBY3RpdmVSZWNvcmRfUmVsYXRpb25fV2FsbGV0FDsn\nYwtXYWxsZXQ7KG87KQs7KkkiDHdhbGxldHMGOwBUOytAAvUBOywwOy1bADsu\nMDsvMDswewk7MVsAOgpqb2luc1sGbzobQXJlbDo6Tm9kZXM6OklubmVySm9p\nbgc7Qm87KQs7KkACtgE7K0ABgjssMDstWwA7LjA7LzA7Rm86FEFyZWw6Ok5v\nZGVzOjpPbgY6CkBleHBybztBBztCUztDBztEbzspCzsqQAL3ATsrQAGCOyww\nOy1bADsuMDsvMDtFSSIHaWQGOwBUO0ZTO0MHO0RAAv0BO0VJIg53YWxsZXRf\naWQGOwBGOzJbBlsHQAK8AWkUO0BbBm87QQc7QlM7Qwc7REAC/QE7RUACxQE7\nRklDO0ciByQxBjsAVDtIMDsiMDtJRjtKbztLCDsrQAL1ATtMbztNDTtObztP\nBztCQAL2ATtGWwZAAvwBO1AwO1EwO1JbBlM7Qwc7REAC9gE7RUlDO1MiBioG\nOwBUO1RbBm87VQY7VlsGQAIKAjtXWwA7WDA7WVsAO1pvO1sLO1xbBkACDgI7\nXVsAOzgwO14wO18wO2AwO2EwO2IwO2MwO2QwO2UwO2YwO2cwO2hbAFsHOhVA\ndGhyb3VnaF9yZWNvcmRzewBbBzoZQHRocm91Z2hfYXNzb2NpYXRpb24wWwc7\naW86YkFjdGl2ZVJlY29yZDo6QXNzb2NpYXRpb25zOjpDb2xsZWN0aW9uUHJv\neHk6OkFjdGl2ZVJlY29yZF9Bc3NvY2lhdGlvbnNfQ29sbGVjdGlvblByb3h5\nX1dhbGxldA07a0AC6wE7J0AC9QE7KEAC9gE7MHsLO0BbBkACCgI7MlsGQAII\nAjtsMDttMDtuMDsBfVsGQAL8ATtIMDsiRjtJVDtKbztLCDsrQAL1ATtMbztN\nDTtObztPBztCQAL2ATtGWwZAAvwBO1AwO1EwO1JbBlM7Qwc7REAC9gE7RUlD\nO1MiBioGOwBUO1RbBm87VQY7VlsGQAIKAjtXWwA7WDA7WVsAO1pvO1sLO1xb\nBkACJwI7XVsAOzgwO14wO18wO2AwOxF7CUkiB2lkBjsAVGkUIhlhdXRoZW50\naWNhdGlvbl90b2tlbkBFIgluYW1lQDYiCWNvZGVANDsSewA7E3sAOxRGOxVG\nOxZGOxcwOxhGOxkwOxp7ADsbMDscWwZGOx0wSSIOb3BlcmF0aW9uBjsARm86\nDk9wZXJhdGlvbhY7B3sOSSIHaWQGOwBUSSIGMQY7AFRJIgljb2RlBjsAVEki\nBjEGOwBUSSIJbmFtZQY7AFRJIhZBYm9ubmVtZW50X1dpbWJvbwY7AFRJIgxj\nb21tZW50BjsAVEkiNVMnYWJvbm5lciBldCBiw6luw6lmaWNpZXIgZGUgbm9t\nYnJldXggYXZhbnRhZ2VzLgY7AFRJIg9zZXJ2aWNlX2lkBjsAVEkiBjEGOwBU\nSSIPY3JlYXRlZF9hdAY7AFQwSSIPdXBkYXRlZF9hdAY7AFQwSSIOcHVibGlz\naGVkBjsAVDBJIhlhdXRoZW50aWNhdGlvbl90b2tlbgY7AFRJIik1MzVlZjJh\nNS1jN2JjLTQ4YzAtOGI0ZC1kNWM3M2M0MGIyNzIGOwBUOwh7DkkiB2lkBjsA\nVEAZSSIJY29kZQY7AFRAG0kiCW5hbWUGOwBUQBtJIgxjb21tZW50BjsAVEAb\nSSIPc2VydmljZV9pZAY7AFRAGUkiD2NyZWF0ZWRfYXQGOwBUbzsLBjsMQB9J\nIg91cGRhdGVkX2F0BjsAVG87CwY7DEAfSSIOcHVibGlzaGVkBjsAVEAjSSIZ\nYXV0aGVudGljYXRpb25fdG9rZW4GOwBUQBs7D3sAOxB7ADsRewciB2lkaQYi\nCWNvZGVAAkQCOxJ7ADsTewA7FEY7FUY7FkY7FzA7GEY7GTA7GnsAOxswOxxb\nBkY7HTBJIg90cnNfYW1vdW50BjsARmYINWUySSILYmFza2V0BjsARnsHSSIS\nYmFza2V0X251bWJlcgY7AFRJIiFnZGxvbG9sZ2Q1Zmc1ODhkZ2Q2Z2hmZmdo\nZmRnBjsAVEkiF3RyYW5zYWN0aW9uX2Ftb3VudAY7AFRJIgo1MDAuMAY7AEZJ\nIiViODNlZmYxYzFiM2ZkYmIyNjE1MzA3NTA0NDI5N2U5MQY7AEZJIiViNmQy\nMDAwYWE1ODVjY2IxY2UyMjY0Y2M0M2Y4MzBiOAY7AEY=\n"], ["updated_at", Sun, 26 Apr 2015 16:58:59 UTC +00:00]]
+  [1m[35m (11.0ms)[0m  COMMIT
+Processing by WalletsController#get_wallets as TEXT
+  Parameters: {"country_id"=>"110"}
+  [1m[36mActiveRecord::SessionStore::Session Load (2.8ms)[0m  [1mSELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = 'ca551fd936eb3a086f97a496aedb0089' ORDER BY "sessions"."id" ASC LIMIT 1[0m
+  [1m[35mCountry Load (1.3ms)[0m  SELECT "countries".* FROM "countries" WHERE (id = 110 AND published IS TRUE)
+  [1m[36mWallet Load (1.4ms)[0m  [1mSELECT "wallets".* FROM "wallets" INNER JOIN "available_wallets" ON "wallets"."id" = "available_wallets"."wallet_id" WHERE "available_wallets"."service_id" = $1 AND "wallets"."country_id" = 110[0m  [["service_id", 15]]
+  [1m[35mAvailableWallet Load (0.9ms)[0m  SELECT "available_wallets".* FROM "available_wallets" WHERE "available_wallets"."service_id" = $1 AND "available_wallets"."published" = 't' AND "available_wallets"."wallet_id" IN (3, 6, 8)  [["service_id", 15]]
+  [1m[36mWallet Load (0.7ms)[0m  [1mSELECT "wallets".* FROM "wallets" WHERE "wallets"."id" = $1 ORDER BY "wallets"."id" ASC LIMIT 1[0m  [["id", 3]]
+  [1m[35mWallet Load (0.7ms)[0m  SELECT "wallets".* FROM "wallets" WHERE "wallets"."id" = $1 ORDER BY "wallets"."id" ASC LIMIT 1  [["id", 8]]
+  Rendered text template (0.0ms)
+Completed 200 OK in 24ms (Views: 0.7ms | ActiveRecord: 7.8ms)
+  [1m[36m (0.4ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.5ms)[0m  COMMIT
+  [1m[36mParameter Load (1.0ms)[0m  [1mSELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1[0m
+Processing by MtnCisController#guard as HTML
+  Parameters: {"service_id"=>"c0ddf015802bd8c3a39f617e8f41329d", "operation_id"=>"1", "basket_number"=>"gdlololgd5fg588dgd6ghffghfdg", "transaction_amount"=>"500.0"}
+  [1m[35mActiveRecord::SessionStore::Session Load (1.6ms)[0m  SELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = 'ca551fd936eb3a086f97a496aedb0089' ORDER BY "sessions"."id" ASC LIMIT 1
+Redirected to http://0.0.0.0:3001/MTNCI
+Completed 302 Found in 7ms (ActiveRecord: 1.6ms)
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.6ms)[0m  COMMIT
+Processing by MtnCisController#index as HTML
+  [1m[36mActiveRecord::SessionStore::Session Load (2.2ms)[0m  [1mSELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = 'ca551fd936eb3a086f97a496aedb0089' ORDER BY "sessions"."id" ASC LIMIT 1[0m
+  [1m[35mWallet Load (1.5ms)[0m  SELECT "wallets".* FROM "wallets" WHERE "wallets"."authentication_token" = '73007113fe' LIMIT 1
+  [1m[36mCurrency Load (1.1ms)[0m  [1mSELECT "currencies".* FROM "currencies" WHERE "currencies"."id" = $1 ORDER BY "currencies"."id" ASC LIMIT 1[0m  [["id", 150]]
+  [1m[35mParameter Load (1.0ms)[0m  SELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1
+  [1m[36mMtnCi Load (1.9ms)[0m  [1mSELECT "mtn_cis".* FROM "mtn_cis" WHERE (number = 'gdlololgd5fg588dgd6ghffghfdg' AND service_id = '15' AND operation_id = '1')[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (0.6ms)[0m  [1mCOMMIT[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1
+  Rendered mtn_cis/index.html.erb within layouts/mtn_ci (5.8ms)
+Completed 200 OK in 672ms (Views: 117.0ms | ActiveRecord: 15.4ms)
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (2.4ms)[0m  UPDATE "sessions" SET "data" = $1, "updated_at" = $2 WHERE "sessions"."id" = 509  [["data", "BAh7DEkiEF9jc3JmX3Rva2VuBjoGRUZJIjFOc1FFN1JOY045VjZYZGpGYmxO\nRXBGZ2tQVGtKcmlhdHRaZCt4djhsTEJVPQY7AEZJIg1jdXJyZW5jeQY7AEZv\nOg1DdXJyZW5jeRY6EEBhdHRyaWJ1dGVzewxJIgdpZAY7AFRJIggxNTAGOwBU\nSSIJbmFtZQY7AFRJIjNDb21tdW5hdXTDqSBGaW5hbmNpw6hyZSBBZnJpY2Fp\nbmUgQkVBQywgRnJhbmNzBjsAVEkiCWNvZGUGOwBUSSIIWEFGBjsAVEkiD2Ny\nZWF0ZWRfYXQGOwBUMEkiD3VwZGF0ZWRfYXQGOwBUMEkiDnB1Ymxpc2hlZAY7\nAFRJIgZ0BjsAVEkiC3N5bWJvbAY7AFRJIglGQ0ZBBjsAVDoSQGNvbHVtbnNf\naGFzaHsMSSIHaWQGOwBUbzpGQWN0aXZlUmVjb3JkOjpDb25uZWN0aW9uQWRh\ncHRlcnM6OlBvc3RncmVTUUxBZGFwdGVyOjpPSUQ6OkludGVnZXIASSIJbmFt\nZQY7AFRvOkdBY3RpdmVSZWNvcmQ6OkNvbm5lY3Rpb25BZGFwdGVyczo6UG9z\ndGdyZVNRTEFkYXB0ZXI6Ok9JRDo6SWRlbnRpdHkASSIJY29kZQY7AFRAG0ki\nD2NyZWF0ZWRfYXQGOwBUbzo9QWN0aXZlUmVjb3JkOjpBdHRyaWJ1dGVNZXRo\nb2RzOjpUaW1lWm9uZUNvbnZlcnNpb246OlR5cGUGOgxAY29sdW1ubzpIQWN0\naXZlUmVjb3JkOjpDb25uZWN0aW9uQWRhcHRlcnM6OlBvc3RncmVTUUxBZGFw\ndGVyOjpPSUQ6OlRpbWVzdGFtcABJIg91cGRhdGVkX2F0BjsAVG87CwY7DEAf\nSSIOcHVibGlzaGVkBjsAVG86RkFjdGl2ZVJlY29yZDo6Q29ubmVjdGlvbkFk\nYXB0ZXJzOjpQb3N0Z3JlU1FMQWRhcHRlcjo6T0lEOjpCb29sZWFuAEkiC3N5\nbWJvbAY7AFRAGzoXQGFnZ3JlZ2F0aW9uX2NhY2hlewA6F0Bhc3NvY2lhdGlv\nbl9jYWNoZXsAOhZAYXR0cmlidXRlc19jYWNoZXsIIgtzeW1ib2xAFiIJY29k\nZUAQIgdpZGkBljoYQHByZXZpb3VzbHlfY2hhbmdlZHsAOhhAY2hhbmdlZF9h\ndHRyaWJ1dGVzewA6DkByZWFkb25seUY6D0BkZXN0cm95ZWRGOhxAbWFya2Vk\nX2Zvcl9kZXN0cnVjdGlvbkY6HkBkZXN0cm95ZWRfYnlfYXNzb2NpYXRpb24w\nOhBAbmV3X3JlY29yZEY6CUB0eG4wOh5AX3N0YXJ0X3RyYW5zYWN0aW9uX3N0\nYXRlewA6F0B0cmFuc2FjdGlvbl9zdGF0ZTA6FEByZWZsZWN0c19zdGF0ZVsG\nRjodQG1hc3NfYXNzaWdubWVudF9vcHRpb25zMEkiDHNlcnZpY2UGOwBGbzoM\nU2VydmljZRY7B3sbSSIHaWQGOwBUSSIHMTUGOwBUSSIJY29kZQY7AFRJIiVj\nMGRkZjAxNTgwMmJkOGMzYTM5ZjYxN2U4ZjQxMzI5ZAY7AFRJIgluYW1lBjsA\nVEkiC1dpbWJvbwY7AFRJIg9jcmVhdGVkX2F0BjsAVEkiHzIwMTQtMTItMDEg\nMTg6MzM6NDAuODgxMDU1BjsAVEkiD3VwZGF0ZWRfYXQGOwBUSSIfMjAxNC0x\nMi0wMSAxODozMzo0MC44ODEwNTUGOwBUSSIPc2FsZXNfYXJlYQY7AFQwSSIT\ndXJsX29uX3N1Y2Nlc3MGOwBUSSI3aHR0cDovLzQxLjE4OS40MC4xOTM6NTAw\nMC92YWxpZGF0ZV90cmFuc2FjdGlvbi5waHAGOwBUSSIRdXJsX29uX2Vycm9y\nBjsAVEkiN2h0dHA6Ly80MS4xODkuNDAuMTkzOjUwMDAvdmFsaWRhdGVfdHJh\nbnNhY3Rpb24ucGhwBjsAVEkiG3VybF9vbl9zZXNzaW9uX2V4cGlyZWQGOwBU\nMEkiGHVybF9vbl9ob2xkX3N1Y2Nlc3MGOwBUMEkiFnVybF9vbl9ob2xkX2Vy\ncm9yBjsAVDBJIhl1cmxfb25faG9sZF9saXN0ZW5lcgY7AFQwSSIZYXV0aGVu\ndGljYXRpb25fdG9rZW4GOwBUSSIlZWYzNDUyM2YxMTk2YzkwNGM2ZTA5YWY4\nMGU0NzJhYzIGOwBUSSIMY29tbWVudAY7AFQwSSIfdXJsX29uX2Jhc2tldF9h\nbHJlYWR5X3BhaWQGOwBUSSI3aHR0cDovLzQxLjE4OS40MC4xOTM6NTAwMC92\nYWxpZGF0ZV90cmFuc2FjdGlvbi5waHAGOwBUSSIPdXJsX3RvX2lwbgY7AFRJ\nIjdodHRwOi8vNDEuMTg5LjQwLjE5Mzo1MDAwL3ZhbGlkYXRlX3RyYW5zYWN0\naW9uLnBocAY7AFRJIg5wdWJsaXNoZWQGOwBUMEkiE2xvZ29fZmlsZV9uYW1l\nBjsAVDBJIhZsb2dvX2NvbnRlbnRfdHlwZQY7AFQwSSITbG9nb19maWxlX3Np\nemUGOwBUMEkiFGxvZ29fdXBkYXRlZF9hdAY7AFQwSSIKdG9rZW4GOwBUSSIR\nZTVlNzUwMmRlMzQzBjsAVDsIextJIgdpZAY7AFRAGUkiCWNvZGUGOwBUQBtJ\nIgluYW1lBjsAVEAbSSIPY3JlYXRlZF9hdAY7AFRvOwsGOwxAH0kiD3VwZGF0\nZWRfYXQGOwBUbzsLBjsMQB9JIg9zYWxlc19hcmVhBjsAVEAbSSITdXJsX29u\nX3N1Y2Nlc3MGOwBUQBtJIhF1cmxfb25fZXJyb3IGOwBUQBtJIht1cmxfb25f\nc2Vzc2lvbl9leHBpcmVkBjsAVEAbSSIYdXJsX29uX2hvbGRfc3VjY2VzcwY7\nAFRAG0kiFnVybF9vbl9ob2xkX2Vycm9yBjsAVEAbSSIZdXJsX29uX2hvbGRf\nbGlzdGVuZXIGOwBUQBtJIhlhdXRoZW50aWNhdGlvbl90b2tlbgY7AFRAG0ki\nDGNvbW1lbnQGOwBUQBtJIh91cmxfb25fYmFza2V0X2FscmVhZHlfcGFpZAY7\nAFRAG0kiD3VybF90b19pcG4GOwBUQBtJIg5wdWJsaXNoZWQGOwBUQCNJIhNs\nb2dvX2ZpbGVfbmFtZQY7AFRAG0kiFmxvZ29fY29udGVudF90eXBlBjsAVEAb\nSSITbG9nb19maWxlX3NpemUGOwBUQBlJIhRsb2dvX3VwZGF0ZWRfYXQGOwBU\nbzsLBjsMQB9JIgp0b2tlbgY7AFRAGzsPewA7EHsMOgxiYXNrZXRzVTozQWN0\naXZlUmVjb3JkOjpBc3NvY2lhdGlvbnM6Okhhc01hbnlBc3NvY2lhdGlvblsH\nOx9bC1sHOgtAb3duZXJAMFsHOgxAbG9hZGVkRlsHOgxAdGFyZ2V0WwBbBzoR\nQHN0YWxlX3N0YXRlMFsHOhdAYXNzb2NpYXRpb25fc2NvcGVvOjlBY3RpdmVS\nZWNvcmQ6OlJlbGF0aW9uOjpBY3RpdmVSZWNvcmRfUmVsYXRpb25fQmFza2V0\nFDoLQGtsYXNzYwtCYXNrZXQ6C0B0YWJsZW86EEFyZWw6OlRhYmxlCzoKQG5h\nbWVJIgxiYXNrZXRzBjsAVDoMQGVuZ2luZUB5Og1AY29sdW1uczA6DUBhbGlh\nc2VzWwA6EUB0YWJsZV9hbGlhczA6EUBwcmltYXJ5X2tleTA6DEB2YWx1ZXN7\nCDoOZXh0ZW5kaW5nWwA6CWJpbmRbBlsHbzo3QWN0aXZlUmVjb3JkOjpDb25u\nZWN0aW9uQWRhcHRlcnM6OlBvc3RncmVTUUxDb2x1bW4ROg5Ab2lkX3R5cGVA\nGzoLQGFycmF5RjsqSSIPc2VydmljZV9pZAY7AFQ6DkBzcWxfdHlwZUkiG2No\nYXJhY3RlciB2YXJ5aW5nKDI1NSkGOwBUOgpAbnVsbFQ6C0BsaW1pdGkB/zoP\nQHByZWNpc2lvbjA6C0BzY2FsZTA6CkB0eXBlOgtzdHJpbmc6DUBkZWZhdWx0\nMDoNQHByaW1hcnkwOgtAY29kZXIwaRQ6CndoZXJlWwZvOhpBcmVsOjpOb2Rl\nczo6RXF1YWxpdHkHOgpAbGVmdFM6IEFyZWw6OkF0dHJpYnV0ZXM6OkF0dHJp\nYnV0ZQc6DXJlbGF0aW9ubzspCzsqQHs7K2MXQWN0aXZlUmVjb3JkOjpCYXNl\nOywwOy1bADsuMDsvMDoJbmFtZUkiD3NlcnZpY2VfaWQGOwBGOgtAcmlnaHRJ\nQzobQXJlbDo6Tm9kZXM6OkJpbmRQYXJhbSIHJDEGOwBUOhdAaW1wbGljaXRf\ncmVhZG9ubHkwOyIwOhRAZGVmYXVsdF9zY29wZWRGOgpAYXJlbG86GEFyZWw6\nOlNlbGVjdE1hbmFnZXIIOytAeToJQGN0eG86HEFyZWw6Ok5vZGVzOjpTZWxl\nY3RDb3JlDToMQHNvdXJjZW86HEFyZWw6Ok5vZGVzOjpKb2luU291cmNlBztC\nQHo7RlsAOglAdG9wMDoUQHNldF9xdWFudGlmaWVyMDoRQHByb2plY3Rpb25z\nWwZTO0MHO0RAejtFSUM6HEFyZWw6Ok5vZGVzOjpTcWxMaXRlcmFsIgYqBjsA\nVDoMQHdoZXJlc1sGbzoVQXJlbDo6Tm9kZXM6OkFuZAY6DkBjaGlsZHJlblsG\nQAGAOgxAZ3JvdXBzWwA6DEBoYXZpbmcwOg1Ad2luZG93c1sAOglAYXN0bzoh\nQXJlbDo6Tm9kZXM6OlNlbGVjdFN0YXRlbWVudAs6C0Bjb3Jlc1sGQAGIOgxA\nb3JkZXJzWwA7ODA6CkBsb2NrMDoMQG9mZnNldDA6CkB3aXRoMDoWQHNjb3Bl\nX2Zvcl9jcmVhdGUwOhJAb3JkZXJfY2xhdXNlMDoMQHRvX3NxbDA6CkBsYXN0\nMDoLQGZpcnN0MDoVQGpvaW5fZGVwZW5kZW5jeTA6F0BzaG91bGRfZWFnZXJf\nbG9hZDA6DUByZWNvcmRzWwBbBzoLQHByb3h5bzpiQWN0aXZlUmVjb3JkOjpB\nc3NvY2lhdGlvbnM6OkNvbGxlY3Rpb25Qcm94eTo6QWN0aXZlUmVjb3JkX0Fz\nc29jaWF0aW9uc19Db2xsZWN0aW9uUHJveHlfQmFza2V0DToRQGFzc29jaWF0\naW9uQG87J0B5OyhAejswewo7QFsGQAGAOzJbBkABezoJZnJvbTA6CWxvY2sw\nOhJyZXZlcnNlX29yZGVyMDtIMDsiRjtJVDtKbztLCDsrQHk7TG87TQ07Tm87\nTwc7QkB6O0ZbADtQMDtRMDtSWwZTO0MHO0RAejtFSUM7UyIGKgY7AFQ7VFsG\nbztVBjtWWwZAAYA7V1sAO1gwO1lbADtabztbCztcWwZAAZ07XVsAOzgwO14w\nO18wO2AwOhNwYXlwYWxfYmFza2V0c1U7IFsHO29bC1sHOyFAMFsHOyJGWwc7\nI1sAWwc7JDBbBzslbzo/QWN0aXZlUmVjb3JkOjpSZWxhdGlvbjo6QWN0aXZl\nUmVjb3JkX1JlbGF0aW9uX1BheXBhbEJhc2tldBQ7J2MRUGF5cGFsQmFza2V0\nOyhvOykLOypJIhNwYXlwYWxfYmFza2V0cwY7AFQ7K0ABtTssMDstWwA7LjA7\nLzA7MHsIOzFbADsyWwZbB287MxE7NEAbOzVGOypJIg9zZXJ2aWNlX2lkBjsA\nVDs2SSIbY2hhcmFjdGVyIHZhcnlpbmcoMjU1KQY7AFQ7N1Q7OGkB/zs5MDs6\nMDs7Ozw7PTA7PjA7PzBpFDtAWwZvO0EHO0JTO0MHO0RvOykLOypAAbc7K0AB\ngzssMDstWwA7LjA7LzA7RUkiD3NlcnZpY2VfaWQGOwBGO0ZJQztHIgckMQY7\nAFQ7SDA7IjA7SUY7Sm87Swg7K0ABtTtMbztNDTtObztPBztCQAG2O0ZbADtQ\nMDtRMDtSWwZTO0MHO0RAAbY7RUlDO1MiBioGOwBUO1RbBm87VQY7VlsGQAHB\nO1dbADtYMDtZWwA7Wm87Wws7XFsGQAHIO11bADs4MDteMDtfMDtgMDthMDti\nMDtjMDtkMDtlMDtmMDtnMDtoWwBbBztpbzpoQWN0aXZlUmVjb3JkOjpBc3Nv\nY2lhdGlvbnM6OkNvbGxlY3Rpb25Qcm94eTo6QWN0aXZlUmVjb3JkX0Fzc29j\naWF0aW9uc19Db2xsZWN0aW9uUHJveHlfUGF5cGFsQmFza2V0DTtrQAGrOydA\nAbU7KEABtjswewo7QFsGQAHBOzJbBkABvDtsMDttMDtuMDtIMDsiRjtJVDtK\nbztLCDsrQAG1O0xvO00NO05vO08HO0JAAbY7RlsAO1AwO1EwO1JbBlM7Qwc7\nREABtjtFSUM7UyIGKgY7AFQ7VFsGbztVBjtWWwZAAcE7V1sAO1gwO1lbADta\nbztbCztcWwZAAd07XVsAOzgwO14wO18wO2AwOhxvcmFuZ2VfbW9uZXlfY2lf\nYmFza2V0c1U7IFsHO3JbC1sHOyFAMFsHOyJGWwc7I1sAWwc7JDBbBzslbzpG\nQWN0aXZlUmVjb3JkOjpSZWxhdGlvbjo6QWN0aXZlUmVjb3JkX1JlbGF0aW9u\nX09yYW5nZU1vbmV5Q2lCYXNrZXQUOydjGE9yYW5nZU1vbmV5Q2lCYXNrZXQ7\nKG87KQs7KkkiHG9yYW5nZV9tb25leV9jaV9iYXNrZXRzBjsAVDsrQAH1Oyww\nOy1bADsuMDsvMDswewg7MVsAOzJbBlsHbzszETs0QBs7NUY7KkkiD3NlcnZp\nY2VfaWQGOwBUOzZJIhtjaGFyYWN0ZXIgdmFyeWluZygyNTUpBjsAVDs3VDs4\naQH/OzkwOzowOzs7PDs9MDs+MDs/MGkUO0BbBm87QQc7QlM7Qwc7RG87KQs7\nKkAB9zsrQAGDOywwOy1bADsuMDsvMDtFSSIPc2VydmljZV9pZAY7AEY7RklD\nO0ciByQxBjsAVDtIMDsiMDtJRjtKbztLCDsrQAH1O0xvO00NO05vO08HO0JA\nAfY7RlsAO1AwO1EwO1JbBlM7Qwc7REAB9jtFSUM7UyIGKgY7AFQ7VFsGbztV\nBjtWWwZAAgEBO1dbADtYMDtZWwA7Wm87Wws7XFsGQAIIATtdWwA7ODA7XjA7\nXzA7YDA7YTA7YjA7YzA7ZDA7ZTA7ZjA7ZzA7aFsAWwc7aW86b0FjdGl2ZVJl\nY29yZDo6QXNzb2NpYXRpb25zOjpDb2xsZWN0aW9uUHJveHk6OkFjdGl2ZVJl\nY29yZF9Bc3NvY2lhdGlvbnNfQ29sbGVjdGlvblByb3h5X09yYW5nZU1vbmV5\nQ2lCYXNrZXQNO2tAAes7J0AB9TsoQAH2OzB7CjtAWwZAAgEBOzJbBkAB/Dts\nMDttMDtuMDtIMDsiRjtJVDtKbztLCDsrQAH1O0xvO00NO05vO08HO0JAAfY7\nRlsAO1AwO1EwO1JbBlM7Qwc7REAB9jtFSUM7UyIGKgY7AFQ7VFsGbztVBjtW\nWwZAAgEBO1dbADtYMDtZWwA7Wm87Wws7XFsGQAIdATtdWwA7ODA7XjA7XzA7\nYDA6EXFhc2hfYmFza2V0c1U7IFsHO3VbC1sHOyFAMFsHOyJGWwc7I1sAWwc7\nJDBbBzslbzo9QWN0aXZlUmVjb3JkOjpSZWxhdGlvbjo6QWN0aXZlUmVjb3Jk\nX1JlbGF0aW9uX1Fhc2hCYXNrZXQUOydjD1Fhc2hCYXNrZXQ7KG87KQs7Kkki\nEXFhc2hfYmFza2V0cwY7AFQ7K0ACNQE7LDA7LVsAOy4wOy8wOzB7CDsxWwA7\nMlsGWwdvOzMROzRAGzs1RjsqSSIPc2VydmljZV9pZAY7AFQ7NkkiG2NoYXJh\nY3RlciB2YXJ5aW5nKDI1NSkGOwBUOzdUOzhpAf87OTA7OjA7Ozs8Oz0wOz4w\nOz8waRQ7QFsGbztBBztCUztDBztEbzspCzsqQAI3ATsrQAGDOywwOy1bADsu\nMDsvMDtFSSIPc2VydmljZV9pZAY7AEY7RklDO0ciByQxBjsAVDtIMDsiMDtJ\nRjtKbztLCDsrQAI1ATtMbztNDTtObztPBztCQAI2ATtGWwA7UDA7UTA7UlsG\nUztDBztEQAI2ATtFSUM7UyIGKgY7AFQ7VFsGbztVBjtWWwZAAkEBO1dbADtY\nMDtZWwA7Wm87Wws7XFsGQAJIATtdWwA7ODA7XjA7XzA7YDA7YTA7YjA7YzA7\nZDA7ZTA7ZjA7ZzA7aFsAWwc7aW86ZkFjdGl2ZVJlY29yZDo6QXNzb2NpYXRp\nb25zOjpDb2xsZWN0aW9uUHJveHk6OkFjdGl2ZVJlY29yZF9Bc3NvY2lhdGlv\nbnNfQ29sbGVjdGlvblByb3h5X1Fhc2hCYXNrZXQNO2tAAisBOydAAjUBOyhA\nAjYBOzB7CjtAWwZAAkEBOzJbBkACPAE7bDA7bTA7bjA7SDA7IkY7SVQ7Sm87\nSwg7K0ACNQE7TG87TQ07Tm87Twc7QkACNgE7RlsAO1AwO1EwO1JbBlM7Qwc7\nREACNgE7RUlDO1MiBioGOwBUO1RbBm87VQY7VlsGQAJBATtXWwA7WDA7WVsA\nO1pvO1sLO1xbBkACXQE7XVsAOzgwO14wO18wO2AwOhVkZWxheWVkX3BheW1l\nbnRzVTsgWwc7eFsLWwc7IUAwWwc7IkZbBzsjWwBbBzskMFsHOyVvOkFBY3Rp\ndmVSZWNvcmQ6OlJlbGF0aW9uOjpBY3RpdmVSZWNvcmRfUmVsYXRpb25fRGVs\nYXllZFBheW1lbnQUOydjE0RlbGF5ZWRQYXltZW50OyhvOykLOypJIhVkZWxh\neWVkX3BheW1lbnRzBjsAVDsrQAJ1ATssMDstWwA7LjA7LzA7MHsIOzFbADsy\nWwZbB287MxE7NEAbOzVGOypJIg9zZXJ2aWNlX2lkBjsAVDs2SSIbY2hhcmFj\ndGVyIHZhcnlpbmcoMjU1KQY7AFQ7N1Q7OGkB/zs5MDs6MDs7Ozw7PTA7PjA7\nPzBpFDtAWwZvO0EHO0JTO0MHO0RvOykLOypAAncBOytAAYM7LDA7LVsAOy4w\nOy8wO0VJIg9zZXJ2aWNlX2lkBjsARjtGSUM7RyIHJDEGOwBUO0gwOyIwO0lG\nO0pvO0sIOytAAnUBO0xvO00NO05vO08HO0JAAnYBO0ZbADtQMDtRMDtSWwZT\nO0MHO0RAAnYBO0VJQztTIgYqBjsAVDtUWwZvO1UGO1ZbBkACgQE7V1sAO1gw\nO1lbADtabztbCztcWwZAAogBO11bADs4MDteMDtfMDtgMDthMDtiMDtjMDtk\nMDtlMDtmMDtnMDtoWwBbBztpbzpqQWN0aXZlUmVjb3JkOjpBc3NvY2lhdGlv\nbnM6OkNvbGxlY3Rpb25Qcm94eTo6QWN0aXZlUmVjb3JkX0Fzc29jaWF0aW9u\nc19Db2xsZWN0aW9uUHJveHlfRGVsYXllZFBheW1lbnQNO2tAAmsBOydAAnUB\nOyhAAnYBOzB7CjtAWwZAAoEBOzJbBkACfAE7bDA7bTA7bjA7SDA7IkY7SVQ7\nSm87Swg7K0ACdQE7TG87TQ07Tm87Twc7QkACdgE7RlsAO1AwO1EwO1JbBlM7\nQwc7REACdgE7RUlDO1MiBioGOwBUO1RbBm87VQY7VlsGQAKBATtXWwA7WDA7\nWVsAO1pvO1sLO1xbBkACnQE7XVsAOzgwO14wO18wO2AwOhZhdmFpbGFibGVf\nd2FsbGV0c1U7IFsHO3tbC1sHOyFAMFsHOyJGWwc7I1sAWwc7JDBbBzslbzpC\nQWN0aXZlUmVjb3JkOjpSZWxhdGlvbjo6QWN0aXZlUmVjb3JkX1JlbGF0aW9u\nX0F2YWlsYWJsZVdhbGxldBQ7J2MUQXZhaWxhYmxlV2FsbGV0OyhvOykLOypJ\nIhZhdmFpbGFibGVfd2FsbGV0cwY7AFQ7K0ACtQE7LDA7LVsAOy4wOy8wOzB7\nCDsxWwA7MlsGWwdvOzMROzRvOwkAOzVGOypJIg9zZXJ2aWNlX2lkBjsAVDs2\nSSIMaW50ZWdlcgY7AFQ7N1Q7ODA7OTA7OjA7OzoMaW50ZWdlcjs9MDs+MDs/\nMGkUO0BbBm87QQc7QlM7Qwc7RG87KQs7KkACtwE7K0ABgzssMDstWwA7LjA7\nLzA7RUkiD3NlcnZpY2VfaWQGOwBGO0ZJQztHIgckMQY7AFQ7SDA7IjA7SUY7\nSm87Swg7K0ACtQE7TG87TQ07Tm87Twc7QkACtgE7RlsAO1AwO1EwO1JbBlM7\nQwc7REACtgE7RUlDO1MiBioGOwBUO1RbBm87VQY7VlsGQALCATtXWwA7WDA7\nWVsAO1pvO1sLO1xbBkACyQE7XVsAOzgwO14wO18wO2AwO2EwO2IwO2MwO2Qw\nO2UwO2YwO2cwO2hbAFsHO2lvOmtBY3RpdmVSZWNvcmQ6OkFzc29jaWF0aW9u\nczo6Q29sbGVjdGlvblByb3h5OjpBY3RpdmVSZWNvcmRfQXNzb2NpYXRpb25z\nX0NvbGxlY3Rpb25Qcm94eV9BdmFpbGFibGVXYWxsZXQNO2tAAqsBOydAArUB\nOyhAArYBOzB7CjtAWwZAAsIBOzJbBkACvAE7bDA7bTA7bjA7SDA7IkY7SVQ7\nSm87Swg7K0ACtQE7TG87TQ07Tm87Twc7QkACtgE7RlsAO1AwO1EwO1JbBlM7\nQwc7REACtgE7RUlDO1MiBioGOwBUO1RbBm87VQY7VlsGQALCATtXWwA7WDA7\nWVsAO1pvO1sLO1xbBkAC3gE7XVsAOzgwO14wO18wO2AwOgx3YWxsZXRzVTo6\nQWN0aXZlUmVjb3JkOjpBc3NvY2lhdGlvbnM6Okhhc01hbnlUaHJvdWdoQXNz\nb2NpYXRpb25bBzt/Ww1bBzshQDBbBzsiRlsHOyNbAFsHOyQwWwc7JW86OUFj\ndGl2ZVJlY29yZDo6UmVsYXRpb246OkFjdGl2ZVJlY29yZF9SZWxhdGlvbl9X\nYWxsZXQUOydjC1dhbGxldDsobzspCzsqSSIMd2FsbGV0cwY7AFQ7K0AC9gE7\nLDA7LVsAOy4wOy8wOzB7CTsxWwA6CmpvaW5zWwZvOhtBcmVsOjpOb2Rlczo6\nSW5uZXJKb2luBztCbzspCzsqQAK3ATsrQAGDOywwOy1bADsuMDsvMDtGbzoU\nQXJlbDo6Tm9kZXM6Ok9uBjoKQGV4cHJvO0EHO0JTO0MHO0RvOykLOypAAvgB\nOytAAYM7LDA7LVsAOy4wOy8wO0VJIgdpZAY7AFQ7RlM7Qwc7REAC/gE7RUki\nDndhbGxldF9pZAY7AEY7MlsGWwdAAr0BaRQ7QFsGbztBBztCUztDBztEQAL+\nATtFQALGATtGSUM7RyIHJDEGOwBUO0gwOyIwO0lGO0pvO0sIOytAAvYBO0xv\nO00NO05vO08HO0JAAvcBO0ZbBkAC/QE7UDA7UTA7UlsGUztDBztEQAL3ATtF\nSUM7UyIGKgY7AFQ7VFsGbztVBjtWWwZAAgsCO1dbADtYMDtZWwA7Wm87Wws7\nXFsGQAIPAjtdWwA7ODA7XjA7XzA7YDA7YTA7YjA7YzA7ZDA7ZTA7ZjA7ZzA7\naFsAWwc6FUB0aHJvdWdoX3JlY29yZHN7AFsHOhlAdGhyb3VnaF9hc3NvY2lh\ndGlvbjBbBztpbzpiQWN0aXZlUmVjb3JkOjpBc3NvY2lhdGlvbnM6OkNvbGxl\nY3Rpb25Qcm94eTo6QWN0aXZlUmVjb3JkX0Fzc29jaWF0aW9uc19Db2xsZWN0\naW9uUHJveHlfV2FsbGV0DTtrQALsATsnQAL2ATsoQAL3ATswews7QFsGQAIL\nAjsyWwZAAgkCO2wwO20wO24wOwF9WwZAAv0BO0gwOyJGO0lUO0pvO0sIOytA\nAvYBO0xvO00NO05vO08HO0JAAvcBO0ZbBkAC/QE7UDA7UTA7UlsGUztDBztE\nQAL3ATtFSUM7UyIGKgY7AFQ7VFsGbztVBjtWWwZAAgsCO1dbADtYMDtZWwA7\nWm87Wws7XFsGQAIoAjtdWwA7ODA7XjA7XzA7YDA7EXsKSSIHaWQGOwBUaRQi\nGWF1dGhlbnRpY2F0aW9uX3Rva2VuQEYiCW5hbWVANyIJY29kZUA1Igp0b2tl\nbkBSOxJ7ADsTewA7FEY7FUY7FkY7FzA7GEY7GTA7GnsAOxswOxxbBkY7HTBJ\nIg5vcGVyYXRpb24GOwBGbzoOT3BlcmF0aW9uFjsHew5JIgdpZAY7AFRJIgYx\nBjsAVEkiCWNvZGUGOwBUSSIGMQY7AFRJIgluYW1lBjsAVEkiFkFib25uZW1l\nbnRfV2ltYm9vBjsAVEkiDGNvbW1lbnQGOwBUSSI1UydhYm9ubmVyIGV0IGLD\nqW7DqWZpY2llciBkZSBub21icmV1eCBhdmFudGFnZXMuBjsAVEkiD3NlcnZp\nY2VfaWQGOwBUSSIGMQY7AFRJIg9jcmVhdGVkX2F0BjsAVDBJIg91cGRhdGVk\nX2F0BjsAVDBJIg5wdWJsaXNoZWQGOwBUMEkiGWF1dGhlbnRpY2F0aW9uX3Rv\na2VuBjsAVEkiKTUzNWVmMmE1LWM3YmMtNDhjMC04YjRkLWQ1YzczYzQwYjI3\nMgY7AFQ7CHsOSSIHaWQGOwBUQBlJIgljb2RlBjsAVEAbSSIJbmFtZQY7AFRA\nG0kiDGNvbW1lbnQGOwBUQBtJIg9zZXJ2aWNlX2lkBjsAVEAZSSIPY3JlYXRl\nZF9hdAY7AFRvOwsGOwxAH0kiD3VwZGF0ZWRfYXQGOwBUbzsLBjsMQB9JIg5w\ndWJsaXNoZWQGOwBUQCNJIhlhdXRoZW50aWNhdGlvbl90b2tlbgY7AFRAGzsP\newA7EHsAOxF7ByIHaWRpBiIJY29kZUACRgI7EnsAOxN7ADsURjsVRjsWRjsX\nMDsYRjsZMDsaewA7GzA7HFsGRjsdMEkiD3Ryc19hbW91bnQGOwBGZgg1ZTJJ\nIgtiYXNrZXQGOwBGewdJIhJiYXNrZXRfbnVtYmVyBjsAVEkiIWdkbG9sb2xn\nZDVmZzU4OGRnZDZnaGZmZ2hmZGcGOwBUSSIXdHJhbnNhY3Rpb25fYW1vdW50\nBjsAVEkiCjUwMC4wBjsARkkiJWI4M2VmZjFjMWIzZmRiYjI2MTUzMDc1MDQ0\nMjk3ZTkxBjsARkkiJWI2ZDIwMDBhYTU4NWNjYjFjZTIyNjRjYzQzZjgzMGI4\nBjsARg==\n"], ["updated_at", Sun, 26 Apr 2015 16:59:04 UTC +00:00]]
+  [1m[36m (9.4ms)[0m  [1mCOMMIT[0m
+Processing by MtnCisController#initialize_payment as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"NsQE7RNcN9V6XdjFblNEpFgkPTkJriattZd+xv8lLBU=", "transaction_id"=>"20150426163735516", "magellan"=>"500", "Frais"=>"20.0", "colomb"=>"58908957", "token"=>"vgbnvbnvbn"}
+  [1m[35mActiveRecord::SessionStore::Session Load (2.6ms)[0m  SELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = 'ca551fd936eb3a086f97a496aedb0089' ORDER BY "sessions"."id" ASC LIMIT 1
+  [1m[36mMtnCi Load (1.1ms)[0m  [1mSELECT "mtn_cis".* FROM "mtn_cis" WHERE "mtn_cis"."transaction_id" = '20150426163735516' LIMIT 1[0m
+  [1m[35mWallet Load (1.7ms)[0m  SELECT "wallets".* FROM "wallets" WHERE "wallets"."authentication_token" = '73007113fe' LIMIT 1
+  [1m[36mCurrency Load (0.8ms)[0m  [1mSELECT "currencies".* FROM "currencies" WHERE "currencies"."id" = $1 ORDER BY "currencies"."id" ASC LIMIT 1[0m  [["id", 150]]
+  [1m[35mParameter Load (0.8ms)[0m  SELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1
+  Rendered mtn_cis/index.html.erb within layouts/mtn_ci (4.8ms)
+Completed 200 OK in 820ms (Views: 26.2ms | ActiveRecord: 7.0ms)
+  [1m[36m (0.6ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.6ms)[0m  COMMIT

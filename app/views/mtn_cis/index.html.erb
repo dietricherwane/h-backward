@@ -65,6 +65,11 @@
 			        <%= text_field_tag "colomb", params[:phone_number], placeholder: 'Numéro de téléphone', :autocomplete => :off %>
 		        </div>
 	        </div>
+	        <div class = "<%= @token_number_css %>">
+		        <div class = "span12">
+			        <%= text_field_tag "token", params[:token], placeholder: 'Code de sécurité', :autocomplete => :off %>
+		        </div>
+	        </div>
           <br />
           <div class="span12">
 		        <button class="btn">
@@ -141,6 +146,11 @@
           <div class = "<%= @phone_number_css %>">
 		        <div class = "span12">
 			        <%= text_field_tag "colomb", params[:phone_number], placeholder: 'Numéro de téléphone', :autocomplete => :off %>
+		        </div>
+	        </div>
+	        <div class = "<%= @token_number_css %>">
+		        <div class = "span12">
+			        <%= text_field_tag "token", params[:token], placeholder: 'Code de sécurité', :autocomplete => :off %>
 		        </div>
 	        </div>
           <br />

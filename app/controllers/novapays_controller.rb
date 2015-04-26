@@ -149,7 +149,7 @@ class NovapaysController < ApplicationController
 
     request.run
 
-    OmLog.create(log_rl: "Paramètres de vérification de paiement: " + @result)
+    OmLog.create(log_rl: "Paramètres de vérification de paiement: " + @result.to_s)
 
     (JSON.parse(@result)["_statut"].downcase rescue nil) == 'succes' ? true : false
   end
