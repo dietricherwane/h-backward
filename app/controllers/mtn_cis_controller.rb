@@ -101,7 +101,7 @@ class MtnCisController < ApplicationController
             @status_id = 1
 
             # Handle GUCE notifications
-            guce_request_payment?(@basket.service.authentication_token, 'QRT46FC')
+            guce_request_payment?(@basket.service.authentication_token, 'QRT46FC', 'ELNPAY4')
 
             # Redirection vers le site marchand
             redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=orange_money_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"

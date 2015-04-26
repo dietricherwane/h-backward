@@ -41,6 +41,7 @@ class NovapaysController < ApplicationController
 
   # Redirect to NovaPay platform
   def process_payment
+    OmLog.create(log_rl: %Q[_identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}])
     request = Typhoeus::Request.new("https://novaplus.ci/NOVAPAY_WEB/FR/novapay.awp", method: :post, body: %Q[{"_descprod": "#{session[:service].name}", "_refact": "#{params[:_refact]}", "_prix": "#{params[:_prix]}" }], headers: { 'QUERY_STRING' => %Q[_identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}], followlocation: true })
     #, params: { _refact: params[:_refact], _prix: params[:_prix], _descprod: "#{session[:service].name}" }
     request.run
@@ -54,7 +55,8 @@ class NovapaysController < ApplicationController
     @refoper = params[:refoper].strip
     @status = params[:status].strip
     @mtnt = params[:mtnt].strip
-    OmLog.create(log_rl: params.to_s) rescue nil
+    OmLog.create(log_rl: params.to_s + "method: #{request.get? ? 'GET' : 'POST'}") rescue nil
+    @request_type = request
     #valid_transaction
     if valid_result_parameters
       if valid_transaction || request.get?
@@ -63,7 +65,7 @@ class NovapaysController < ApplicationController
 
           # Use NovaPay authentication_token
           update_wallet_used(@basket, "77e26b3cbd")
-
+          request.post? ? @status = "1" : nil
           if (@status.to_s.downcase.strip == "1" || @status.to_s.downcase.strip == "succes")
 
             # Conversion du montant débité par le wallet et des frais en euro avant envoi pour notification au back office du hub
@@ -81,7 +83,7 @@ class NovapaysController < ApplicationController
               # Update in available_wallet the number of successful_transactions
               update_number_of_succeed_transactions
               # Handle GUCE notifications
-              guce_request_payment?(@basket.service.authentication_token, 'QRTGH78')
+              guce_request_payment?(@basket.service.authentication_token, 'QRTGH78', 'VIECOB8')
               render text: "0"
             else
               # Redirection vers le site marchand
@@ -137,6 +139,8 @@ class NovapaysController < ApplicationController
   end
 
   def valid_transaction
+    if @request_type.post?
+    #OmLog.create(log_rl: %Q[_identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}])
     request = Typhoeus::Request.new("https://novaplus.ci/NOVAPAY_WEB/FR/paycheck.awp", method: :post, body: %Q[{"_refact": "#{@refact}", "_prix": "#{@mtnt}", "_nooper": "#{@refoper}" }], headers: { 'QUERY_STRING' => %Q[_identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}]}, followlocation: true, method: :get)
     @result = nil
 
@@ -148,9 +152,10 @@ class NovapaysController < ApplicationController
 
     request.run
 
-    #OmLog.create(log_rl: "Paramètres de vérification de paiement: " + @result)
+    #OmLog.create(log_rl: "Paramètres de vérification de paiement: " + @result.to_s)
 
-    (JSON.parse(@result)["_statut"].downcase rescue nil) == 'succes' ? true : false
+    !@result.blank? ? true : false
+    end
   end
 
   def notify_to_back_office(basket, url)
