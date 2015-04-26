@@ -316,11 +316,11 @@ CATTA-CI SARL 09 BP 1327 ABIDJAN 09 TREICHVILLE-VGE-IMMEUBLE LA BALANCE
     end
   end
 
-  def guce_request_payment?(authentication_token, collector_id)
+  def guce_request_payment?(authentication_token, collector_id, payment_mode)
     parameters = Parameter.first
 
     if authentication_token == '57813dc7992fbdc721ca5f6b0d02d559'
-      request = Typhoeus::Request.new("#{parameters.guce_payment_url}/GPG_GUCE/rest/Mob_Mon_Pay/pay/#{@basket.number}/#{@basket.original_transaction_amount}/ELNPAY4/#{collector_id}/#{(@basket.login_id.blank? ? 'NULL' : @basket.login_id)}", method: :get, followlocation: true)
+      request = Typhoeus::Request.new("#{parameters.guce_payment_url}/GPG_GUCE/rest/Mob_Mon_Pay/pay/#{@basket.number}/#{@basket.original_transaction_amount}/#{payment_mode}/#{collector_id}/#{(@basket.login_id.blank? ? 'NULL' : @basket.login_id)}", method: :get, followlocation: true)
       request.run
 
       response = (Nokogiri.XML(request.response.body) rescue nil)

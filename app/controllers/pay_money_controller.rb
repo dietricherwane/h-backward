@@ -145,7 +145,7 @@ class PayMoneyController < ApplicationController
           @status_id = 1
 
           # Handle GUCE notifications
-          guce_request_payment?(@basket.service.authentication_token, 'QRTM9DZ')
+          guce_request_payment?(@basket.service.authentication_token, 'QRTM9DZ', 'ELNPAY4')
 
           # Redirection vers le site marchand
           redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paymoney&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
