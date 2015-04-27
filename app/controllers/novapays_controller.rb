@@ -152,11 +152,7 @@ class NovapaysController < ApplicationController
 
     request.run
 
-<<<<<<< HEAD
-    OmLog.create(log_rl: "Paramètres de vérification de paiement: " + @result.to_s)
-=======
     #OmLog.create(log_rl: "Paramètres de vérification de paiement: " + @result.to_s)
->>>>>>> ebc0cd2998237ac51c9edbbd4fc405c01e0b40d7
 
     !@result.blank? ? true : false
     end

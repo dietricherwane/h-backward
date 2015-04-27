@@ -76,13 +76,6 @@ class MtnCisController < ApplicationController
     @phone_number_css = @token_number_css = "row-form error"
   end
 
-  def duke
-    @client = Savon.client(wsdl: "http://0.0.0.0:3000/wsdl_mtns/wsdl")
-    @response = @client.call(:get_bill, message: {:Reference => "20150421003051452", :Montant => 520})
-
-    render text: @response.to_xml.to_s
-  end
-
   def payment_result_listener
     @transaction_id = params[:purchaseref]
     @token = params[:token]
