@@ -169,13 +169,13 @@ class PayMoneyController < ApplicationController
 
   def ipn(basket)
     @service = Service.find_by_id(basket.service_id)
-    @request = Typhoeus::Request.new("#{@service.url_to_ipn}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paymoney&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}", followlocation: true, method: :post)
+    @request = Typhoeus::Request.new("#{@service.url_to_ipn}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paymoney&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}", followlocation: true, method: :post)
     # wallet=05ccd7ba3d
     @request.run
     @response = @request.response
-    #if @response.to_s == "200" and @response.body.blank?
+    if @response.code.to_s == "200"
       basket.update_attributes(:notified_to_ecommerce => true)
-    #end
+    end
   end
 
   # Returns 0 or 1 depending on the status of the transaction
