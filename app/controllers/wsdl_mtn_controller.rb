@@ -105,6 +105,8 @@ class WsdlMtnController < ApplicationController
           # Handle GUCE notifications
           guce_request_payment?(bill.service.authentication_token, 'QRTH45N', 'ELNPAY4')
 
+          generic_ipn_notification(bill)
+
           result = %Q[
               <?xml version="1.0" encoding="utf-8" ?>
               <Paiement xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://billrequest.billmanager.mtn.ci/">
@@ -161,6 +163,17 @@ class WsdlMtnController < ApplicationController
 
     if @status.to_s.strip == "1"
       basket.update_attributes(:notified_to_back_office => true)
+    end
+  end
+
+  def generic_ipn_notification(basket)
+    @service = Service.find_by_id(basket.service_id)
+    @request = Typhoeus::Request.new("#{@service.url_to_ipn}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}", followlocation: true, method: :post)
+    # wallet=05ccd7ba3d
+    @request.run
+    @response = @request.response
+    if @response.code.to_s == "200"
+      basket.update_attributes(:notified_to_ecommerce => true)
     end
   end
 end

@@ -4,9 +4,9 @@ class NovapaysController < ApplicationController
   @@second_origin_url = Parameter.first.second_origin_url
 
   ##before_action :only => :guard do |o| o.filter_connections end
-  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :payment_result_listener, :valid_result_parameters]
+  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :payment_result_listener, :valid_result_parameters, :generic_ipn_notification]
   # Si l'utilisateur ne s'est pas connecté en passant par main#guard, on le rejette
-  before_action :except => [:ipn, :transaction_acknowledgement, :payment_result_listener, :valid_result_parameters] do |s| s.session_authenticated? end
+  before_action :except => [:ipn, :transaction_acknowledgement, :payment_result_listener, :valid_result_parameters, :generic_ipn_notification] do |s| s.session_authenticated? end
 
   # Set transaction amount for GUCE requests
   before_action :only => :index do |o| o.guce_request? end
@@ -175,6 +175,17 @@ class NovapaysController < ApplicationController
   # Returns 0 or 1 depending on the status of the transaction
   def transaction_acknowledgement
     generic_transaction_acknowledgement(Novapay, params[:transaction_id])
+  end
+
+  def generic_ipn_notification(basket)
+    @service = Service.find_by_id(basket.service_id)
+    @request = Typhoeus::Request.new("#{@service.url_to_ipn}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=biao&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}", followlocation: true, method: :post)
+    # wallet=05ccd7ba3d
+    @request.run
+    @response = @request.response
+    if @response.code.to_s == "200"
+      basket.update_attributes(:notified_to_ecommerce => true)
+    end
   end
 
 end
