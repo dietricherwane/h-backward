@@ -56,6 +56,9 @@ HubsBackOffice::Application.routes.draw do
   post "/MTNCI/ProcessPayment" => "mtn_cis#redirect_to_billing_platform"
   post "MTNCI/PaymentResultListener" => "mtn_cis#payment_result_listener"
   post "MTNCI/ipn" => "mtn_cis#ipn"
+  get "MTNCI/waiting_validation" => "mtn_cis#waiting_validation", as: :waiting_validation
+  get "MTNCI/check_transaction_validation" => "mtn_cis#check_transaction_validation"
+  get "MTNCI/redirect_to_merchant_website" => "mtn_cis#redirect_to_merchant_website"
   get "om" => "mtn_cis#initialize_session"
   post "MTNCI/transaction_acknowledgement" => "mtn_cis#transaction_acknowledgement"
   post "MTNCI/transaction_acknowledgement/:transaction_id" => "mtn_cis#transaction_acknowledgement"

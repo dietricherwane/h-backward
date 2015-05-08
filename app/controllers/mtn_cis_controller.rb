@@ -47,14 +47,7 @@ class MtnCisController < ApplicationController
     @client = Savon.client(wsdl: "#{Rails.root}/lib/mtn_ci/billmanageronlinepayment.wsdl")
 
     if valid_phone_number?(params[:colomb])
-<<<<<<< HEAD
       response = @client.call(:process_online_payment, message: { "User" => "guce_request", "Password" => "956AD14A701F8BE8C94F615572904518D2D3CC6A", "ServiceCode" => "GUCE", "SubscriberID" => params[:colomb], "Reference" => @basket.transaction_id, "Balance" => (@basket.transaction_amount + @basket.fees), "TextMessage" => "", "Token" => params[:token], "ImmediateReply" => true})
-      #response = @client.call(:process_online_payment, message: { :User => "guce_request", :Password => "956AD14A701F8BE8C94F615572904518D2D3CC6A", :ServiceCode => "GUCE", :SubscriberID => params[:colomb], :Reference => @basket.transaction_id, :Balance => (@basket.transaction_amount + @basket.fees), :TextMessage => "", :Token => params[:token], :ImmediateReply => true})
-
-=======
-      #response = @client.call(:process_online_payment, message: { :User => "guce_request", :Password => "956AD14A701F8BE8C94F615572904518D2D3CC6A", :ServiceCode => "GUCE", :SubscriberID => params[:colomb], :Reference => @basket.transaction_id, :Balance => (@basket.transaction_amount + @basket.fees), :TextMessage => "", :Token => params[:token], :ImmediateReply => true})
-      response = @client.call(:process_online_payment, message: { "User" => "guce_request", "Password" => "956AD14A701F8BE8C94F615572904518D2D3CC6A", "ServiceCode" => "GUCE", "SubscriberID" => params[:colomb], "Reference" => @basket.transaction_id, "Balance" => (@basket.transaction_amount + @basket.fees), "TextMessage" => "", "Token" => params[:token], "ImmediateReply" => true})
->>>>>>> 648d11a699ac03670eb362afdd84edbea43215d6
       result = response.body[:process_online_payment_response][:process_online_payment_result] rescue nil
 
       response_code = (result[:responsecode] rescue nil)
@@ -62,20 +55,44 @@ class MtnCisController < ApplicationController
 
       if response_message == "0"
         @basket.update_attributes(process_online_client_number: params[:colomb], process_online_response_code: response_code, process_online_response_message: response_message)
-        #@basket.update_attributes(process_online_client_number: params[:colomb], )
+        session[:transaction_id] = params[:transaction_id]
+        redirect_to waiting_validation_path
       else
         @error = true
         @error_messages = [result[:responsemessage]]
         init_index
+        render :index
       end
-      render text: "Paramètres émis: " + "{ :User => 'guce_request', :Password => '956AD14A701F8BE8C94F615572904518D2D3CC6A', :ServiceCode => 'GUCE', :SubscriberID => #{params[:colomb]}, :Reference => #{@basket.transaction_id}, :Balance => #{(@basket.transaction_amount + @basket.fees)}, :TextMessage => '', :Token => #{params[:token]}, :ImmediateReply => true})" + "Paramètres reçus: " + result.to_s
+      #render text: "Paramètres émis: " + "{ :User => 'guce_request', :Password => '956AD14A701F8BE8C94F615572904518D2D3CC6A', :ServiceCode => 'GUCE', :SubscriberID => #{params[:colomb]}, :Reference => #{@basket.transaction_id}, :Balance => #{(@basket.transaction_amount + @basket.fees)}, :TextMessage => '', :Token => #{params[:token]}, :ImmediateReply => true})" + "Paramètres reçus: " + result.to_s
     else
       init_index
       render :index
     end
+  end
 
-    #render :index
-      
+  def waiting_validation
+    initialize_customer_view("73007113fe", "ceiled_transaction_amount", "ceiled_shipping_fee")
+    get_service_logo(session[:service].token)
+  end
+
+  def check_transaction_validation
+    order = MtnCi.find_by_transaction_id(session[:transaction_id])
+    transaction_status = "0"
+
+    if order
+      if order.payment_status
+        transaction_status = "1"
+      end
+    end
+
+    render text: transaction_status
+  end
+
+  def redirect_to_merchant_website
+    order = MtnCi.find_by_transaction_id(session[:transaction_id])
+
+    # Redirection vers le site marchand
+    redirect_to "#{order.service.url_on_success}?transaction_id=#{order.transaction_id}&order_id=#{order.number}&status_id=1&wallet=orange_money_ci&transaction_amount=#{order.original_transaction_amount}&currency=#{order.currency.code}&paid_transaction_amount=#{order.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(order.paid_currency_id).code}&change_rate=#{order.rate}&id=#{order.login_id}"
   end
 
   def init_index
