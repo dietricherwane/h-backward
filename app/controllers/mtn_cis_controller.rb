@@ -47,28 +47,35 @@ class MtnCisController < ApplicationController
     @client = Savon.client(wsdl: "#{Rails.root}/lib/mtn_ci/billmanageronlinepayment.wsdl")
 
     if valid_phone_number?(params[:colomb])
+<<<<<<< HEAD
       response = @client.call(:process_online_payment, message: { "User" => "guce_request", "Password" => "956AD14A701F8BE8C94F615572904518D2D3CC6A", "ServiceCode" => "GUCE", "SubscriberID" => params[:colomb], "Reference" => @basket.transaction_id, "Balance" => (@basket.transaction_amount + @basket.fees), "TextMessage" => "", "Token" => params[:token], "ImmediateReply" => true})
       #response = @client.call(:process_online_payment, message: { :User => "guce_request", :Password => "956AD14A701F8BE8C94F615572904518D2D3CC6A", :ServiceCode => "GUCE", :SubscriberID => params[:colomb], :Reference => @basket.transaction_id, :Balance => (@basket.transaction_amount + @basket.fees), :TextMessage => "", :Token => params[:token], :ImmediateReply => true})
 
+=======
+      #response = @client.call(:process_online_payment, message: { :User => "guce_request", :Password => "956AD14A701F8BE8C94F615572904518D2D3CC6A", :ServiceCode => "GUCE", :SubscriberID => params[:colomb], :Reference => @basket.transaction_id, :Balance => (@basket.transaction_amount + @basket.fees), :TextMessage => "", :Token => params[:token], :ImmediateReply => true})
+      response = @client.call(:process_online_payment, message: { "User" => "guce_request", "Password" => "956AD14A701F8BE8C94F615572904518D2D3CC6A", "ServiceCode" => "GUCE", "SubscriberID" => params[:colomb], "Reference" => @basket.transaction_id, "Balance" => (@basket.transaction_amount + @basket.fees), "TextMessage" => "", "Token" => params[:token], "ImmediateReply" => true})
+>>>>>>> 648d11a699ac03670eb362afdd84edbea43215d6
       result = response.body[:process_online_payment_response][:process_online_payment_result] rescue nil
 
       response_code = (result[:responsecode] rescue nil)
       response_message = (result[:responsemessage] rescue nil)
 
-      @basket.update_attributes(process_online_client_number: params[:colomb], process_online_response_code: response_code, process_online_response_message: response_message)
-
       if response_message == "0"
-        @basket.update_attributes(process_online_client_number: params[:colomb], )
+        @basket.update_attributes(process_online_client_number: params[:colomb], process_online_response_code: response_code, process_online_response_message: response_message)
+        #@basket.update_attributes(process_online_client_number: params[:colomb], )
       else
         @error = true
         @error_messages = [result[:responsemessage]]
         init_index
       end
+      render text: "Paramètres émis: " + "{ :User => 'guce_request', :Password => '956AD14A701F8BE8C94F615572904518D2D3CC6A', :ServiceCode => 'GUCE', :SubscriberID => #{params[:colomb]}, :Reference => #{@basket.transaction_id}, :Balance => #{(@basket.transaction_amount + @basket.fees)}, :TextMessage => '', :Token => #{params[:token]}, :ImmediateReply => true})" + "Paramètres reçus: " + result.to_s
     else
       init_index
+      render :index
     end
 
-    render :index
+    #render :index
+      
   end
 
   def init_index
