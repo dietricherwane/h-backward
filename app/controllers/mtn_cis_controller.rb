@@ -47,7 +47,8 @@ class MtnCisController < ApplicationController
     @client = Savon.client(wsdl: "#{Rails.root}/lib/mtn_ci/billmanageronlinepayment.wsdl")
 
     if valid_phone_number?(params[:colomb])
-      response = @client.call(:process_online_payment, message: { :User => "guce_request", :Password => "956AD14A701F8BE8C94F615572904518D2D3CC6A", :ServiceCode => "GUCE", :SubscriberID => params[:colomb], :Reference => @basket.transaction_id, :Balance => (@basket.transaction_amount + @basket.fees), :TextMessage => "", :Token => params[:token], :ImmediateReply => true})
+      response = @client.call(:process_online_payment, message: { "User" => "guce_request", "Password" => "956AD14A701F8BE8C94F615572904518D2D3CC6A", "ServiceCode" => "GUCE", "SubscriberID" => params[:colomb], "Reference" => @basket.transaction_id, "Balance" => (@basket.transaction_amount + @basket.fees), "TextMessage" => "", "Token" => params[:token], "ImmediateReply" => true})
+      #response = @client.call(:process_online_payment, message: { :User => "guce_request", :Password => "956AD14A701F8BE8C94F615572904518D2D3CC6A", :ServiceCode => "GUCE", :SubscriberID => params[:colomb], :Reference => @basket.transaction_id, :Balance => (@basket.transaction_amount + @basket.fees), :TextMessage => "", :Token => params[:token], :ImmediateReply => true})
 
       result = response.body[:process_online_payment_response][:process_online_payment_result] rescue nil
 
