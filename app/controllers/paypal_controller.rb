@@ -85,7 +85,7 @@ class PaypalController < ApplicationController
           @response = @request.response
           if @response.code.to_s == "200"
             @basket.update_attributes(:notified_to_ecommerce => true)
-          #end
+          end
         end
       end
     end
