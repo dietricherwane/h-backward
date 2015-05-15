@@ -9,7 +9,7 @@ class NovapaysController < ApplicationController
   before_action :except => [:ipn, :transaction_acknowledgement, :payment_result_listener, :valid_result_parameters, :generic_ipn_notification] do |s| s.session_authenticated? end
 
   # Set transaction amount for GUCE requests
-  before_action :only => :index do |o| o.guce_request? end
+  #before_action :only => :index do |o| o.guce_request? end
 
   layout :select_layout
 
@@ -28,7 +28,10 @@ class NovapaysController < ApplicationController
 
   def index
     initialize_customer_view("77e26b3cbd", "ceiled_transaction_amount", "ceiled_shipping_fee")
-    #get_service_logo(session[:service].token)
+    get_service_logo(session[:service].token)
+
+    @transaction_amount = session[:trs_amount]
+    @shipping = 0
 
     # vérifie qu'un numéro panier appartenant à ce service n'existe pas déjà. Si non, on crée un panier temporaire, si oui, on met à jour le montant envoyé par le ecommerce, la monnaie envoyée par celui ci ainsi que le montant, la monnaie et les frais à envoyer au ecommerce
     @basket = Novapay.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'")

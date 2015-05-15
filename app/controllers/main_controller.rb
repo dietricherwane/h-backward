@@ -3,7 +3,7 @@ class MainController < ApplicationController
   before_action :only => :guard do |s| s.get_service_by_token(params[:currency], params[:service_token], params[:operation_token], params[:order], params[:transaction_amount], params[:id]) end
   # Only for guard action, we check if the session varable is initialized, if the operation_id is initialized and if transaction_amount is a number
   before_action :only => [:guard, :index] do |o| o.filter_connections end
-  #before_action :only => :guard do |r| r.authenticate_incoming_request(params[:operation_id], params[:basket_number], params[:transaction_amount]) end
+  ##before_action :only => :guard do |r| r.authenticate_incoming_request(params[:operation_id], params[:basket_number], params[:transaction_amount]) end
   # Vérifie que le panier n'a pas déjà été payé via paypal
   before_action :only => :guard do |s| s.basket_already_paid?(session[:basket]["basket_number"]) end
   # Vérifie pour toutes les actions que la variable de session existe
