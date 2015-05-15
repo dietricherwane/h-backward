@@ -53,7 +53,7 @@ class MtnCisController < ApplicationController
       response_code = (result[:responsecode] rescue nil)
       response_message = (result[:responsemessage] rescue nil)
 
-      if response_message == "0"
+      if response_code == "0"
         @basket.update_attributes(process_online_client_number: params[:colomb], process_online_response_code: response_code, process_online_response_message: response_message)
         session[:transaction_id] = params[:transaction_id]
         redirect_to waiting_validation_path
