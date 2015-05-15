@@ -1,32 +1,3 @@
-<script>
-  /*$(document).ready(function() {
-    $("#submit_n").click(function()
-    {
-      $.ajax({
-        url: "https://novaplus.ci/novapay.awp",
-        type: "post",
-        data: {
-          _refact: "GGDG89dFDF",
-          _prix: "500"
-        },
-        crossDomain: true,
-        headers: {
-          QUERY_STRING: "_identify='3155832361',_password='b1bad9eee66ff67d80735cd2d693d7ae',_dateheure='20150318164400332'"
-        },
-        error: function(xhr, textStatus, errorThrown){
-        	alert("Une erreur s'est produite: " + xhr.status);
-        },
-        success: function(response, response_status, xhr) {
-          alert(response);
-          /*$(target_tag).children().remove();
-          $(response).appendTo(target_tag);
-        }
-      });
-    });
-  });*/
-
-</script>
-
 <% if session[:service].authentication_token != '57813dc7992fbdc721ca5f6b0d02d559' %>
 
 <div class = "row-fluid login-logo">
@@ -154,28 +125,28 @@
         <%= form_tag ("/novapay/process_payment") do %>
 		      <%= hidden_field_tag "_refact", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
 		      <%= hidden_field_tag "_prix", "#{@transaction_amount + @shipping}" %>
-	        <div class = "<%= @transaction_amount_css %>">
-	          <div class = "input-append">
-		          <div class = "span9">
-			          <%= text_field_tag "magellan", @transaction_amount, :readonly => true %>
-			          <button class = "btn btn-info" type = "button"><%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
-		          </div>
+	        <div class = "form-group">
+	          <div class = "input-group">
+		          <%= text_field_tag "magellan", @transaction_amount, :readonly => true, class: "form-control input-sm" %>
+			        <span class="input-group-btn">
+			          <button type="submit" class="btn btn-sm"><%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+			        </span>
 		        </div>
 	        </div>
-	        <div class = "row-form">
-	          <div class = "input-append">
-		          <div class = "span9">
-			          <%= text_field_tag "Frais", @shipping, :readonly => true %>
-			          <button class = "btn btn-info" type = "button">Frais [Shipping] <%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
-		          </div>
+	        <div class = "form-group">
+	          <div class = "input-group">
+		          <%= text_field_tag "Frais", @shipping, :readonly => true, class: "form-control input-sm" %>
+		          <span class="input-group-btn">
+			          <button type="submit" class="btn btn-sm">Frais [Shipping] <%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+			        </span>
 		        </div>
 	        </div>
 	        <br />
-          <div class="span12">
-		        <button class="btn">
-			        Payer avec NovaPay <div class="icon-arrow-next icon-white"></div>
-		        </button>
-	        </div>
+          <div class="form-group">
+              <button class="btn btn-info btn-sm">
+                Payer avec NovaPay <div class="glyphicon glyphicon-circle-arrow-right"></div>
+              </button>
+            </div>
         <% end %>
         </div>
   <!-- End block -->
