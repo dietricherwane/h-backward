@@ -29,12 +29,6 @@ class NovapaysController < ApplicationController
   def index
     initialize_customer_view("77e26b3cbd", "ceiled_transaction_amount", "ceiled_shipping_fee")
     get_service_logo(session[:service].token)
-<<<<<<< HEAD
-
-    @transaction_amount = session[:trs_amount]
-    @shipping = 0
-=======
->>>>>>> 77b9f84bd6a237a8229acadca20fc91ed8bfb0cf
 
     # vérifie qu'un numéro panier appartenant à ce service n'existe pas déjà. Si non, on crée un panier temporaire, si oui, on met à jour le montant envoyé par le ecommerce, la monnaie envoyée par celui ci ainsi que le montant, la monnaie et les frais à envoyer au ecommerce
     @basket = Novapay.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'")
