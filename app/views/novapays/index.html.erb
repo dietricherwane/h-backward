@@ -129,7 +129,7 @@
 	          <div class = "input-group">
 		          <%= text_field_tag "magellan", @transaction_amount, :readonly => true, class: "form-control input-sm" %>
 			        <span class="input-group-btn">
-			          <button type="submit" class="btn btn-sm"><%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+			          <button type="button" class="btn btn-sm"><%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
 			        </span>
 		        </div>
 	        </div>
@@ -137,7 +137,7 @@
 	          <div class = "input-group">
 		          <%= text_field_tag "Frais", @shipping, :readonly => true, class: "form-control input-sm" %>
 		          <span class="input-group-btn">
-			          <button type="submit" class="btn btn-sm">Frais [Shipping] <%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+			          <button type="button" class="btn btn-sm">Frais [Shipping] <%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
 			        </span>
 		        </div>
 	        </div>
