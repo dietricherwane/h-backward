@@ -33,7 +33,7 @@
 
 .btn-primary{background: #005683;}
     .btn-primary:hover,.btn-primary:active,.btn-primary.active{background: #00486F;}
-.btn-info{background: #FFAA31; cursor: default;pointer-events: none;}
+.btn-info{background: #FFAA31;}
     .btn-info:hover,.btn-info:active,.btn-info.active{background: #FF990F;}
 .btn-success{background: #68AF27;}
     .btn-success:hover,.btn-success:active,.btn-success.active{background: #5A9922;}

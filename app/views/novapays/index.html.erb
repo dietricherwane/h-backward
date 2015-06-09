@@ -51,7 +51,7 @@
 		  <div class = "data-fluid" >
 		    <%= form_tag ("/novapay/process_payment") do %>
 		      <%= hidden_field_tag "_refact", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
-		      <%= hidden_field_tag "_prix", "#{@transaction_amount + @shipping}" %>
+		      <%= hidden_field_tag "_prix", "#{@transaction_amount.to_i + @shipping.to_i}" %>
 	        <div class = "<%= @transaction_amount_css %>">
 	          <div class = "input-append">
 		          <div class = "span9">
@@ -124,12 +124,12 @@
 
         <%= form_tag ("/novapay/process_payment") do %>
 		      <%= hidden_field_tag "_refact", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
-		      <%= hidden_field_tag "_prix", "#{@transaction_amount + @shipping}" %>
+		      <%= hidden_field_tag "_prix", "#{@transaction_amount.to_i + @shipping.to_i}" %>
 	        <div class = "form-group">
 	          <div class = "input-group">
 		          <%= text_field_tag "magellan", @transaction_amount, :readonly => true, class: "form-control input-sm" %>
 			        <span class="input-group-btn">
-			          <button type="submit" class="btn btn-sm"><%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+			          <button type="button" class="btn btn-sm"><%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
 			        </span>
 		        </div>
 	        </div>
@@ -137,7 +137,7 @@
 	          <div class = "input-group">
 		          <%= text_field_tag "Frais", @shipping, :readonly => true, class: "form-control input-sm" %>
 		          <span class="input-group-btn">
-			          <button type="submit" class="btn btn-sm">Frais [Shipping] <%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+			          <button type="button" class="btn btn-sm">Frais [Shipping] <%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
 			        </span>
 		        </div>
 	        </div>
