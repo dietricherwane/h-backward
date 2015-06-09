@@ -34,23 +34,23 @@ class ServicesController < ApplicationController
   def update
     @status = ""
     if params[:authentication_token].eql?("7a57b200d5be13837de15874300b16ee")
-      @service_id = params[:service_id]
-      @sales_area = params[:sales_area]
-      @comment = params[:comment]
-      @code = params[:code]
-      @url_on_success = params[:url_on_success]
-      @url_to_ipn = params[:url_to_ipn]
-      @url_on_error = params[:url_on_error]
-      @url_on_session_expired = params[:url_on_session_expired]
-      @url_on_hold_success = params[:url_on_hold_success]
-      @url_on_hold_error = params[:url_on_hold_error]
-      @url_on_hold_listener = params[:url_on_hold_listener]
-      @url_on_basket_already_paid = params[:url_on_basket_already_paid]
+      service_token = params[:service_token]
+      #@sales_area = params[:sales_area]
+      #@comment = params[:comment]
+      #@code = params[:code]
+      url_on_success = params[:url_on_success]
+      url_to_ipn = params[:url_to_ipn]
+      url_on_error = params[:url_on_error]
+      #@url_on_session_expired = params[:url_on_session_expired]
+      #@url_on_hold_success = params[:url_on_hold_success]
+      #@url_on_hold_error = params[:url_on_hold_error]
+      #@url_on_hold_listener = params[:url_on_hold_listener]
+      url_on_basket_already_paid = params[:url_on_basket_already_paid]
 
-      @service = Service.find_by_id(@service_id)
+      @service = Service.find_by_token(service_token)
 
       if !@service.blank?
-        @service.update_attributes(code: @code, sales_area: @sales_area, comment: @comment, url_on_success: @url_on_success, url_to_ipn: @url_to_ipn, url_on_error: @url_on_error, url_on_session_expired: @url_on_session_expired, url_on_hold_success: @url_on_hold_success, url_on_hold_error: @url_on_hold_error, url_on_hold_listener: @url_on_hold_listener, url_on_basket_already_paid: @url_on_basket_already_paid)
+        @service.update_attributes(url_on_success: url_on_success, url_to_ipn: url_to_ipn, url_on_error: url_on_error, url_on_basket_already_paid: url_on_basket_already_paid)
         @status = "f26e0312bd863867f4f1e6b83483644b"
       else
         @status = "blank"
