@@ -15,7 +15,7 @@ class PayMoneyController < ApplicationController
   before_action :except => [:create_account, :account, :credit_account, :add_credit, :transaction_acknowledgement] do |s| s.session_authenticated? end
 
   # Set transaction amount for GUCE requests
-  #before_action :only => :index do |o| o.guce_request? end
+  before_action :only => :index do |o| o.guce_request? end
 
   #layout "payMoney"
 

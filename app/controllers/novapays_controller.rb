@@ -9,7 +9,7 @@ class NovapaysController < ApplicationController
   before_action :except => [:ipn, :transaction_acknowledgement, :payment_result_listener, :valid_result_parameters, :generic_ipn_notification] do |s| s.session_authenticated? end
 
   # Set transaction amount for GUCE requests
-  #before_action :only => :index do |o| o.guce_request? end
+  before_action :only => :index do |o| o.guce_request? end
 
   layout :select_layout
 
