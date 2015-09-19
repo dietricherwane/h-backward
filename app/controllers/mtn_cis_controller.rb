@@ -62,16 +62,24 @@ class MtnCisController < ApplicationController
       </paymentRequest>], followlocation: true, method: :post, headers: {'Content-Type'=> "application/xml"})
 
       request.on_complete do |response|
-        response_code = (response.xpath('//paymentResponse').at('ResponseCode').content rescue nil)
-        if response.success? && response_code == '0000'
+        if response.success?
           response = (Nokogiri.XML(request.response.body) rescue nil)
-          @basket.update_attributes(process_online_client_number: params[:colomb], process_online_response_code: response_code, snet_init_response: request.response.body)
-          session[:transaction_id] = params[:transaction_id]
-          redirect_to waiting_validation_path
+          response_code = (response.xpath('//paymentResponse').at('ResponseCode').content rescue nil)
+          if response_code == '0000'
+            @basket.update_attributes(process_online_client_number: params[:colomb], process_online_response_code: response_code, snet_init_response: request.response.body)
+            session[:transaction_id] = params[:transaction_id]
+            redirect_to waiting_validation_path
+          else
+            @error = true
+            @error_messages = ["Votre transaction n'a pas pu aboutir"]
+            @basket.update_attributes(process_online_client_number: params[:colomb], process_online_response_code: response_code, snet_init_response: request.response.body)
+            init_index
+            render :index
+          end
         else
           @error = true
           @error_messages = ["Votre transaction n'a pas pu aboutir"]
-          @basket.update_attributes(process_online_client_number: params[:colomb], process_online_response_code: response_code, snet_init_error_response: request.response.body)
+          @basket.update_attributes(process_online_client_number: params[:colomb], snet_init_error_response: request.response.body)
           init_index
           render :index
         end
