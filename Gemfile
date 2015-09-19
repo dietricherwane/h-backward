@@ -80,6 +80,8 @@ gem 'wash_out'
 # Create soap client
 gem 'savon', '~> 2.10.0'
 
+gem 'rest-client'
+
 #gem "rails_12factor", group: :production
 
 #gem 'rails_log_stdout',           github: 'heroku/rails_log_stdout'

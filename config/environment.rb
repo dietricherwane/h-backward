@@ -6,6 +6,6 @@ HubsBackOffice::Application.initialize!
 
 Paperclip.options[:command_path] = "/usr/local/bin/"
 
-Rails.logger = Logger.new(STDOUT)
+#Rails.logger = Logger.new(STDOUT)
 
-Rails.logger.level = 0
+#Rails.logger.level = 0

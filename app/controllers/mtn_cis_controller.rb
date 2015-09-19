@@ -1,9 +1,9 @@
 class MtnCisController < ApplicationController
   @@second_origin_url = Parameter.first.second_origin_url
   ##before_action :only => :guard do |o| o.filter_connections end
-  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :initialize_session, :session_initialized, :payment_result_listener, :duke]
+  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :initialize_session, :session_initialized, :payment_result_listener, :duke, :api_confirm_amount]
   # Si l'utilisateur ne s'est pas connecté en passant par main#guard, on le rejette
-  before_action :except => [:ipn, :transaction_acknowledgement, :initialize_session, :initialize_session, :payment_result_listener, :duke] do |s| s.session_authenticated? end
+  before_action :except => [:ipn, :transaction_acknowledgement, :initialize_session, :initialize_session, :payment_result_listener, :duke, :api_confirm_amount] do |s| s.session_authenticated? end
 
   # Set transaction amount for GUCE requests
   before_action :only => :index do |o| o.guce_request? end
@@ -31,7 +31,7 @@ class MtnCisController < ApplicationController
     # vérifie qu'un numéro panier appartenant à ce service n'existe pas déjà. Si non, on crée un panier temporaire, si oui, on met à jour le montant envoyé par le ecommerce, la monnaie envoyée par celui ci ainsi que le montant, la monnaie et les frais à envoyer au ecommerce
     @basket = MtnCi.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'")
     if @basket.blank?
-      @basket = MtnCi.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :original_transaction_amount => session[:trs_amount], :transaction_amount => session[:trs_amount].to_f.ceil, :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"), :fees => @shipping, :rate => @rate, :login_id => session[:login_id])
+      @basket = MtnCi.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :original_transaction_amount => session[:trs_amount], :transaction_amount => session[:trs_amount].to_f.ceil, :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, transaction_id: Digest::SHA1.hexdigest([DateTime.now.iso8601(6), rand].join), :fees => @shipping, :rate => @rate, :login_id => session[:login_id])
     else
       @basket.first.update_attributes(:transaction_amount => session[:trs_amount].to_f.ceil, :original_transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, :fees => @shipping, :rate => @rate, :login_id => session[:login_id])
     end
@@ -47,28 +47,59 @@ class MtnCisController < ApplicationController
     @client = Savon.client(wsdl: "#{Rails.root}/lib/mtn_ci/billmanageronlinepayment.wsdl")
 
     if valid_phone_number?(params[:colomb])
-      response = @client.call(:process_online_payment, message: { "User" => "guce_request", "Password" => "956AD14A701F8BE8C94F615572904518D2D3CC6A", "ServiceCode" => "GUCE", "SubscriberID" => params[:colomb], "Reference" => @basket.transaction_id, "Balance" => (@basket.transaction_amount + @basket.fees), "TextMessage" => "", "Token" => params[:token], "ImmediateReply" => true})
-      result = response.body[:process_online_payment_response][:process_online_payment_result] rescue nil
+      request = Typhoeus::Request.new("http://27.34.246.94:8080/Guce/ngser/pay/PaymentRequest", body: %Q[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+      <paymentRequest>
+      <UserName>ngser</UserName>
+      <Password>ngser_pas</Password>
+      <Currency>XOF</Currency>
+      <ReferenceInvoice>#{@basket.number}</ReferenceInvoice>
+      <Amount>#{@basket.transaction_amount}</Amount>
+      <ServiceFees>#{@basket.fees}</ServiceFees>
+      <OperatorId>#{session[:service].authentication_token}</OperatorId>
+      <GuceTransactionId>#{@basket.transaction_id}</GuceTransactionId>
+      <ChannelId>11</ChannelId>
+      <MobileNumber>#{params[:colomb]}</MobileNumber>
+      <Token>#{params[:token]}</Token>
+      </paymentRequest>], followlocation: true, method: :post, headers: {'Content-Type'=> "application/xml"})
 
-      response_code = (result[:responsecode] rescue nil)
-      response_message = (result[:responsemessage] rescue nil)
-
-      if response_code == "0"
-        @basket.update_attributes(process_online_client_number: params[:colomb], process_online_response_code: response_code, process_online_response_message: response_message)
-        session[:transaction_id] = params[:transaction_id]
-        redirect_to waiting_validation_path
-      else
-        @error = true
-        @error_messages = [result[:responsemessage]]
-        init_index
-        render :index
+      request.on_complete do |response|
+        response_code = (response.xpath('//paymentResponse').at('ResponseCode').content rescue nil)
+        if response.success? && response_code == '0000'
+          response = (Nokogiri.XML(request.response.body) rescue nil)
+          @basket.update_attributes(process_online_client_number: params[:colomb], process_online_response_code: response_code, snet_init_response: request.response.body)
+          session[:transaction_id] = params[:transaction_id]
+          redirect_to waiting_validation_path
+        else
+          @error = true
+          @error_messages = ["Votre transaction n'a pas pu aboutir"]
+          @basket.update_attributes(process_online_client_number: params[:colomb], process_online_response_code: response_code, snet_init_error_response: request.response.body)
+          init_index
+          render :index
+        end
       end
-      #render text: "Paramètres émis: " + "{ :User => 'guce_request', :Password => '956AD14A701F8BE8C94F615572904518D2D3CC6A', :ServiceCode => 'GUCE', :SubscriberID => #{params[:colomb]}, :Reference => #{@basket.transaction_id}, :Balance => #{(@basket.transaction_amount + @basket.fees)}, :TextMessage => '', :Token => #{params[:token]}, :ImmediateReply => true})" + "Paramètres reçus: " + result.to_s
+
+      request.run
     else
       init_index
       render :index
     end
   end
+
+  # After sending a payment request to SNET, they should check the existence of the transaction on the GPG
+  def api_confirm_amount
+    transaction = MtnCi.where("number = '#{params[:reference_invoice]}' AND transaction_amount = #{params[:transaction_amount]} AND transaction_id = '#{params[:transaction_id]}'")
+
+    render text: %Q[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+      <confirmAmountResponse>
+      <Status>#{transaction.blank? ? "9868" : "0000"}</Status>
+      <ReferenceInvoice>#{transaction.first.number rescue nil}</ReferenceInvoice>
+      <GuceTransactionId>#{transaction.first.transaction_id rescue nil}</GuceTransactionId>
+      <Amount>#{transaction.first.transaction_amount rescue nil}</Amount>
+      <ServiceFees>#{transaction.first.fees rescue nil}</ServiceFees>
+      </confirmAmountResponse>]
+  end
+
+
 
   def waiting_validation
     initialize_customer_view("73007113fe", "ceiled_transaction_amount", "ceiled_shipping_fee")
@@ -92,7 +123,13 @@ class MtnCisController < ApplicationController
     order = MtnCi.find_by_transaction_id(session[:transaction_id])
 
     # Redirection vers le site marchand
-    redirect_to "#{order.service.url_on_success}?transaction_id=#{order.transaction_id}&order_id=#{order.number}&status_id=1&wallet=orange_money_ci&transaction_amount=#{order.original_transaction_amount}&currency=#{order.currency.code}&paid_transaction_amount=#{order.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(order.paid_currency_id).code}&change_rate=#{order.rate}&id=#{order.login_id}"
+    #redirect_to "#{order.service.url_on_success}?transaction_id=#{order.transaction_id}&order_id=#{order.number}&status_id=1&wallet=mtn_ci&transaction_amount=#{order.original_transaction_amount}&currency=#{order.currency.code}&paid_transaction_amount=#{order.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(order.paid_currency_id).code}&change_rate=#{order.rate}&id=#{order.login_id}"
+
+    if (order.operation.authentication_token rescue nil) == "b6dff4ae-05c1-4050-a976-0db6e358f22b"
+      redirect_to "http://ekioskmobile.net/retourabonnement.php?transaction_id=#{order.transaction_id}&order_id=#{order.number}&status_id=1&wallet=mtn_ci&transaction_amount=#{order.original_transaction_amount}&currency=#{order.currency.code}&paid_transaction_amount=#{order.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(order.paid_currency_id).code}&change_rate=#{order.rate}&id=#{order.login_id}"
+    else
+      redirect_to "#{order.service.url_on_success}?transaction_id=#{order.transaction_id}&order_id=#{order.number}&status_id=1&wallet=mtn_ci&transaction_amount=#{order.original_transaction_amount}&currency=#{order.currency.code}&paid_transaction_amount=#{order.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(order.paid_currency_id).code}&change_rate=#{order.rate}&id=#{order.login_id}"
+    end
   end
 
   def init_index
@@ -102,96 +139,103 @@ class MtnCisController < ApplicationController
   end
 
   def payment_result_listener
-    @transaction_id = params[:purchaseref]
-    @token = params[:token]
-    @clientid = params[:clientid]
-    @transaction_amount = params[:amount]
+    @user_name = params[:user_name]
+    @password = params[:password]
+    @number = params[:reference_invoice]
+    @transaction_id = params[:guce_transaction_id]
     @status = params[:status]
-    @payid = params[:payid]
+    @transaction_amount = params[:paid_amount]
+    @fee = params[:paid_fee]
+    @login_id = params[:txn_id]
+    @real_time_code = params[:real_time_code]
+    @real_time_numfacture = params[:real_time_numfacture]
+    @real_time_datefacture = params[:real_time_datefacture]
+    @real_time_delaipaiement = params[:real_time_delaipaiement]
+    @real_time_montant = params[:real_time_montant]
+    @real_time_ch_str_xx = params[:real_time_ch_str_xx]
+    @real_time_ch_long_xx = params[:real_time_ch_long_xx]
+    @real_time_ch_date_xx = params[:real_time_ch_date_xx]
+    @real_time_ch_money_xx = params[:real_time_ch_money_xx]
+    @real_time_transact = params[:real_time_transact]
     OmLog.create(log_rl: params.to_s) rescue nil
 
-    if valid_result_parameters
+    status = ''
+
+    if valid_authentication
       if valid_transaction
-        @basket = MtnCi.find_by_transaction_id(@transaction_id)
-        if @basket
+        # Use MTN Money authentication_token
+        update_wallet_used(@basket, "73007113fe")
+        status = '0000'
+        if @status == '0000'
 
-          # Use Orange Money authentication_token
-          update_wallet_used(@basket, "b005fd07f0")
+          # Conversion du montant débité par le wallet et des frais en euro avant envoi pour notification au back office du hub
+          @rate = get_change_rate("XAF", "EUR")
 
-          if (@basket.paid_transaction_amount + @basket.fees) == @transaction_amount.to_f
+          MtnCi.find_by_transaction_id(@transaction_id).update_attributes(params.merge({payment_status: true, compensation_rate: @rate, snet_payment_response: params.to_s}))
 
-            # Conversion du montant débité par le wallet et des frais en euro avant envoi pour notification au back office du hub
-            @rate = get_change_rate("XAF", "EUR")
+          @amount_for_compensation = ((@transaction.first.paid_transaction_amount + @transaction.first.fees) * @rate).round(2)
+          @fees_for_compensation = (@transaction.first.fees * @rate).round(2)
 
-            @basket.update_attributes(payment_status: true, ompay_token: @token, ompay_clientid: @clientid, ompay_payid: @payid, compensation_rate: @rate)
+          # Notification au back office du hub
+          notify_to_back_office(@basket, "#{@@second_origin_url}/GATEWAY/rest/WS/#{@transaction.first.operation.id}/#{@transaction.first.number}/#{@transaction.first.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")
 
-            @amount_for_compensation = ((@basket.paid_transaction_amount + @basket.fees) * @rate).round(2)
-            @fees_for_compensation = (@basket.fees * @rate).round(2)
+          # Update in available_wallet the number of successful_transactions
+          update_number_of_succeed_transactions
 
-            # Notification au back office du hub
-            notify_to_back_office(@basket, "#{@@second_origin_url}/GATEWAY/rest/WS/#{@basket.operation.id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")
-
-            # Update in available_wallet the number of successful_transactions
-            update_number_of_succeed_transactions
-
-            @status_id = 1
-
-            # Handle GUCE notifications
-            guce_request_payment?(@basket.service.authentication_token, 'QRT46FC', 'ELNPAY4')
-
-            # Redirection vers le site marchand
-            if (@basket.operation.authentication_token rescue nil) == "b6dff4ae-05c1-4050-a976-0db6e358f22b"
-              redirect_to "http://ekioskmobile.net/retourabonnement.php?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=orange_money_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
-            else
-              redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=orange_money_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
-            end
-          else
-            @basket.update_attributes(:conflictual_transaction_amount => @transaction_amount.to_f, :conflictual_currency => "XAF")
-
-            # Update in available_wallet the number of failed_transactions
-            update_number_of_failed_transactions
-
-            if (@basket.operation.authentication_token rescue nil) == "b6dff4ae-05c1-4050-a976-0db6e358f22b"
-              redirect_to "http://ekioskmobile.net/retourabonnement.php?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=orange_money_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}&id=#{@basket.login_id}"
-            else
-              redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=orange_money_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}&id=#{@basket.login_id}"
-            end
-          end
+          # Handle GUCE notifications
+          guce_request_payment?(@transaction.first.service.authentication_token, 'QRTH45N', 'ELNPAY4')
         else
-          render text: "La transaction n'existe pas - H"#redirect_to error_page_path
+          # Update in available_wallet the number of failed_transactions
+          update_number_of_failed_transactions
+
+          MtnCi.find_by_transaction_id(@transaction_id).update_attributes(params.merge({payment_status: false, snet_payment_error_response: params.to_s}))
         end
       else
-        render text: "La transaction n'existe pas - O"#redirect_to error_page_path
+        status = '9568'
       end
     else
-      render text: "Les paramètres que vous avez envoyé sont invalides"#redirect_to error_page_path
+       status = '0102'
     end
+
+    render text: %Q[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+      <paymentResponse>
+      <Status>#{status}</Status>
+      <ReferenceInvoice>#{@number}</ReferenceInvoice>
+      <GuceTransactionId>#{@transaction_id}</GuceTransactionId>
+      <PaidAmount>#{@transaction_amount}</PaidAmount>
+      <ServiceFees>#{@fee}</ServiceFees>
+      <TxnId>#{@login_id}</TxnId>
+      <RealTimeCode>#{@real_time_code}</RealTimeCode>
+      <RealTimeNumfacture>#{@real_time_numfacture}</RealTimeNumfacture>
+      <RealTimeDatefacture>#{@real_time_datefacture}</RealTimeDatefacture>
+      <RealTimeDelaiPaiement>#{@real_time_delaipaiement}</RealTimeDelaiPaiement>
+      <RealTimeMontant>#{@real_time_montant}</RealTimeMontant>
+      <RealTimeChStr>#{@real_time_ch_str_xx}</RealTimeChStr>
+      <RealTimeChLong>#{@real_time_ch_long_xx}</RealTimeChLong>
+      <RealTimeChDate>#{@real_time_ch_date_xx}</RealTimeChDate>
+      <RealTimeChMoney>#{@real_time_ch_money_xx}</RealTimeChMoney>
+      <RealTimeTransact>#{@real_time_transact}</RealTimeTransact>
+      </paymentResponse>]
   end
 
-  def valid_result_parameters
-    if !@transaction_id.blank? && !@token.blank? && !@clientid.blank? && !@transaction_amount.blank? && (!@status.blank? && @status.to_s.strip == "0")
+  # Authenticates incoming request according to provided credentials [user_name, password]
+  def valid_authentication
+    if @user_name == "6d544d9a-a912-4921-b8c0-ef64251ec814" && @password == "0a2d16022896"
       return true
     else
       return false
     end
   end
 
+  # Validates the given parameters and check the existence of TxnId
   def valid_transaction
-     parameter = Parameter.first
-    request = Typhoeus::Request.new(parameter.orange_money_ci_verify_url, body: "merchantid=1f3e745c66347bc2cc9492d8526bfe040519396d7c98ad199f4211f39dfd6365&token=#{@token}", headers: {:'Content-Type'=> "application/x-www-form-urlencoded"}, followlocation: true, method: :post)
+    @transaction = MtnCi.where("number = '#{@number}' AND transaction_id = '#{@transaction_id}' AND transaction_amount = #{@transaction_amount} AND fees = #{@fee}")
 
-    request.on_complete do |response|
-      if response.success?
-        @result = response.body.strip rescue nil
-      else
-        @result = nil
-      end
+    if @transaction.blank?
+      return false
+    else
+      return true
     end
-
-    request.run
-
-    OmLog.first.update_attributes(log_tv: @result.to_s) rescue nil
-    /status=.*;/.match(@result).to_s.sub("status=", "")[0..0] == "0" ? true : false
   end
 
   def ipn

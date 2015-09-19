@@ -63,6 +63,9 @@ HubsBackOffice::Application.routes.draw do
   post "MTNCI/transaction_acknowledgement" => "mtn_cis#transaction_acknowledgement"
   post "MTNCI/transaction_acknowledgement/:transaction_id" => "mtn_cis#transaction_acknowledgement"
   get "MTNCI/transaction_acknowledgement/:transaction_id" => "mtn_cis#transaction_acknowledgement"
+  post "/api/93c080fe2b/MTNCI/confirm_amount/:reference_invoice/:transaction_id/:transaction_amount" => "mtn_cis#api_confirm_amount"
+
+  post "/STAS/transaction/confirm" => "mtn_cis#payment_result_listener"
 
   wash_out :wsdl_mtn
 
