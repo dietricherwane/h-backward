@@ -44,7 +44,6 @@ class MtnCisController < ApplicationController
 
   def initialize_payment
     @basket = MtnCi.find_by_transaction_id(params[:transaction_id])
-    @client = Savon.client(wsdl: "#{Rails.root}/lib/mtn_ci/billmanageronlinepayment.wsdl")
 
     if valid_phone_number?(params[:colomb])
       request = Typhoeus::Request.new("http://27.34.246.94:8080/Guce/ngser/pay/PaymentRequest", body: %Q[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>

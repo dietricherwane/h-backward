@@ -67,7 +67,6 @@ HubsBackOffice::Application.routes.draw do
 
   post "/STAS/transaction/confirm" => "mtn_cis#payment_result_listener"
 
-  wash_out :wsdl_mtn
 
   get "novapay/:service_id/:operation_id/:basket_number/:transaction_amount" => "novapays#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "NovaPay" => "novapays#index"
