@@ -1,0 +1,39 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  number: MyString
+  service_id: 1
+  operation_id: 1
+  payment_status: false
+  transaction_amount: 1.5
+  notified_to_back_office: false
+  transaction_id: MyString
+  fees: 1.5
+  currency_id: 1
+  paid_transaction_amount: 1.5
+  paid_currency_id: 1
+  rate: 1.5
+  conflictual_transaction_amount: 1.5
+  conflictual_currency: MyString
+  compensation_rate: 1.5
+  orginal_transaction_amount: 1.5
+  refoper: MyString
+
+two:
+  number: MyString
+  service_id: 1
+  operation_id: 1
+  payment_status: false
+  transaction_amount: 1.5
+  notified_to_back_office: false
+  transaction_id: MyString
+  fees: 1.5
+  currency_id: 1
+  paid_transaction_amount: 1.5
+  paid_currency_id: 1
+  rate: 1.5
+  conflictual_transaction_amount: 1.5
+  conflictual_currency: MyString
+  compensation_rate: 1.5
+  orginal_transaction_amount: 1.5
+  refoper: MyString

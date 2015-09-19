@@ -30,7 +30,7 @@
 
 .btn{-moz-border-radius: 0px; -webkit-border-radius: 0px; border-radius: 0px; border: 0px; background: #009AD7; color: #F9F9F9; text-shadow: none; margin-bottom: 3px;}
     .btn:hover,.btn-primary:active,.btn[disabled],.btn.disabled{background: #008DC4; color: #FFF;}
-    
+
 .btn-primary{background: #005683;}
     .btn-primary:hover,.btn-primary:active,.btn-primary.active{background: #00486F;}
 .btn-info{background: #FFAA31;}
@@ -42,11 +42,11 @@
 .btn-danger{background: #C22439;}
     .btn-danger:hover,.btn-danger:active,.btn-danger.active{background: #AA2031;}
 .btn-inverse{background: #222; }
-    .btn-inverse:hover,.btn-inverse:active,.btn-inverse.active{background: #1A1A1D;}    
-.btn-link{background: transparent; color: #333;}    
+    .btn-inverse:hover,.btn-inverse:active,.btn-inverse.active{background: #1A1A1D;}
+.btn-link{background: transparent; color: #333;}
     .btn-link:hover,.btn-link:active,.btn-link.active{background: transparent; color: #333;}
 
-.btn.disabled,.open .btn.dropdown-toggle{background-color: #008DC4 !important;}   
+.btn.disabled,.open .btn.dropdown-toggle{background-color: #008DC4 !important;}
 .btn.btn-primary.disabled,.open .btn-primary.dropdown-toggle{background-color: #00486F !important;}
 .btn.btn-info.disabled,.open .btn-info.dropdown-toggle{background-color: #FF990F !important;}
 .btn.btn-success.disabled,.open .btn-success.dropdown-toggle{background-color: #5A9922 !important;}

@@ -1,0 +1,34 @@
+<div class="row payment-fields">
+  <div class="col-xs-6">
+    <div class="row">
+      <div class="col-xs-5"><label>Raison sociale :</label></div>
+      <div class="col-xs-7"><%= session[:service].name %></div>
+    </div>
+    <div class="row">
+      <div class="col-xs-5"><label>Montant :</label></div>
+      <div class="col-xs-7"><%= "#{session[:basket]['transaction_amount']} #{session[:currency].symbol}" %></div>
+    </div>
+    <div class="row">
+      <div class="col-xs-5"><label>Devise :</label></div>
+      <div class="col-xs-7"><%= session[:currency].code %></div>
+    </div>
+  </div>
+  <div class="col-xs-6">
+
+    <div class="row">
+      <div class="col-xs-6 pays">
+        <label>Choisir un pays :</label>
+      </div>
+      <div class="col-xs-6">
+      	<%= collection_select(:country, :country_id, @countries, :id, :name, :selected => @international.id) %>
+      </div>
+      <div class="col-xs-12 paymethod">
+        <% @available_wallets.each do |available_wallet| %>
+          <% @url = "#{available_wallet.wallet.url}/#{session[:service].code}/#{session[:operation].code}/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}" %>
+          <%= link_to image_tag(available_wallet.wallet.logo.url(:medium)), @url %>
+        <% end %>
+      </div>
+    </div>
+
+  </div>
+</div>

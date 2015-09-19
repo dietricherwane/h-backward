@@ -5,6 +5,8 @@ require 'uri'
 require 'yajl/http_stream'
 require "nokogiri"
 require "open-uri"
+require 'json'
+require 'savon'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
