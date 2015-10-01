@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150426204301) do
+ActiveRecord::Schema.define(version: 20150919104533) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -128,6 +128,10 @@ ActiveRecord::Schema.define(version: 20150426204301) do
     t.string   "login_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "snet_init_response"
+    t.text     "snet_init_error_response"
+    t.text     "snet_payment_response"
+    t.text     "snet_payment_error_response"
   end
 
   create_table "novapays", force: true do |t|
