@@ -71,7 +71,7 @@ class MtnCisController < ApplicationController
             redirect_to waiting_validation_path
           else
             @error = true
-            @error_messages = ["Votre transaction n'a pas pu aboutir"]
+            @error_messages = ["Votre transaction n'a pas été reconnue par le système"]
             @basket.update_attributes(process_online_client_number: params[:colomb], process_online_response_code: response_code, snet_init_response: request.response.body)
             init_index
             render :index
@@ -96,7 +96,7 @@ class MtnCisController < ApplicationController
   def api_confirm_amount
     transaction = MtnCi.where("number = '#{params[:reference_invoice]}' AND transaction_amount = #{params[:transaction_amount]} AND transaction_id = '#{params[:transaction_id]}'")
 
-    render text: %Q[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    render xml: %Q[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
       <confirmAmountResponse>
       <Status>#{transaction.blank? ? "9868" : "0000"}</Status>
       <ReferenceInvoice>#{transaction.first.number rescue nil}</ReferenceInvoice>
@@ -204,8 +204,8 @@ class MtnCisController < ApplicationController
        status = '0102'
     end
 
-    render text: %Q[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-      <paymentResponse>
+    render xml: %Q[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+      <ConfirmPaymentResponse>
       <Status>#{status}</Status>
       <ReferenceInvoice>#{@number}</ReferenceInvoice>
       <GuceTransactionId>#{@transaction_id}</GuceTransactionId>
@@ -222,7 +222,7 @@ class MtnCisController < ApplicationController
       <RealTimeChDate>#{@real_time_ch_date_xx}</RealTimeChDate>
       <RealTimeChMoney>#{@real_time_ch_money_xx}</RealTimeChMoney>
       <RealTimeTransact>#{@real_time_transact}</RealTimeTransact>
-      </paymentResponse>]
+      </ConfirmPaymentResponse>]
   end
 
   # Authenticates incoming request according to provided credentials [user_name, password]
