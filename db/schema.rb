@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150919104533) do
+ActiveRecord::Schema.define(version: 20151028134219) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -132,6 +132,8 @@ ActiveRecord::Schema.define(version: 20150919104533) do
     t.text     "snet_init_error_response"
     t.text     "snet_payment_response"
     t.text     "snet_payment_error_response"
+    t.text     "sent_request"
+    t.string   "notified_to_ecommerce"
   end
 
   create_table "novapays", force: true do |t|

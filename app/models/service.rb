@@ -9,6 +9,7 @@ class Service < ActiveRecord::Base
   # Relationships
   has_many :baskets
   has_many :paypal_baskets
+  has_many :mtn_cis
   has_many :orange_money_ci_baskets
   has_many :qash_baskets
   has_many :novapays
