@@ -42,11 +42,13 @@ class NovapaysController < ApplicationController
   # Redirect to NovaPay platform
   def process_payment
     OmLog.create(log_rl: %Q[_identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}])
-    request = Typhoeus::Request.new("https://novaplus.ci/NOVAPAY_WEB/FR/novapay.awp", method: :post, body: %Q[{"_descprod": "#{session[:service].name}", "_refact": "#{params[:_refact]}", "_prix": "#{params[:_prix]}" }], headers: { 'QUERY_STRING' => %Q[_identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}], followlocation: true })
+    request = Typhoeus::Request.new("https://novaplus.ci/NOVAPAY_WEB/FR/novapay.awp", method: :post, body: %Q[{"_descprod": "#{session[:service].name}", "_refact": "#{params[:_refact]}", "_prix": "#{params[:_prix]}" }], headers: { 'QUERY-STRING' => %Q[_identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}]}, followlocation: true, ssl_verifypeer: false, ssl_verifyhost: 0)
+    str = %Q[https://novaplus.ci/NOVAPAY_WEB/FR/novapay.awp | body: {"_descprod": "#{session[:service].name}", "_refact": "#{params[:_refact]}", "_prix": "#{params[:_prix]}"} headers: { 'QUERY_STRING' => _identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}}]
     #, params: { _refact: params[:_refact], _prix: params[:_prix], _descprod: "#{session[:service].name}" }
     request.run
     response = request.response
 
+    #render text: "response_code: " + response.code.to_s + " " + str
     render text: response.body
   end
 
