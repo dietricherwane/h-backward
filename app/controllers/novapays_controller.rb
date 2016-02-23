@@ -140,19 +140,21 @@ class NovapaysController < ApplicationController
 
   def valid_transaction
     if @request_type.post?
-    #OmLog.create(log_rl: %Q[_identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}])
+    OmLog.create(log_rl: %Q[_identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}])
+
     request = Typhoeus::Request.new("https://novaplus.ci/NOVAPAY_WEB/FR/paycheck.awp", method: :post, body: %Q[{"_refact": "#{@refact}", "_prix": "#{@mtnt}", "_nooper": "#{@refoper}" }], headers: { 'QUERY_STRING' => %Q[_identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}]}, followlocation: true, method: :get)
     @result = nil
 
     request.on_complete do |response|
       if response.success?
         @result = response.body.strip
+        OmLog.create(log_rl: %Q[https://novaplus.ci/NOVAPAY_WEB/FR/paycheck.awp -- #{@result} --  {"_refact": "#{@refact}", "_prix": "#{@mtnt}", "_nooper": "#{@refoper}" }]) rescue nil
       end
     end
 
     request.run
 
-    #OmLog.create(log_rl: "Paramètres de vérification de paiement: " + @result.to_s)
+    OmLog.create(log_rl: "Paramètres de vérification de paiement: " + @result.to_s)
 
     !@result.blank? ? true : false
     end

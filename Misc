@@ -8,6 +8,13 @@ Montant
 
 Devise
 
-http://0.0.0.0:3000/order/xof/ef34523f1196c904c6e09af80e472ac2/535ef2a5-c7bc-48c0-8b4d-d5c73c40b272/dukenukemtest/500
+http://41.189.40.193:6968/order/xof/ef34523f1196c904c6e09af80e472ac2/535ef2a5-c7bc-48c0-8b4d-d5c73c40b272/YdddfHHDC447CCC/500
 
-http://41.189.40.193:6996/order/xof/ef34523f1196c904c6e09af80e472ac2/535ef2a5-c7bc-48c0-8b4d-d5c73c40b272/dukenukemtest/500
+http://41.189.40.193:6968/order/xof/57813dc7992fbdc721ca5f6b0d02d559/1c2018aa-434e-43e2-b494-a18c25986602/SAD201500002134/46008
+
+https://pay-money.net/order/xof/57813dc7992fbdc721ca5f6b0d02d559/1c2018aa-434e-43e2-b494-a18c25986602/SAD201500002134/46008
+
+
+curl --request POST --data "{"_descprod": "GUCE", "_refact": "3f5ba2affcf608cad131584898aa64d208290d88", "_prix": "47108"}" --header "QUERY-STRING: identify=3155832361,_password=f56d711605554f5fd7be3f8b1a55de7f,_dateheure=20160122143234453" https://novaplus.ci/NOVAPAY_WEB/FR/novapay.awp  --insecure
+
+"http://41.189.40.193:8080/GPG_GUCE/rest/Mob_Mon_Pay/pay/SAD201600000244/20000/VIECOB8/QRTGH78/NULL
