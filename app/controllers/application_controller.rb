@@ -252,7 +252,7 @@ class ApplicationController < ActionController::Base
     parameters = Parameter.first
 
 #=begin
-      
+
       request = Typhoeus::Request.new("#{parameters.guce_back_office_url}/GPG_GUCE/rest/Mob_Mon/Check/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}", method: :get, followlocation: true)
       request.run
 
@@ -294,7 +294,7 @@ CATTA-CI SARL 09 BP 1327 ABIDJAN 09 TREICHVILLE-VGE-IMMEUBLE LA BALANCE
     @amount = (response.xpath('//ns3:response').at('bill').at('amount').content rescue nil)
     @payment_fee = (response.xpath('//ns3:response').at('bill').at('paymentFee').content rescue nil)
     @tob = (response.xpath('//ns3:response').at('bill').at('tob').content rescue nil)
-    
+
     if valid_guce_params?
       new_transaction_amount = @amount.to_f.round(2)
       if new_transaction_amount != session[:trs_amount]
@@ -303,7 +303,7 @@ CATTA-CI SARL 09 BP 1327 ABIDJAN 09 TREICHVILLE-VGE-IMMEUBLE LA BALANCE
       session[:trs_amount] = new_transaction_amount
       session[:basket]['transaction_amount'] = new_transaction_amount
       @shipping = @payment_fee.to_i + @tob.to_i
-      
+
     else
       redirect_to error_page_path
     end
@@ -322,10 +322,13 @@ CATTA-CI SARL 09 BP 1327 ABIDJAN 09 TREICHVILLE-VGE-IMMEUBLE LA BALANCE
     parameters = Parameter.first
 
     if authentication_token == '57813dc7992fbdc721ca5f6b0d02d559'
+      OmLog.create(log_rl: "Requete au GUCE: " + "#{parameters.guce_payment_url}/GPG_GUCE/rest/Mob_Mon_Pay/pay/#{@basket.number}/#{@basket.original_transaction_amount}/#{payment_mode}/#{collector_id}/#{(@basket.login_id.blank? ? 'NULL' : @basket.login_id)}")
       request = Typhoeus::Request.new("#{parameters.guce_payment_url}/GPG_GUCE/rest/Mob_Mon_Pay/pay/#{@basket.number}/#{@basket.original_transaction_amount}/#{payment_mode}/#{collector_id}/#{(@basket.login_id.blank? ? 'NULL' : @basket.login_id)}", method: :get, followlocation: true)
       request.run
 
       response = (Nokogiri.XML(request.response.body) rescue nil)
+
+      OmLog.create(log_rl: "Reponse du GUCE: " + (request.response.body.to_s rescue ""))
 
       status = (response.xpath('//ns2:result').text rescue nil)
 
