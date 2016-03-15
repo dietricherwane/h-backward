@@ -82,6 +82,8 @@ class NovapaysController < ApplicationController
               # Notification au back office du hub
               notify_to_back_office(@basket, "#{@@second_origin_url}/GATEWAY/rest/WS/#{@basket.operation.id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")
 
+              OmLog.create(log_rl: "Notification à paymoney: " + "#{@@second_origin_url}/GATEWAY/rest/WS/#{@basket.operation.id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")
+
               # Update in available_wallet the number of successful_transactions
               update_number_of_succeed_transactions
               # Handle GUCE notifications
@@ -107,7 +109,7 @@ class NovapaysController < ApplicationController
             render text: "2"#"order id not found" + @refac
           else
             #redirect_to error_page_path
-            render text: "order id not found" + @refac
+            render text: "order id not found" + @refac.to_s
           end
         end
       else
@@ -142,22 +144,26 @@ class NovapaysController < ApplicationController
 
   def valid_transaction
     if @request_type.post?
-    #OmLog.create(log_rl: %Q[_identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}])
-    request = Typhoeus::Request.new("https://novaplus.ci/NOVAPAY_WEB/FR/paycheck.awp", method: :post, body: %Q[{"_refact": "#{@refact}", "_prix": "#{@mtnt}", "_nooper": "#{@refoper}" }], headers: { 'QUERY_STRING' => %Q[_identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}]}, followlocation: true, method: :get)
+    OmLog.create(log_rl: %Q[_identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')} --- {"_refact": "#{@refact}", "_prix": "#{@mtnt}", "_nooper": "#{@refoper}" }])    
+
+    request = Typhoeus::Request.new("https://novaplus.ci/NOVAPAY_WEB/FR/paycheck.awp", method: :post, body: %Q[{"_refact": "#{@refact}", "_prix": "#{@mtnt}", "_nooper": "#{@refoper}" }], headers: { 'QUERY-STRING' => %Q[_identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}]}, followlocation: true, method: :get, ssl_verifypeer: false, ssl_verifyhost: 0)
     @result = nil
 
     request.on_complete do |response|
       if response.success?
         @result = response.body.strip
+        OmLog.create(log_rl: %Q[https://novaplus.ci/NOVAPAY_WEB/FR/paycheck.awp -- #{@result} --  {"_refact": "#{@refact}", "_prix": "#{@mtnt}", "_nooper": "#{@refoper}" }]) rescue nil
+      else
+        OmLog.create(log_rl: "Paramètres de vérification de paiement: code " + response.code.to_s + " body " + (response.body.to_s rescue ''))
       end
     end
 
     request.run
 
-    #OmLog.create(log_rl: "Paramètres de vérification de paiement: " + @result.to_s)
+    OmLog.create(log_rl: "Paramètres de vérification de paiement: " + @result.to_s)
 
-    !@result.blank? ? true : false
     end
+    !@result.blank? ? true : false
   end
 
   def notify_to_back_office(basket, url)
