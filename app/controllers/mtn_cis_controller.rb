@@ -1,9 +1,9 @@
 class MtnCisController < ApplicationController
   @@second_origin_url = Parameter.first.second_origin_url
   ##before_action :only => :guard do |o| o.filter_connections end
-  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :initialize_session, :session_initialized, :payment_result_listener, :duke, :api_confirm_amount]
+  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :initialize_session, :session_initialized, :payment_result_listener, :duke, :api_confirm_amount, :generic_ipn_notification]
   # Si l'utilisateur ne s'est pas connecté en passant par main#guard, on le rejette
-  before_action :except => [:ipn, :transaction_acknowledgement, :initialize_session, :initialize_session, :payment_result_listener, :duke, :api_confirm_amount] do |s| s.session_authenticated? end
+  before_action :except => [:ipn, :transaction_acknowledgement, :initialize_session, :initialize_session, :payment_result_listener, :duke, :api_confirm_amount, :generic_ipn_notification] do |s| s.session_authenticated? end
 
   # Set transaction amount for GUCE requests
   before_action :only => :index do |o| o.guce_request? end
@@ -33,21 +33,20 @@ class MtnCisController < ApplicationController
     if @basket.blank?
       @basket = MtnCi.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :original_transaction_amount => session[:trs_amount], :transaction_amount => session[:trs_amount].to_f.ceil, :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, transaction_id: Digest::SHA1.hexdigest([DateTime.now.iso8601(6), rand].join), :fees => @shipping, :rate => @rate, :login_id => session[:login_id])
     else
-      @basket.first.update_attributes(:transaction_amount => session[:trs_amount].to_f.ceil, :original_transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, :fees => @shipping, :rate => @rate, :login_id => session[:login_id])
+      @basket.first.update_attributes(:transaction_amount => session[:trs_amount].to_f.ceil, transaction_id: Digest::SHA1.hexdigest([DateTime.now.iso8601(6), rand].join), :original_transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, :fees => @shipping, :rate => @rate, :login_id => session[:login_id])
     end
 
-    initialize_session
-    unless session_initialized
-      redirect_to error_page_path
-    end
+    #initialize_session
+    #unless session_initialized
+      #redirect_to error_page_path
+    #end
   end
 
   def initialize_payment
     @basket = MtnCi.find_by_transaction_id(params[:transaction_id])
-    @client = Savon.client(wsdl: "#{Rails.root}/lib/mtn_ci/billmanageronlinepayment.wsdl")
 
     if valid_phone_number?(params[:colomb])
-      request = Typhoeus::Request.new("http://27.34.246.94:8080/Guce/ngser/pay/PaymentRequest", body: %Q[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+      body = %Q[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
       <paymentRequest>
       <UserName>ngser</UserName>
       <Password>ngser_pas</Password>
@@ -60,7 +59,11 @@ class MtnCisController < ApplicationController
       <ChannelId>11</ChannelId>
       <MobileNumber>#{params[:colomb]}</MobileNumber>
       <Token>#{params[:token]}</Token>
-      </paymentRequest>], followlocation: true, method: :post, headers: {'Content-Type'=> "application/xml"})
+      </paymentRequest>]
+
+      @basket.update_attributes(sent_request: body)
+
+      request = Typhoeus::Request.new("http://27.34.246.91:8080/Guce/ngser/pay/PaymentRequest", body: body, followlocation: true, method: :post, headers: {'Content-Type'=> "application/xml"})
 
       request.on_complete do |response|
         if response.success?
@@ -191,7 +194,8 @@ class MtnCisController < ApplicationController
           update_number_of_succeed_transactions
 
           # Handle GUCE notifications
-          guce_request_payment?(@transaction.first.service.authentication_token, 'QRTH45N', 'ELNPAY4')
+          @basket = @transaction.first
+          guce_request_payment?(@transaction.first.service.authentication_token, 'QRT0FDD', 'ELNPAY4')
         else
           # Update in available_wallet the number of failed_transactions
           update_number_of_failed_transactions
@@ -304,4 +308,16 @@ class MtnCisController < ApplicationController
       return true
     end
   end
+
+def generic_ipn_notification(basket)
+    @service = Service.find_by_id(basket.service_id)
+    @request = Typhoeus::Request.new("#{@service.url_to_ipn}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}", followlocation: true, method: :post)
+    # wallet=05ccd7ba3d
+    @request.run
+    @response = @request.response
+    if @response.code.to_s == "200"
+      basket.update_attributes(:notified_to_ecommerce => true)
+    end
+  end
+
 end

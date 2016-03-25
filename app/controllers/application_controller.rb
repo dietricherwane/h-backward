@@ -93,8 +93,9 @@ class ApplicationController < ActionController::Base
       @orange_money_ci_basket = session[:service].orange_money_ci_baskets.where("number = '#{basket_number}' AND operation_id = '#{session[:operation].id}'")
       @qash_basket = session[:service].qash_baskets.where("number = '#{basket_number}' AND operation_id = '#{session[:operation].id}'")
       @delayed_payment = session[:service].delayed_payments.where("number = '#{basket_number}' AND operation_id = '#{session[:operation].id}'")
+      @mtn_ci_basket = session[:service].mtn_cis.where("number = '#{basket_number}' AND operation_id = '#{session[:operation].id}'")
       #session[:service_id] = @service.id
-      if ((!@basket.blank? and @basket.first.payment_status.eql?(true)) or (!@paypal_basket.blank? and @paypal_basket.first.payment_status.eql?(true)) or (!@delayed_payment.blank? and @delayed_payment.first.payment_status.eql?(true)) or (!@orange_money_ci_basket.blank? and @orange_money_ci_basket.first.payment_status.eql?(true)) or (!@qash_basket.blank? and @qash_basket.first.payment_status.eql?(true)))
+      if ((!@basket.blank? and @basket.first.payment_status.eql?(true)) or (!@mtn_ci_basket.blank? and @mtn_ci_basket.first.payment_status.eql?(true))  or (!@paypal_basket.blank? and @paypal_basket.first.payment_status.eql?(true)) or (!@delayed_payment.blank? and @delayed_payment.first.payment_status.eql?(true)) or (!@orange_money_ci_basket.blank? and @orange_money_ci_basket.first.payment_status.eql?(true)) or (!@qash_basket.blank? and @qash_basket.first.payment_status.eql?(true)))
         redirect_to "#{session[:service].url_on_basket_already_paid}?status_id=2"
         #redirect_to error_page_path
       end
@@ -329,7 +330,6 @@ CATTA-CI SARL 09 BP 1327 ABIDJAN 09 TREICHVILLE-VGE-IMMEUBLE LA BALANCE
       response = (Nokogiri.XML(request.response.body) rescue nil)
 
       OmLog.create(log_rl: "Reponse du GUCE: " + (request.response.body.to_s rescue ""))
-
       status = (response.xpath('//ns2:result').text rescue nil)
 
       case status

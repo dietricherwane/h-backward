@@ -54,8 +54,8 @@ class PaypalController < ApplicationController
     OmLog.create(log_rl: params.to_s) rescue nil
     @status = ""
     @parameters = {"cmd" => "_notify-validate"}.merge(params.except(:action, :controller))
-    #@request = Typhoeus::Request.new("https://www.sandbox.paypal.com/cgi-bin/webscr", followlocation: true, params: @parameters, method: :post)
-    @request = Typhoeus::Request.new("https://www.paypal.com/cgi-bin/webscr", followlocation: true, params: @parameters, method: :post)
+    @request = Typhoeus::Request.new("https://www.sandbox.paypal.com/cgi-bin/webscr", followlocation: true, params: @parameters, method: :post)
+    #@request = Typhoeus::Request.new("https://www.paypal.com/cgi-bin/webscr", followlocation: true, params: @parameters, method: :post)
     @request.run
     @response = @request.response
     if @response.body == "VERIFIED"
@@ -102,10 +102,10 @@ class PaypalController < ApplicationController
     @error_messages = []
     @status = ""
 
-    #OmLog.create(log_rl: params.to_s) rescue nil
+    OmLog.create(log_rl: ("Paypal parameters 1: " + params.to_s)) rescue nil
 
-    #@request = Typhoeus::Request.new("https://www.sandbox.paypal.com/cgi-bin/webscr", method: :post, params: {cmd: "_notify-sync", tx: "#{params[:tx]}", at: "wc9rbATkeBqy488jdxnQeXHsv9ya8Sh6Pq_DST3BihQ4oV2-De3epJilfKG"})
-    @request = Typhoeus::Request.new("https://www.paypal.com/cgi-bin/webscr", method: :post, params: {cmd: "_notify-sync", tx: "#{params[:tx]}", at: "xGmhRanXxEiDPNYldQAjQA_uC5plNzWVCCJFb_n_Tbxk5ncfm_vlsYXls1C"})
+    @request = Typhoeus::Request.new("https://www.sandbox.paypal.com/cgi-bin/webscr", method: :post, params: {cmd: "_notify-sync", tx: "#{params[:tx]}", at: "wc9rbATkeBqy488jdxnQeXHsv9ya8Sh6Pq_DST3BihQ4oV2-De3epJilfKG"})
+    #@request = Typhoeus::Request.new("https://www.paypal.com/cgi-bin/webscr", method: :post, params: {cmd: "_notify-sync", tx: "#{params[:tx]}", at: "xGmhRanXxEiDPNYldQAjQA_uC5plNzWVCCJFb_n_Tbxk5ncfm_vlsYXls1C"})
     @request.run
     @response = @request.response
 
@@ -143,6 +143,7 @@ class PaypalController < ApplicationController
           if (@basket.operation.authentication_token rescue nil) == "b6dff4ae-05c1-4050-a976-0db6e358f22b"
             redirect_to "http://ekioskmobile.net/retourabonnement.php?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
           else
+            OmLog.create(log_rl: ("Paypal parameters 3: " + "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}")) rescue nil
             redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
           end
         else
