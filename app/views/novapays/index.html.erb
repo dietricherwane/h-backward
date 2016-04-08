@@ -50,13 +50,8 @@
       <!------------------------------------------ Data-fluid ----------------------------------->
 		  <div class = "data-fluid" >
 		    <%= form_tag ("/novapay/process_payment") do %>
-<<<<<<< HEAD
-		      <%= hidden_field_tag "_refact", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
-		      <%= hidden_field_tag "_prix", "#{@transaction_amount.to_i + @shipping.to_i}" %>
-=======
 		      <%= hidden_field_tag "_refact", "#{@basket.number rescue @basket.first.number}" %>
 		      <%= hidden_field_tag "_prix", "#{@transaction_amount + @shipping}" %>
->>>>>>> 4c38a19f792c2c1058fff4efc931636feb67f805
 	        <div class = "<%= @transaction_amount_css %>">
 	          <div class = "input-append">
 		          <div class = "span9">
@@ -128,13 +123,8 @@
           <% end %>
 
         <%= form_tag ("/novapay/process_payment") do %>
-<<<<<<< HEAD
-		      <%= hidden_field_tag "_refact", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
-		      <%= hidden_field_tag "_prix", "#{@transaction_amount.to_i + @shipping.to_i}" %>
-=======
 		      <%= hidden_field_tag "_refact", "#{@basket.number rescue @basket.first.number}" %>
 		      <%= hidden_field_tag "_prix", "#{@transaction_amount + @shipping}" %>
->>>>>>> 4c38a19f792c2c1058fff4efc931636feb67f805
 	        <div class = "form-group">
 	          <div class = "input-group">
 		          <%= text_field_tag "magellan", @transaction_amount, :readonly => true, class: "form-control input-sm" %>
