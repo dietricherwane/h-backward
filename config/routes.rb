@@ -67,6 +67,10 @@ HubsBackOffice::Application.routes.draw do
 
   post "/STAS/transaction/confirm" => "mtn_cis#payment_result_listener"
 
+  get "/uba/:service_id/:operation_id/:basket_number/:transaction_amount" => "uba#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
+  get "/UBA" => "uba#index"
+  post "/UBA/validate" => "uba#validate_transaction"
+
 
   get "novapay/:service_id/:operation_id/:basket_number/:transaction_amount" => "novapays#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "NovaPay" => "novapays#index"

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151028134219) do
+ActiveRecord::Schema.define(version: 20160325185323) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -338,6 +338,39 @@ ActiveRecord::Schema.define(version: 20151028134219) do
   end
 
   add_index "simple_captcha_data", ["key"], name: "idx_key", using: :btree
+
+  create_table "ubas", force: true do |t|
+    t.string   "firstname"
+    t.string   "lastname"
+    t.string   "email"
+    t.string   "phone_number"
+    t.string   "username"
+    t.string   "password"
+    t.string   "channel_id"
+    t.integer  "service_id"
+    t.boolean  "payment_status"
+    t.integer  "operation_id"
+    t.float    "transaction_amount"
+    t.boolean  "notified_to_back_office"
+    t.string   "transaction_id"
+    t.float    "fees"
+    t.integer  "currency_id"
+    t.float    "paid_transaction_amount"
+    t.integer  "paid_currency_id"
+    t.float    "rate"
+    t.float    "conflictual_transaction_amount"
+    t.string   "conflictual_currency"
+    t.float    "compensation_rate"
+    t.float    "original_transaction_amount"
+    t.string   "login_id"
+    t.string   "txn_id"
+    t.text     "uba_redirect_url"
+    t.text     "uba_redirect_response"
+    t.text     "return_params"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "number"
+  end
 
   create_table "wallets", force: true do |t|
     t.string   "name"
