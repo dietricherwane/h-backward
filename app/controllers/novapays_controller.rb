@@ -62,7 +62,7 @@ class NovapaysController < ApplicationController
     #valid_transaction
     if valid_result_parameters
       if valid_transaction || request.get?
-        @basket = Novapay.find_by_transaction_id(@refact)
+        @basket = Novapay.find_by_number(@refact)
         if @basket
 
           # Use NovaPay authentication_token
