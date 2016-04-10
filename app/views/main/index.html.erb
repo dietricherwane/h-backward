@@ -5,7 +5,7 @@
       data: {country_id: country_id},
       dataType: "text",
       error: function(xhr, textStatus, errorThrown){
-      	alert("Votre session a expiré. Veuillez refaire vos achats sur le site marchand et effectuer le paiement dans les 10 minutes suivantes." + errorThrown);
+      	alert("Votre session a expiré. Veuillez refaire vos achats sur le site marchand et effectuer le paiement dans les 10 minutes suivantes.");
       },
       success: function(response, response_status, xhr) {
         if(response == "Il n'y a aucun moyen de paiement pour ce pays."){
@@ -93,7 +93,7 @@
 
       <div class="row">
         <div class="col-xs-6 pays">
-          <label>Libellé de la catégorie :</label>
+          <label>Catégorie :</label>
         </div>
         <div class="col-xs-6">
         	<%= collection_select(:country, :country_id, @countries, :id, :name, :selected => @international.id) %>
