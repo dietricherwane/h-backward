@@ -5,7 +5,8 @@ class UbaController < ApplicationController
   # Set transaction amount for GUCE requests
   before_action :only => :index do |o| o.guce_request? end
 
-  @@bill_request = "http://27.34.246.91:8080/Guce/uba/billrequest"
+  #@@bill_request = "http://27.34.246.91:8080/Guce/uba/billrequest"
+  @@bill_request = "http://27.34.246.91:8080/Guce/uba/billrequest_1"
 
   #layout "uba"
   layout :select_layout
@@ -72,7 +73,7 @@ class UbaController < ApplicationController
     end
 
     if @error_messages.blank?
-      render text: response.body
+     render text: response.body
     else
       render :index
     end
