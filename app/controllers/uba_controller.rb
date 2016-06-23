@@ -6,7 +6,7 @@ class UbaController < ApplicationController
   before_action :only => :index do |o| o.guce_request? end
 
   #@@bill_request = "http://27.34.246.91:8080/Guce/uba/billrequest"
-  @@bill_request = "http://27.34.246.91:8080/Guce/uba/billrequest_1"
+  @@bill_request = "http://27.34.246.91:8080/Guce/uba/billrequest"
 
   #layout "uba"
   layout :select_layout
@@ -55,7 +55,7 @@ class UbaController < ApplicationController
     @basket = Uba.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'").first rescue nil
 
     if @error_messages.blank?
-      request = Typhoeus::Request.new(@@bill_request, method: :post, body: {userName: 'ngser', password: 'ngser', currency: 'XOF', referenceInvoice: 'XOF', amount: @basket.paid_transaction_amount, serviceFees: @basket.fees, operatorId: '411cd', guceTransactionId: @basket.transaction_id, channelId: '01', firstname: @firstname, lastname: @lastname, email: @email, phone: @msisdn}, followlocation: true)
+      request = Typhoeus::Request.new(@@bill_request, method: :post, body: {userName: 'ngser', password: 'ngser', currency: 'XOF', referenceInvoice: @basket.transaction_id, amount: @basket.paid_transaction_amount, serviceFees: @basket.fees, operatorId: '411cd', guceTransactionId: @basket.transaction_id, channelId: '01', firstname: @firstname, lastname: @lastname, email: @email, phone: @msisdn}, followlocation: true)
 
       request.run
       response = request.response
@@ -92,6 +92,11 @@ class UbaController < ApplicationController
     if not_a_number?(@msisdn) || (@msisdn.length != 8 && @msisdn.length != 11)
       @error_messages << "Le numéro de téléphone n'est pas valide."
     end
+  end
+
+  def transaction_acknowledgement
+    OmLog.create(log_rl: 'UBA -- ' + params.to_s) rescue nil
+    render text: params	
   end
 
 end
