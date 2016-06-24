@@ -100,7 +100,7 @@ class PayMoneyController < ApplicationController
       url = "#{@@paymoney_url}/PAYMONEY_WALLET/rest/operation_ecommerce/#{@basket.service.ecommerce_profile.token}/#{session[:operation].authentication_token}/#{@paymoney_token}/#{session[:basket]["transaction_amount"]}/0/0/#{@transaction_id}"
       @status = RestClient.get(url) rescue ""
 
-      Log.create(description: "Paymoney sale", sent_request: url, sent_response: @status)
+      Log.create(description: "Paymoney sale", sent_request: url, sent_response: @status, paymoney_account_number: @account_number)
 
       #@internal_com_request = "@response = Nokogiri.XML(request.response.body)
       #@response.xpath('//status').each do |link|

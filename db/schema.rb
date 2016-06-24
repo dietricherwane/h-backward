@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160624181821) do
+ActiveRecord::Schema.define(version: 20160624183332) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -109,6 +109,7 @@ ActiveRecord::Schema.define(version: 20160624181821) do
     t.text     "sent_response"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "paymoney_account_number"
   end
 
   create_table "mtn_cis", force: true do |t|
