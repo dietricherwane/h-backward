@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160325185323) do
+ActiveRecord::Schema.define(version: 20160624002230) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -93,6 +93,22 @@ ActiveRecord::Schema.define(version: 20160325185323) do
     t.datetime "updated_at"
     t.string   "transaction_id"
     t.boolean  "notified_to_ecommerce"
+  end
+
+  create_table "ecommerce_profiles", force: true do |t|
+    t.string   "description"
+    t.string   "token"
+    t.boolean  "published"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "logs", force: true do |t|
+    t.string   "description"
+    t.text     "sent_request"
+    t.text     "sent_response"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "mtn_cis", force: true do |t|
@@ -224,6 +240,7 @@ ActiveRecord::Schema.define(version: 20160325185323) do
     t.string   "back_office_url",                    limit: 100
     t.string   "guce_back_office_url"
     t.string   "guce_payment_url"
+    t.string   "paymoney_wallet_url"
   end
 
   create_table "payment_way_fees", force: true do |t|
@@ -315,6 +332,7 @@ ActiveRecord::Schema.define(version: 20160325185323) do
     t.integer  "logo_file_size"
     t.datetime "logo_updated_at"
     t.string   "token",                      limit: 100
+    t.integer  "ecommerce_profile_id"
   end
 
   add_index "services", ["code"], name: "index_services_on_code", using: :btree

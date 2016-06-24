@@ -3,6 +3,7 @@ HubsBackOffice::Application.routes.draw do
 
   get "order/:currency/:service_token/:operation_token/:order/:transaction_amount/:id" => "main#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "order/:currency/:service_token/:operation_token/:order/:transaction_amount" => "main#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
+  get "order/:currency/:service_token/:operation_token/:order/:transaction_amount" => "main#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "/Main" => "main#index", as: :main
 
   get "get_wallets" => "wallets#get_wallets"
