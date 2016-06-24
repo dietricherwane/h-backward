@@ -332,7 +332,6 @@ ActiveRecord::Schema.define(version: 20160624002230) do
     t.integer  "logo_file_size"
     t.datetime "logo_updated_at"
     t.string   "token",                      limit: 100
-    t.integer  "ecommerce_profile_id"
   end
 
   add_index "services", ["code"], name: "index_services_on_code", using: :btree
