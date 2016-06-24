@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  description: MyString
+  token: MyString
+  published: false
+
+two:
+  description: MyString
+  token: MyString
+  published: false

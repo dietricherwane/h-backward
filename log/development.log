@@ -1,0 +1,30 @@
+  [1m[36mActiveRecord::SchemaMigration Load (18.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddEcommerceProfileIdToServices (20160623222955)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (27.9ms)[0m  [1mALTER TABLE "services" ADD COLUMN "ecommerce_profile_id" integer[0m
+PG::DuplicateColumn: ERROR:  column "ecommerce_profile_id" of relation "services" already exists
+: ALTER TABLE "services" ADD COLUMN "ecommerce_profile_id" integer
+  [1m[35m (0.5ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (1.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.7ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (1.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to CreateEcommerceProfiles (20160623223432)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (172.8ms)[0m  [1mCREATE TABLE "ecommerce_profiles" ("id" serial primary key, "description" character varying(255), "token" character varying(255), "published" boolean, "created_at" timestamp, "updated_at" timestamp) [0m
+  [1m[35mSQL (2.7ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160623223432"]]
+  [1m[36m (14.2ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.8ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (1.7ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddPaymoneyWalletUrlToParameters (20160623230611)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (15.1ms)[0m  [1mALTER TABLE "parameters" ADD COLUMN "paymoney_wallet_url" character varying(255)[0m
+  [1m[35mSQL (2.0ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160623230611"]]
+  [1m[36m (8.8ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (1.1ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (1.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to CreateLogs (20160624002230)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (78.1ms)[0m  [1mCREATE TABLE "logs" ("id" serial primary key, "description" character varying(255), "sent_request" text, "sent_response" text, "created_at" timestamp, "updated_at" timestamp) [0m
+  [1m[35mSQL (2.4ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160624002230"]]
+  [1m[36m (11.7ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.7ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"

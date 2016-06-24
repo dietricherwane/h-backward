@@ -241,7 +241,7 @@ class MtnCisController < ApplicationController
 
   # Validates the given parameters and check the existence of TxnId
   def valid_transaction
-    @transaction = MtnCi.where("number = '#{@number}' AND transaction_id = '#{@transaction_id}' AND transaction_amount = #{@transaction_amount} AND fees = #{@fee}")
+    @basket = @transaction = MtnCi.where("number = '#{@number}' AND transaction_id = '#{@transaction_id}' AND transaction_amount = #{@transaction_amount} AND fees = #{@fee}")
 
     if @transaction.blank?
       return false

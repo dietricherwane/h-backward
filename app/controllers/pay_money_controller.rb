@@ -96,16 +96,20 @@ class PayMoneyController < ApplicationController
       render action: 'index'
     else
       # communication with paymoney
-      @request = Typhoeus::Request.new("#{@@paymoney_url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{session[:basket]["transaction_amount"]}", followlocation: true)
-      @duke = "#{@@paymoney_url}/PAYMONEY-NGSER/rest/OperationService/DebitOperation/2/#{@account_number}/#{@password}/#{session[:basket]["transaction_amount"].to_f + @basket.fees.to_f}"
-      @internal_com_request = "@response = Nokogiri.XML(request.response.body)
-      @response.xpath('//status').each do |link|
-      @status = link.content
-      end
-      "
-      run_typhoeus_request(@request, @internal_com_request)
+      @paymoney_token = (RestClient.get "#{Parameter.first.paymoney_wallet_url}/PAYMONEY_WALLET/rest/check2_compte/#{account_number}" rescue "")
+      url = "#{@@paymoney_url}/PAYMONEY_WALLET/rest/operation_ecommerce/#{@basket.service.ecommerce_profile.token}/#{session[:operation].authentication_token}/#{@paymoney_token}/#{session[:basket]["transaction_amount"]}/0/0/#{@transaction_id}"
+      @status = RestClient.get(url) rescue ""
 
-      if @status.to_s.strip == "1"
+      Log.create(description: "Paymoney sale", sent_request: url, sent_response: @status)
+
+      #@internal_com_request = "@response = Nokogiri.XML(request.response.body)
+      #@response.xpath('//status').each do |link|
+      #@status = link.content
+      #end
+      #"
+      #run_typhoeus_request(@request, @internal_com_request)
+
+      if @status.to_s.strip == "good"
         #if @basket.blank?
           #@basket = Basket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => session[:basket]["transaction_amount"], :paid_currency_id => @wallet_currency.id, transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"), :fees => @shipping, :rate => @rate)
         #else
