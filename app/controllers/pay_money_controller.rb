@@ -96,7 +96,7 @@ class PayMoneyController < ApplicationController
       render action: 'index'
     else
       # communication with paymoney
-      paymoney_token_url = "#{Parameter.first.paymoney_wallet_url}/PAYMONEY_WALLET/rest/check2_compte/#{account_number}"
+      paymoney_token_url = "#{Parameter.first.paymoney_wallet_url}/PAYMONEY_WALLET/rest/check2_compte/#{@account_number}"
       @paymoney_token = (RestClient.get(paymoney_token_url) rescue "")
       url = "#{@@paymoney_url}/PAYMONEY_WALLET/rest/operation_ecommerce/#{@basket.service.ecommerce_profile.token}/#{session[:operation].authentication_token}/#{@paymoney_token}/#{session[:basket]["transaction_amount"]}/0/0/#{@transaction_id}"
       @status = RestClient.get(url) rescue ""
