@@ -6,5 +6,5 @@ class Operation < ActiveRecord::Base
   has_many :qash_baskets
   has_many :delayed_payments
 
-  attr_accessible :code, :name, :comment, :service_id, :published, :authentication_token
+  attr_accessible :code, :name, :comment, :service_id, :published, :authentication_token, :paymoney_token
 end

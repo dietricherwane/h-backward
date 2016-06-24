@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160624184732) do
+ActiveRecord::Schema.define(version: 20160624190903) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -194,6 +194,7 @@ ActiveRecord::Schema.define(version: 20160624184732) do
     t.datetime "updated_at"
     t.boolean  "published"
     t.string   "authentication_token"
+    t.string   "paymoney_token"
   end
 
   create_table "orange_money_ci_baskets", force: true do |t|
