@@ -58,6 +58,12 @@
 		      <%= hidden_field_tag "item_name", "#{session[:service].name}" %>
 		      <input type="hidden" name="quantity" value="1">
 		      <div class = "row-form">
+		        <div class = "span12">
+		          <span class="bottom">Numéro de compte PAYMONEY à recharger</span>
+			        <%= text_field_tag "paymoney_account_number", session[:paymoney_account_number], :readonly => true %>
+		        </div>
+	        </div>
+		      <div class = "row-form">
 	          <div class = "input-append">
 		          <div class = "span9">
 			          <%= text_field_tag "amount", @transaction_amount, :readonly => true %>
