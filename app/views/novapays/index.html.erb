@@ -54,8 +54,8 @@
 		      <%= hidden_field_tag "_prix", "#{@transaction_amount + @shipping}" %>
 		      <div class = "row-form">
 		        <div class = "span12">
+		          <span class="bottom">Numéro de compte PAYMONEY à recharger</span>
 			        <%= text_field_tag "paymoney_account_number", session[:paymoney_account_number], :readonly => true %>
-			        <span class="bottom">Numéro de compte PAYMONEY à recharger</span>
 		        </div>
 	        </div>
 	        <div class = "<%= @transaction_amount_css %>">
