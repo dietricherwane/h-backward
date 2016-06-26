@@ -23,8 +23,8 @@ class ApplicationController < ActionController::Base
           session[:paymoney_password] = paymoney_password
           unless session[:paymoney_account_number].blank?
             paymoney_token_url = "#{Parameter.first.paymoney_wallet_url}/PAYMONEY_WALLET/rest/check2_compte/#{session[:paymoney_account_number]}"
-            @paymoney_token = (RestClient.get(paymoney_token_url) rescue "")
-            if @paymoney_token.blank? || @paymoney_token == "null"
+            session[:paymoney_account_token] = (RestClient.get(paymoney_token_url) rescue "")
+            if session[:paymoney_account_token].blank? || session[:paymoney_account_token] == "null"
               redirect_to "#{session[:service].url_on_basket_already_paid}?status_id=4"
             end
           end
