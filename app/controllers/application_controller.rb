@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 
   # Initialise la variable de session contenant les informations sur la transaction
-  def get_service_by_token(currency, service_token, operation_token, order, transaction_amount, id)
+  def get_service_by_token(currency, service_token, operation_token, order, transaction_amount, id, paymoney_account_number, paymoney_password)
     # si la devise envoyee n'existe pas, on renvoie la page d'erreur
     currency_exists?(currency)
     session[:currency] = @currency.first
@@ -19,7 +19,15 @@ class ApplicationController < ActionController::Base
           session[:operation] = Operation.find_by_authentication_token(operation_token)
           session[:trs_amount] = transaction_amount.to_f.round(2)
           session[:basket] = {"basket_number" => "#{order}", "transaction_amount" => "#{transaction_amount.to_f.round(2)}"}
-          session[:login_id] = id
+          session[:paymoney_account_number] = paymoney_account_number
+          session[:paymoney_password] = paymoney_password
+          unless session[:paymoney_password].blank?
+            paymoney_token_url = "#{Parameter.first.paymoney_wallet_url}/PAYMONEY_WALLET/rest/check2_compte/#{session[:paymoney_account_number]}"
+            @paymoney_token = (RestClient.get(paymoney_token_url) rescue "")
+            if @paymoney_token.blank? || @paymoney_token == "null"
+              redirect_to "#{session[:service].url_on_basket_already_paid}?status_id=4"
+            end
+          end
         end
       end
     end
