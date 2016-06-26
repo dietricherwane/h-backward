@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
           session[:basket] = {"basket_number" => "#{order}", "transaction_amount" => "#{transaction_amount.to_f.round(2)}"}
           session[:paymoney_account_number] = paymoney_account_number
           session[:paymoney_password] = paymoney_password
-          unless session[:paymoney_password].blank?
+          unless session[:paymoney_account_number].blank?
             paymoney_token_url = "#{Parameter.first.paymoney_wallet_url}/PAYMONEY_WALLET/rest/check2_compte/#{session[:paymoney_account_number]}"
             @paymoney_token = (RestClient.get(paymoney_token_url) rescue "")
             if @paymoney_token.blank? || @paymoney_token == "null"

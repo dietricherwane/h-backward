@@ -57,3 +57,37 @@ Migrating to AddPaymoneyTokenToOperations (20160624190903)
   [1m[35mSQL (2.5ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160624190903"]]
   [1m[36m (10.0ms)[0m  [1mCOMMIT[0m
   [1m[35mActiveRecord::SchemaMigration Load (0.9ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (62.0ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddPaymoneyFieldsToUbas (20160626225335)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (135.3ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "paymoney_account_number" text[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "ubas" ADD COLUMN "paymoney_account_token" character varying(255)
+  [1m[36m (0.9ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "paymoney_reload_request" text[0m
+  [1m[35m (0.9ms)[0m  ALTER TABLE "ubas" ADD COLUMN "paymoney_reload_response" text
+  [1m[36m (1.3ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "paymoney_token_request" text[0m
+  [1m[35mSQL (2.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160626225335"]]
+  [1m[36m (51.9ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.9ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (1.7ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.8ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+Migrating to AddPaymoneyFieldsToUbas (20160626225335)
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35m (72.5ms)[0m  ALTER TABLE "ubas" DROP "paymoney_token_request"
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "ubas" DROP "paymoney_reload_response"[0m
+  [1m[35m (0.5ms)[0m  ALTER TABLE "ubas" DROP "paymoney_reload_request"
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "ubas" DROP "paymoney_account_token"[0m
+  [1m[35m (0.6ms)[0m  ALTER TABLE "ubas" DROP "paymoney_account_number"
+  [1m[36mSQL (11.2ms)[0m  [1mDELETE FROM "schema_migrations" WHERE "schema_migrations"."version" = '20160626225335'[0m
+  [1m[35m (15.3ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddPaymoneyFieldsToUbas (20160626225659)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (1.5ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "paymoney_account_number" text[0m
+  [1m[35m (0.8ms)[0m  ALTER TABLE "ubas" ADD COLUMN "paymoney_account_token" character varying(255)
+  [1m[36m (0.8ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "paymoney_reload_request" text[0m
+  [1m[35m (0.8ms)[0m  ALTER TABLE "ubas" ADD COLUMN "paymoney_reload_response" text
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "paymoney_token_request" text[0m
+  [1m[35mSQL (2.4ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160626225659"]]
+  [1m[36m (12.5ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.9ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
