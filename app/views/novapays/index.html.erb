@@ -52,6 +52,12 @@
 		    <%= form_tag ("/novapay/process_payment") do %>
 		      <%= hidden_field_tag "_refact", "#{@basket.number rescue @basket.first.number}" %>
 		      <%= hidden_field_tag "_prix", "#{@transaction_amount + @shipping}" %>
+		      <div class = "row-form">
+		        <div class = "span12">
+			        <%= text_field_tag "paymoney_account_number", session[:paymoney_account_number], :readonly => true %>
+			        <span class="bottom">Numéro de compte PAYMONEY à recharger</span>
+		        </div>
+	        </div>
 	        <div class = "<%= @transaction_amount_css %>">
 	          <div class = "input-append">
 		          <div class = "span9">

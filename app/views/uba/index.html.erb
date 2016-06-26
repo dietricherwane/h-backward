@@ -53,6 +53,12 @@
       <!------------------------------------------ Data-fluid ----------------------------------->
 		  <div class = "data-fluid" >
 		    <%= form_tag ("/UBA/validate") do %>
+		      <div class = "row-form">
+		        <div class = "span12">
+			        <%= text_field_tag "paymoney_account_number", session[:paymoney_account_number], :readonly => true %>
+			        <span class="bottom">Numéro de compte PAYMONEY à recharger</span>
+		        </div>
+	        </div>
           <div class = "row-form">
 		        <div class = "span12">
 			        <%= text_field_tag "firstname", params[:firstname], placeholder: 'Nom' %>
