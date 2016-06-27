@@ -91,3 +91,46 @@ Migrating to AddPaymoneyFieldsToUbas (20160626225659)
   [1m[35mSQL (2.4ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160626225659"]]
   [1m[36m (12.5ms)[0m  [1mCOMMIT[0m
   [1m[35mActiveRecord::SchemaMigration Load (0.9ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (52.2ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.7ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+Migrating to AddPaymoneyFieldsToUbas (20160626225659)
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35m (241.9ms)[0m  ALTER TABLE "ubas" DROP "paymoney_token_request"
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "ubas" DROP "paymoney_reload_response"[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "ubas" DROP "paymoney_reload_request"
+  [1m[36m (0.8ms)[0m  [1mALTER TABLE "ubas" DROP "paymoney_account_token"[0m
+  [1m[35m (0.6ms)[0m  ALTER TABLE "ubas" DROP "paymoney_account_number"
+  [1m[36mSQL (10.3ms)[0m  [1mDELETE FROM "schema_migrations" WHERE "schema_migrations"."version" = '20160626225659'[0m
+  [1m[35m (23.4ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (1.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddPaymoneyFieldsToUbas (20160627095649)
+  [1m[35m (0.7ms)[0m  BEGIN
+  [1m[36m (20.8ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "paymoney_account_number" text[0m
+  [1m[35m (0.9ms)[0m  ALTER TABLE "ubas" ADD COLUMN "paymoney_account_token" character varying(255)
+  [1m[36m (0.9ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "paymoney_reload_request" text[0m
+  [1m[35m (0.5ms)[0m  ALTER TABLE "ubas" ADD COLUMN "paymoney_reload_response" text
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "paymoney_token_request" text[0m
+  [1m[35m (0.5ms)[0m  ALTER TABLE "ubas" ADD COLUMN "paymoney_transaction_id" character varying(255)
+  [1m[36mSQL (2.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160627095649"]]
+  [1m[35m (16.1ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (1.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddPaymoneyFieldsToBaskets (20160627142649)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (11.4ms)[0m  [1mALTER TABLE "baskets" ADD COLUMN "paymoney_account_number" text[0m
+  [1m[35m (1.3ms)[0m  ALTER TABLE "baskets" ADD COLUMN "paymoney_account_token" character varying(255)
+  [1m[36m (1.0ms)[0m  [1mALTER TABLE "baskets" ADD COLUMN "paymoney_reload_request" text[0m
+  [1m[35m (0.9ms)[0m  ALTER TABLE "baskets" ADD COLUMN "paymoney_reload_response" text
+  [1m[36m (0.8ms)[0m  [1mALTER TABLE "baskets" ADD COLUMN "paymoney_token_request" text[0m
+  [1m[35m (0.8ms)[0m  ALTER TABLE "baskets" ADD COLUMN "paymoney_transaction_id" character varying(255)
+  [1m[36mSQL (2.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160627142649"]]
+  [1m[35m (5.2ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.6ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddGatewayWalletUrlToParameters (20160627145211)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (19.9ms)[0m  [1mALTER TABLE "parameters" ADD COLUMN "gateway_wallet_url" character varying(255)[0m
+  [1m[35mSQL (1.9ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160627145211"]]
+  [1m[36m (5.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (1.0ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"

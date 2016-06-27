@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160626225659) do
+ActiveRecord::Schema.define(version: 20160627145211) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,6 +53,12 @@ ActiveRecord::Schema.define(version: 20160626225659) do
     t.string   "original_transaction_amount"
     t.float    "conflictual_transaction_amount"
     t.string   "login_id"
+    t.text     "paymoney_account_number"
+    t.string   "paymoney_account_token"
+    t.text     "paymoney_reload_request"
+    t.text     "paymoney_reload_response"
+    t.text     "paymoney_token_request"
+    t.string   "paymoney_transaction_id"
   end
 
   add_index "baskets", ["number"], name: "index_baskets_on_number", using: :btree
@@ -245,6 +251,7 @@ ActiveRecord::Schema.define(version: 20160626225659) do
     t.string   "guce_back_office_url"
     t.string   "guce_payment_url"
     t.string   "paymoney_wallet_url"
+    t.string   "gateway_wallet_url"
   end
 
   create_table "payment_way_fees", force: true do |t|
@@ -397,6 +404,7 @@ ActiveRecord::Schema.define(version: 20160626225659) do
     t.text     "paymoney_reload_request"
     t.text     "paymoney_reload_response"
     t.text     "paymoney_token_request"
+    t.string   "paymoney_transaction_id"
   end
 
   create_table "wallets", force: true do |t|

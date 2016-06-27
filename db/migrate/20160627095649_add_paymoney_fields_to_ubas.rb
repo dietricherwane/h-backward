@@ -5,5 +5,6 @@ class AddPaymoneyFieldsToUbas < ActiveRecord::Migration
     add_column :ubas, :paymoney_reload_request, :text
     add_column :ubas, :paymoney_reload_response, :text
     add_column :ubas, :paymoney_token_request, :text
+    add_column :ubas, :paymoney_transaction_id, :string
   end
 end

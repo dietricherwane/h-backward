@@ -155,6 +155,7 @@ class PayMoneyController < ApplicationController
           # Handle GUCE notifications
           guce_request_payment?(@basket.service.authentication_token, 'QRTM9DZ', 'ELNPAY4')
 
+
           # Redirection vers le site marchand
           if (@basket.operation.authentication_token rescue nil) == "b6dff4ae-05c1-4050-a976-0db6e358f22b"
             redirect_to "http://ekioskmobile.net/retourabonnement.php?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paymoney&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
