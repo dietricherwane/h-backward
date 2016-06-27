@@ -56,12 +56,14 @@
 		      <%= hidden_field_tag "sessionid", "#{@basket.number rescue @basket.first.number}" %>
 		      <%= hidden_field_tag "purchaseref", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
 		      <%= hidden_field_tag "token", "#{@session_id}" %>
-		      <div class = "row-form">
-		        <div class = "span12">
-		          <span class="bottom">Numéro de compte PAYMONEY à recharger</span>
-			        <%= text_field_tag "paymoney_account_number", session[:paymoney_account_number], :readonly => true %>
-		        </div>
-	        </div>
+		      <%if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4' %>
+		        <div class = "row-form">
+		          <div class = "span12">
+		            <span class="bottom">Numéro de compte PAYMONEY à recharger</span>
+			          <%= text_field_tag "paymoney_account_number", session[:paymoney_account_number], :readonly => true %>
+		          </div>
+	          </div>
+	        <% end %>
 	        <div class = "<%= @transaction_amount_css %>">
 	          <div class = "input-append">
 		          <div class = "span9">
