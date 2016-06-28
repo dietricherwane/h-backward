@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160627145211) do
+ActiveRecord::Schema.define(version: 20160628121906) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -159,6 +159,12 @@ ActiveRecord::Schema.define(version: 20160627145211) do
     t.text     "snet_payment_error_response"
     t.text     "sent_request"
     t.string   "notified_to_ecommerce"
+    t.text     "paymoney_account_number"
+    t.string   "paymoney_account_token"
+    t.text     "paymoney_reload_request"
+    t.text     "paymoney_reload_response"
+    t.text     "paymoney_token_request"
+    t.string   "paymoney_transaction_id"
   end
 
   create_table "novapays", force: true do |t|
@@ -182,6 +188,12 @@ ActiveRecord::Schema.define(version: 20160627145211) do
     t.datetime "updated_at"
     t.float    "original_transaction_amount"
     t.string   "login_id"
+    t.text     "paymoney_account_number"
+    t.string   "paymoney_account_token"
+    t.text     "paymoney_reload_request"
+    t.text     "paymoney_reload_response"
+    t.text     "paymoney_token_request"
+    t.string   "paymoney_transaction_id"
   end
 
   create_table "om_logs", force: true do |t|
@@ -233,6 +245,12 @@ ActiveRecord::Schema.define(version: 20160627145211) do
     t.text     "log_rl"
     t.text     "log_tv"
     t.string   "login_id"
+    t.text     "paymoney_account_number"
+    t.string   "paymoney_account_token"
+    t.text     "paymoney_reload_request"
+    t.text     "paymoney_reload_response"
+    t.text     "paymoney_token_request"
+    t.string   "paymoney_transaction_id"
   end
 
   create_table "parameters", force: true do |t|
@@ -287,6 +305,12 @@ ActiveRecord::Schema.define(version: 20160627145211) do
     t.string   "original_transaction_amount"
     t.float    "conflictual_transaction_amount"
     t.string   "login_id"
+    t.text     "paymoney_account_number"
+    t.string   "paymoney_account_token"
+    t.text     "paymoney_reload_request"
+    t.text     "paymoney_reload_response"
+    t.text     "paymoney_token_request"
+    t.string   "paymoney_transaction_id"
   end
 
   create_table "products", force: true do |t|
@@ -319,6 +343,12 @@ ActiveRecord::Schema.define(version: 20160627145211) do
     t.string   "qash_transaction_id"
     t.string   "original_transaction_amount"
     t.string   "login_id"
+    t.text     "paymoney_account_number"
+    t.string   "paymoney_account_token"
+    t.text     "paymoney_reload_request"
+    t.text     "paymoney_reload_response"
+    t.text     "paymoney_token_request"
+    t.string   "paymoney_transaction_id"
   end
 
   create_table "services", force: true do |t|
