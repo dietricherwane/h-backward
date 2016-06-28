@@ -134,3 +134,61 @@ Migrating to AddGatewayWalletUrlToParameters (20160627145211)
   [1m[35mSQL (1.9ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160627145211"]]
   [1m[36m (5.4ms)[0m  [1mCOMMIT[0m
   [1m[35mActiveRecord::SchemaMigration Load (1.0ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (28.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddPaymoneyFieldsToPaypalBaskets (20160628120321)
+  [1m[35m (0.8ms)[0m  BEGIN
+  [1m[36m (118.8ms)[0m  [1mALTER TABLE "paypal_baskets" ADD COLUMN "paymoney_account_number" text[0m
+  [1m[35m (0.6ms)[0m  ALTER TABLE "paypal_baskets" ADD COLUMN "paymoney_account_token" character varying(255)
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "paypal_baskets" ADD COLUMN "paymoney_reload_request" text[0m
+  [1m[35m (0.6ms)[0m  ALTER TABLE "paypal_baskets" ADD COLUMN "paymoney_reload_response" text
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "paypal_baskets" ADD COLUMN "paymoney_token_request" text[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "paypal_baskets" ADD COLUMN "paymoney_transaction_id" character varying(255)
+  [1m[36mSQL (2.0ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160628120321"]]
+  [1m[35m (18.4ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (0.8ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddPaymoneyFieldsToNovapays (20160628120836)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (13.1ms)[0m  [1mALTER TABLE "novapays" ADD COLUMN "paymoney_account_number" text[0m
+  [1m[35m (0.9ms)[0m  ALTER TABLE "novapays" ADD COLUMN "paymoney_account_token" character varying(255)
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "novapays" ADD COLUMN "paymoney_reload_request" text[0m
+  [1m[35m (0.6ms)[0m  ALTER TABLE "novapays" ADD COLUMN "paymoney_reload_response" text
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "novapays" ADD COLUMN "paymoney_token_request" text[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "novapays" ADD COLUMN "paymoney_transaction_id" character varying(255)
+  [1m[36mSQL (2.5ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160628120836"]]
+  [1m[35m (14.7ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (0.9ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddPaymoneyFieldsToQashBaskets (20160628121441)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (16.0ms)[0m  [1mALTER TABLE "qash_baskets" ADD COLUMN "paymoney_account_number" text[0m
+  [1m[35m (1.0ms)[0m  ALTER TABLE "qash_baskets" ADD COLUMN "paymoney_account_token" character varying(255)
+  [1m[36m (0.8ms)[0m  [1mALTER TABLE "qash_baskets" ADD COLUMN "paymoney_reload_request" text[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "qash_baskets" ADD COLUMN "paymoney_reload_response" text
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "qash_baskets" ADD COLUMN "paymoney_token_request" text[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "qash_baskets" ADD COLUMN "paymoney_transaction_id" character varying(255)
+  [1m[36mSQL (1.9ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160628121441"]]
+  [1m[35m (15.0ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.7ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddPaymoneyFieldsToOrangeMoneyCiBaskets (20160628121814)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (1.8ms)[0m  [1mALTER TABLE "orange_money_ci_baskets" ADD COLUMN "paymoney_account_number" text[0m
+  [1m[35m (0.8ms)[0m  ALTER TABLE "orange_money_ci_baskets" ADD COLUMN "paymoney_account_token" character varying(255)
+  [1m[36m (0.8ms)[0m  [1mALTER TABLE "orange_money_ci_baskets" ADD COLUMN "paymoney_reload_request" text[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "orange_money_ci_baskets" ADD COLUMN "paymoney_reload_response" text
+  [1m[36m (1.1ms)[0m  [1mALTER TABLE "orange_money_ci_baskets" ADD COLUMN "paymoney_token_request" text[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "orange_money_ci_baskets" ADD COLUMN "paymoney_transaction_id" character varying(255)
+  [1m[36mSQL (2.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160628121814"]]
+  [1m[35m (14.9ms)[0m  COMMIT
+Migrating to AddPaymoneyFieldsToMtnCis (20160628121906)
+  [1m[36m (0.6ms)[0m  [1mBEGIN[0m
+  [1m[35m (1.4ms)[0m  ALTER TABLE "mtn_cis" ADD COLUMN "paymoney_account_number" text
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "mtn_cis" ADD COLUMN "paymoney_account_token" character varying(255)[0m
+  [1m[35m (0.5ms)[0m  ALTER TABLE "mtn_cis" ADD COLUMN "paymoney_reload_request" text
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "mtn_cis" ADD COLUMN "paymoney_reload_response" text[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "mtn_cis" ADD COLUMN "paymoney_token_request" text
+  [1m[36m (13.3ms)[0m  [1mALTER TABLE "mtn_cis" ADD COLUMN "paymoney_transaction_id" character varying(255)[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160628121906"]]
+  [1m[36m (56.8ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (1.1ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"

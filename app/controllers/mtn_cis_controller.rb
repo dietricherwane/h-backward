@@ -139,7 +139,20 @@ class MtnCisController < ApplicationController
     if (order.operation.authentication_token rescue nil) == "b6dff4ae-05c1-4050-a976-0db6e358f22b"
       redirect_to "http://ekioskmobile.net/retourabonnement.php?transaction_id=#{order.transaction_id}&order_id=#{order.number}&status_id=1&wallet=mtn_ci&transaction_amount=#{order.original_transaction_amount}&currency=#{order.currency.code}&paid_transaction_amount=#{order.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(order.paid_currency_id).code}&change_rate=#{order.rate}&id=#{order.login_id}"
     else
-      redirect_to "#{order.service.url_on_success}?transaction_id=#{order.transaction_id}&order_id=#{order.number}&status_id=1&wallet=mtn_ci&transaction_amount=#{order.original_transaction_amount}&currency=#{order.currency.code}&paid_transaction_amount=#{order.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(order.paid_currency_id).code}&change_rate=#{order.rate}&id=#{order.login_id}"
+
+      # Cashin mobile money
+      if (@basket.operation.authentication_token rescue nil) == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4'
+        mobile_money_token = 'a71766d6'
+        reload_request = "#{Parameter.first.gateway_wallet_url}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.original_transaction_amount}/0"
+        reload_response = (RestClient.get(reload_request) rescue "")
+        if reload_response.include?('|')
+          @status_id = '5'
+        end
+        @basket.update_attributes(paymoney_reload_request: reload_request, paymoney_reload_response: reload_response, paymoney_transaction_id: ((reload_response.blank? || reload_response.include?('|')) ? nil : reload_response))
+      end
+      # Cashin mobile money
+
+      redirect_to "#{order.service.url_on_success}?transaction_id=#{order.transaction_id}&order_id=#{order.number}&status_id=#{@status_id}&wallet=mtn_ci&transaction_amount=#{order.original_transaction_amount}&currency=#{order.currency.code}&paid_transaction_amount=#{order.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(order.paid_currency_id).code}&change_rate=#{order.rate}&id=#{order.login_id}"
     end
   end
 
