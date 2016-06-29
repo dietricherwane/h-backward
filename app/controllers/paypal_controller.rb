@@ -147,7 +147,7 @@ class PaypalController < ApplicationController
             # Cashin mobile money
             if (@basket.operation.authentication_token rescue nil) == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4'
               mobile_money_token = 'd62b4b7c'
-              reload_request = "#{Parameter.first.gateway_wallet_url}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.original_transaction_amount}/0"
+              reload_request = "#{Parameter.first.gateway_wallet_url}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/PAYPAL/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.original_transaction_amount}/0"
               reload_response = (RestClient.get(reload_request) rescue "")
               if reload_response.include?('|')
                 @status_id = '5'
