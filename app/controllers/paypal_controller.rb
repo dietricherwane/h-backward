@@ -109,7 +109,7 @@ class PaypalController < ApplicationController
     @request.run
     @response = @request.response
 
-    OmLog.create(log_rl: ("Paypal parameters 2: " + @request.response.to_s)) rescue nil
+    OmLog.create(log_rl: ("Paypal parameters 2: " + @request.response.body + '--' + params.to_s)) rescue nil
 
     # On vérifie que la transaction a été effectuée
     if( params[:st] == "Completed" || params[:st] == "Processed" || (params[:st] == "Pending" && ["address", "authorization", "multi-currency"].include?(params[:pending_reason])) )
