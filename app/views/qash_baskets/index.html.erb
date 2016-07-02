@@ -53,10 +53,10 @@
 		      <%= hidden_field_tag "MONTANT", "#{session[:basket]["transaction_amount"].to_i + (@basket.fees.ceil rescue @basket.first.fees.ceil)}" %>
 		      <%= hidden_field_tag "ID_OPERATION", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
 		      <%= hidden_field_tag "DEVISE", "CFA" %>
-		      <%if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4' %>
+		      <% if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4' || session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423' %>
 		        <div class = "row-form">
 		          <div class = "span12">
-		            <span class="bottom">Numéro de compte PAYMONEY à recharger</span>
+		            <span class="bottom">Numéro de compte PAYMONEY à <%= (session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4') ? ' recharger' : 'débiter'%></span>
 			          <%= text_field_tag "paymoney_account_number", session[:paymoney_account_number], :readonly => true %>
 		          </div>
 	          </div>
