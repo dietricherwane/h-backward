@@ -191,7 +191,7 @@ class PaypalController < ApplicationController
   def cashout
     @transaction_id = params[:custom]
 
-    @basket = Basket.find_by_transaction_id(@transaction_id)
+    @basket = PaypalBasket.find_by_transaction_id(@transaction_id)
 
     if !@basket.blank?
       # Cashout mobile money
