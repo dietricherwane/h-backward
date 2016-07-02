@@ -10,7 +10,7 @@ class PaypalController < ApplicationController
   # Vérifie pour toutes les actions que la variable de session existe
   before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :cashout]
   # Si l'utilisateur ne s'est pas connecté en passant par main#guard, on le rejette
-  before_action :except => [:ipn, :transaction_acknowledgement] do |s| s.session_authenticated? end
+  before_action :except => [:ipn, :transaction_acknowledgement, :cashout] do |s| s.session_authenticated? end
 
   # Set transaction amount for GUCE requests
   before_action :only => :index do |o| o.guce_request? end
@@ -211,7 +211,7 @@ class PaypalController < ApplicationController
         #update_number_of_succeed_transactions
         @basket.update_attributes(payment_status: true, cashout: true, cashout_completed: true)
       end
-      @basket.update_attributes(paymoney_reload_request: reload_request, paymoney_reload_response: reload_response, paymoney_transaction_id: ((reload_response.blank? || reload_response.include?('|')) ? nil : reload_response))
+      @basket.update_attributes(paymoney_reload_request: unload_request, paymoney_reload_response: unload_response, paymoney_transaction_id: ((unload_response.blank? || unload_response.include?('|')) ? nil : unload_response))
 
       redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
       # Cashout mobile money
