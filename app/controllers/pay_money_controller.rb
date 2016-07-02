@@ -130,25 +130,24 @@ class PayMoneyController < ApplicationController
         @basket.update_attributes(compensation_rate: @rate)
         @amount_for_compensation = ((@basket.paid_transaction_amount + @basket.fees) * @rate).round(2)
         @fees_for_compensation = (@basket.fees * @rate).round(2)
-        @request = Typhoeus::Request.new("#{@@second_origin_url}/GATEWAY/rest/WS/#{session[:operation].id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/1", followlocation: true)
+        #@request = Typhoeus::Request.new("#{@@second_origin_url}/GATEWAY/rest/WS/#{session[:operation].id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/1", followlocation: true)
 
-        @internal_com_request = "@response = Nokogiri.XML(request.response.body)
-        @response.xpath('//status').each do |link|
-        @status = link.content
-        end
-        "
+        #@internal_com_request = "@response = Nokogiri.XML(request.response.body)
+        #@response.xpath('//status').each do |link|
+        #@status = link.content
+        #end
+        #"
 
-        run_typhoeus_request(@request, @internal_com_request)
+        #run_typhoeus_request(@request, @internal_com_request)
 
         # Use Paymoney authentication_token
         update_wallet_used(@basket, "05ccd7ba3d")
 
-        if @status.to_s.strip == "1"
-          # Conversion du montant débité par le wallet et des frais en euro avant envoi pour notification au back office du hub
-          @basket.update_attributes(:notified_to_back_office => true, :payment_status => true)
+        @status = '1'
 
-          # Update in available_wallet the number of successful_transactions
-          update_number_of_succeed_transactions
+        if @status == '1'
+          # Conversion du montant débité par le wallet et des frais en euro avant envoi pour notification au back office du hub
+          @basket.update_attributes(:notified_to_back_office => false, :payment_status => true)
 
           @status_id = 1
 
@@ -159,6 +158,8 @@ class PayMoneyController < ApplicationController
           # Redirection vers le site marchand
           if (@basket.operation.authentication_token rescue nil) == "b6dff4ae-05c1-4050-a976-0db6e358f22b"
             redirect_to "http://ekioskmobile.net/retourabonnement.php?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paymoney&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
+            # Update in available_wallet the number of successful_transactions
+            update_number_of_succeed_transactions
           else
 
             # Cashin mobile money
@@ -168,6 +169,13 @@ class PayMoneyController < ApplicationController
               reload_response = (RestClient.get(reload_request) rescue "")
               if reload_response.include?('|')
                 @status_id = '5'
+                # Update in available_wallet the number of failed_transactions
+                update_number_of_failed_transactions
+                @basket.update_attributes(payment_status: false)
+              else
+                # Update in available_wallet the number of successful_transactions
+                update_number_of_succeed_transactions
+                @basket.update_attributes(payment_status: true)
               end
               @basket.update_attributes(paymoney_reload_request: reload_request, paymoney_reload_response: reload_response, paymoney_transaction_id: ((reload_response.blank? || reload_response.include?('|')) ? nil : reload_response))
             end
