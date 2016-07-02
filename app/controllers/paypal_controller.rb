@@ -189,7 +189,7 @@ class PaypalController < ApplicationController
   end
 
   def cashout
-    @transaction_id = params[:cm]
+    @transaction_id = params[:custom]
 
     @basket = Basket.find_by_transaction_id(@transaction_id)
 
