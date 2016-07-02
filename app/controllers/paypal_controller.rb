@@ -188,6 +188,38 @@ class PaypalController < ApplicationController
     end
   end
 
+  def cashout
+    @transaction_id = params[:cm]
+
+    @basket = Basket.find_by_transaction_id(@transaction_id)
+
+    if !@basket.blank?
+      # Cashout mobile money
+      operation_token = 'c85ee39c'
+      mobile_money_token = 'CEWlSRkn'
+      unload_request = "#{Parameter.first.gateway_wallet_url}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/PAYPAL/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{session[:paymoney_password]}/#{@basket.original_transaction_amount}/0"
+
+      unload_response = (RestClient.get(unload_request) rescue "")
+      if unload_response.include?('|')
+        @status_id = '0'
+        # Update in available_wallet the number of failed_transactions
+        update_number_of_failed_transactions
+        @basket.update_attributes(payment_status: false, cashout: true, cashout_completed: false)
+      else
+        @status_id = '5'
+        # Update in available_wallet the number of successful_transactions
+        #update_number_of_succeed_transactions
+        @basket.update_attributes(payment_status: true, cashout: true, cashout_completed: true)
+      end
+      @basket.update_attributes(paymoney_reload_request: reload_request, paymoney_reload_response: reload_response, paymoney_transaction_id: ((reload_response.blank? || reload_response.include?('|')) ? nil : reload_response))
+
+      redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
+      # Cashout mobile money
+    else
+      redirect_to error_page_path
+    end
+  end
+
   def notify_to_back_office(basket, url)
     #if basket.payment_status != true
       #basket.update_attributes(:payment_status => true)

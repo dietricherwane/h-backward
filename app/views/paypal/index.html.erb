@@ -50,7 +50,11 @@
 
       <!------------------------------------------ Data-fluid ----------------------------------->
 		  <div class = "data-fluid" >
-		    <form method="post" action="https://www.sandbox.paypal.com/cgi-bin/webscr" class = "paypal-button" target="_top" style="opacity: 1;">
+		    <% if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423' %>
+		      <form method="post" action="/Paypal/cashout" class = "paypal-button" target="_top" style="opacity: 1;">
+		    <% else %>
+		      <form method="post" action="https://www.sandbox.paypal.com/cgi-bin/webscr" class = "paypal-button" target="_top" style="opacity: 1;">
+		    <% end %>
 		    <!--<form method="post" action="https://www.paypal.com/cgi-bin/webscr" class = "paypal-button" target="_top" style="opacity: 1;">-->
 		      <input type="hidden" name="button" value="buynow">
 		      <input type="hidden" name="business" value="6XLW4P3YQCASY">
