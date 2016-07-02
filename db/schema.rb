@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160628121906) do
+ActiveRecord::Schema.define(version: 20160702213138) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -311,6 +311,8 @@ ActiveRecord::Schema.define(version: 20160628121906) do
     t.text     "paymoney_reload_response"
     t.text     "paymoney_token_request"
     t.string   "paymoney_transaction_id"
+    t.boolean  "cashout"
+    t.boolean  "cashout_completed"
   end
 
   create_table "products", force: true do |t|

@@ -46,6 +46,7 @@ HubsBackOffice::Application.routes.draw do
   post "Paypal/transaction_acknowledgement" => "paypal#transaction_acknowledgement"
   get "Paypal/transaction_acknowledgement/:transaction_id" => "paypal#transaction_acknowledgement"
   post "Paypal/transaction_acknowledgement/:transaction_id" => "paypal#transaction_acknowledgement"
+  post "Paypal/cashout" => "paypal#cashout"
 
   get "orange_money_ci/:service_id/:operation_id/:basket_number/:transaction_amount" => "orange_money_ci#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "OrangeMoneyCI" => "orange_money_ci#index"
