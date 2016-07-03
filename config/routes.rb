@@ -81,6 +81,7 @@ HubsBackOffice::Application.routes.draw do
   get "/UBA" => "uba#index"
   post "/UBA/validate" => "uba#validate_transaction"
   post "/UBA/transaction_acknowledgement" => "uba#transaction_acknowledgement"
+  get "/UBA/transaction_acknowledgement" => "uba#transaction_acknowledgement"
   post "UBA/cashout" => "uba#cashout"
 
   get "novapay/:service_id/:operation_id/:basket_number/:transaction_amount" => "novapays#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}

@@ -134,9 +134,9 @@
 
           <div class = "data-fluid" >
         <% if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423' %>
-	        <%= form_tag ("/MTNCI/cashout") do %>
+	        <form action = "/MTNCI/cashout" method = "post">
 	      <% else %>
-		      <%= form_tag ("/MTNCI/InitializePayment") do %>
+		      <form action = "/MTNCI/InitializePayment" method = "post">
 		    <% end %>
 		      <%= hidden_field_tag "transaction_id", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
 	        <div class="form-group">
@@ -171,7 +171,7 @@
               Payer avec Mtn Mobile Money <div class="glyphicon glyphicon-circle-arrow-right"></div>
             </button>
           </div>
-        <% end %>
+        </form>
 		  </div>
         </div>
   <!-- End block -->

@@ -131,9 +131,9 @@
           <% end %>
 
         <% if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423' %>
-		      <%= form_tag ("/NovaPay/cashout") do %>
+		      <form action = "/NovaPay/cashout" method = "post">
 		    <% else %>
-          <%= form_tag ("/novapay/process_payment") do %>
+          <form action = "/novapay/process_payment" method = "post">
         <% end %>
 		      <%= hidden_field_tag "_refact", "#{@basket.number rescue @basket.first.number}" %>
 		      <%= hidden_field_tag "_prix", "#{@transaction_amount + @shipping}" %>
@@ -159,7 +159,7 @@
               Payer avec NovaPay <div class="glyphicon glyphicon-circle-arrow-right"></div>
             </button>
           </div>
-        <% end %>
+        </form>
         </div>
   <!-- End block -->
 

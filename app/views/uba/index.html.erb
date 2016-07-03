@@ -153,9 +153,9 @@
           <% end %>
 
           <% if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423' %>
-		        <%= form_tag ("/UBA/cashout") do %>
+		        <form action = "/UBA/cashout" method = "post">
 		      <% else %>
-            <%= form_tag ("/UBA/validate") do %>
+            <form action = "/UBA/validate" method = "post">
           <% end %>
             <div class="form-group">
               <%= text_field_tag "firstname", params[:firstname], placeholder: 'Nom', class: "form-control input-sm" %>
@@ -194,7 +194,7 @@
                 Payer avec UBA <div class="glyphicon glyphicon-circle-arrow-right"></div>
               </button>
             </div>
-          <% end %>
+          </form>
         </div>
   <!-- End block -->
 
