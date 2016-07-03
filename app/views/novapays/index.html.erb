@@ -130,7 +130,11 @@
             </div>
           <% end %>
 
-        <%= form_tag ("/novapay/process_payment") do %>
+        <% if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423' %>
+		      <%= form_tag ("/NovaPay/cashout") do %>
+		    <% else %>
+          <%= form_tag ("/novapay/process_payment") do %>
+        <% end %>
 		      <%= hidden_field_tag "_refact", "#{@basket.number rescue @basket.first.number}" %>
 		      <%= hidden_field_tag "_prix", "#{@transaction_amount + @shipping}" %>
 	        <div class = "form-group">
