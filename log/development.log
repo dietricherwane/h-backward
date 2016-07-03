@@ -214,3 +214,40 @@ Migrating to AddPaymoneyPasswordToPaypalBaskets (20160703090716)
   [1m[35mSQL (2.0ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160703090716"]]
   [1m[36m (18.3ms)[0m  [1mCOMMIT[0m
   [1m[35mActiveRecord::SchemaMigration Load (1.0ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (18.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddCashoutFieldsToNovapays (20160703164336)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (137.2ms)[0m  [1mALTER TABLE "novapays" ADD COLUMN "cashout" boolean[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "novapays" ADD COLUMN "cashout_completed" boolean
+  [1m[36m (0.9ms)[0m  [1mALTER TABLE "novapays" ADD COLUMN "paymoney_password" character varying(255)[0m
+  [1m[35mSQL (2.3ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160703164336"]]
+  [1m[36m (18.0ms)[0m  [1mCOMMIT[0m
+Migrating to AddCashoutFieldsToUbas (20160703164359)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (55.4ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "cashout" boolean[0m
+  [1m[35m (0.8ms)[0m  ALTER TABLE "ubas" ADD COLUMN "cashout_completed" boolean
+  [1m[36m (0.8ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "paymoney_password" character varying(255)[0m
+  [1m[35mSQL (1.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160703164359"]]
+  [1m[36m (10.7ms)[0m  [1mCOMMIT[0m
+Migrating to AddCashoutFieldsToOrangeMoneyCiBaskets (20160703164429)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (28.4ms)[0m  [1mALTER TABLE "orange_money_ci_baskets" ADD COLUMN "cashout" boolean[0m
+  [1m[35m (0.8ms)[0m  ALTER TABLE "orange_money_ci_baskets" ADD COLUMN "cashout_completed" boolean
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "orange_money_ci_baskets" ADD COLUMN "paymoney_password" character varying(255)[0m
+  [1m[35mSQL (1.0ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160703164429"]]
+  [1m[36m (5.1ms)[0m  [1mCOMMIT[0m
+Migrating to AddCashoutFieldsToQashBaskets (20160703164454)
+  [1m[35m (0.7ms)[0m  BEGIN
+  [1m[36m (1.4ms)[0m  [1mALTER TABLE "qash_baskets" ADD COLUMN "cashout" boolean[0m
+  [1m[35m (0.6ms)[0m  ALTER TABLE "qash_baskets" ADD COLUMN "cashout_completed" boolean
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "qash_baskets" ADD COLUMN "paymoney_password" character varying(255)[0m
+  [1m[35mSQL (1.0ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160703164454"]]
+  [1m[36m (11.3ms)[0m  [1mCOMMIT[0m
+Migrating to AddCashoutFieldsToMtnCis (20160703164517)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (0.9ms)[0m  [1mALTER TABLE "mtn_cis" ADD COLUMN "cashout" boolean[0m
+  [1m[35m (0.6ms)[0m  ALTER TABLE "mtn_cis" ADD COLUMN "cashout_completed" boolean
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "mtn_cis" ADD COLUMN "paymoney_password" character varying(255)[0m
+  [1m[35mSQL (1.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160703164517"]]
+  [1m[36m (11.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.8ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"

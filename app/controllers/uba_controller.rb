@@ -1,6 +1,6 @@
 class UbaController < ApplicationController
   @@second_origin_url = Parameter.first.second_origin_url
-  before_action :except => :guard do |s| s.session_authenticated? end
+  before_action :except => [:guard, :cashout] do |s| s.session_authenticated? end
 
   # Set transaction amount for GUCE requests
   before_action :only => :index do |o| o.guce_request? end
@@ -37,9 +37,9 @@ class UbaController < ApplicationController
     end
 
     if @basket.blank?
-      @basket = Uba.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :original_transaction_amount => session[:trs_amount], :transaction_amount => session[:trs_amount].to_f.ceil, :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, transaction_id: Digest::SHA1.hexdigest([DateTime.now.iso8601(6), rand].join), :fees => @shipping, :rate => @rate, :login_id => session[:login_id], paymoney_account_number: session[:paymoney_account_number], paymoney_account_token: session[:paymoney_account_token])
+      @basket = Uba.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :original_transaction_amount => session[:trs_amount], :transaction_amount => session[:trs_amount].to_f.ceil, :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, transaction_id: Digest::SHA1.hexdigest([DateTime.now.iso8601(6), rand].join), :fees => @shipping, :rate => @rate, :login_id => session[:login_id], paymoney_account_number: session[:paymoney_account_number], paymoney_account_token: session[:paymoney_account_token], paymoney_password: session[:paymoney_password])
     else
-      @basket.first.update_attributes(:transaction_amount => session[:trs_amount].to_f.ceil, :original_transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, :fees => @shipping, :rate => @rate, :login_id => session[:login_id], paymoney_account_number: session[:paymoney_account_number], paymoney_account_token: session[:paymoney_account_token])
+      @basket.first.update_attributes(:transaction_amount => session[:trs_amount].to_f.ceil, :original_transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, :fees => @shipping, :rate => @rate, :login_id => session[:login_id], paymoney_account_number: session[:paymoney_account_number], paymoney_account_token: session[:paymoney_account_token], paymoney_password: session[:paymoney_password])
     end
   end
 
@@ -76,6 +76,38 @@ class UbaController < ApplicationController
      render text: response.body
     else
       render :index
+    end
+  end
+
+  def cashout
+    @transaction_id = params[:custom]
+
+    @basket = Uba.find_by_transaction_id(@transaction_id)
+
+    if !@basket.blank?
+      # Cashout mobile money
+      operation_token = 'cb77b491'
+      mobile_money_token = '8ed6ab4a'
+      unload_request = "#{Parameter.first.gateway_wallet_url}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/PAYPAL/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.paymoney_password}/#{@basket.original_transaction_amount}/0"
+
+      unload_response = (RestClient.get(unload_request) rescue "")
+      if unload_response.include?('|') || unload_response.blank?
+        @status_id = '0'
+        # Update in available_wallet the number of failed_transactions
+        update_number_of_failed_transactions
+        @basket.update_attributes(payment_status: false, cashout: true, cashout_completed: false)
+      else
+        @status_id = '5'
+        # Update in available_wallet the number of successful_transactions
+        #update_number_of_succeed_transactions
+        @basket.update_attributes(payment_status: true, cashout: true, cashout_completed: true)
+      end
+      @basket.update_attributes(paymoney_reload_request: unload_request, paymoney_reload_response: unload_response, paymoney_transaction_id: ((unload_response.blank? || unload_response.include?('|')) ? nil : unload_response))
+
+      redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=uba&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
+      # Cashout mobile money
+    else
+      redirect_to error_page_path
     end
   end
 

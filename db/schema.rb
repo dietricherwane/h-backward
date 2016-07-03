@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160703090716) do
+ActiveRecord::Schema.define(version: 20160703164517) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -165,6 +165,9 @@ ActiveRecord::Schema.define(version: 20160703090716) do
     t.text     "paymoney_reload_response"
     t.text     "paymoney_token_request"
     t.string   "paymoney_transaction_id"
+    t.boolean  "cashout"
+    t.boolean  "cashout_completed"
+    t.string   "paymoney_password"
   end
 
   create_table "novapays", force: true do |t|
@@ -194,6 +197,9 @@ ActiveRecord::Schema.define(version: 20160703090716) do
     t.text     "paymoney_reload_response"
     t.text     "paymoney_token_request"
     t.string   "paymoney_transaction_id"
+    t.boolean  "cashout"
+    t.boolean  "cashout_completed"
+    t.string   "paymoney_password"
   end
 
   create_table "om_logs", force: true do |t|
@@ -251,6 +257,9 @@ ActiveRecord::Schema.define(version: 20160703090716) do
     t.text     "paymoney_reload_response"
     t.text     "paymoney_token_request"
     t.string   "paymoney_transaction_id"
+    t.boolean  "cashout"
+    t.boolean  "cashout_completed"
+    t.string   "paymoney_password"
   end
 
   create_table "parameters", force: true do |t|
@@ -352,6 +361,9 @@ ActiveRecord::Schema.define(version: 20160703090716) do
     t.text     "paymoney_reload_response"
     t.text     "paymoney_token_request"
     t.string   "paymoney_transaction_id"
+    t.boolean  "cashout"
+    t.boolean  "cashout_completed"
+    t.string   "paymoney_password"
   end
 
   create_table "services", force: true do |t|
@@ -438,6 +450,9 @@ ActiveRecord::Schema.define(version: 20160703090716) do
     t.text     "paymoney_reload_response"
     t.text     "paymoney_token_request"
     t.string   "paymoney_transaction_id"
+    t.boolean  "cashout"
+    t.boolean  "cashout_completed"
+    t.string   "paymoney_password"
   end
 
   create_table "wallets", force: true do |t|

@@ -133,7 +133,11 @@
           <% end %>
 
           <div class = "data-fluid" >
-		    <%= form_tag ("/MTNCI/InitializePayment") do %>
+        <% if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423' %>
+	        <%= form_tag ("/MTNCI/cashout") do %>
+	      <% else %>
+		      <%= form_tag ("/MTNCI/InitializePayment") do %>
+		    <% end %>
 		      <%= hidden_field_tag "transaction_id", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
 	        <div class="form-group">
             <div class="input-group">

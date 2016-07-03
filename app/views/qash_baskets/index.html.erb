@@ -48,7 +48,11 @@
 
       <!------------------------------------------ Data-fluid ----------------------------------->
 		  <div class = "data-fluid" >
-		    <form action="http://teamqplus.qashservices.com:700/API_PAIEMENT.aspx" method="post">
+		    <% if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423' %>
+	        <form action="/Qash/cashout" method="post">
+	      <% else %>
+		      <form action="http://teamqplus.qashservices.com:700/API_PAIEMENT.aspx" method="post">
+		    <% end %>
 		      <%= hidden_field_tag "REF_COMMERCE", "HFraCS07DA4" %>
 		      <%= hidden_field_tag "MONTANT", "#{session[:basket]["transaction_amount"].to_i + (@basket.fees.ceil rescue @basket.first.fees.ceil)}" %>
 		      <%= hidden_field_tag "ID_OPERATION", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
