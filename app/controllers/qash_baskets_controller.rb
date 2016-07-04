@@ -164,7 +164,7 @@ class QashBasketsController < ApplicationController
   end
 
   def cashout
-    @transaction_id = params[:transaction_id]
+    @transaction_id = params[:ID_OPERATION]
 
     @basket = QashBasket.find_by_transaction_id(@transaction_id)
 
