@@ -14,12 +14,14 @@ http://0.0.0.0:3000/order/xof/ef34523f1196c904c6e09af80e472ac2/535ef2a5-c7bc-48c
 
 http://41.189.40.193:6968/order/xof/ef34523f1196c904c6e09af80e472ac2/535ef2a5-c7bc-48c0-8b4d-d5c73c40b272/GGFJJD555444D/500
 
-https://pay-money.net/order/xof/57813dc7992fbdc721ca5f6b0d02d559/1c2018aa-434e-43e2-b494-a18c25986602/SAD201500002134/46008
+http://41.189.40.193:6968/order/xof/57813dc7992fbdc721ca5f6b0d02d559/1c2018aa-434e-43e2-b494-a18c25986602/SAD201600002604/100761
 
 
 curl --request POST --data "{"_refact": "d414cfc7e9d1e494387a26916fd2524dd4f504a9", "_prix": "12384192", "_nooper": "H072468" }" --header "QUERY-STRING: _identify=3155832361,_password=f46eb4cc014288254ad8ade06b6cc6e1,_dateheure=20160223174400517" https://novaplus.ci/NOVAPAY_WEB/FR/paycheck.awp  --insecure
 
-"http://41.189.40.193:8080/GPG_GUCE/rest/Mob_Mon_Pay/pay/SAD201600000244/20000/VIECOB8/QRTGH78/NULL
+"http://41.189.40.193:8080/GPG_GUCE/rest/Mob_Mon_Pay/pay/SAD201600002604/100761/VIECOB8/QRTGH78/NULL
+
+http://41.189.40.193:8080/GPG_GUCE/rest/Mob_Mon/Check/SAD201600002604/100761
 
 _identify=3155832361,_password=f46eb4cc014288254ad8ade06b6cc6e1,_dateheure=20160223174400517 --- {"_refact": "d414cfc7e9d1e494387a26916fd2524dd4f504a9", "_prix": "12384192", "_nooper": "H072468" }
 
