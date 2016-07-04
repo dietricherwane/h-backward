@@ -49,7 +49,11 @@
 
       <!------------------------------------------ Data-fluid ----------------------------------->
 		  <div class = "data-fluid" >
-		    <%= form_tag ("/novapay/process_payment") do %>
+		    <% if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423' %>
+		      <form action = "NovaPay/cashout/process" method = "post">
+		    <% else %>
+          <form action = "/novapay/process_payment" method = "post">
+        <% end %>
 		      <%= hidden_field_tag "_refact", "#{@basket.number rescue @basket.first.number}" %>
 		      <%= hidden_field_tag "_prix", "#{@transaction_amount + @shipping}" %>
 		      <% if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4' || session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423' %>
@@ -82,7 +86,7 @@
 			        Payer avec NovaPay <div class="icon-arrow-next icon-white"></div>
 		        </button>
 	        </div>
-        <% end %>
+        </form>
 		  </div>
 	    <!------------------------------------------ Data-fluid ----------------------------------->
 	    </div>
