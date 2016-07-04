@@ -199,7 +199,7 @@ class NovapaysController < ApplicationController
   def cashout
     @transaction_id = params[:_refact]
 
-    @basket = Novapay.find_by_transaction_id(@transaction_id)
+    @basket = Novapay.find_by_number(@transaction_id)
 
     if !@basket.blank?
       # Cashout mobile money
