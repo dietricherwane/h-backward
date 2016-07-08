@@ -190,11 +190,11 @@ class PaypalController < ApplicationController
 
   def cashout
     @transaction_id = params[:custom]
-    cashout_account_number = params[:cashout_account_number]
+    @cashout_account_number = params[:cashout_account_number]
 
     @basket = PaypalBasket.find_by_transaction_id(@transaction_id)
 
-    if cashout_account_number.blank?
+    if @cashout_account_number.blank?
       @error = true
       @error_messages = ["Veuillez entrer le compte à recharger"]
       initialize_customer_view("e6da96e284", "unceiled_transaction_amount", "unceiled_shipping_fee")
@@ -214,18 +214,18 @@ class PaypalController < ApplicationController
           @status_id = '0'
           # Update in available_wallet the number of failed_transactions
           update_number_of_failed_transactions
-          @basket.update_attributes(payment_status: false, cashout: true, cashout_completed: false, paymoney_reload_request: unload_request, paymoney_reload_response: unload_response, paymoney_transaction_id: unload_response)
+          @basket.update_attributes(payment_status: false, cashout: true, cashout_completed: false, paymoney_reload_request: unload_request, paymoney_reload_response: unload_response, paymoney_transaction_id: unload_response, cashout_account_number: @cashout_account_number)
         else
           @status_id = '5'
           # Update in available_wallet the number of successful_transactions
           #update_number_of_succeed_transactions
-          @basket.update_attributes(payment_status: true, cashout: true, cashout_completed: true, paymoney_reload_request: unload_request, paymoney_reload_response: unload_response)
+          @basket.update_attributes(payment_status: true, cashout: true, cashout_completed: true, paymoney_reload_request: unload_request, paymoney_reload_response: unload_response, cashout_account_number: @cashout_account_number)
         end
 
         # Saves the transaction on the front office
         save_cashout_log
 
-        redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
+        redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
         # Cashout mobile money
       else
         redirect_to error_page_path
@@ -235,7 +235,7 @@ class PaypalController < ApplicationController
 
   # Saves the transaction on the front office
   def save_cashout_log
-    log_request = "#{Parameter.first.front_office_url}/api/856332ed59e5207c68e864564/cashout/log/paypal?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
+    log_request = "#{Parameter.first.front_office_url}/api/856332ed59e5207c68e864564/cashout/log/paypal?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}&account_number=#{@cashout_account_number}"
     log_response = (RestClient.get(log_request) rescue "")
 
     @basket.update_attributes(cashout_notified_to_front_office: (log_response == '1' ? true : false), cashout_notification_request: log_request, cashout_notification_response: log_response)
