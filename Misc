@@ -30,3 +30,5 @@ _identify=3155832361,_password=f46eb4cc014288254ad8ade06b6cc6e1,_dateheure=20160
 41.189.40.193:6968/order/unload/XOF/af1a30551acd531383e605d7c1afbbe2/3d20d7af-2ecb-4681-8e4f-a585d7705423/XHJO414HDMQ16455/500/440000019/3415
 
 41.189.40.193:10001/api/86d138798bc43ed59e5207c664/mobile_money/cashin/:mobile_money_account/:account/:transaction_amount/:fee
+
+rails generate model PaypalCashout transaction_id:string:index order_id:string:index status_id:string{5}:index transaction_a
