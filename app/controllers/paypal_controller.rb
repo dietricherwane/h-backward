@@ -195,7 +195,13 @@ class PaypalController < ApplicationController
     @basket = PaypalBasket.find_by_transaction_id(@transaction_id)
 
     if cashout_account_number.blank?
-      redirect_to :back
+      @error = true
+      @error_messages = ["Veuillez entrer le compte à recharger"]
+      initialize_customer_view("e6da96e284", "unceiled_transaction_amount", "unceiled_shipping_fee")
+      get_service_logo(session[:service].token)
+      @basket = PaypalBasket.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'")
+
+      render :index
     else
       if !@basket.blank?
         # Cashout mobile money
