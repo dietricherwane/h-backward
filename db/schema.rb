@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160703164517) do
+ActiveRecord::Schema.define(version: 20160707195815) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -309,7 +309,7 @@ ActiveRecord::Schema.define(version: 20160703164517) do
     t.float    "paid_transaction_amount"
     t.integer  "paid_currency_id"
     t.float    "rate"
-    t.string   "conflictual_currency",           limit: 3
+    t.string   "conflictual_currency",             limit: 3
     t.float    "compensation_rate"
     t.string   "original_transaction_amount"
     t.float    "conflictual_transaction_amount"
@@ -323,6 +323,10 @@ ActiveRecord::Schema.define(version: 20160703164517) do
     t.boolean  "cashout"
     t.boolean  "cashout_completed"
     t.string   "paymoney_password"
+    t.string   "cashout_account_number"
+    t.boolean  "cashout_notified_to_front_office"
+    t.text     "cashout_notification_request"
+    t.text     "cashout_notification_response"
   end
 
   create_table "products", force: true do |t|
