@@ -5237,3 +5237,169 @@ NoMethodError (undefined method `original_transaction_amount' for #<ActiveRecord
   Rendered /home/ngser/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/_trace.erb (1.1ms)
   Rendered /home/ngser/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (1.5ms)
   Rendered /home/ngser/.rvm/gems/ruby-2.0.0-p195@rails4.0.7/gems/actionpack-4.0.0/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (16.5ms)
+
+
+Started GET "/get_wallets?country_id=243" for 41.202.76.144 at 2016-07-09 21:41:38 +0000
+Processing by WalletsController#get_wallets as TEXT
+  Parameters: {"country_id"=>"243"}
+  [1m[36mActiveRecord::SessionStore::Session Load (1.0ms)[0m  [1mSELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = '75f85b1de3267186a84fd8cd52e3bb95' ORDER BY "sessions"."id" ASC LIMIT 1[0m
+  [1m[35mCountry Load (0.7ms)[0m  SELECT "countries".* FROM "countries" WHERE (id = 243 AND published IS TRUE)
+  [1m[36mWallet Load (0.7ms)[0m  [1mSELECT "wallets".* FROM "wallets" INNER JOIN "available_wallets" ON "wallets"."id" = "available_wallets"."wallet_id" WHERE "available_wallets"."service_id" = $1 AND "wallets"."country_id" = 243[0m  [["service_id", 22]]
+  [1m[35mAvailableWallet Load (0.7ms)[0m  SELECT "available_wallets".* FROM "available_wallets" WHERE "available_wallets"."service_id" = $1 AND "available_wallets"."published" = 't' AND "available_wallets"."wallet_id" IN (7, 9)  [["service_id", 22]]
+  [1m[36mWallet Load (0.6ms)[0m  [1mSELECT "wallets".* FROM "wallets" WHERE "wallets"."id" = $1 ORDER BY "wallets"."id" ASC LIMIT 1[0m  [["id", 7]]
+  [1m[35mWallet Load (0.7ms)[0m  SELECT "wallets".* FROM "wallets" WHERE "wallets"."id" = $1 ORDER BY "wallets"."id" ASC LIMIT 1  [["id", 9]]
+  Rendered text template (0.0ms)
+Completed 200 OK in 366ms (Views: 0.7ms | ActiveRecord: 18.0ms)
+  [1m[36m (0.4ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.4ms)[0m  COMMIT
+
+
+Started GET "/get_wallets?country_id=244" for 41.202.76.144 at 2016-07-09 21:41:39 +0000
+Processing by WalletsController#get_wallets as TEXT
+  Parameters: {"country_id"=>"244"}
+  [1m[36mActiveRecord::SessionStore::Session Load (1.1ms)[0m  [1mSELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = '75f85b1de3267186a84fd8cd52e3bb95' ORDER BY "sessions"."id" ASC LIMIT 1[0m
+  [1m[35mCountry Load (0.6ms)[0m  SELECT "countries".* FROM "countries" WHERE (id = 244 AND published IS TRUE)
+  [1m[36mWallet Load (0.9ms)[0m  [1mSELECT "wallets".* FROM "wallets" INNER JOIN "available_wallets" ON "wallets"."id" = "available_wallets"."wallet_id" WHERE "available_wallets"."service_id" = $1 AND "wallets"."country_id" = 244[0m  [["service_id", 22]]
+  [1m[35mAvailableWallet Load (0.6ms)[0m  SELECT "available_wallets".* FROM "available_wallets" WHERE "available_wallets"."service_id" = $1 AND "available_wallets"."published" = 't' AND "available_wallets"."wallet_id" IN (1, 2, 3, 6, 8)  [["service_id", 22]]
+  [1m[36mWallet Load (0.5ms)[0m  [1mSELECT "wallets".* FROM "wallets" WHERE "wallets"."id" = $1 ORDER BY "wallets"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mWallet Load (0.4ms)[0m  SELECT "wallets".* FROM "wallets" WHERE "wallets"."id" = $1 ORDER BY "wallets"."id" ASC LIMIT 1  [["id", 3]]
+  [1m[36mWallet Load (0.4ms)[0m  [1mSELECT "wallets".* FROM "wallets" WHERE "wallets"."id" = $1 ORDER BY "wallets"."id" ASC LIMIT 1[0m  [["id", 6]]
+  [1m[35mWallet Load (0.5ms)[0m  SELECT "wallets".* FROM "wallets" WHERE "wallets"."id" = $1 ORDER BY "wallets"."id" ASC LIMIT 1  [["id", 8]]
+  Rendered text template (0.0ms)
+Completed 200 OK in 18ms (Views: 0.4ms | ActiveRecord: 5.2ms)
+  [1m[36m (0.4ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.4ms)[0m  COMMIT
+
+
+Started GET "/paypal/af1a30551acd531383e605d7c1afbbe2/3d20d7af-2ecb-4681-8e4f-a585d7704523/XHJO418554HDMQ52177455/300000.0" for 41.202.76.144 at 2016-07-09 21:41:41 +0000
+  [1m[36mParameter Load (0.7ms)[0m  [1mSELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1[0m
+Processing by PaypalController#guard as HTML
+  Parameters: {"service_id"=>"af1a30551acd531383e605d7c1afbbe2", "operation_id"=>"3d20d7af-2ecb-4681-8e4f-a585d7704523", "basket_number"=>"XHJO418554HDMQ52177455", "transaction_amount"=>"300000.0"}
+  [1m[35mActiveRecord::SessionStore::Session Load (0.9ms)[0m  SELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = '75f85b1de3267186a84fd8cd52e3bb95' ORDER BY "sessions"."id" ASC LIMIT 1
+Redirected to http://41.189.40.193:6968/Paypal
+Completed 302 Found in 6ms (ActiveRecord: 0.9ms)
+  [1m[36m (0.3ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.3ms)[0m  COMMIT
+
+
+Started GET "/Paypal" for 41.202.76.144 at 2016-07-09 21:41:42 +0000
+Processing by PaypalController#index as HTML
+  [1m[36mActiveRecord::SessionStore::Session Load (1.2ms)[0m  [1mSELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = '75f85b1de3267186a84fd8cd52e3bb95' ORDER BY "sessions"."id" ASC LIMIT 1[0m
+  [1m[35mWallet Load (0.6ms)[0m  SELECT "wallets".* FROM "wallets" WHERE "wallets"."authentication_token" = 'e6da96e284' LIMIT 1
+  [1m[36mCurrency Load (0.6ms)[0m  [1mSELECT "currencies".* FROM "currencies" WHERE "currencies"."id" = $1 ORDER BY "currencies"."id" ASC LIMIT 1[0m  [["id", 144]]
+  [1m[35m (0.5ms)[0m  SELECT * FROM currencies_matches WHERE first_code = 'XOF' AND second_code = 'USD'
+  [1m[36mParameter Load (0.7ms)[0m  [1mSELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1[0m
+ETHON: performed EASY effective_url=http://41.189.40.193:6565/ecommerce/get_logo/9cd0ddbf8a36 response_code=200 return_code=ok total_time=0.015557
+  [1m[35mFeeType Load (0.6ms)[0m  SELECT "fee_types".* FROM "fee_types" WHERE "fee_types"."token" = '0175ad' LIMIT 1
+  [1m[36mFee Load (27.4ms)[0m  [1mSELECT "fees".* FROM "fees" WHERE "fees"."fee_type_id" = $1 AND (min_value <= 300000.0 AND max_value >= 300000.0) ORDER BY "fees"."id" ASC LIMIT 1[0m  [["fee_type_id", 1]]
+  [1m[35mPaypalBasket Load (0.9ms)[0m  SELECT "paypal_baskets".* FROM "paypal_baskets" WHERE (number = 'XHJO418554HDMQ52177455' AND service_id = '22' AND operation_id = '33')
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (1.3ms)[0m  UPDATE "paypal_baskets" SET "original_transaction_amount" = $1, "fees" = $2, "updated_at" = $3 WHERE "paypal_baskets"."id" = 316  [["original_transaction_amount", 300000.0], ["fees", nil], ["updated_at", Sat, 09 Jul 2016 21:41:42 UTC +00:00]]
+  [1m[36m (13.6ms)[0m  [1mCOMMIT[0m
+  Rendered paypal/index.html.erb within layouts/paypal (54.1ms)
+Completed 200 OK in 274ms (Views: 68.6ms | ActiveRecord: 55.2ms)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+
+
+Started GET "/assets/backgrounds/default.jpg" for 41.202.76.144 at 2016-07-09 21:41:43 +0000
+
+
+Started GET "/assets/fonts/icomoon.woff" for 41.202.76.144 at 2016-07-09 21:41:43 +0000
+
+
+Started GET "/assets/next.png" for 41.202.76.144 at 2016-07-09 21:41:43 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (0.9ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+
+
+Started GET "/Main" for 41.202.76.144 at 2016-07-09 21:42:44 +0000
+Processing by MainController#index as HTML
+  [1m[35mActiveRecord::SessionStore::Session Load (2.3ms)[0m  SELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = '75f85b1de3267186a84fd8cd52e3bb95' ORDER BY "sessions"."id" ASC LIMIT 1
+  [1m[36mCountry Load (0.7ms)[0m  [1mSELECT "countries".* FROM "countries" WHERE "countries"."name" = 'Banques' LIMIT 1[0m
+  [1m[35mWallet Load (4.2ms)[0m  SELECT "wallets".* FROM "wallets" INNER JOIN "available_wallets" ON "wallets"."id" = "available_wallets"."wallet_id" WHERE "available_wallets"."service_id" = $1 AND "wallets"."country_id" = 243  [["service_id", 22]]
+  [1m[36mCountry Load (0.8ms)[0m  [1mSELECT "countries".* FROM "countries" WHERE (published IS TRUE) ORDER BY name ASC[0m
+  [1m[35mAvailableWallet Load (1.2ms)[0m  SELECT "available_wallets".* FROM "available_wallets" WHERE "available_wallets"."service_id" = $1 AND "available_wallets"."published" = 't' AND "available_wallets"."wallet_id" IN (7, 9)  [["service_id", 22]]
+  [1m[36mWallet Load (1.1ms)[0m  [1mSELECT "wallets".* FROM "wallets" WHERE "wallets"."id" = $1 ORDER BY "wallets"."id" ASC LIMIT 1[0m  [["id", 7]]
+  [1m[35mWallet Load (0.6ms)[0m  SELECT "wallets".* FROM "wallets" WHERE "wallets"."id" = $1 ORDER BY "wallets"."id" ASC LIMIT 1  [["id", 9]]
+  Rendered main/index.html.erb within layouts/main (126.2ms)
+Completed 200 OK in 550ms (Views: 184.9ms | ActiveRecord: 29.6ms)
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.4ms)[0m  COMMIT
+
+
+Started GET "/assets/creative/ga.js?body=1" for 41.202.76.144 at 2016-07-09 21:42:45 +0000
+
+
+Started GET "/assets/cloud-1.png" for 41.202.76.144 at 2016-07-09 21:42:45 +0000
+
+
+Started GET "/assets/cloud-2.png" for 41.202.76.144 at 2016-07-09 21:42:46 +0000
+
+
+Started GET "/assets/cloud-4.png" for 41.202.76.144 at 2016-07-09 21:42:46 +0000
+
+
+Started GET "/assets/cloud-5.png" for 41.202.76.144 at 2016-07-09 21:42:46 +0000
+
+
+Started GET "/assets/cloud-6.png" for 41.202.76.144 at 2016-07-09 21:42:46 +0000
+
+
+Started GET "/assets/cloud-3.png" for 41.202.76.144 at 2016-07-09 21:42:46 +0000
+
+
+Started GET "/get_wallets?country_id=244" for 41.202.76.144 at 2016-07-09 21:42:48 +0000
+Processing by WalletsController#get_wallets as TEXT
+  Parameters: {"country_id"=>"244"}
+  [1m[35mActiveRecord::SessionStore::Session Load (1.0ms)[0m  SELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = '75f85b1de3267186a84fd8cd52e3bb95' ORDER BY "sessions"."id" ASC LIMIT 1
+  [1m[36mCountry Load (0.7ms)[0m  [1mSELECT "countries".* FROM "countries" WHERE (id = 244 AND published IS TRUE)[0m
+  [1m[35mWallet Load (0.9ms)[0m  SELECT "wallets".* FROM "wallets" INNER JOIN "available_wallets" ON "wallets"."id" = "available_wallets"."wallet_id" WHERE "available_wallets"."service_id" = $1 AND "wallets"."country_id" = 244  [["service_id", 22]]
+  [1m[36mAvailableWallet Load (0.7ms)[0m  [1mSELECT "available_wallets".* FROM "available_wallets" WHERE "available_wallets"."service_id" = $1 AND "available_wallets"."published" = 't' AND "available_wallets"."wallet_id" IN (1, 2, 3, 6, 8)[0m  [["service_id", 22]]
+  [1m[35mWallet Load (0.6ms)[0m  SELECT "wallets".* FROM "wallets" WHERE "wallets"."id" = $1 ORDER BY "wallets"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36mWallet Load (0.6ms)[0m  [1mSELECT "wallets".* FROM "wallets" WHERE "wallets"."id" = $1 ORDER BY "wallets"."id" ASC LIMIT 1[0m  [["id", 3]]
+  [1m[35mWallet Load (0.5ms)[0m  SELECT "wallets".* FROM "wallets" WHERE "wallets"."id" = $1 ORDER BY "wallets"."id" ASC LIMIT 1  [["id", 6]]
+  [1m[36mWallet Load (0.5ms)[0m  [1mSELECT "wallets".* FROM "wallets" WHERE "wallets"."id" = $1 ORDER BY "wallets"."id" ASC LIMIT 1[0m  [["id", 8]]
+  Rendered text template (0.0ms)
+Completed 200 OK in 373ms (Views: 0.7ms | ActiveRecord: 19.8ms)
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+
+
+Started GET "/paypal/af1a30551acd531383e605d7c1afbbe2/3d20d7af-2ecb-4681-8e4f-a585d7704523/XHJO418554HDMQ52177455/300000.0" for 41.202.76.144 at 2016-07-09 21:42:50 +0000
+  [1m[35mParameter Load (0.7ms)[0m  SELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1
+Processing by PaypalController#guard as HTML
+  Parameters: {"service_id"=>"af1a30551acd531383e605d7c1afbbe2", "operation_id"=>"3d20d7af-2ecb-4681-8e4f-a585d7704523", "basket_number"=>"XHJO418554HDMQ52177455", "transaction_amount"=>"300000.0"}
+  [1m[36mActiveRecord::SessionStore::Session Load (1.1ms)[0m  [1mSELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = '75f85b1de3267186a84fd8cd52e3bb95' ORDER BY "sessions"."id" ASC LIMIT 1[0m
+Redirected to http://41.189.40.193:6968/Paypal
+Completed 302 Found in 6ms (ActiveRecord: 1.1ms)
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36m (0.5ms)[0m  [1mCOMMIT[0m
+
+
+Started GET "/Paypal" for 41.202.76.144 at 2016-07-09 21:42:51 +0000
+Processing by PaypalController#index as HTML
+  [1m[35mActiveRecord::SessionStore::Session Load (1.0ms)[0m  SELECT "sessions".* FROM "sessions" WHERE "sessions"."session_id" = '75f85b1de3267186a84fd8cd52e3bb95' ORDER BY "sessions"."id" ASC LIMIT 1
+  [1m[36mWallet Load (0.7ms)[0m  [1mSELECT "wallets".* FROM "wallets" WHERE "wallets"."authentication_token" = 'e6da96e284' LIMIT 1[0m
+  [1m[35mCurrency Load (0.6ms)[0m  SELECT "currencies".* FROM "currencies" WHERE "currencies"."id" = $1 ORDER BY "currencies"."id" ASC LIMIT 1  [["id", 144]]
+  [1m[36m (0.5ms)[0m  [1mSELECT * FROM currencies_matches WHERE first_code = 'XOF' AND second_code = 'USD'[0m
+  [1m[35mParameter Load (0.7ms)[0m  SELECT "parameters".* FROM "parameters" ORDER BY "parameters"."id" ASC LIMIT 1
+ETHON: performed EASY effective_url=http://41.189.40.193:6565/ecommerce/get_logo/9cd0ddbf8a36 response_code=200 return_code=ok total_time=0.015827
+  [1m[36mFeeType Load (0.5ms)[0m  [1mSELECT "fee_types".* FROM "fee_types" WHERE "fee_types"."token" = '0175ad' LIMIT 1[0m
+  [1m[35mFee Load (0.6ms)[0m  SELECT "fees".* FROM "fees" WHERE "fees"."fee_type_id" = $1 AND (min_value <= 300000.0 AND max_value >= 300000.0) ORDER BY "fees"."id" ASC LIMIT 1  [["fee_type_id", 1]]
+  [1m[36mPaypalBasket Load (1.0ms)[0m  [1mSELECT "paypal_baskets".* FROM "paypal_baskets" WHERE (number = 'XHJO418554HDMQ52177455' AND service_id = '22' AND operation_id = '33')[0m
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36mSQL (0.7ms)[0m  [1mUPDATE "paypal_baskets" SET "original_transaction_amount" = $1, "updated_at" = $2 WHERE "paypal_baskets"."id" = 316[0m  [["original_transaction_amount", 300000.0], ["updated_at", Sat, 09 Jul 2016 21:42:51 UTC +00:00]]
+  [1m[35m (6.3ms)[0m  COMMIT
+  Rendered paypal/index.html.erb within layouts/paypal (2.2ms)
+Completed 200 OK in 242ms (Views: 16.5ms | ActiveRecord: 20.6ms)
+  [1m[36m (0.3ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.2ms)[0m  COMMIT
+
+
+Started GET "/assets/fonts/icomoon.woff" for 41.202.76.144 at 2016-07-09 21:42:52 +0000
+
+
+Started GET "/assets/backgrounds/default.jpg" for 41.202.76.144 at 2016-07-09 21:42:52 +0000
+
+
+Started GET "/assets/next.png" for 41.202.76.144 at 2016-07-09 21:42:52 +0000
