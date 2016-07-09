@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  fee_type_id: 1
+  min_value: 1.5
+  max_value: 1.5
+  fee_value: 1.5
+
+two:
+  fee_type_id: 1
+  min_value: 1.5
+  max_value: 1.5
+  fee_value: 1.5

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160707195815) do
+ActiveRecord::Schema.define(version: 20160709185020) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,6 +108,26 @@ ActiveRecord::Schema.define(version: 20160707195815) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "fee_types", force: true do |t|
+    t.string   "name"
+    t.string   "token"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "fee_types", ["token"], name: "index_fee_types_on_token", using: :btree
+
+  create_table "fees", force: true do |t|
+    t.integer  "fee_type_id"
+    t.float    "min_value"
+    t.float    "max_value"
+    t.float    "fee_value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "fees", ["fee_type_id"], name: "index_fees_on_fee_type_id", using: :btree
 
   create_table "logs", force: true do |t|
     t.string   "description"

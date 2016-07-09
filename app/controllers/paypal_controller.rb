@@ -39,6 +39,9 @@ class PaypalController < ApplicationController
 
     # vérifie qu'un numéro panier appartenant à ce service n'existe pas déjà. Si non, on crée un panier temporaire, si oui, on met à jour le montant envoyé par le ecommerce, la monnaie envoyée par celui ci ainsi que le montant, la monnaie et les frais à envoyer au ecommerce
     @basket = PaypalBasket.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'")
+
+    set_cashout_fee
+
     if @basket.blank?
       @basket = PaypalBasket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :original_transaction_amount => session[:trs_amount], :transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, transaction_id: Digest::SHA1.hexdigest([DateTime.now.iso8601(6), rand].join), :fees => @shipping, :rate => @rate, :login_id => session[:login_id], paymoney_account_number: session[:paymoney_account_number], paymoney_account_token: session[:paymoney_account_token], paymoney_password: session[:paymoney_password])
     else
@@ -207,7 +210,9 @@ class PaypalController < ApplicationController
         # Cashout mobile money
         operation_token = 'c85ee39c'
         mobile_money_token = 'CEWlSRkn'
-        unload_request = "#{Parameter.first.gateway_wallet_url}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/PAYPAL/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.paymoney_password}/#{@basket.original_transaction_amount}/0"
+
+
+        unload_request = "#{Parameter.first.gateway_wallet_url}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/PAYPAL/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.paymoney_password}/#{@basket.original_transaction_amount}/#{@fee}"
 
         unload_response = (RestClient.get(unload_request) rescue "")
         if unload_response.include?('|') || unload_response.blank?
@@ -231,6 +236,17 @@ class PaypalController < ApplicationController
         redirect_to error_page_path
       end
     end
+  end
+
+  def set_cashout_fee
+    if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423'
+      fee_type = FeeType.find_by_token('0175ad')
+      @shipping = 0
+
+      if !fee_type.blank?
+	      @shipping = fee_type.fees.where("min_value <= #{@basket.original_transaction_amount.to_f} AND max_value >= #{@basket.original_transaction_amount.to_f}").first.fee_value.to_s rescue 0
+	    end
+	  end
   end
 
   # Saves the transaction on the front office
