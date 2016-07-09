@@ -244,7 +244,7 @@ class PaypalController < ApplicationController
       @shipping = 0
 
       if !fee_type.blank?
-	      @shipping = (fee_type.fees.where("min_value <= #{session[:trs_amount].to_f} AND max_value >= #{session[:trs_amount].to_f}").first.fee_value)# * @rate
+	      @shipping = (fee_type.fees.where("min_value <= #{session[:trs_amount].to_f} AND max_value >= #{session[:trs_amount].to_f}").first.fee_value) * @rate
 	    end
 	  end
   end
