@@ -4691,3 +4691,132 @@ Migrating to CreateFees (20160709185020)
   [1m[36m (13.5ms)[0m  [1mCOMMIT[0m
   [1m[35mActiveRecord::SchemaMigration Load (1.2ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
 >>>>>>> a589c22ddffae2d2d0d5d090969152572d8ae579
+  [1m[36mActiveRecord::SchemaMigration Load (0.8ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to CreateFeeTypes (20160709184804)
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36m (130.0ms)[0m  [1mCREATE TABLE "fee_types" ("id" serial primary key, "name" character varying(255), "token" character varying(255), "created_at" timestamp, "updated_at" timestamp) [0m
+  [1m[35m (39.8ms)[0m  CREATE INDEX "index_fee_types_on_token" ON "fee_types" ("token")
+  [1m[36mSQL (1.6ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160709184804"]]
+  [1m[35m (18.4ms)[0m  COMMIT
+Migrating to CreateFees (20160709185020)
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35m (34.9ms)[0m  CREATE TABLE "fees" ("id" serial primary key, "fee_type_id" integer, "min_value" float, "max_value" float, "fee_value" float, "created_at" timestamp, "updated_at" timestamp) 
+  [1m[36m (24.4ms)[0m  [1mCREATE INDEX "index_fees_on_fee_type_id" ON "fees" ("fee_type_id")[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160709185020"]]
+  [1m[36m (10.3ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.7ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+
+
+Started GET "/assets/plugins/jquery/globalize.js?body=1" for 41.202.76.144 at 2016-07-09 21:14:45 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (0.8ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+
+
+Started GET "/assets/plugins/jquery/jquery-ui-1.10.1.custom.min.js?body=1" for 41.202.76.144 at 2016-07-09 21:14:45 +0000
+
+
+Started GET "/assets/plugins/jflot/jquery.flot.pie.js?body=1" for 41.202.76.144 at 2016-07-09 21:14:46 +0000
+
+
+Started GET "/assets/plugins/jflot/jquery.flot.stack.js?body=1" for 41.202.76.144 at 2016-07-09 21:14:46 +0000
+
+
+Started GET "/assets/plugins/sparklines/jquery.sparkline.min.js?body=1" for 41.202.76.144 at 2016-07-09 21:14:46 +0000
+
+
+Started GET "/assets/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js?body=1" for 41.202.76.144 at 2016-07-09 21:14:46 +0000
+
+
+Started GET "/assets/fancybox/jquery.fancybox.css" for 41.202.76.144 at 2016-07-09 21:14:47 +0000
+
+
+Started GET "/assets/bootstrap/bootstrap-fileupload.css" for 41.202.76.144 at 2016-07-09 21:14:47 +0000
+
+
+Started GET "/assets/epiechart/jquery.easy-pie-chart.css" for 41.202.76.144 at 2016-07-09 21:14:47 +0000
+
+
+Started GET "/assets/tagsinput/jquery.tagsinput.css" for 41.202.76.144 at 2016-07-09 21:14:47 +0000
+
+
+Started GET "/assets/jquery/ui.css" for 41.202.76.144 at 2016-07-09 21:14:47 +0000
+
+
+Started GET "/assets/validation/validationEngine.jquery.css" for 41.202.76.144 at 2016-07-09 21:14:47 +0000
+
+
+Started GET "/assets/multiselect/multiselect.css" for 41.202.76.144 at 2016-07-09 21:14:47 +0000
+
+
+Started GET "/assets/cleditor/cleditor.css" for 41.202.76.144 at 2016-07-09 21:14:48 +0000
+
+
+Started GET "/assets/mcustomscrollbar/mCustomScrollbar.css" for 41.202.76.144 at 2016-07-09 21:14:48 +0000
+
+
+Started GET "/assets/shbrush/shCoreDefault.css" for 41.202.76.144 at 2016-07-09 21:14:48 +0000
+
+
+Started GET "/assets/shbrush/shThemeDefault.css" for 41.202.76.144 at 2016-07-09 21:14:48 +0000
+
+
+Started GET "/assets/stepywizard/jquery.stepy.css" for 41.202.76.144 at 2016-07-09 21:14:48 +0000
+
+
+Started GET "/assets/plugins/plupload/jquery.plupload.queue/css/jquery.plupload.queue.css" for 41.202.76.144 at 2016-07-09 21:14:48 +0000
+
+
+Started GET "/assets/icons.css" for 41.202.76.144 at 2016-07-09 21:14:48 +0000
+
+
+Started GET "/assets/styling.css" for 41.202.76.144 at 2016-07-09 21:14:48 +0000
+
+
+Started GET "/assets/stylesheet.css" for 41.202.76.144 at 2016-07-09 21:14:48 +0000
+
+
+Started GET "/assets/opera.css" for 41.202.76.144 at 2016-07-09 21:14:48 +0000
+
+
+Started GET "/assets/bootstrap/bootstrap.min.css" for 41.202.76.144 at 2016-07-09 21:14:49 +0000
+
+
+Started GET "/assets/bootstrap/bootstrap-responsive.min.css" for 41.202.76.144 at 2016-07-09 21:14:49 +0000
+
+
+Started GET "/assets/uniform/uniform.css" for 41.202.76.144 at 2016-07-09 21:14:49 +0000
+
+
+Started GET "/assets/plugins/uniform/jquery.uniform.min.js?body=1" for 41.202.76.144 at 2016-07-09 21:14:49 +0000
+
+
+Started GET "/assets/mystyles.css" for 41.202.76.144 at 2016-07-09 21:14:49 +0000
+
+
+Started GET "/assets/plugins/shbrush/shCore.js?body=1" for 41.202.76.144 at 2016-07-09 21:14:49 +0000
+
+
+Started GET "/assets/plugins/shbrush/shBrushXml.js?body=1" for 41.202.76.144 at 2016-07-09 21:14:49 +0000
+
+
+Started GET "/assets/plugins/shbrush/shBrushJScript.js?body=1" for 41.202.76.144 at 2016-07-09 21:14:49 +0000
+
+
+Started GET "/assets/select/select.css" for 41.202.76.144 at 2016-07-09 21:14:49 +0000
+
+
+Started GET "/assets/plugins.js?body=1" for 41.202.76.144 at 2016-07-09 21:14:50 +0000
+
+
+Started GET "/assets/plugins/shbrush/shBrushCss.js?body=1" for 41.202.76.144 at 2016-07-09 21:14:50 +0000
+
+
+Started GET "/assets/plugins/bootstrap/bootstrap.min.js?body=1" for 41.202.76.144 at 2016-07-09 21:14:50 +0000
+
+
+Started GET "/assets/plugins/shbrush/XRegExp.js?body=1" for 41.202.76.144 at 2016-07-09 21:14:50 +0000
+
+
+Started GET "/assets/charts.js?body=1" for 41.202.76.144 at 2016-07-09 21:14:50 +0000
+
+
+Started GET "/assets/backgrounds/default.jpg" for 41.202.76.144 at 2016-07-09 21:14:51 +0000
