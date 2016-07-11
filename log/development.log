@@ -9230,6 +9230,7 @@ Migrating to AddCashoutLogFieldsToUbas (20160711161354)
   [1m[36mSQL (2.7ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160711161354"]]
   [1m[35m (13.6ms)[0m  COMMIT
   [1m[36mActiveRecord::SchemaMigration Load (1.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+<<<<<<< HEAD
 >>>>>>> b15af307a9e4e213177f2d6f687d52a4743cddd4
   [1m[36mActiveRecord::SchemaMigration Load (0.8ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
 Migrating to AddCashoutLogFieldsToUbas (20160711161354)
@@ -9241,3 +9242,39 @@ Migrating to AddCashoutLogFieldsToUbas (20160711161354)
   [1m[36mSQL (1.6ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160711161354"]]
   [1m[35m (16.9ms)[0m  COMMIT
   [1m[36mActiveRecord::SchemaMigration Load (0.6ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+=======
+  [1m[36mActiveRecord::SchemaMigration Load (1.9ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddCashoutLogFieldsToNovapays (20160711165353)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (9.1ms)[0m  [1mALTER TABLE "novapays" ADD COLUMN "cashout_account_number" character varying(255)[0m
+  [1m[35m (0.5ms)[0m  ALTER TABLE "novapays" ADD COLUMN "cashout_notified_to_front_office" boolean
+  [1m[36m (1.0ms)[0m  [1mALTER TABLE "novapays" ADD COLUMN "cashout_notification_request" text[0m
+  [1m[35m (1.0ms)[0m  ALTER TABLE "novapays" ADD COLUMN "cashout_notification_response" text
+  [1m[36mSQL (2.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160711165353"]]
+  [1m[35m (16.5ms)[0m  COMMIT
+Migrating to AddCashoutLogFieldsToMtnCis (20160711165424)
+  [1m[36m (0.6ms)[0m  [1mBEGIN[0m
+  [1m[35m (11.3ms)[0m  ALTER TABLE "mtn_cis" ADD COLUMN "cashout_account_number" character varying(255)
+  [1m[36m (0.8ms)[0m  [1mALTER TABLE "mtn_cis" ADD COLUMN "cashout_notified_to_front_office" boolean[0m
+  [1m[35m (0.8ms)[0m  ALTER TABLE "mtn_cis" ADD COLUMN "cashout_notification_request" text
+  [1m[36m (0.9ms)[0m  [1mALTER TABLE "mtn_cis" ADD COLUMN "cashout_notification_response" text[0m
+  [1m[35mSQL (1.0ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160711165424"]]
+  [1m[36m (9.7ms)[0m  [1mCOMMIT[0m
+Migrating to AddCashoutLogFieldsToOrangeMoneyCiBaskets (20160711165456)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (1.8ms)[0m  [1mALTER TABLE "orange_money_ci_baskets" ADD COLUMN "cashout_account_number" character varying(255)[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "orange_money_ci_baskets" ADD COLUMN "cashout_notified_to_front_office" boolean
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "orange_money_ci_baskets" ADD COLUMN "cashout_notification_request" text[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "orange_money_ci_baskets" ADD COLUMN "cashout_notification_response" text
+  [1m[36mSQL (1.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160711165456"]]
+  [1m[35m (7.3ms)[0m  COMMIT
+Migrating to AddCashoutLogFieldsToQashBaskets (20160711165523)
+  [1m[36m (0.6ms)[0m  [1mBEGIN[0m
+  [1m[35m (1.3ms)[0m  ALTER TABLE "qash_baskets" ADD COLUMN "cashout_account_number" character varying(255)
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "qash_baskets" ADD COLUMN "cashout_notified_to_front_office" boolean[0m
+  [1m[35m (8.3ms)[0m  ALTER TABLE "qash_baskets" ADD COLUMN "cashout_notification_request" text
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "qash_baskets" ADD COLUMN "cashout_notification_response" text[0m
+  [1m[35mSQL (1.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160711165523"]]
+  [1m[36m (12.2ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (1.0ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+>>>>>>> c5901b7612a7bd43f42ecfa529e4bb42a74be0b4
