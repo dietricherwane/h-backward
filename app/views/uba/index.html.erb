@@ -65,6 +65,7 @@
 		          </div>
 	          </div>
 	        <% end %>
+	        <%= hidden_field_tag "transaction_id", "#{@basket.transaction_id}" %>
           <div class = "row-form">
 		        <div class = "span12">
 			        <%= text_field_tag "firstname", params[:firstname], placeholder: 'Nom' %>
