@@ -83,7 +83,7 @@ class UbaController < ApplicationController
 
   def cashout
     @cashout_account_number = params[:cashout_account_number]
-    @transaction_id = params[:custom]
+    @transaction_id = session[:basket].transaction_id
 
     @basket = Uba.find_by_transaction_id(@transaction_id)
 
