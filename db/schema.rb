@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160709185020) do
+ActiveRecord::Schema.define(version: 20160711161354) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -477,6 +477,10 @@ ActiveRecord::Schema.define(version: 20160709185020) do
     t.boolean  "cashout"
     t.boolean  "cashout_completed"
     t.string   "paymoney_password"
+    t.string   "cashout_account_number"
+    t.boolean  "cashout_notified_to_front_office"
+    t.text     "cashout_notification_request"
+    t.text     "cashout_notification_response"
   end
 
   create_table "wallets", force: true do |t|

@@ -4,9 +4,9 @@ class NovapaysController < ApplicationController
   @@second_origin_url = Parameter.first.second_origin_url
 
   ##before_action :only => :guard do |o| o.filter_connections end
-  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :payment_result_listener, :valid_result_parameters, :generic_ipn_notification, :cashout, :process_payment]
+  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :payment_result_listener, :valid_result_parameters, :generic_ipn_notification, :cashout, :process_payment, :cashout]
   # Si l'utilisateur ne s'est pas connecté en passant par main#guard, on le rejette
-  before_action :except => [:ipn, :transaction_acknowledgement, :payment_result_listener, :valid_result_parameters, :generic_ipn_notification, :cashout, :process_payment] do |s| s.session_authenticated? end
+  before_action :except => [:ipn, :transaction_acknowledgement, :payment_result_listener, :valid_result_parameters, :generic_ipn_notification, :cashout, :process_payment, :cashout] do |s| s.session_authenticated? end
 
   # Set transaction amount for GUCE requests
   before_action :only => :index do |o| o.guce_request? end
@@ -33,6 +33,9 @@ class NovapaysController < ApplicationController
     # vérifie qu'un numéro panier appartenant à ce service n'existe pas déjà. Si non, on crée un panier temporaire, si oui, on met à jour le montant envoyé par le ecommerce, la monnaie envoyée par celui ci ainsi que le montant, la monnaie et les frais à envoyer au ecommerce
    #render text: "#{Parameter.first.guce_back_office_url}/GPG_GUCE/rest/Mob_Mon/Check/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}"
     @basket = Novapay.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'")
+
+    set_cashout_fee
+
     if @basket.blank?
       @basket = Novapay.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :original_transaction_amount => session[:trs_amount], :transaction_amount => session[:trs_amount].to_f.ceil, :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, transaction_id: Digest::SHA1.hexdigest([DateTime.now.iso8601(6), rand].join), :fees => @shipping, :rate => @rate, :login_id => session[:login_id], paymoney_account_number: session[:paymoney_account_number], paymoney_account_token: session[:paymoney_account_token], paymoney_password: session[:paymoney_password])
     else
@@ -197,35 +200,69 @@ class NovapaysController < ApplicationController
   end
 
   def cashout
+    @cashout_account_number = params[:cashout_account_number]
     @transaction_id = params[:_refact]
 
     @basket = Novapay.find_by_number(@transaction_id)
 
-    if !@basket.blank?
-      # Cashout mobile money
-      operation_token = '98414bba'
-      mobile_money_token = 'ffce3241'
-      unload_request = "#{Parameter.first.gateway_wallet_url}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/PAYPAL/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.paymoney_password}/#{@basket.original_transaction_amount}/0"
+    if @cashout_account_number.blank?
+      @error = true
+      @error_messages = ["Veuillez entrer le compte à recharger"]
+      initialize_customer_view("77e26b3cbd", "ceiled_transaction_amount", "ceiled_shipping_fee")
+      get_service_logo(session[:service].token)
+      @basket = Novapay.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'")
 
-      unload_response = (RestClient.get(unload_request) rescue "")
-      if unload_response.include?('|') || unload_response.blank?
-        @status_id = '0'
-        # Update in available_wallet the number of failed_transactions
-        update_number_of_failed_transactions
-        @basket.update_attributes(payment_status: false, cashout: true, cashout_completed: false)
-      else
-        @status_id = '5'
-        # Update in available_wallet the number of successful_transactions
-        #update_number_of_succeed_transactions
-        @basket.update_attributes(payment_status: true, cashout: true, cashout_completed: true)
-      end
-      @basket.update_attributes(paymoney_reload_request: unload_request, paymoney_reload_response: unload_response, paymoney_transaction_id: ((unload_response.blank? || unload_response.include?('|')) ? nil : unload_response))
-
-      redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=biao&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
-      # Cashout mobile money
+      render :index
     else
-      redirect_to error_page_path
+      if !@basket.blank?
+        # Cashout mobile money
+        operation_token = '98414bba'
+        mobile_money_token = 'ffce3241'
+
+
+        unload_request = "#{Parameter.first.gateway_wallet_url}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/Nsia/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.paymoney_password}/#{@basket.original_transaction_amount}/#{(@basket.fees / @basket.rate).ceil.round(2)}"
+
+        unload_response = (RestClient.get(unload_request) rescue "")
+        if unload_response.include?('|') || unload_response.blank?
+          @status_id = '0'
+          # Update in available_wallet the number of failed_transactions
+          update_number_of_failed_transactions
+          @basket.update_attributes(payment_status: false, cashout: true, cashout_completed: false, paymoney_reload_request: unload_request, paymoney_reload_response: unload_response, paymoney_transaction_id: unload_response, cashout_account_number: @cashout_account_number)
+        else
+          @status_id = '5'
+          # Update in available_wallet the number of successful_transactions
+          #update_number_of_succeed_transactions
+          @basket.update_attributes(payment_status: true, cashout: true, cashout_completed: true, paymoney_reload_request: unload_request, paymoney_reload_response: unload_response, cashout_account_number: @cashout_account_number)
+        end
+
+        # Saves the transaction on the front office
+        save_cashout_log
+
+        redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=biao&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
+        # Cashout mobile money
+      else
+        redirect_to error_page_path
+      end
     end
+  end
+
+  def set_cashout_fee
+    if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423'
+      fee_type = FeeType.find_by_token('0175ad')
+      @shipping = 0
+
+      if !fee_type.blank?
+	      @shipping = ((fee_type.fees.where("min_value <= #{session[:trs_amount].to_f} AND max_value >= #{session[:trs_amount].to_f}").first.fee_value) * @rate).ceil.round(2)
+	    end
+	  end
+  end
+
+  # Saves the transaction on the front office
+  def save_cashout_log
+    log_request = "#{Parameter.first.front_office_url}/api/856332ed59e5207c68e864564/cashout/log/novapay?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}&cashout_account_number=#{@cashout_account_number}"
+    log_response = (RestClient.get(log_request) rescue "")
+
+    @basket.update_attributes(cashout_notified_to_front_office: (log_response == '1' ? true : false), cashout_notification_request: log_request, cashout_notification_response: log_response)
   end
 
   # Returns 0 or 1 depending on the status of the transaction

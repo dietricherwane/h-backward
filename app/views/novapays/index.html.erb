@@ -80,6 +80,11 @@
 		          </div>
 		        </div>
 	        </div>
+	        <% if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423' %>
+	          <div class="form-group">
+              <%= text_field_tag "cashout_account_number", '', placeholder: 'Compte destinataire', :autocomplete => :off, class: "form-control input-sm" %>
+            </div>
+	        <% end %>
 	        <br />
           <div class="span12">
 		        <button class="btn" id = "submit_n">
