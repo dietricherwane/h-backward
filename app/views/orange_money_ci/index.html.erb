@@ -50,7 +50,11 @@
 
       <!------------------------------------------ Data-fluid ----------------------------------->
 		  <div class = "data-fluid" >
-		    <form accept-charset="UTF-8" enctype = "application/x-www-form-urlencoded" action="https://ompay.orange.ci/e-commerce_test_gw/" method="post">
+		    <% if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423' %>
+	        <form action="/OrangeMoneyCI/cashout" method="post">
+	      <% else %>
+          <form accept-charset="UTF-8" enctype = "application/x-www-form-urlencoded" action="https://ompay.orange.ci/e-commerce_test_gw/" method="post">
+        <% end %>
 		      <%= hidden_field_tag "merchantid", "1f3e745c66347bc2cc9492d8526bfe040519396d7c98ad199f4211f39dfd6365" %>
 		      <%= hidden_field_tag "amount", "#{@transaction_amount + (@basket.fees.ceil rescue @basket.first.fees.ceil)}" %>
 		      <%= hidden_field_tag "sessionid", "#{@basket.number rescue @basket.first.number}" %>
@@ -140,11 +144,7 @@
             </div>
           <% end %>
 
-          <% if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423' %>
-		        <form action="/OrangeMoneyCI/cashout" method="post">
-		      <% else %>
             <form accept-charset="UTF-8" enctype = "application/x-www-form-urlencoded" action="https://ompay.orange.ci/e-commerce_test_gw/" method="post">
-          <% end %>
 		        <%= hidden_field_tag "merchantid", "1f3e745c66347bc2cc9492d8526bfe040519396d7c98ad199f4211f39dfd6365" %>
 		        <%= hidden_field_tag "amount", "#{@transaction_amount + (@basket.fees.ceil rescue @basket.first.fees.ceil)}" %>
 		        <%= hidden_field_tag "sessionid", "#{@basket.number rescue @basket.first.number}" %>
