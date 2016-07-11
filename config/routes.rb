@@ -46,7 +46,7 @@ HubsBackOffice::Application.routes.draw do
   post "Paypal/transaction_acknowledgement" => "paypal#transaction_acknowledgement"
   get "Paypal/transaction_acknowledgement/:transaction_id" => "paypal#transaction_acknowledgement"
   post "Paypal/transaction_acknowledgement/:transaction_id" => "paypal#transaction_acknowledgement"
-  post "Paypal/cashout" => "paypal#cashout"
+  post "/Paypal/cashout" => "paypal#cashout"
 
   get "orange_money_ci/:service_id/:operation_id/:basket_number/:transaction_amount" => "orange_money_ci#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "OrangeMoneyCI" => "orange_money_ci#index"
@@ -57,7 +57,7 @@ HubsBackOffice::Application.routes.draw do
   post "OrangeMoneyCI/transaction_acknowledgement" => "orange_money_ci#transaction_acknowledgement"
   post "OrangeMoneyCI/transaction_acknowledgement/:transaction_id" => "orange_money_ci#transaction_acknowledgement"
   get "OrangeMoneyCI/transaction_acknowledgement/:transaction_id" => "orange_money_ci#transaction_acknowledgement"
-  post "OrangeMoneyCI/cashout" => "orange_money_ci#cashout"
+  post "/OrangeMoneyCI/cashout" => "orange_money_ci#cashout"
 
   get "mtn_ci/:service_id/:operation_id/:basket_number/:transaction_amount" => "mtn_cis#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "MTNCI" => "mtn_cis#index"
@@ -73,7 +73,7 @@ HubsBackOffice::Application.routes.draw do
   post "MTNCI/transaction_acknowledgement/:transaction_id" => "mtn_cis#transaction_acknowledgement"
   get "MTNCI/transaction_acknowledgement/:transaction_id" => "mtn_cis#transaction_acknowledgement"
   post "/api/93c080fe2b/MTNCI/confirm_amount/:reference_invoice/:transaction_id/:transaction_amount" => "mtn_cis#api_confirm_amount"
-  post "MTNCI/cashout" => "mtn_cis#cashout"
+  post "/MTNCI/cashout" => "mtn_cis#cashout"
 
   post "/STAS/transaction/confirm" => "mtn_cis#payment_result_listener"
 
@@ -82,7 +82,7 @@ HubsBackOffice::Application.routes.draw do
   post "/UBA/validate" => "uba#validate_transaction"
   post "/UBA/transaction_acknowledgement" => "uba#transaction_acknowledgement"
   get "/UBA/transaction_acknowledgement" => "uba#transaction_acknowledgement"
-  post "UBA/cashout" => "uba#cashout"
+  post "/UBA/cashout" => "uba#cashout"
 
   get "novapay/:service_id/:operation_id/:basket_number/:transaction_amount" => "novapays#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "NovaPay" => "novapays#index"
@@ -92,7 +92,7 @@ HubsBackOffice::Application.routes.draw do
   post "NovaPay/transaction_acknowledgement" => "novapays#transaction_acknowledgement"
   post "NovaPay/transaction_acknowledgement/:transaction_id" => "novapays#transaction_acknowledgement"
   get "NovaPay/transaction_acknowledgement/:transaction_id" => "novapays#transaction_acknowledgement"
-  post "NovaPay/cashout/process" => "novapays#cashout"
+  post "/NovaPay/cashout/process" => "novapays#cashout"
 
   get "qash/:service_id/:operation_id/:basket_number/:transaction_amount" => "qash_baskets#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "Qash" => "qash_baskets#index"
@@ -101,7 +101,7 @@ HubsBackOffice::Application.routes.draw do
   post "Qash/transaction_acknowledgement" => "qash_baskets#transaction_acknowledgement"
   post "Qash/transaction_acknowledgement/:transaction_id" => "qash_baskets#transaction_acknowledgement"
   get "Qash/transaction_acknowledgement/:transaction_id" => "qash_baskets#transaction_acknowledgement"
-  post "Qash/cashout" => "qash_baskets#cashout"
+  post "/Qash/cashout" => "qash_baskets#cashout"
 
   get "delayed_payments/:service_id/:operation_id/:basket_number/:transaction_amount" => "delayed_payments#guard"
   get "Delayed_Payment" => "delayed_payments#index"
