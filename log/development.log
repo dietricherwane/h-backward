@@ -4690,6 +4690,7 @@ Migrating to CreateFees (20160709185020)
   [1m[35mSQL (0.9ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160709185020"]]
   [1m[36m (13.5ms)[0m  [1mCOMMIT[0m
   [1m[35mActiveRecord::SchemaMigration Load (1.2ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+<<<<<<< HEAD
 >>>>>>> a589c22ddffae2d2d0d5d090969152572d8ae579
   [1m[36mActiveRecord::SchemaMigration Load (0.8ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
 Migrating to CreateFeeTypes (20160709184804)
@@ -9218,3 +9219,15 @@ Started GET "/assets/plugins/uniform/jquery.uniform.min.js?body=1" for 41.207.18
 
 
 Started GET "/assets/backgrounds/default.jpg" for 41.207.18.81 at 2016-07-11 13:52:53 +0000
+=======
+  [1m[36mActiveRecord::SchemaMigration Load (18.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddCashoutLogFieldsToUbas (20160711161354)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (28.7ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "cashout_account_number" character varying(255)[0m
+  [1m[35m (1.1ms)[0m  ALTER TABLE "ubas" ADD COLUMN "cashout_notified_to_front_office" boolean
+  [1m[36m (0.8ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "cashout_notification_request" text[0m
+  [1m[35m (0.9ms)[0m  ALTER TABLE "ubas" ADD COLUMN "cashout_notification_response" text
+  [1m[36mSQL (2.7ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160711161354"]]
+  [1m[35m (13.6ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (1.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+>>>>>>> b15af307a9e4e213177f2d6f687d52a4743cddd4
