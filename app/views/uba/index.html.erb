@@ -65,7 +65,7 @@
 		          </div>
 	          </div>
 	        <% end %>
-	        <%= hidden_field_tag "transaction_id", "#{@basket.transaction_id}" %>
+	        <%= hidden_field_tag "transaction_id", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
 	        <div class = "row-form">
 	          <div class = "input-append">
 		          <div class = "span9">
@@ -183,7 +183,7 @@
               <%= text_field_tag "msisdn", params[:msisdn], placeholder: 'Numéro de téléphone', class: "form-control input-sm" %>
             </div>
 
-
+            <%= hidden_field_tag "transaction_id", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
             <div class="form-group">
               <div class="input-group">
                 <%= text_field_tag "amount", @transaction_amount, :readonly => true, class: "form-control input-sm" %>
