@@ -108,7 +108,7 @@ class ServicesController < ApplicationController
   # Creates service and default associated operation
   def create_service(params)
     @service_token = generate_service_token
-    @service = Service.create(code: @service_token, name: params[:name], authentication_token: @service_token, url_on_success: params[:pdt_url], url_on_error: params[:pdt_url], url_to_ipn: params[:ipn_url], token: params[:token], ecommerce_profile_id: (EcommerceProfile.find_by_token(params[:ecommerce_profile_token]) rescue ''))
+    @service = Service.create(code: @service_token, name: params[:name], authentication_token: @service_token, url_on_success: params[:pdt_url], url_on_error: params[:pdt_url], url_to_ipn: params[:ipn_url], token: params[:token], ecommerce_profile_id: (EcommerceProfile.find_by_token(params[:ecommerce_profile_token]).id rescue ''))
     if @service
       create_operation
     else
