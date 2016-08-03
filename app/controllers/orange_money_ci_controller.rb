@@ -143,38 +143,6 @@ class OrangeMoneyCiController < ApplicationController
   end
 
   def cashout
-    @transaction_id = params[:purchaseref]
-
-    @basket = OrangeMoneyCiBasket.find_by_transaction_id(@transaction_id)
-
-    if !@basket.blank?
-      # Cashout mobile money
-      operation_token = '3e7573a1'
-      mobile_money_token = '064b6e92'
-      unload_request = "#{Parameter.first.gateway_wallet_url}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/PAYPAL/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.paymoney_password}/#{@basket.original_transaction_amount}/0"
-
-      unload_response = (RestClient.get(unload_request) rescue "")
-      if unload_response.include?('|') || unload_response.blank?
-        @status_id = '0'
-        # Update in available_wallet the number of failed_transactions
-        update_number_of_failed_transactions
-        @basket.update_attributes(payment_status: false, cashout: true, cashout_completed: false)
-      else
-        @status_id = '5'
-        # Update in available_wallet the number of successful_transactions
-        #update_number_of_succeed_transactions
-        @basket.update_attributes(payment_status: true, cashout: true, cashout_completed: true)
-      end
-      @basket.update_attributes(paymoney_reload_request: unload_request, paymoney_reload_response: unload_response, paymoney_transaction_id: ((unload_response.blank? || unload_response.include?('|')) ? nil : unload_response))
-
-      redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=orange_money_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
-      # Cashout mobile money
-    else
-      redirect_to error_page_path
-    end
-  end
-
-  def cashout
     @cashout_account_number = params[:cashout_account_number]
 
     @transaction_id = params[:purchaseref]
