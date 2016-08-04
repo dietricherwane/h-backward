@@ -251,7 +251,7 @@ class OrangeMoneyCiController < ApplicationController
   end
 
   def session_initialized
-    (@session_id != "access denied" && @session_id.length > 30) ? true : false
+    (@session_id != "access denied" && @session_id != nil && @session_id.length > 30) ? true : false
   end
 
   def notify_to_back_office(basket, url)
