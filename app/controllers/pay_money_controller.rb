@@ -97,7 +97,7 @@ class PayMoneyController < ApplicationController
       # communication with paymoney
       paymoney_token_url = "#{Parameter.first.paymoney_wallet_url}/PAYMONEY_WALLET/rest/check2_compte/#{@account_number}"
       @paymoney_token = (RestClient.get(paymoney_token_url) rescue "")
-      url = "#{@@paymoney_url}/PAYMONEY_WALLET/rest/operation_ecommerce/#{@basket.service.ecommerce_profile.token}/#{@basket.operation.paymoney_token}/#{@paymoney_token}/#{session[:basket]["transaction_amount"]}/#{@basket.fees}/0/#{@transaction_id}/#{@password}"
+      url = "#{Parameter.first.paymoney_wallet_url}/PAYMONEY_WALLET/rest/operation_ecommerce/#{@basket.service.ecommerce_profile.token}/#{@basket.operation.paymoney_token}/#{@paymoney_token}/#{session[:basket]["transaction_amount"]}/#{@basket.fees}/0/#{@transaction_id}/#{@password}"
       @status = RestClient.get(url) rescue ""
 
       Log.create(description: "Paymoney sale", sent_request: url, sent_response: @status, paymoney_account_number: @account_number, paymoney_token_request: paymoney_token_url, paymoney_token_response: @paymoney_token)
