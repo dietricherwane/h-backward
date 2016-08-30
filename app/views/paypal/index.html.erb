@@ -50,7 +50,7 @@
 
       <!------------------------------------------ Data-fluid ----------------------------------->
 		  <div class = "data-fluid" >
-		    <% if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423' %>
+		    <% if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423' || session[:operation].authentication_token == '0acae92d-d63c-41d7-b385-d797b95e9855' %>
 		      <form method="post" action="/Paypal/cashout" class = "paypal-button" target="_top" style="opacity: 1;">
 		    <% else %>
 		      <form method="post" action="https://www.sandbox.paypal.com/cgi-bin/webscr" class = "paypal-button" target="_top" style="opacity: 1;">
@@ -61,10 +61,10 @@
 		      <!--<input type="hidden" name="business" value="92ZE9QH5KHPHY">-->
 		      <%= hidden_field_tag "item_name", "#{session[:service].name}" %>
 		      <input type="hidden" name="quantity" value="1">
-		      <% if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4' || session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423' %>
+		      <% if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4' || session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423' || session[:operation].authentication_token == '0acae92d-d63c-41d7-b385-d797b95e98dc' || session[:operation].authentication_token == '0acae92d-d63c-41d7-b385-d797b95e9855' %>
 		        <div class = "row-form">
 		          <div class = "span12">
-		            <span class="bottom">Numéro de compte PAYMONEY à <%= (session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4') ? ' recharger' : 'débiter'%></span>
+		            <span class="bottom">Numéro de compte PAYMONEY à <%= (session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4' || session[:operation].authentication_token == '0acae92d-d63c-41d7-b385-d797b95e98dc') ? ' recharger' : 'débiter'%></span>
 			          <%= text_field_tag "paymoney_account_number", session[:paymoney_account_number], :readonly => true %>
 		          </div>
 	          </div>
@@ -90,7 +90,7 @@
 		          </div>
 		        </div>
 	        </div>
-	        <% if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423' %>
+	        <% if ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e9855'].include?(session[:operation].authentication_token)  %>
 	          <div class="form-group">
               <%= text_field_tag "cashout_account_number", '', placeholder: 'Compte destinataire', :autocomplete => :off, class: "form-control input-sm" %>
             </div>

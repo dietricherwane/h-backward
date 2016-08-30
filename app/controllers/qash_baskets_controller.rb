@@ -74,7 +74,7 @@ class QashBasketsController < ApplicationController
             generic_ipn_notification(@basket)
 
             # Cashin mobile money
-            if (@basket.operation.authentication_token rescue nil) == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4'
+            if (@basket.operation.authentication_token rescue nil) == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4' || (@basket.operation.authentication_token rescue nil) == '0acae92d-d63c-41d7-b385-d797b95e98dc'
               operation_token = 'd0e39ff3'
               mobile_money_token = '02523ec1'
               reload_request = "#{Parameter.first.gateway_wallet_url}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/QS/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.original_transaction_amount}/0"
