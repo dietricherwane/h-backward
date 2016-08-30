@@ -153,7 +153,11 @@ class PaypalController < ApplicationController
             if (@basket.operation.authentication_token rescue nil) == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4' || (@basket.operation.authentication_token rescue nil) == '0acae92d-d63c-41d7-b385-d797b95e98dc'
               operation_token = 'd62b4b7c'
               mobile_money_token = 'CEWlSRkn'
+              deposit_request = "#{Parameter.first.paymoney_wallet_url}/PAYMONEY_WALLET/rest/cash_in_pos/53740905/CEWlSRkn/#{@basket.original_transaction_amount}/#{Digest::SHA1.hexdigest([DateTime.now.iso8601(6), rand].join).hex.to_s[0..8]}"
+              deposit_response = (RestClient.get(deposit_request) rescue "")
               reload_request = "#{Parameter.first.gateway_wallet_url}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/PAYPAL/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.original_transaction_amount}/0"
+              OmLog.create(log_rl: deposit_request, log_tv: reload_request)
+
               reload_response = (RestClient.get(reload_request) rescue "")
               if reload_response.include?('|')
                 @status_id = '5'
