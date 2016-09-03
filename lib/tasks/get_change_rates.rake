@@ -11,7 +11,7 @@ namespace :currencies do
   	        unless from == to
           	  @request = Typhoeus::Request.new("http://apilayer.net/api/live?access_key=3ff2b63b0f2219858333df046e99f541&currencies=#{to}&source=#{from}", method: :get)
               @request.run
-              @response = eval(@request.response.body.gsub(":", "=>")) rescue nil
+              @response = eval(@request.response.body.gsub(":", "=>")) #rescue nil
               unless @response.blank?
                 @change_exists = ActiveRecord::Base.connection.execute("SELECT * FROM currencies_matches WHERE first_code = '#{from}' AND second_code = '#{to}'")
                 change_amount = @response["#{from + to}"].to_f
