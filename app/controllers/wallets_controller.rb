@@ -125,7 +125,7 @@ class WalletsController < ApplicationController
         transactions = @service.send(wallet.table_name).where(payment_status: true).order("created_at DESC").as_json rescue {}
       # To get failed transactions
       else
-        transactions = @service.send(wallet.table_name).where("conflictual_transaction_amount IS NOT NULL").order("created_at DESC").as_json rescue {}
+        transactions = @service.send(wallet.table_name).where("payment_status IS FALSE").order("created_at DESC").as_json rescue {}
       end
     end
 

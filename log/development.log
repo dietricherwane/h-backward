@@ -350,3 +350,10 @@ HINT:  No operator matches the given name and argument type(s). You might need t
 : SELECT id, number FROM "baskets"  WHERE (id =! 1)
   [1m[35mBasket Load (104.7ms)[0m  SELECT id, number FROM "baskets" WHERE (id = 1)
   [1m[36mBasket Load (1.3ms)[0m  [1mSELECT id, number FROM "baskets" WHERE (id = 90)[0m
+  [1m[36m (12.2ms)[0m  [1mSELECT * FROM currencies_matches[0m
+  [1m[35m (1.1ms)[0m  SELECT * FROM currencies_matches
+  [1m[36m (1.2ms)[0m  [1mSELECT * FROM currencies_matches[0m
+  [1m[35m (1.2ms)[0m  SELECT * FROM currencies_matches
+  [1m[36m (1.0ms)[0m  [1mSELECT * FROM currencies_matches[0m
+  [1m[35m (1.1ms)[0m  SELECT * FROM currencies_matches
+  [1m[36m (1.1ms)[0m  [1mSELECT * FROM currencies_matches[0m
