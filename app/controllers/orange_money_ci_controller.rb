@@ -127,7 +127,10 @@ class OrangeMoneyCiController < ApplicationController
           render text: "La transaction n'existe pas - H"#redirect_to error_page_path
         end
       else
-        render text: "La transaction n'existe pas - O"#redirect_to error_page_path
+        @basket = OrangeMoneyCiBasket.find_by_transaction_id(@transaction_id) rescue nil
+        @basket.update_attributes(payment_status: true, ompay_token: @token, ompay_clientid: @clientid) rescue nil
+        redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=orange_money_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}&id=#{@basket.login_id}"
+        #render text: "La transaction n'existe pas - O"#redirect_to error_page_path
       end
     else
       render text: "Les paramètres que vous avez envoyé sont invalides"#redirect_to error_page_path
