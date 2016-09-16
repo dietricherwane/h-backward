@@ -135,7 +135,7 @@ class OrangeMoneyCiController < ApplicationController
   end
 
   def valid_result_parameters
-    if !@transaction_id.blank? && !@token.blank? && !@clientid.blank? && !@transaction_amount.blank? && (!@status.blank? && @status.to_s.strip == "0")
+    if !@transaction_id.blank? && !@token.blank? && !@clientid.blank? && !@transaction_amount.blank? && !@status.blank?
       return true
     else
       return false
