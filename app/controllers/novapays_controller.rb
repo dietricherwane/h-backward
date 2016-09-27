@@ -97,7 +97,7 @@ class NovapaysController < ApplicationController
               @status_id = '1'
 
               # Cashin mobile money
-              if (@basket.operation.authentication_token rescue nil) == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4' || (@basket.operation.authentication_token rescue nil) == '0acae92d-d63c-41d7-b385-d797b95e98dc'
+              if ['3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '0acae92d-d63c-41d7-b385-d797b95e98dc', '7489bd19-6ef8-4748-8218-ac9201512345'].include?(@basket.operation.authentication_token)
                 operation_token = '1be8397d'
                 mobile_money_token = 'ffce3241'
                 reload_request = "#{Parameter.first.gateway_wallet_url}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/Nsia/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.original_transaction_amount}/0"
