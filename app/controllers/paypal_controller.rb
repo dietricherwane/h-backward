@@ -150,7 +150,7 @@ class PaypalController < ApplicationController
           else
 
             # Cashin mobile money
-            if ['3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '0acae92d-d63c-41d7-b385-d797b95e98dc', '7489bd19-6ef8-4748-8218-ac9201512345'].include?(@basket.operation.authentication_token)
+            if ['3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '0acae92d-d63c-41d7-b385-d797b95e98dc', '7489bd19-6ef8-4748-8218-ac9201512345', 'ebb1f4f3-116b-417e-8348-5964771d0123'].include?(@basket.operation.authentication_token)
               operation_token = 'd62b4b7c'
               mobile_money_token = 'CEWlSRkn'
               deposit_request = "#{Parameter.first.paymoney_wallet_url}/PAYMONEY_WALLET/rest/cash_in_pos/53740905/CEWlSRkn/#{@basket.original_transaction_amount}/#{Digest::SHA1.hexdigest([DateTime.now.iso8601(6), rand].join).hex.to_s[0..8]}"

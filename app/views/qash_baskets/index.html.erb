@@ -48,7 +48,7 @@
 
       <!------------------------------------------ Data-fluid ----------------------------------->
 		  <div class = "data-fluid" >
-		    <% if ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e9855', '7489bd19-6ef8-4748-8218-ac92015039c1'].include?(session[:operation].authentication_token) %>
+		    <% if ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e9855', '7489bd19-6ef8-4748-8218-ac92015039c1', 'ebb1f4f3-116b-417e-8348-5964771d0758'].include?(session[:operation].authentication_token) %>
 	        <form action="/Qash/cashout" method="post">
 	      <% else %>
 		      <form action="http://teamqplus.qashservices.com:700/API_PAIEMENT.aspx" method="post">
@@ -57,10 +57,10 @@
 		      <%= hidden_field_tag "MONTANT", "#{session[:basket]["transaction_amount"].to_i + (@basket.fees.ceil rescue @basket.first.fees.ceil)}" %>
 		      <%= hidden_field_tag "ID_OPERATION", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
 		      <%= hidden_field_tag "DEVISE", "CFA" %>
-		      <% if ['3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e98dc', '0acae92d-d63c-41d7-b385-d797b95e9855', '7489bd19-6ef8-4748-8218-ac92015039c1', '7489bd19-6ef8-4748-8218-ac9201512345'].include?(session[:operation].authentication_token) %>
+		      <% if ['3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e98dc', '0acae92d-d63c-41d7-b385-d797b95e9855', '7489bd19-6ef8-4748-8218-ac92015039c1', '7489bd19-6ef8-4748-8218-ac9201512345', 'ebb1f4f3-116b-417e-8348-5964771d0758', 'ebb1f4f3-116b-417e-8348-5964771d0123'].include?(session[:operation].authentication_token) %>
 		        <div class = "row-form">
 		          <div class = "span12">
-		            <span class="bottom">Numéro de compte PAYMONEY à <%= ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e98dc', '7489bd19-6ef8-4748-8218-ac9201512345'].include?(session[:operation].authentication_token) ? ' recharger' : 'débiter'%></span>
+		            <span class="bottom">Numéro de compte PAYMONEY à <%= ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e98dc', '7489bd19-6ef8-4748-8218-ac92015039c1', 'ebb1f4f3-116b-417e-8348-5964771d0758'].include?(session[:operation].authentication_token) ? ' recharger' : 'débiter'%></span>
 			          <%= text_field_tag "paymoney_account_number", session[:paymoney_account_number], :readonly => true %>
 		          </div>
 	          </div>
@@ -81,7 +81,7 @@
 		          </div>
 		        </div>
 	        </div>
-	        <% if ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e9855', '7489bd19-6ef8-4748-8218-ac92015039c1'].include?(session[:operation].authentication_token)  %>
+	        <% if ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e9855', '7489bd19-6ef8-4748-8218-ac92015039c1', 'ebb1f4f3-116b-417e-8348-5964771d0758'].include?(session[:operation].authentication_token)  %>
 	          <div class="form-group">
               <%= text_field_tag "cashout_account_number", '', placeholder: 'Compte destinataire', :autocomplete => :off, class: "form-control input-sm" %>
             </div>
