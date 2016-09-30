@@ -41,7 +41,7 @@ class PaypalController < ApplicationController
     @basket = PaypalBasket.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'")
 
     set_cashout_fee
-s
+
     @shipping = @shipping + 1
 
     if @basket.blank?
