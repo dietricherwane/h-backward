@@ -210,11 +210,15 @@ class ApplicationController < ActionController::Base
   def get_shipping_fee
     @fee = 0
 
-    if @wallet
-      if(@wallet.percentage)
-        @fee = (((@transaction_amount).to_f * @wallet.fee) / 100).round(2)
-      else
-        @fee = @wallet.fee
+    if session[:service].fee.blank?
+      @fee = (((@transaction_amount).to_f * session[:service].fee) / 100).round(2)
+    else
+      if @wallet
+        if(@wallet.percentage)
+          @fee = (((@transaction_amount).to_f * @wallet.fee) / 100).round(2)
+        else
+          @fee = @wallet.fee
+        end
       end
     end
     return @fee
