@@ -211,7 +211,7 @@ class ApplicationController < ActionController::Base
     @fee = 0
 
     if session[:service].fee.blank?
-      @fee = (((@transaction_amount).to_f * session[:service].fee) / 100).round(2)
+      @fee = ((@transaction_amount.to_f * (session[:service].fee || 0)) / 100).round(2)
     else
       if @wallet
         if(@wallet.percentage)
