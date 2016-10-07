@@ -157,11 +157,11 @@ class PaypalController < ApplicationController
               mobile_money_token = 'CEWlSRkn'
               deposit_request = "#{Parameter.first.paymoney_wallet_url}/PAYMONEY_WALLET/rest/cash_in_pos/53740905/CEWlSRkn/#{@basket.original_transaction_amount}/#{Digest::SHA1.hexdigest([DateTime.now.iso8601(6), rand].join).hex.to_s[0..8]}"
               deposit_response = (RestClient.get(deposit_request) rescue "")
-              OmLog.create(log_rl: deposit_request, log_tv: deposit_response)
+              OmLog.create(log_rl: deposit_request.force_encoding('iso8859-1').encode('utf-8'), log_tv: deposit_response.force_encoding('iso8859-1').encode('utf-8')) rescue nil
               reload_request = "#{Parameter.first.gateway_wallet_url}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/PAYPAL/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.original_transaction_amount}/0"
 
               reload_response = (RestClient.get(reload_request) rescue "")
-              OmLog.create(log_rl: reload_request, log_tv: reload_response)
+              OmLog.create(log_rl: reload_request.force_encoding('iso8859-1').encode('utf-8'), log_tv: reload_response.force_encoding('iso8859-1').encode('utf-8')) rescue nil
               if reload_response.include?('|')
                 @status_id = '5'
               end
