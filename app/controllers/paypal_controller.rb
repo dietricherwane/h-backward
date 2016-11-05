@@ -126,7 +126,7 @@ class PaypalController < ApplicationController
         # Use authentication_token to update wallet used
         update_wallet_used(@basket, "e6da96e284")
 
-        if true #(@basket.paid_transaction_amount + @basket.fees) == params[:amt].to_f #(@basket.paid_transaction_amount + @basket.fees) == params[:amt].to_f  and (Currency.find_by_id(@basket.paid_currency_id).code.upcase rescue "") == params[:cc].upcase
+        #if true #(@basket.paid_transaction_amount + @basket.fees) == params[:amt].to_f #(@basket.paid_transaction_amount + @basket.fees) == params[:amt].to_f  and (Currency.find_by_id(@basket.paid_currency_id).code.upcase rescue "") == params[:cc].upcase
           @basket.update_attributes(:payment_status => true)
 
           # Conversion du montant débité par le wallet et des frais en euro avant envoi pour notification au back office du hub
@@ -172,6 +172,7 @@ class PaypalController < ApplicationController
             OmLog.create(log_rl: ("Paypal parameters 3: " + "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}")) rescue nil
             redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
           end
+=begin
         else
           (params[:cc].length > 3) ? params[:cc][0,3] : false
           # Le montant payé ou la monnaie n'est pas celui ou celle envoyé au wallet pour ce panier
@@ -186,6 +187,7 @@ class PaypalController < ApplicationController
             redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}&id=#{@basket.login_id}"
           end
         end
+=end
       else
         # On vérifie que le panier existe
         redirect_to error_page_path
