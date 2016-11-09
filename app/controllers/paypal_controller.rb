@@ -8,9 +8,9 @@ class PaypalController < ApplicationController
   # Vérifie que le panier n'a pas déjà été payé via paypal
   #before_action :only => :guard do |s| s.basket_already_paid?(params[:basket_number]) end
   # Vérifie pour toutes les actions que la variable de session existe
-  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :cashout]
+  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :cashout, :payment_result_listener]
   # Si l'utilisateur ne s'est pas connecté en passant par main#guard, on le rejette
-  before_action :except => [:ipn, :transaction_acknowledgement, :cashout] do |s| s.session_authenticated? end
+  before_action :except => [:ipn, :transaction_acknowledgement, :cashout, :payment_result_listener] do |s| s.session_authenticated? end
 
   # Set transaction amount for GUCE requests
   before_action :only => :index do |o| o.guce_request? end
@@ -136,7 +136,7 @@ class PaypalController < ApplicationController
           @fees_for_compensation = (@basket.fees * @rate).round(2)
 
           # Notification au back office du hub
-          notify_to_back_office(@basket, "#{@@second_origin_url}/GATEWAY/rest/WS/#{session[:operation].id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")
+          #notify_to_back_office(@basket, "#{@@second_origin_url}/GATEWAY/rest/WS/#{session[:operation].id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")
 
           # Update in available_wallet the number of successful_transactions
           update_number_of_succeed_transactions
@@ -169,7 +169,7 @@ class PaypalController < ApplicationController
             end
             # Cashin mobile money
 
-            OmLog.create(log_rl: ("Paypal parameters 3: " + "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}")) rescue nil
+            OmLog.create(log_rl: ("Paypal parameters 3: " + "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}")) rescue nil
             redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
           end
 =begin
