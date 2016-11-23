@@ -50,7 +50,7 @@
 
       <!------------------------------------------ Data-fluid ----------------------------------->
 		  <div class = "data-fluid" >
-		    <% if ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e9855', '7489bd19-6ef8-4748-8218-ac92015039c1', 'ebb1f4f3-116b-417e-8348-5964771d0758'].include?(session[:operation].authentication_token) %>
+		    <% if ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e9855', '7489bd19-6ef8-4748-8218-ac92015039c1', 'ebb1f4f3-116b-417e-8348-5964771d0758', 'f8c56da9-63f1-486e-9b0c-eceb0aab6d6c'].include?(session[:operation].authentication_token) %>
 	        <form action="/OrangeMoneyCI/cashout" method="post">
 	      <% else %>
           <form accept-charset="UTF-8" enctype = "application/x-www-form-urlencoded" action="https://ompay.orange.ci/e-commerce/" method="post">
@@ -60,10 +60,10 @@
 		      <%= hidden_field_tag "sessionid", "#{@basket.number rescue @basket.first.number}" %>
 		      <%= hidden_field_tag "purchaseref", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
 		      <%= hidden_field_tag "token", "#{@session_id}" %>
-		      <% if ['3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e98dc', '0acae92d-d63c-41d7-b385-d797b95e9855', '7489bd19-6ef8-4748-8218-ac92015039c1', '7489bd19-6ef8-4748-8218-ac9201512345', 'ebb1f4f3-116b-417e-8348-5964771d0758', 'ebb1f4f3-116b-417e-8348-5964771d0123'].include?(session[:operation].authentication_token) %>
+		      <% if ['3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e98dc', '0acae92d-d63c-41d7-b385-d797b95e9855', '7489bd19-6ef8-4748-8218-ac92015039c1', '7489bd19-6ef8-4748-8218-ac9201512345', 'ebb1f4f3-116b-417e-8348-5964771d0758', 'ebb1f4f3-116b-417e-8348-5964771d0123', 'f8c56da9-63f1-486e-9b0c-eceb0aab6d6c', 's8g56da9-63f1-486e-9b0c-eceb0aab6d6c'].include?(session[:operation].authentication_token) %>
 		        <div class = "row-form">
 		          <div class = "span12">
-		            <span class="bottom">Numéro de compte PAYMONEY à <%= ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e98dc', '7489bd19-6ef8-4748-8218-ac9201512345', '7489bd19-6ef8-4748-8218-ac92015039c1', 'ebb1f4f3-116b-417e-8348-5964771d0758'].include?(session[:operation].authentication_token) ? ' recharger' : 'débiter'%></span>
+		            <span class="bottom">Numéro de compte PAYMONEY à <%= ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e98dc', '7489bd19-6ef8-4748-8218-ac9201512345', '7489bd19-6ef8-4748-8218-ac92015039c1', 'ebb1f4f3-116b-417e-8348-5964771d0758', 'f8c56da9-63f1-486e-9b0c-eceb0aab6d6c'].include?(session[:operation].authentication_token) ? ' recharger' : 'débiter'%></span>
 			          <%= text_field_tag "paymoney_account_number", session[:paymoney_account_number], :readonly => true %>
 		          </div>
 	          </div>
@@ -84,7 +84,7 @@
 		          </div>
 		        </div>
 	        </div>
-	        <% if ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e9855', '7489bd19-6ef8-4748-8218-ac92015039c1', 'ebb1f4f3-116b-417e-8348-5964771d0758'].include?(session[:operation].authentication_token)  %>
+	        <% if ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e9855', '7489bd19-6ef8-4748-8218-ac92015039c1', 'ebb1f4f3-116b-417e-8348-5964771d0758', 'f8c56da9-63f1-486e-9b0c-eceb0aab6d6c'].include?(session[:operation].authentication_token)  %>
 	          <div class="form-group">
               <%= text_field_tag "cashout_account_number", '', placeholder: 'Compte destinataire', :autocomplete => :off, class: "form-control input-sm" %>
             </div>
