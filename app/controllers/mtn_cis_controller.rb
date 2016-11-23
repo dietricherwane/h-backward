@@ -397,6 +397,7 @@ class MtnCisController < ApplicationController
 
   def merchant_side_redirection
 
+<<<<<<< HEAD
     @transaction_id= session[:transaction_id]
     @basket = MtnCi.find_by_transaction_id(@transaction_id)
     if !@basket.blank?
@@ -471,6 +472,17 @@ class MtnCisController < ApplicationController
           @response_path = "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
           @basket.update_attributes(payment_status: false)
           redirect_to @response_path
+=======
+      # Unload
+      # Cashin mobile money
+      if ['3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '0acae92d-d63c-41d7-b385-d797b95e98dc', '7489bd19-6ef8-4748-8218-ac9201512345', 'ebb1f4f3-116b-417e-8348-5964771d0123', 's8g56da9-63f1-486e-9b0c-eceb0aab6d6c'].include?(@basket.operation.authentication_token)
+        operation_token = 'a71766d6'
+        mobile_money_token = '5cbd715e'
+        reload_request = "#{Parameter.first.gateway_wallet_url}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/Mtn/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.original_transaction_amount}/0"
+        reload_response = (RestClient.get(reload_request) rescue "")
+        if reload_response.include?('|')
+          @status_id = '5'
+>>>>>>> 1541baae075af15774a57b4af9db7e87e634c3dd
         end
       end
 

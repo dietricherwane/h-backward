@@ -97,7 +97,7 @@ class OrangeMoneyCiController < ApplicationController
             else
 
               # Cashin mobile money
-              if (@basket.operation.authentication_token rescue nil) == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4' || (@basket.operation.authentication_token rescue nil) == '0acae92d-d63c-41d7-b385-d797b95e98dc'
+              if ['3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '0acae92d-d63c-41d7-b385-d797b95e98dc', '7489bd19-6ef8-4748-8218-ac9201512345', 'ebb1f4f3-116b-417e-8348-5964771d0123', 's8g56da9-63f1-486e-9b0c-eceb0aab6d6c'].include?(@basket.operation.authentication_token)
                 operation_token = '6fb8a45e'
                 mobile_money_token = '064b6e92'
                 reload_request = "#{Parameter.first.gateway_wallet_url}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/Orange/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.original_transaction_amount}/0"
@@ -127,7 +127,10 @@ class OrangeMoneyCiController < ApplicationController
           render text: "La transaction n'existe pas - H"#redirect_to error_page_path
         end
       else
-        render text: "La transaction n'existe pas - O"#redirect_to error_page_path
+        @basket = OrangeMoneyCiBasket.find_by_transaction_id(@transaction_id) rescue nil
+        @basket.update_attributes(payment_status: true, ompay_token: @token, ompay_clientid: @clientid) rescue nil
+        redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=orange_money_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}&id=#{@basket.login_id}"
+        #render text: "La transaction n'existe pas - O"#redirect_to error_page_path
       end
     else
       render text: "Les paramètres que vous avez envoyé sont invalides"#redirect_to error_page_path
@@ -135,7 +138,7 @@ class OrangeMoneyCiController < ApplicationController
   end
 
   def valid_result_parameters
-    if !@transaction_id.blank? && !@token.blank? && !@clientid.blank? && !@transaction_amount.blank? && (!@status.blank? && @status.to_s.strip == "0")
+    if !@transaction_id.blank? && !@token.blank? && !@clientid.blank? && !@transaction_amount.blank? && !@status.blank?
       return true
     else
       return false

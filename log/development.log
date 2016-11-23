@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 test tetstststssts tsttstts
 
 NoMethodError (undefined method `available_wallets' for nil:NilClass):
@@ -783,3 +784,371 @@ Encoding::InvalidByteSequenceError ("\xE9" followed by "e" on UTF-8):
   app/controllers/mtn_cis_controller.rb:248:in `cashin_mobile'
 
 
+=======
+  [1m[36mActiveRecord::SchemaMigration Load (18.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddEcommerceProfileIdToServices (20160623222955)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (27.9ms)[0m  [1mALTER TABLE "services" ADD COLUMN "ecommerce_profile_id" integer[0m
+PG::DuplicateColumn: ERROR:  column "ecommerce_profile_id" of relation "services" already exists
+: ALTER TABLE "services" ADD COLUMN "ecommerce_profile_id" integer
+  [1m[35m (0.5ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (1.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.7ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (1.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to CreateEcommerceProfiles (20160623223432)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (172.8ms)[0m  [1mCREATE TABLE "ecommerce_profiles" ("id" serial primary key, "description" character varying(255), "token" character varying(255), "published" boolean, "created_at" timestamp, "updated_at" timestamp) [0m
+  [1m[35mSQL (2.7ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160623223432"]]
+  [1m[36m (14.2ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.8ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (1.7ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddPaymoneyWalletUrlToParameters (20160623230611)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (15.1ms)[0m  [1mALTER TABLE "parameters" ADD COLUMN "paymoney_wallet_url" character varying(255)[0m
+  [1m[35mSQL (2.0ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160623230611"]]
+  [1m[36m (8.8ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (1.1ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (1.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to CreateLogs (20160624002230)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (78.1ms)[0m  [1mCREATE TABLE "logs" ("id" serial primary key, "description" character varying(255), "sent_request" text, "sent_response" text, "created_at" timestamp, "updated_at" timestamp) [0m
+  [1m[35mSQL (2.4ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160624002230"]]
+  [1m[36m (11.7ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.7ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (18.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddEcommerceProfileIdToServices (20160624181821)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (13.2ms)[0m  [1mALTER TABLE "services" ADD COLUMN "ecommerce_profile_id" integer[0m
+  [1m[35mSQL (1.6ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160624181821"]]
+  [1m[36m (18.7ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.6ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (1.9ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddPaymoneyAccountNumberToLogs (20160624183332)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (16.2ms)[0m  [1mALTER TABLE "logs" ADD COLUMN "paymoney_account_number" character varying(255)[0m
+  [1m[35mSQL (2.4ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160624183332"]]
+  [1m[36m (14.7ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (1.0ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (1.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddPaymoneyFieldsToLogs (20160624184732)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (1.1ms)[0m  [1mALTER TABLE "logs" ADD COLUMN "paymoney_token_request" text[0m
+  [1m[35m (0.5ms)[0m  ALTER TABLE "logs" ADD COLUMN "paymoney_token_response" text
+  [1m[36mSQL (2.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160624184732"]]
+  [1m[35m (86.3ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (0.7ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.5ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddPaymoneyTokenToOperations (20160624190903)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (11.7ms)[0m  [1mALTER TABLE "operations" ADD COLUMN "paymoney_token" character varying(255)[0m
+  [1m[35mSQL (2.5ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160624190903"]]
+  [1m[36m (10.0ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.9ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (62.0ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddPaymoneyFieldsToUbas (20160626225335)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (135.3ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "paymoney_account_number" text[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "ubas" ADD COLUMN "paymoney_account_token" character varying(255)
+  [1m[36m (0.9ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "paymoney_reload_request" text[0m
+  [1m[35m (0.9ms)[0m  ALTER TABLE "ubas" ADD COLUMN "paymoney_reload_response" text
+  [1m[36m (1.3ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "paymoney_token_request" text[0m
+  [1m[35mSQL (2.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160626225335"]]
+  [1m[36m (51.9ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.9ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (1.7ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.8ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+Migrating to AddPaymoneyFieldsToUbas (20160626225335)
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35m (72.5ms)[0m  ALTER TABLE "ubas" DROP "paymoney_token_request"
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "ubas" DROP "paymoney_reload_response"[0m
+  [1m[35m (0.5ms)[0m  ALTER TABLE "ubas" DROP "paymoney_reload_request"
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "ubas" DROP "paymoney_account_token"[0m
+  [1m[35m (0.6ms)[0m  ALTER TABLE "ubas" DROP "paymoney_account_number"
+  [1m[36mSQL (11.2ms)[0m  [1mDELETE FROM "schema_migrations" WHERE "schema_migrations"."version" = '20160626225335'[0m
+  [1m[35m (15.3ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddPaymoneyFieldsToUbas (20160626225659)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (1.5ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "paymoney_account_number" text[0m
+  [1m[35m (0.8ms)[0m  ALTER TABLE "ubas" ADD COLUMN "paymoney_account_token" character varying(255)
+  [1m[36m (0.8ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "paymoney_reload_request" text[0m
+  [1m[35m (0.8ms)[0m  ALTER TABLE "ubas" ADD COLUMN "paymoney_reload_response" text
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "paymoney_token_request" text[0m
+  [1m[35mSQL (2.4ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160626225659"]]
+  [1m[36m (12.5ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.9ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (52.2ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.7ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+Migrating to AddPaymoneyFieldsToUbas (20160626225659)
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35m (241.9ms)[0m  ALTER TABLE "ubas" DROP "paymoney_token_request"
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "ubas" DROP "paymoney_reload_response"[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "ubas" DROP "paymoney_reload_request"
+  [1m[36m (0.8ms)[0m  [1mALTER TABLE "ubas" DROP "paymoney_account_token"[0m
+  [1m[35m (0.6ms)[0m  ALTER TABLE "ubas" DROP "paymoney_account_number"
+  [1m[36mSQL (10.3ms)[0m  [1mDELETE FROM "schema_migrations" WHERE "schema_migrations"."version" = '20160626225659'[0m
+  [1m[35m (23.4ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (1.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddPaymoneyFieldsToUbas (20160627095649)
+  [1m[35m (0.7ms)[0m  BEGIN
+  [1m[36m (20.8ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "paymoney_account_number" text[0m
+  [1m[35m (0.9ms)[0m  ALTER TABLE "ubas" ADD COLUMN "paymoney_account_token" character varying(255)
+  [1m[36m (0.9ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "paymoney_reload_request" text[0m
+  [1m[35m (0.5ms)[0m  ALTER TABLE "ubas" ADD COLUMN "paymoney_reload_response" text
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "paymoney_token_request" text[0m
+  [1m[35m (0.5ms)[0m  ALTER TABLE "ubas" ADD COLUMN "paymoney_transaction_id" character varying(255)
+  [1m[36mSQL (2.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160627095649"]]
+  [1m[35m (16.1ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (1.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddPaymoneyFieldsToBaskets (20160627142649)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (11.4ms)[0m  [1mALTER TABLE "baskets" ADD COLUMN "paymoney_account_number" text[0m
+  [1m[35m (1.3ms)[0m  ALTER TABLE "baskets" ADD COLUMN "paymoney_account_token" character varying(255)
+  [1m[36m (1.0ms)[0m  [1mALTER TABLE "baskets" ADD COLUMN "paymoney_reload_request" text[0m
+  [1m[35m (0.9ms)[0m  ALTER TABLE "baskets" ADD COLUMN "paymoney_reload_response" text
+  [1m[36m (0.8ms)[0m  [1mALTER TABLE "baskets" ADD COLUMN "paymoney_token_request" text[0m
+  [1m[35m (0.8ms)[0m  ALTER TABLE "baskets" ADD COLUMN "paymoney_transaction_id" character varying(255)
+  [1m[36mSQL (2.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160627142649"]]
+  [1m[35m (5.2ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.6ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddGatewayWalletUrlToParameters (20160627145211)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (19.9ms)[0m  [1mALTER TABLE "parameters" ADD COLUMN "gateway_wallet_url" character varying(255)[0m
+  [1m[35mSQL (1.9ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160627145211"]]
+  [1m[36m (5.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (1.0ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (28.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddPaymoneyFieldsToPaypalBaskets (20160628120321)
+  [1m[35m (0.8ms)[0m  BEGIN
+  [1m[36m (118.8ms)[0m  [1mALTER TABLE "paypal_baskets" ADD COLUMN "paymoney_account_number" text[0m
+  [1m[35m (0.6ms)[0m  ALTER TABLE "paypal_baskets" ADD COLUMN "paymoney_account_token" character varying(255)
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "paypal_baskets" ADD COLUMN "paymoney_reload_request" text[0m
+  [1m[35m (0.6ms)[0m  ALTER TABLE "paypal_baskets" ADD COLUMN "paymoney_reload_response" text
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "paypal_baskets" ADD COLUMN "paymoney_token_request" text[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "paypal_baskets" ADD COLUMN "paymoney_transaction_id" character varying(255)
+  [1m[36mSQL (2.0ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160628120321"]]
+  [1m[35m (18.4ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (0.8ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddPaymoneyFieldsToNovapays (20160628120836)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (13.1ms)[0m  [1mALTER TABLE "novapays" ADD COLUMN "paymoney_account_number" text[0m
+  [1m[35m (0.9ms)[0m  ALTER TABLE "novapays" ADD COLUMN "paymoney_account_token" character varying(255)
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "novapays" ADD COLUMN "paymoney_reload_request" text[0m
+  [1m[35m (0.6ms)[0m  ALTER TABLE "novapays" ADD COLUMN "paymoney_reload_response" text
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "novapays" ADD COLUMN "paymoney_token_request" text[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "novapays" ADD COLUMN "paymoney_transaction_id" character varying(255)
+  [1m[36mSQL (2.5ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160628120836"]]
+  [1m[35m (14.7ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (0.9ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddPaymoneyFieldsToQashBaskets (20160628121441)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (16.0ms)[0m  [1mALTER TABLE "qash_baskets" ADD COLUMN "paymoney_account_number" text[0m
+  [1m[35m (1.0ms)[0m  ALTER TABLE "qash_baskets" ADD COLUMN "paymoney_account_token" character varying(255)
+  [1m[36m (0.8ms)[0m  [1mALTER TABLE "qash_baskets" ADD COLUMN "paymoney_reload_request" text[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "qash_baskets" ADD COLUMN "paymoney_reload_response" text
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "qash_baskets" ADD COLUMN "paymoney_token_request" text[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "qash_baskets" ADD COLUMN "paymoney_transaction_id" character varying(255)
+  [1m[36mSQL (1.9ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160628121441"]]
+  [1m[35m (15.0ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.7ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddPaymoneyFieldsToOrangeMoneyCiBaskets (20160628121814)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (1.8ms)[0m  [1mALTER TABLE "orange_money_ci_baskets" ADD COLUMN "paymoney_account_number" text[0m
+  [1m[35m (0.8ms)[0m  ALTER TABLE "orange_money_ci_baskets" ADD COLUMN "paymoney_account_token" character varying(255)
+  [1m[36m (0.8ms)[0m  [1mALTER TABLE "orange_money_ci_baskets" ADD COLUMN "paymoney_reload_request" text[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "orange_money_ci_baskets" ADD COLUMN "paymoney_reload_response" text
+  [1m[36m (1.1ms)[0m  [1mALTER TABLE "orange_money_ci_baskets" ADD COLUMN "paymoney_token_request" text[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "orange_money_ci_baskets" ADD COLUMN "paymoney_transaction_id" character varying(255)
+  [1m[36mSQL (2.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160628121814"]]
+  [1m[35m (14.9ms)[0m  COMMIT
+Migrating to AddPaymoneyFieldsToMtnCis (20160628121906)
+  [1m[36m (0.6ms)[0m  [1mBEGIN[0m
+  [1m[35m (1.4ms)[0m  ALTER TABLE "mtn_cis" ADD COLUMN "paymoney_account_number" text
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "mtn_cis" ADD COLUMN "paymoney_account_token" character varying(255)[0m
+  [1m[35m (0.5ms)[0m  ALTER TABLE "mtn_cis" ADD COLUMN "paymoney_reload_request" text
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "mtn_cis" ADD COLUMN "paymoney_reload_response" text[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "mtn_cis" ADD COLUMN "paymoney_token_request" text
+  [1m[36m (13.3ms)[0m  [1mALTER TABLE "mtn_cis" ADD COLUMN "paymoney_transaction_id" character varying(255)[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160628121906"]]
+  [1m[36m (56.8ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (1.1ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (72.8ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddCashoutFieldsToPaypal (20160702213032)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (48.3ms)[0m  [1mALTER TABLE "paypals" ADD COLUMN "cashout" boolean[0m
+PG::UndefinedTable: ERROR:  relation "paypals" does not exist
+: ALTER TABLE "paypals" ADD COLUMN "cashout" boolean
+  [1m[35m (0.6ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (1.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddCashoutFieldsToPaypalBaskets (20160702213138)
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36m (94.7ms)[0m  [1mALTER TABLE "paypal_baskets" ADD COLUMN "cashout" boolean[0m
+  [1m[35m (1.0ms)[0m  ALTER TABLE "paypal_baskets" ADD COLUMN "cashout_completed" boolean
+  [1m[36mSQL (2.4ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160702213138"]]
+  [1m[35m (37.9ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (1.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (17.6ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddPaymoneyPasswordToPaypalBaskets (20160703090716)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (111.0ms)[0m  [1mALTER TABLE "paypal_baskets" ADD COLUMN "paymoney_password" character varying(255)[0m
+  [1m[35mSQL (2.0ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160703090716"]]
+  [1m[36m (18.3ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (1.0ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (18.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddCashoutFieldsToNovapays (20160703164336)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (137.2ms)[0m  [1mALTER TABLE "novapays" ADD COLUMN "cashout" boolean[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "novapays" ADD COLUMN "cashout_completed" boolean
+  [1m[36m (0.9ms)[0m  [1mALTER TABLE "novapays" ADD COLUMN "paymoney_password" character varying(255)[0m
+  [1m[35mSQL (2.3ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160703164336"]]
+  [1m[36m (18.0ms)[0m  [1mCOMMIT[0m
+Migrating to AddCashoutFieldsToUbas (20160703164359)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (55.4ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "cashout" boolean[0m
+  [1m[35m (0.8ms)[0m  ALTER TABLE "ubas" ADD COLUMN "cashout_completed" boolean
+  [1m[36m (0.8ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "paymoney_password" character varying(255)[0m
+  [1m[35mSQL (1.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160703164359"]]
+  [1m[36m (10.7ms)[0m  [1mCOMMIT[0m
+Migrating to AddCashoutFieldsToOrangeMoneyCiBaskets (20160703164429)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (28.4ms)[0m  [1mALTER TABLE "orange_money_ci_baskets" ADD COLUMN "cashout" boolean[0m
+  [1m[35m (0.8ms)[0m  ALTER TABLE "orange_money_ci_baskets" ADD COLUMN "cashout_completed" boolean
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "orange_money_ci_baskets" ADD COLUMN "paymoney_password" character varying(255)[0m
+  [1m[35mSQL (1.0ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160703164429"]]
+  [1m[36m (5.1ms)[0m  [1mCOMMIT[0m
+Migrating to AddCashoutFieldsToQashBaskets (20160703164454)
+  [1m[35m (0.7ms)[0m  BEGIN
+  [1m[36m (1.4ms)[0m  [1mALTER TABLE "qash_baskets" ADD COLUMN "cashout" boolean[0m
+  [1m[35m (0.6ms)[0m  ALTER TABLE "qash_baskets" ADD COLUMN "cashout_completed" boolean
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "qash_baskets" ADD COLUMN "paymoney_password" character varying(255)[0m
+  [1m[35mSQL (1.0ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160703164454"]]
+  [1m[36m (11.3ms)[0m  [1mCOMMIT[0m
+Migrating to AddCashoutFieldsToMtnCis (20160703164517)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (0.9ms)[0m  [1mALTER TABLE "mtn_cis" ADD COLUMN "cashout" boolean[0m
+  [1m[35m (0.6ms)[0m  ALTER TABLE "mtn_cis" ADD COLUMN "cashout_completed" boolean
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "mtn_cis" ADD COLUMN "paymoney_password" character varying(255)[0m
+  [1m[35mSQL (1.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160703164517"]]
+  [1m[36m (11.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.8ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (29.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddCashoutAccountNumberToPaypalBaskets (20160707195257)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (115.6ms)[0m  [1mALTER TABLE "paypal_baskets" ADD COLUMN "cashout_account_number" character varying(255)[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "paypal_baskets" ADD COLUMN "cashout_notified_to_front_office" boolean
+  [1m[36mSQL (2.4ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160707195257"]]
+  [1m[35m (17.7ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (0.8ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.7ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddCashoutNotificationsToPaypalBaskets (20160707195815)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (1.2ms)[0m  [1mALTER TABLE "paypal_baskets" ADD COLUMN "cashout_notification_request" text[0m
+  [1m[35m (0.6ms)[0m  ALTER TABLE "paypal_baskets" ADD COLUMN "cashout_notification_response" text
+  [1m[36mSQL (2.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160707195815"]]
+  [1m[35m (15.3ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (0.6ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mPaypalBasket Load (84.9ms)[0m  [1mSELECT "paypal_baskets".* FROM "paypal_baskets" ORDER BY "paypal_baskets"."id" ASC LIMIT 1[0m
+  [1m[35mPaypalBasket Load (1.7ms)[0m  SELECT "paypal_baskets".* FROM "paypal_baskets" ORDER BY "paypal_baskets"."id" ASC LIMIT 1
+  [1m[36mPaypalBasket Load (1.5ms)[0m  [1mSELECT "paypal_baskets".* FROM "paypal_baskets" ORDER BY "paypal_baskets"."id" ASC LIMIT 1[0m
+  [1m[35mPaypalBasket Load (1.5ms)[0m  SELECT "paypal_baskets".* FROM "paypal_baskets" ORDER BY "paypal_baskets"."id" ASC LIMIT 1
+  [1m[36mActiveRecord::SchemaMigration Load (29.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddcashoutLogFieldsToPaypalBaskets (20160708143430)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36mSQL (2.7ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160708143430"]]
+  [1m[35m (15.2ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (0.9ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.2ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.7ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+Migrating to AddcashoutLogFieldsToPaypalBaskets (20160708143430)
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (44.5ms)[0m  DELETE FROM "schema_migrations" WHERE "schema_migrations"."version" = '20160708143430'
+  [1m[36m (40.9ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.8ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (40.2ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to CreateFeeTypes (20160709184804)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (454.7ms)[0m  [1mCREATE TABLE "fee_types" ("id" serial primary key, "name" character varying(255), "token" character varying(255), "created_at" timestamp, "updated_at" timestamp) [0m
+  [1m[35m (38.8ms)[0m  CREATE INDEX "index_fee_types_on_token" ON "fee_types" ("token")
+  [1m[36mSQL (1.9ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160709184804"]]
+  [1m[35m (21.4ms)[0m  COMMIT
+Migrating to CreateFees (20160709185020)
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35m (44.2ms)[0m  CREATE TABLE "fees" ("id" serial primary key, "fee_type_id" integer, "min_value" float, "max_value" float, "fee_value" float, "created_at" timestamp, "updated_at" timestamp) 
+  [1m[36m (31.1ms)[0m  [1mCREATE INDEX "index_fees_on_fee_type_id" ON "fees" ("fee_type_id")[0m
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160709185020"]]
+  [1m[36m (13.5ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (1.2ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mActiveRecord::SchemaMigration Load (18.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddCashoutLogFieldsToUbas (20160711161354)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (28.7ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "cashout_account_number" character varying(255)[0m
+  [1m[35m (1.1ms)[0m  ALTER TABLE "ubas" ADD COLUMN "cashout_notified_to_front_office" boolean
+  [1m[36m (0.8ms)[0m  [1mALTER TABLE "ubas" ADD COLUMN "cashout_notification_request" text[0m
+  [1m[35m (0.9ms)[0m  ALTER TABLE "ubas" ADD COLUMN "cashout_notification_response" text
+  [1m[36mSQL (2.7ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160711161354"]]
+  [1m[35m (13.6ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (1.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.9ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddCashoutLogFieldsToNovapays (20160711165353)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (9.1ms)[0m  [1mALTER TABLE "novapays" ADD COLUMN "cashout_account_number" character varying(255)[0m
+  [1m[35m (0.5ms)[0m  ALTER TABLE "novapays" ADD COLUMN "cashout_notified_to_front_office" boolean
+  [1m[36m (1.0ms)[0m  [1mALTER TABLE "novapays" ADD COLUMN "cashout_notification_request" text[0m
+  [1m[35m (1.0ms)[0m  ALTER TABLE "novapays" ADD COLUMN "cashout_notification_response" text
+  [1m[36mSQL (2.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160711165353"]]
+  [1m[35m (16.5ms)[0m  COMMIT
+Migrating to AddCashoutLogFieldsToMtnCis (20160711165424)
+  [1m[36m (0.6ms)[0m  [1mBEGIN[0m
+  [1m[35m (11.3ms)[0m  ALTER TABLE "mtn_cis" ADD COLUMN "cashout_account_number" character varying(255)
+  [1m[36m (0.8ms)[0m  [1mALTER TABLE "mtn_cis" ADD COLUMN "cashout_notified_to_front_office" boolean[0m
+  [1m[35m (0.8ms)[0m  ALTER TABLE "mtn_cis" ADD COLUMN "cashout_notification_request" text
+  [1m[36m (0.9ms)[0m  [1mALTER TABLE "mtn_cis" ADD COLUMN "cashout_notification_response" text[0m
+  [1m[35mSQL (1.0ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160711165424"]]
+  [1m[36m (9.7ms)[0m  [1mCOMMIT[0m
+Migrating to AddCashoutLogFieldsToOrangeMoneyCiBaskets (20160711165456)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (1.8ms)[0m  [1mALTER TABLE "orange_money_ci_baskets" ADD COLUMN "cashout_account_number" character varying(255)[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "orange_money_ci_baskets" ADD COLUMN "cashout_notified_to_front_office" boolean
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "orange_money_ci_baskets" ADD COLUMN "cashout_notification_request" text[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "orange_money_ci_baskets" ADD COLUMN "cashout_notification_response" text
+  [1m[36mSQL (1.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160711165456"]]
+  [1m[35m (7.3ms)[0m  COMMIT
+Migrating to AddCashoutLogFieldsToQashBaskets (20160711165523)
+  [1m[36m (0.6ms)[0m  [1mBEGIN[0m
+  [1m[35m (1.3ms)[0m  ALTER TABLE "qash_baskets" ADD COLUMN "cashout_account_number" character varying(255)
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "qash_baskets" ADD COLUMN "cashout_notified_to_front_office" boolean[0m
+  [1m[35m (8.3ms)[0m  ALTER TABLE "qash_baskets" ADD COLUMN "cashout_notification_request" text
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "qash_baskets" ADD COLUMN "cashout_notification_response" text[0m
+  [1m[35mSQL (1.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160711165523"]]
+  [1m[36m (12.2ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (1.0ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36mBasket Load (76.2ms)[0m  [1mSELECT id, number FROM "baskets" WHERE (id =! 1)[0m
+PG::UndefinedFunction: ERROR:  operator does not exist: integer =! integer
+LINE 1: SELECT id, number FROM "baskets"  WHERE (id =! 1)
+                                                    ^
+HINT:  No operator matches the given name and argument type(s). You might need to add explicit type casts.
+: SELECT id, number FROM "baskets"  WHERE (id =! 1)
+  [1m[35mBasket Load (104.7ms)[0m  SELECT id, number FROM "baskets" WHERE (id = 1)
+  [1m[36mBasket Load (1.3ms)[0m  [1mSELECT id, number FROM "baskets" WHERE (id = 90)[0m
+  [1m[36m (12.2ms)[0m  [1mSELECT * FROM currencies_matches[0m
+  [1m[35m (1.1ms)[0m  SELECT * FROM currencies_matches
+  [1m[36m (1.2ms)[0m  [1mSELECT * FROM currencies_matches[0m
+  [1m[35m (1.2ms)[0m  SELECT * FROM currencies_matches
+  [1m[36m (1.0ms)[0m  [1mSELECT * FROM currencies_matches[0m
+  [1m[35m (1.1ms)[0m  SELECT * FROM currencies_matches
+  [1m[36m (1.1ms)[0m  [1mSELECT * FROM currencies_matches[0m
+  [1m[36mActiveRecord::SchemaMigration Load (39.2ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to AddFeeToServices (20160930104227)
+  [1m[35m (0.7ms)[0m  BEGIN
+  [1m[36m (143.6ms)[0m  [1mALTER TABLE "services" ADD COLUMN "fee" float[0m
+  [1m[35mSQL (2.4ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160930104227"]]
+  [1m[36m (8.6ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (1.0ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+>>>>>>> 1541baae075af15774a57b4af9db7e87e634c3dd
