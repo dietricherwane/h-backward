@@ -40,71 +40,145 @@
       <% end %>
 	    <div class = "block">
 
-      <!------------------------------------------ Data-fluid ----------------------------------->
 		  <div class = "data-fluid" >
-		    <% if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423' || session[:operation].authentication_token == '0acae92d-d63c-41d7-b385-d797b95e9855' %>
-	        <form action = "/MTNCI/cashout" method = "post">
-	      <% else %>
-		      <form action = "/MTNCI/InitializePayment" method = "post">
-		    <% end %>
-		      <%= hidden_field_tag "transaction_id", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
-		      <% if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4' || session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423' || session[:operation].authentication_token == '0acae92d-d63c-41d7-b385-d797b95e98dc' || session[:operation].authentication_token == '0acae92d-d63c-41d7-b385-d797b95e9855' %>
+		    <% if !['3d20d7af-2ecb-4681-8e4f-a585d7705423', '3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '0acae92d-d63c-41d7-b385-d797b95e9855', '0acae92d-d63c-41d7-b385-d797b95e98dc', '3dcbb787-cdba-43a0-b38d-1ecda36a1e36'].include?(session[:operation].authentication_token) %>
+	        <form action = "/MTNCI/ecommerce_payment" method = "post">
+						<%= hidden_field_tag "transaction_id", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
+						<div class = "row-form">
+		          <div class = "input-append">
+			          <div class = "span9">
+				          <%= text_field_tag "payment_amount", @transaction_amount, :readonly => true %>
+				          <button class = "btn btn-info" type = "button"><%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+			          </div>
+			        </div>
+		        </div>
 		        <div class = "row-form">
-		          <div class = "span12">
-		            <span class="bottom">Numéro de compte PAYMONEY à <%= (session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4' || session[:operation].authentication_token == '0acae92d-d63c-41d7-b385-d797b95e98dc') ? ' recharger' : 'débiter'%></span>
-			          <%= text_field_tag "paymoney_account_number", session[:paymoney_account_number], :readonly => true %>
-		          </div>
-	          </div>
-	        <% end %>
-	        <div class = "row-form">
-	          <div class = "input-append">
-		          <div class = "span9">
-			          <%= text_field_tag "magellan", @transaction_amount, :readonly => true %>
-			          <button class = "btn btn-info" type = "button"><%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
-		          </div>
+		          <div class = "input-append">
+			          <div class = "span9">
+				          <%= text_field_tag "payment_fee", (@basket.fees rescue @basket.first.fees), :readonly => true %>
+				          <button class = "btn btn-info" type = "button">Frais [Shipping] <%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+			          </div>
+			        </div>
 		        </div>
-	        </div>
-	        <div class = "row-form">
-	          <div class = "input-append">
-		          <div class = "span9">
-			          <%= text_field_tag "Frais", (@basket.fees rescue @basket.first.fees), :readonly => true %>
-			          <button class = "btn btn-info" type = "button">Frais [Shipping] <%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
-		          </div>
-		        </div>
-	        </div>
 
-	        <% if session[:operation].authentication_token != '3d20d7af-2ecb-4681-8e4f-a585d7705423' && session[:operation].authentication_token != '0acae92d-d63c-41d7-b385-d797b95e9855' %>
-            <div class = "<%= @phone_number_css %>">
+						<div class = "<%= @phone_number_css %>">
 		          <div class = "span12">
-			          <%= text_field_tag "colomb", params[:phone_number], placeholder: 'Numéro de téléphone', :autocomplete => :off %>
+			          <%= text_field_tag "mobile_money_number", params[:phone_number], placeholder: 'Numéro de téléphone', :autocomplete => :off %>
 		          </div>
 	          </div>
-	          <div class = "<%= @token_number_css %>">
+	        <!--  <div class = "<%= @token_number_css %>">
 		          <div class = "span12">
 			          <%= text_field_tag "token", params[:token], placeholder: 'Code de sécurité', :autocomplete => :off %>
 		          </div>
-	          </div>
-	        <% end %>
+	          </div> -->
 
-	        <% if ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e9855'].include?(session[:operation].authentication_token)  %>
-	          <div class="form-group">
-              <%= text_field_tag "cashout_account_number", '', placeholder: 'Compte destinataire', :autocomplete => :off, class: "form-control input-sm" %>
-            </div>
-	        <% end %>
-          <br />
-          <div class="span12">
-		        <button class="btn">
-			        Payer avec Mtn Mobile Money <div class="icon-arrow-next icon-white"></div>
-		        </button>
-	        </div>
-        </form>
+						<br />
+	          <div class="span12">
+			        <button class="btn">
+				        Payer avec Mtn Mobile Money <div class="icon-arrow-next icon-white"></div>
+			        </button>
+		        </div>
+	        </form>
+
+	      <% elsif ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e9855'].include?(session[:operation].authentication_token)%>
+		      <form action = "/MTNCI/cashin_mobile" method = "post">
+						<%= hidden_field_tag "transaction_id", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
+						<%= hidden_field_tag "paymoney_password", session[:paymoney_password] %>
+						<div class = "row-form">
+		          <div class = "input-append">
+			          <div class = "span9">
+				          <%= text_field_tag "payment_amount", @transaction_amount, :readonly => true %>
+				          <button class = "btn btn-info" type = "button"><%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+			          </div>
+			        </div>
+		        </div>
+		        <div class = "row-form">
+		          <div class = "input-append">
+			          <div class = "span9">
+				          <%= text_field_tag "payment_fee", (@basket.fees rescue @basket.first.fees), :readonly => true %>
+				          <button class = "btn btn-info" type = "button">Frais [Shipping] <%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+			          </div>
+			        </div>
+		        </div>
+
+						<div class = "row-form">
+		          <div class = "input-append">
+			          <div class = "span9">
+				          <%= text_field_tag "paymoney_account_number", session[:paymoney_account_number], :readonly => true %>
+				          <button class = "btn btn-info" type = "button">N° PAYMONEY</button>
+			          </div>
+			        </div>
+		        </div>
+
+						<div class = "<%= @phone_number_css %>">
+		          <div class = "span12">
+			          <%= text_field_tag "mobile_money_number", params[:phone_number], placeholder: 'Numéro de téléphone destinataire', :autocomplete => :off %>
+		          </div>
+	          </div>
+						<br />
+	          <div class="span12">
+			        <button class="btn">
+				        Valider <div class="icon-arrow-next icon-white"></div>
+			        </button>
+		        </div>
+	        </form>
+				<% elsif ['3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '0acae92d-d63c-41d7-b385-d797b95e98dc'].include?(session[:operation].authentication_token)%>
+					<form action = "/MTNCI/cashout_mobile" method = "post">
+						<%= hidden_field_tag "transaction_id", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
+						<%= hidden_field_tag "paymoney_password", session[:paymoney_password] %>
+						<div class = "row-form">
+		          <div class = "input-append">
+			          <div class = "span9">
+				          <%= text_field_tag "payment_amount", @transaction_amount, :readonly => true %>
+				          <button class = "btn btn-info" type = "button"><%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+			          </div>
+			        </div>
+		        </div>
+		        <div class = "row-form">
+		          <div class = "input-append">
+			          <div class = "span9">
+				          <%= text_field_tag "payment_fee", (@basket.fees rescue @basket.first.fees), :readonly => true %>
+				          <button class = "btn btn-info" type = "button">Frais [Shipping] <%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+			          </div>
+			        </div>
+		        </div>
+
+						<div class = "row-form">
+		          <div class = "input-append">
+			          <div class = "span9">
+				          <%= text_field_tag "paymoney_account_number", session[:paymoney_account_number], :readonly => true %>
+				          <button class = "btn btn-info" type = "button">N° PAYMONEY</button>
+			          </div>
+			        </div>
+		        </div>
+
+						<div class = "<%= @phone_number_css %>">
+		          <div class = "span12">
+			          <%= text_field_tag "mobile_money_number", params[:phone_number], placeholder: 'Numéro de téléphone', :autocomplete => :off %>
+		          </div>
+	          </div>
+						<!--
+	          <div class = "<%= @token_number_css %>">
+		          <div class = "span12">
+			          <%= password_field_tag "token", params[:token], placeholder: 'Code de sécurité', :autocomplete => :off %>
+		          </div>
+	          </div>
+					-->
+						<br />
+	          <div class="span12">
+			        <button class="btn">
+				        Valider <div class="icon-arrow-next icon-white"></div>
+			        </button>
+		        </div>
+	        </form>
+				<% end %>
+
 		  </div>
-	    <!------------------------------------------ Data-fluid ----------------------------------->
+
 	    </div>
 	  </div>
   </div>
 </div>
-<!-- END Login -->
 
 <% else %>
 <div class="row payment-fields paymoney">
@@ -146,46 +220,46 @@
           <% end %>
 
           <div class = "data-fluid" >
-        <% if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423' %>
-	        <form action = "/MTNCI/cashout" method = "post">
-	      <% else %>
-		      <form action = "/MTNCI/InitializePayment" method = "post">
-		    <% end %>
-		      <%= hidden_field_tag "transaction_id", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
-	        <div class="form-group">
-            <div class="input-group">
-              <%= text_field_tag "magellan", @transaction_amount, :readonly => true, class: "form-control input-sm" %>
-              <span class="input-group-btn">
-                <button type="button" class="btn btn-sm"><%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
-              </span>
-            </div>
-          </div>
+						<form action = "/MTNCI/ecommerce_payment" method = "post">
+							<%= hidden_field_tag "transaction_id", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
 
-          <div class="form-group">
-            <div class="input-group">
-              <%= text_field_tag "Frais", (@basket.fees rescue @basket.first.fees), :readonly => true, class: "form-control input-sm" %>
-              <span class="input-group-btn">
-                <button type="button" class="btn btn-sm">Frais [Shipping] <%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
-              </span>
-            </div>
-          </div>
+							<div class = "row-form">
+			          <div class = "input-append">
+				          <div class = "span9">
+					          <%= text_field_tag "payment_amount", @transaction_amount, :readonly => true %>
+					          <button class = "btn btn-info" type = "button"><%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+				          </div>
+				        </div>
+			        </div>
+			        <div class = "row-form">
+			          <div class = "input-append">
+				          <div class = "span9">
+					          <%= text_field_tag "payment_fee", (@basket.fees rescue @basket.first.fees), :readonly => true %>
+					          <button class = "btn btn-info" type = "button">Frais [Shipping] <%= @wallet_currency.symbol %> (<%= @wallet_currency.code %>)</button>
+				          </div>
+				        </div>
+			        </div>
 
-          <div class="form-group">
-            <%= text_field_tag "colomb", params[:phone_number], placeholder: 'Numéro de téléphone', :autocomplete => :off, class: "form-control input-sm" %>
-          </div>
-
-          <div class="form-group">
-            <%= text_field_tag "token", params[:token], placeholder: 'Code de sécurité', :autocomplete => :off, class: "form-control input-sm" %>
-          </div>
-
-          <br />
-	        <div class="form-group">
-            <button class="btn btn-info btn-sm">
-              Payer avec Mtn Mobile Money <div class="glyphicon glyphicon-circle-arrow-right"></div>
-            </button>
-          </div>
-        </form>
-		  </div>
+							<div class = "<%= @phone_number_css %>">
+			          <div class = "span12">
+				          <%= text_field_tag "mobile_money_number", params[:phone_number], placeholder: 'Numéro de téléphone', :autocomplete => :off %>
+			          </div>
+		          </div>
+							<!--
+		          <div class = "<%= @token_number_css %>">
+			          <div class = "span12">
+				          <%= text_field_tag "token", params[:token], placeholder: 'Code de sécurité', :autocomplete => :off %>
+			          </div>
+		          </div>
+						-->
+							<br />
+		          <div class="span12">
+				        <button class="btn">
+					        Payer avec Mtn Mobile Money <div class="icon-arrow-next icon-white"></div>
+				        </button>
+			        </div>
+		        </form>
+		  		</div>
         </div>
   <!-- End block -->
 

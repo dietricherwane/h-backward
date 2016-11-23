@@ -36,7 +36,7 @@
           $("#timer_area").show();
         }
         else{
-          window.location.replace("<%= url_for :action => 'redirect_to_merchant_website', :controller => 'mtn_cis' %>");
+          window.location.replace("<%= url_for :action => 'merchant_side_redirection', :controller => 'mtn_cis' %>");
         }
       }
     });
