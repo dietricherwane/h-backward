@@ -41,7 +41,6 @@
 	    <div class = "block">
 
 		  <div class = "data-fluid" >
-<<<<<<< HEAD
 		    <% if !['3d20d7af-2ecb-4681-8e4f-a585d7705423', '3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '0acae92d-d63c-41d7-b385-d797b95e9855', '0acae92d-d63c-41d7-b385-d797b95e98dc', '3dcbb787-cdba-43a0-b38d-1ecda36a1e36'].include?(session[:operation].authentication_token) %>
 	        <form action = "/MTNCI/ecommerce_payment" method = "post">
 						<%= hidden_field_tag "transaction_id", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
@@ -53,17 +52,6 @@
 			          </div>
 			        </div>
 		        </div>
-=======
-		    <!-- reload -->
-		    <% if ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e9855', '7489bd19-6ef8-4748-8218-ac92015039c1', 'ebb1f4f3-116b-417e-8348-5964771d0758', 'f8c56da9-63f1-486e-9b0c-eceb0aab6d6c'].include?(session[:operation].authentication_token) %>
-	        <form action = "/MTNCI/cashout" method = "post">
-	      <% else %>
-		      <form action = "/MTNCI/InitializePayment" method = "post">
-		    <% end %>
-		      <%= hidden_field_tag "transaction_id", "#{@basket.transaction_id rescue @basket.first.transaction_id}" %>
-		      <!-- both -->
-		      <% if ['3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e98dc', '0acae92d-d63c-41d7-b385-d797b95e9855', '7489bd19-6ef8-4748-8218-ac92015039c1', '7489bd19-6ef8-4748-8218-ac9201512345', 'ebb1f4f3-116b-417e-8348-5964771d0758', 'ebb1f4f3-116b-417e-8348-5964771d0123', 'f8c56da9-63f1-486e-9b0c-eceb0aab6d6c', 's8g56da9-63f1-486e-9b0c-eceb0aab6d6c', 's8g56da9-63f1-486e-9b0c-eceb0aab6d6c'].include?(session[:operation].authentication_token) %>
->>>>>>> 1541baae075af15774a57b4af9db7e87e634c3dd
 		        <div class = "row-form">
 		          <div class = "input-append">
 			          <div class = "span9">
@@ -75,13 +63,7 @@
 
 						<div class = "<%= @phone_number_css %>">
 		          <div class = "span12">
-<<<<<<< HEAD
 			          <%= text_field_tag "mobile_money_number", params[:phone_number], placeholder: 'Numéro de téléphone', :autocomplete => :off %>
-=======
-		            <!-- reload -->
-		            <span class="bottom">Numéro de compte PAYMONEY à <%= ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e98dc', '7489bd19-6ef8-4748-8218-ac92015039c1', 'ebb1f4f3-116b-417e-8348-5964771d0758', 'f8c56da9-63f1-486e-9b0c-eceb0aab6d6c'].include?(session[:operation].authentication_token) ? ' recharger' : 'débiter'%></span>
-			          <%= text_field_tag "paymoney_account_number", session[:paymoney_account_number], :readonly => true %>
->>>>>>> 1541baae075af15774a57b4af9db7e87e634c3dd
 		          </div>
 	          </div>
 	        <!--  <div class = "<%= @token_number_css %>">
@@ -160,7 +142,6 @@
 			          </div>
 			        </div>
 		        </div>
-<<<<<<< HEAD
 
 						<div class = "row-form">
 		          <div class = "input-append">
@@ -172,12 +153,6 @@
 		        </div>
 
 						<div class = "<%= @phone_number_css %>">
-=======
-	        </div>
-          <!-- reload -->
-	        <% if !['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e98dc', '7489bd19-6ef8-4748-8218-ac92015039c1', 'ebb1f4f3-116b-417e-8348-5964771d0758', 'f8c56da9-63f1-486e-9b0c-eceb0aab6d6c'].include?(session[:operation].authentication_token)  %>
-            <div class = "<%= @phone_number_css %>">
->>>>>>> 1541baae075af15774a57b4af9db7e87e634c3dd
 		          <div class = "span12">
 			          <%= text_field_tag "mobile_money_number", params[:phone_number], placeholder: 'Numéro de téléphone', :autocomplete => :off %>
 		          </div>
@@ -198,21 +173,6 @@
 	        </form>
 				<% end %>
 
-<<<<<<< HEAD
-=======
-	        <% if ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e98dc', '7489bd19-6ef8-4748-8218-ac92015039c1', 'ebb1f4f3-116b-417e-8348-5964771d0758', 'f8c56da9-63f1-486e-9b0c-eceb0aab6d6c'].include?(session[:operation].authentication_token)  %>
-	          <div class="form-group">
-              <%= text_field_tag "cashout_account_number", '', placeholder: 'Compte destinataire', :autocomplete => :off, class: "form-control input-sm" %>
-            </div>
-	        <% end %>
-          <br />
-          <div class="span12">
-		        <button class="btn">
-			        Payer avec Mtn Mobile Money <div class="icon-arrow-next icon-white"></div>
-		        </button>
-	        </div>
-        </form>
->>>>>>> 1541baae075af15774a57b4af9db7e87e634c3dd
 		  </div>
 
 	    </div>

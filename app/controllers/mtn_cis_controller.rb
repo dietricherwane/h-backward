@@ -3,9 +3,9 @@ class MtnCisController < ApplicationController
   require 'digest'
   #@@second_origin_url = Parameter.first.second_origin_url
   ##before_action :only => :guard do |o| o.filter_connections end
-  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :initialize_session, :session_initialized, :payment_result_listener, :generic_ipn_notification, :cashout]
+  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :initialize_session, :session_initialized, :payment_result_listener, :generic_ipn_notification, :cashout, :get_sdp_notification]
   # Si l'utilisateur ne s'est pas connecté en passant par main#guard, on le rejette
-  before_action :except => [:ipn, :transaction_acknowledgement, :initialize_session, :payment_result_listener, :generic_ipn_notification, :cashout] do |s| s.session_authenticated? end
+  before_action :except => [:ipn, :transaction_acknowledgement, :initialize_session, :payment_result_listener, :generic_ipn_notification, :cashout, :get_sdp_notification] do |s| s.session_authenticated? end
 
   # Set transaction amount for GUCE requests
   before_action :only => :index do |o| o.guce_request? end
@@ -215,9 +215,9 @@ class MtnCisController < ApplicationController
                     restitution_request_pm_mtn = "http://192.168.1.40:8080/PAYMONEY_WALLET/rest/remonte_vers_TRJ/c905b4c3/#{@paymoney_account_token}/5cbd715e/#{@basket.original_transaction_amount}/0/0/#{@transaction_id}"
                     restitution_request_fees = "http://192.168.1.40:8080/PAYMONEY_WALLET/rest/remonte_vers_TRJ/c905b4c3/#{@paymoney_account_token}/alOWhAgC/#{(@basket.fees / @basket.rate).ceil.round(2)}/0/0/#{@transaction_id}"
                     res1 = (RestClient.get(restitution_request_pm_mtn) rescue "")
-                    res1 = res1.encode("ASCII-8BIT", "UTF-8")
+                    res1 = res1.force_encoding('iso8859-1').encode('utf-8')
                     res2 = (RestClient.get(restitution_request_fees) rescue "")
-                    res2 = res2.encode("ASCII-8BIT", "UTF-8")
+                    res2 = res2.force_encoding('iso8859-1').encode('utf-8')
 
                     log = "Transaction_Id: #{@transaction_id}// restitution_request_pm_mtn: #{restitution_request_pm_mtn}// response1: #{res1}// restitution_request_fees: #{restitution_request_fees}// response2: #{res2}"
                     OmLog.create(log_rl: log)
@@ -234,9 +234,9 @@ class MtnCisController < ApplicationController
                   restitution_request_pm_mtn = "http://192.168.1.40:8080/PAYMONEY_WALLET/rest/remonte_vers_TRJ/c905b4c3/#{@paymoney_account_token}/5cbd715e/#{@basket.original_transaction_amount}/0/0/#{@transaction_id}"
                   restitution_request_fees = "http://192.168.1.40:8080/PAYMONEY_WALLET/rest/remonte_vers_TRJ/c905b4c3/#{@paymoney_account_token}/alOWhAgC/#{(@basket.fees / @basket.rate).ceil.round(2)}/0/0/#{@transaction_id}"
                   res1 = (RestClient.get(restitution_request_pm_mtn) rescue "")
-                  res1 = res1.encode("ASCII-8BIT", "UTF-8")
+                  res1 = res1.force_encoding('iso8859-1').encode('utf-8')
                   res2 = (RestClient.get(restitution_request_fees) rescue "")
-                  res2 = res2.encode("ASCII-8BIT", "UTF-8")
+                  res2 = res2.force_encoding('iso8859-1').encode('utf-8')
                   log = "Transaction_Id: #{@transaction_id}// restitution_request_pm_mtn: #{restitution_request_pm_mtn}// response1: #{res1}// restitution_request_fees: #{restitution_request_fees}// response2: #{res2}"
                   OmLog.create(log_rl: log)
                   @status_code = '0'
@@ -372,32 +372,37 @@ class MtnCisController < ApplicationController
   end
 
   def get_sdp_notification
-    @transaction_token = params[:transaction_token]
-    @status_code = params[:status]
-    @amount_paid = params[:amount_paid].to_f
-    @basket = MtnCi.find_by_transaction_id(@transaction_token)
+    #
+    #@transaction_token = params[:transaction_token]
+    #@status_code = params[:status]
+    #@amount_paid = params[:amount_paid].to_f
+    #@basket = MtnCi.find_by_transaction_id(@transaction_token)
     request_message = request.body.read
-    response =  ""
-
-    if !@basket.blank?
-      response =  'OK'
-      if @status_code == '1'
-        @basket.update_attributes(payment_status: true)
-        update_number_of_succeed_transactions
-      else
-        @basket.update_attributes(payment_status: false)
-        update_number_of_failed_transactions
-      end
-    else
-      response =  'NOK'
+    OmLog.create(log_rl: request_message.to_s)
+    response =  "OK"
+    if request_message.blank?
+      response = "NOK"
     end
+
+
+    #if !@basket.blank?
+    #  response =  'OK'
+    #  if @status_code == '1'
+      #  @basket.update_attributes(payment_status: true)
+      #  update_number_of_succeed_transactions
+      #else
+      #  @basket.update_attributes(payment_status: false)
+      #  update_number_of_failed_transactions
+      #end
+  #  else
+    #  response =  'NOK'
+    #end
 
     render text: response
   end
 
   def merchant_side_redirection
 
-<<<<<<< HEAD
     @transaction_id= session[:transaction_id]
     @basket = MtnCi.find_by_transaction_id(@transaction_id)
     if !@basket.blank?
@@ -459,7 +464,9 @@ class MtnCisController < ApplicationController
           restitution_request_pm_mtn = "http://192.168.1.40:8080/PAYMONEY_WALLET/rest/remonte_vers_TRJ/c905b4c3/#{@basket.paymoney_account_token}/5cbd715e/#{@basket.original_transaction_amount}/0/0/#{@transaction_id}"
           restitution_request_fees = "http://192.168.1.40:8080/PAYMONEY_WALLET/rest/remonte_vers_TRJ/c905b4c3/#{@basket.paymoney_account_token}/alOWhAgC/#{(@basket.fees / @basket.rate).ceil.round(2)}/0/0/#{@transaction_id}"
           res1 = (RestClient.get(restitution_request_pm_mtn) rescue "")
+          res1 = res1.force_encoding('iso8859-1').encode('utf-8')
           res2 = (RestClient.get(restitution_request_fees) rescue "")
+          res2 = res2.force_encoding('iso8859-1').encode('utf-8')
           log = "Transaction_Id: #{@transaction_id}// restitution_request_pm_mtn: #{restitution_request_pm_mtn}// response1: #{res1}// restitution_request_fees: #{restitution_request_fees}// response2: #{res2}"
           OmLog.create(log_rl: log)
           @status_code = '0'
@@ -472,17 +479,6 @@ class MtnCisController < ApplicationController
           @response_path = "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
           @basket.update_attributes(payment_status: false)
           redirect_to @response_path
-=======
-      # Unload
-      # Cashin mobile money
-      if ['3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '0acae92d-d63c-41d7-b385-d797b95e98dc', '7489bd19-6ef8-4748-8218-ac9201512345', 'ebb1f4f3-116b-417e-8348-5964771d0123', 's8g56da9-63f1-486e-9b0c-eceb0aab6d6c'].include?(@basket.operation.authentication_token)
-        operation_token = 'a71766d6'
-        mobile_money_token = '5cbd715e'
-        reload_request = "#{Parameter.first.gateway_wallet_url}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/Mtn/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.original_transaction_amount}/0"
-        reload_response = (RestClient.get(reload_request) rescue "")
-        if reload_response.include?('|')
-          @status_id = '5'
->>>>>>> 1541baae075af15774a57b4af9db7e87e634c3dd
         end
       end
 

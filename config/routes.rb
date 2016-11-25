@@ -67,7 +67,7 @@ HubsBackOffice::Application.routes.draw do
 
   post "MTNCI/ipn" => "mtn_cis#ipn"
 
-  get "/mtn_sdp_notification" => "mtn_cis#get_sdp_notification"
+  post "/mtn_sdp_notification" => "mtn_cis#get_sdp_notification"
   get "MTNCI/merchant_side_redirection" => "mtn_cis#merchant_side_redirection", as: :merchant_side_redirection
   get "MTNCI/waiting_validation" => "mtn_cis#waiting_validation", as: :waiting_validation
   get "MTNCI/check_transaction_validation" => "mtn_cis#check_transaction_validation"
