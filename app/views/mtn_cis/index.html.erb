@@ -173,6 +173,21 @@
 	        </form>
 				<% end %>
 
+<<<<<<< HEAD
+=======
+	        <% if ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e98dc', '7489bd19-6ef8-4748-8218-ac92015039c1', 'ebb1f4f3-116b-417e-8348-5964771d0758', 's8g56da9-63f1-486e-9b0c-eceb0aab6d6c'].include?(session[:operation].authentication_token)  %>
+	          <div class="form-group">
+              <%= text_field_tag "cashout_account_number", '', placeholder: 'Compte destinataire', :autocomplete => :off, class: "form-control input-sm" %>
+            </div>
+	        <% end %>
+          <br />
+          <div class="span12">
+		        <button class="btn">
+			        Payer avec Mtn Mobile Money <div class="icon-arrow-next icon-white"></div>
+		        </button>
+	        </div>
+        </form>
+>>>>>>> 85c21ee82bb7b6ca598a697c664a55f71e916d86
 		  </div>
 
 	    </div>
