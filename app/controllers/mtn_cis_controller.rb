@@ -452,6 +452,21 @@ class MtnCisController < ApplicationController
       end
     end
 
+    result = %Q[
+        <?xml version="1.0" encoding="utf-8"?>
+        <MTNMomoTransactionResponse>
+          <result>
+            <resultCode xmlns="">#{@result_code}</resultCode>
+            <resultDescription xmlns="">#{@result_description}</resultDescription>
+          </result>
+          <extensionInfo>
+            <item>
+              <key>resultInfo</key>
+              <value>#{@status_info}</value>
+            </item>
+          </extensionInfo>
+        </MTNMomoTransactionResponse>
+      ]
 
 
     result = %Q[
