@@ -30,6 +30,7 @@
       },
       success: function(response, response_status, xhr) {
         clearInterval(interval);
+        console.log(response);
         if(response == "0"){
           $("#countdown").hide();
           $("#countdown").html('15');
@@ -92,6 +93,7 @@
             15
           </div>
           <div id = "timer_area">
+            <%= hidden_field_tag 'transaction_id', session[:transaction_id]%>
             <button class="btn" id ="confirm_payment" onclick="launchTimer()">
 	            Cliquez ici lorsque vous aurez reçu le SMS de confirmation de paiement <div class="icon-arrow-next icon-white"></div>
             </button>

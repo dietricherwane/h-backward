@@ -101,11 +101,13 @@ class MtnCisController < ApplicationController
               redirect_to waiting_validation_path
             else
               @status_code = 0
+              update_number_of_failed_transactions
               @basket.update_attributes(process_online_client_number: @mtn_msisdn, process_online_response_code: response_code, process_online_response_message: payment_request.response.body, payment_status: false)
               redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
             end
           else
             @status_code = 0
+            update_number_of_failed_transactions
             @basket.update_attributes(process_online_client_number: @mtn_msisdn, process_online_response_code: response_code, process_online_response_message: payment_request.response.body, payment_status: false)
             redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
           end
@@ -150,7 +152,7 @@ class MtnCisController < ApplicationController
     else
       if !@basket.blank?
         # Cashin du compte MTN Mobile Money
-
+        update_wallet_used(@basket, "73007113fe")
         unless @paymoney_account_number.blank?
           #Vérification du compte paymoney
           paymoney_token_url = "#{Parameter.first.paymoney_wallet_url}/PAYMONEY_WALLET/rest/check2_compte/#{@paymoney_account_number}"
@@ -179,7 +181,7 @@ class MtnCisController < ApplicationController
               @sdp_id = '2250110001599'
               @sdp_password = 'bmeB500'
               @timestamp = Time.now.strftime('%Y%m%d%H%M%S')
-              @order_time = Time.now.strftime('%Y%m%d')
+              @order_time = @timestamp
               md5_encrypt = @sdp_id+@sdp_password+@timestamp
               @sdp_password = Digest::MD5.hexdigest(md5_encrypt)
               @request_body = build_mtn_request(2, @cashin_mobile_number, @sdp_id, @sdp_password, @timestamp, @transaction_id, @transaction_amount.to_i, @order_time)
@@ -188,7 +190,7 @@ class MtnCisController < ApplicationController
                 "http://196.201.33.108:8310/ThirdPartyServiceUMMImpl/UMMServiceService/DepositMobileMoney/v17",
                 method: :post,
                 body: @request_body,
-                headers: { Accept: "text/xml" }
+                headers: { Accept: "application/xml" }
               )
 
               @basket.update_attributes(sent_request: @request_body)
@@ -199,14 +201,18 @@ class MtnCisController < ApplicationController
                 if response.success?
                   response_code = (Nokogiri.XML(deposit_request.response.body) rescue nil)
                   return_array = response_code.xpath('//return')
-                  response_code = return_array[2].to_s
+                  response_code = return_array[0].to_s
                   response_code = Nokogiri.XML(response_code)
                   response_code = (response_code.xpath('//value').first.text rescue nil)
 
-                  if response_code.to_s.strip == '01' || response_code.to_s.strip == '1000'
-                    @basket.update_attributes(process_online_client_number: @cashin_mobile_number, process_online_response_code: response_code, process_online_response_message:   deposit_request.response.body, cashout_account_number: @paymoney_account_number)
+                  if response_code.to_s.strip == '01'
+                    @basket.update_attributes(process_online_client_number: @cashin_mobile_number, process_online_response_code: response_code, process_online_response_message: deposit_request.response.body, payment_status: true, cashout_account_number: @paymoney_account_number)
                     session[:transaction_id] = @transaction_id
-                    redirect_to waiting_validation_path
+                    #redirect_to waiting_validation_path
+                    @status_code = 5
+                    update_number_of_succeed_transactions
+                    @response_path = "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
+                    redirect_to @response_path
                   else
                     update_number_of_failed_transactions
 
@@ -223,7 +229,7 @@ class MtnCisController < ApplicationController
                     OmLog.create(log_rl: log)
                     @status_code = '0'
                     @response_path = "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
-                    @basket.update_attributes(process_online_client_number: @cashin_mobile_number, payment_status: false)
+                    @basket.update_attributes(process_online_client_number: @cashin_mobile_number, process_online_response_code: response_code, process_online_response_message: deposit_request.response.body, payment_status: false)
                     redirect_to @response_path
                   end
                 else
@@ -291,7 +297,7 @@ class MtnCisController < ApplicationController
     else
       if !@basket.blank?
         # Cashout du compte MTN Mobile Money
-
+        update_wallet_used(@basket, "73007113fe")
         unless @paymoney_account_number.blank?
           #Vérification du compte paymoney
           paymoney_token_url = "#{Parameter.first.paymoney_wallet_url}/PAYMONEY_WALLET/rest/check2_compte/#{@paymoney_account_number}"
@@ -305,7 +311,7 @@ class MtnCisController < ApplicationController
            redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
           else
             #Débiter le compte mtn mobile money
-
+            session[:transaction_id] = @transaction_id
             @sdp_id = '2250110001599'
             @sdp_password = 'bmeB500'
             @timestamp = Time.now.strftime('%Y%m%d%H%M%S')
@@ -372,33 +378,61 @@ class MtnCisController < ApplicationController
   end
 
   def get_sdp_notification
-    #
-    #@transaction_token = params[:transaction_token]
-    #@status_code = params[:status]
-    #@amount_paid = params[:amount_paid].to_f
-    #@basket = MtnCi.find_by_transaction_id(@transaction_token)
+
     request_message = request.body.read
     OmLog.create(log_rl: request_message.to_s)
-    response =  "OK"
-    if request_message.blank?
-      response = "NOK"
+    request_body = (Nokogiri.XML(request_message) rescue nil)
+    request_body.remove_namespaces!
+    @transaction_token = (request_body.xpath('//ProcessingNumber').first.text rescue nil)
+    @status_code = (request_body.xpath('//StatusCode').first.text rescue nil)
+    @transaction_token = @transaction_token.to_s
+    @status_code = @status_code.to_s
+    @result_code = @result_description = @status_info = nil
+
+    @basket = MtnCi.find_by_transaction_id(@transaction_token)
+
+    unless @basket.blank?
+      unless @status_code.blank?
+        if @status_code == '01'
+          @result_code = '01'
+          @result_description = 'SUCCESSFUL'
+          @basket.update_attributes(payment_status: true)
+          @status_info = 'OPERATION COMPLETED'
+        else
+          @result_code = '00'
+          @result_description = 'FAILED'
+          @status_info = 'OPERATION FAILED'
+          @basket.update_attributes(payment_status: false)
+        end
+      else
+        @result_code = '02'
+        @result_description = 'INVALID PARAMETER'
+        @status_info = 'StatusCode parameter is invalid'
+        @basket.update_attributes(payment_status: false)
+      end
+    else
+      @result_code = '02'
+      @result_description = 'INVALID PARAMETER'
+      @status_info = 'ProcessingNumber parameter is invalid'
     end
 
+    result = %Q[
+        <?xml version="1.0" encoding="utf-8"?>
+        <MTNMomoTransactionResponse>
+          <result>
+            <resultCode xmlns="">#{@result_code}</resultCode>
+            <resultDescription xmlns="">#{@result_description}</resultDescription>
+          </result>
+          <extensionInfo>
+            <item>
+              <key>resultInfo</key>
+              <value>#{@status_info}</value>
+            </item>
+          </extensionInfo>
+        </MTNMomoTransactionResponse>
+      ]
 
-    #if !@basket.blank?
-    #  response =  'OK'
-    #  if @status_code == '1'
-      #  @basket.update_attributes(payment_status: true)
-      #  update_number_of_succeed_transactions
-      #else
-      #  @basket.update_attributes(payment_status: false)
-      #  update_number_of_failed_transactions
-      #end
-  #  else
-    #  response =  'NOK'
-    #end
-
-    render text: response
+    render :xml => result
   end
 
   def merchant_side_redirection
@@ -407,6 +441,7 @@ class MtnCisController < ApplicationController
     @basket = MtnCi.find_by_transaction_id(@transaction_id)
     if !@basket.blank?
       #Le paiement s'est bien éffectué chez MTN
+      update_wallet_used(@basket, "73007113fe")
       if @basket.payment_status == true
         if !['3d20d7af-2ecb-4681-8e4f-a585d7705423', '3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '0acae92d-d63c-41d7-b385-d797b95e9855', '0acae92d-d63c-41d7-b385-d797b95e98dc', '3dcbb787-cdba-43a0-b38d-1ecda36a1e36'].include?(@basket.operation.authentication_token)
           @status_code = 1
@@ -415,10 +450,13 @@ class MtnCisController < ApplicationController
           if (@basket.operation.authentication_token rescue nil) == "0faa5dbc-14d1-4b1a-ab85-d701cffafb58"
             @response_path = "http://ekioskmobile.net/retourabonnement.php?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
           end
+          update_number_of_succeed_transactions
           redirect_to @response_path
         elsif ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e9855'].include?(@basket.operation.authentication_token)
           @status_code = 5
+          update_number_of_succeed_transactions
           @response_path = "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
+          redirect_to @response_path
         elsif ['3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '0acae92d-d63c-41d7-b385-d797b95e98dc'].include?(@basket.operation.authentication_token)
           @operation_token = 'a71766d6'
           @mobile_money_token = '5cbd715e'
@@ -456,6 +494,7 @@ class MtnCisController < ApplicationController
             @response_path = "http://ekioskmobile.net/retourabonnement.php?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
           end
           redirect_to @response_path
+          update_number_of_failed_transactions
         elsif ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e9855'].include?(@basket.operation.authentication_token)
           update_number_of_failed_transactions
 
@@ -496,11 +535,12 @@ class MtnCisController < ApplicationController
   end
 
   def check_transaction_validation
-    order = MtnCi.find_by_transaction_id(session[:transaction_id])
+    @transaction_id= session[:transaction_id].to_s
+    @basket = MtnCi.find_by(transaction_id: @transaction_id)
     transaction_status = "0"
 
-    if order
-      unless order.payment_status.blank?
+    unless @basket.blank?
+      unless @basket.payment_status.nil?
         transaction_status = "1"
       end
     end
@@ -586,63 +626,56 @@ class MtnCisController < ApplicationController
                       </soapenv:Body>
                     </soapenv:Envelope>]
     when 2
-      query_body = %Q[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-                        xmlns:b2b="http://b2b.mobilemoney.mtn.zm_v1.0/">
-                            <soapenv:Header>
-                              <RequestSOAPHeader xmlns="http://www.huawei.com.cn/schema/common/v2_1">
-                                <spId>#{sdp_id}</spId>
-                                <spPassword>#{encrypted_password}</spPassword>
-                                <bundleID></bundleID>
-                                <serviceId></serviceId>
-                                <timeStamp>#{time_stamp}</timeStamp>
-                              </RequestSOAPHeader>
-                            </soapenv:Header>
-                              <soapenv:Body>
-                                <b2b:processRequest>
-                                  <serviceId>#{msisdn}@LONACIE.SDP</serviceId>
-                                  <parameter>
-                                  <name>ProcessingNumber</name>
-                                  <value>#{token_transaction}</value>
-                                  </parameter>
-                                  <parameter>
-                                  <name>serviceId</name>
-                                  <value>#{msisdn}@LONACIE.SDP</value>
-                                  </parameter>
-                                  <parameter>
-                                  <name>SenderID</name>
-                                  <value>MOM</value>
-                                  </parameter>
-                                  <parameter>
-                                  <name>PrefLang</name>
-                                  <value></value>
-                                  </parameter>
-                                  <parameter>
-                                  <name>OpCoID</name>
-                                  <value>22501</value>
-                                  </parameter>
-                                  <parameter>
-                                  <name>MSISDNNum</name>
-                                  <value>#{msisdn}</value>
-                                  </parameter>
-                                  <parameter>
-                                  <name>Amount</name>
-                                  <value>#{amount}</value>
-                                  </parameter>
-                                  <parameter>
-                                  <name>Narration</name>
-                                  <value></value>
-                                  </parameter>
-                                  <parameter>
-                                  <name>IMSINum</name>
-                                  <value></value>
-                                  </parameter>
-                                  <parameter>
-                                  <name>OrderDateTime</name>
-                                  <value>#{order_time}</value>
-                                  </parameter>
-                                </b2b:processRequest>
-                              </soapenv:Body>
-                            </soapenv:Envelope>]
+      query_body = %Q[<?xml version="1.0" encoding="utf-8"?>
+                      <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:b2b="http://b2b.mobilemoney.mtn.zm_v1.0/">
+                      <SOAP-ENV:Header><b2b:RequestSOAPHeader xmlns="http://www.huawei.com.cn/schema/common/v2_1">
+                      <b2b:spId>#{sdp_id}</b2b:spId>
+                      <b2b:spPassword>#{encrypted_password}</b2b:spPassword>
+                      <b2b:timeStamp>#{time_stamp}</b2b:timeStamp>
+                      </b2b:RequestSOAPHeader>
+                      </SOAP-ENV:Header>
+                      <SOAP-ENV:Body>
+                      <b2b:processRequest>
+                      <serviceId>201</serviceId>
+                      <parameter>
+                      <name>ProcessingNumber</name>
+                      <value>#{token_transaction}</value>
+                      </parameter>
+                      <parameter>
+                      <name>serviceId</name>
+                      <value>LONACIE.SDP</value>
+                      </parameter>
+                      <parameter>
+                      <name>SenderID</name>
+                      <value>420</value>
+                      </parameter>
+                      <parameter>
+                      <name>PrefLang</name>
+                      <value>fr</value>
+                      </parameter>
+                      <parameter>
+                      <name>OpCoID</name>
+                      <value>ic</value>
+                      </parameter>
+                      <parameter>
+                      <name>MSISDNNum</name>
+                      <value>#{msisdn}</value>
+                      </parameter>
+                      <parameter>
+                      <name>Amount</name>
+                      <value>#{amount}</value>
+                      </parameter>
+                      <parameter>
+                      <name>OrderDateTime</name>
+                      <value>#{order_time}</value>
+                      </parameter>
+                      <parameter>
+                      <name>CurrCode</name>
+                      <value>XOF</value>
+                      </parameter>
+                      </b2b:processRequest>
+                      </SOAP-ENV:Body>
+                      </SOAP-ENV:Envelope>]
     end
     return query_body
   end

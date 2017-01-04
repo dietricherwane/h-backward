@@ -2,7 +2,7 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 require 'uri'
-require 'yajl/http_stream'
+# require 'yajl/http_stream'
 require "nokogiri"
 require "open-uri"
 require 'json'

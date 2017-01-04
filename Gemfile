@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 #gem 'rails', :git => 'git://github.com/rails/rails.git'
 gem 'rails', '4.0.0'
 
-ruby '2.0.0'
+ruby '2.3.1'
 
 # Use postgresql as the database for Active Record
 gem 'pg'
@@ -52,7 +52,7 @@ gem 'heroku'
 gem 'rabl'
 
 # JSON parser
-gem "yajl-ruby"
+# gem "yajl-ruby"
 
 # XML parser
 gem "nokogiri"
@@ -81,6 +81,14 @@ gem 'wash_out'
 gem 'savon', '~> 2.10.0'
 
 gem 'rest-client'
+
+group :development, :test do
+  gem 'rspec-rails', "~> 3.5" #"~> 2.14"
+end
+
+group :test do
+  gem 'database_cleaner'
+end
 
 #gem "rails_12factor", group: :production
 
