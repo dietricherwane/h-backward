@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe DelayedPaymentsController, type: :controller do
+RSpec.describe DelayedPaymentsController, type: :routing do
   describe 'GET /delayed_payments/:service_id/:operation_id/:basket_number/:transaction_amount' do
     it 'routes to the guard action' do
       expect(get: 'delayed_payments/780/120/98456321/5000')

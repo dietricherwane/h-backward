@@ -82,8 +82,14 @@ gem 'savon', '~> 2.10.0'
 
 gem 'rest-client'
 
+group :development do
+  gem 'pry-byebug', '~> 3.4', '>= 3.4.2'
+end
+
 group :development, :test do
-  gem 'rspec-rails', "~> 3.5" #"~> 2.14"
+  gem 'rspec-rails', "~> 3.5"
+  gem 'shoulda', '~> 3.5'
+  gem 'factory_girl_rails'
 end
 
 group :test do

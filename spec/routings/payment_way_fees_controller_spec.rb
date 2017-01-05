@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe PaymentWayFeesController, type: :controller do
+RSpec.describe PaymentWayFeesController, type: :routing do
   describe 'GET payment_way_fee/create' do
     it 'routes to the create action' do
       expect(get: 'payment_way_fee/create')
