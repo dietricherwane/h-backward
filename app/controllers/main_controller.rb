@@ -33,7 +33,5 @@ class MainController < ApplicationController
     @countries = Country.where("published IS TRUE").order("name ASC")
     @international = Country.find_by_name("Banques")
     @available_wallets = session[:service].available_wallets.where(published: true, wallet_id: session[:service].wallets.where(country_id: @international.id).map{|w| w.id})
-
   end
-
 end

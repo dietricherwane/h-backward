@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe AvailableWalletsController, type: :controller do
+RSpec.describe AvailableWalletsController, type: :routing do
   describe 'POST available_wallet/enable_disable' do
     it 'routes to the enable_disable action' do
       expect(post: 'available_wallet/enable_disable')

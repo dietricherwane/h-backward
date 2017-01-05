@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe ServicesController, type: :controller do
+RSpec.describe ServicesController, type: :routing do
   describe 'GET services' do
     it 'routes to the index action' do
       expect(get: 'services')

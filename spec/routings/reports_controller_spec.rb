@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe ReportsController, type: :controller do
+RSpec.describe ReportsController, type: :routing do
   describe 'GET Wimboo/Reports/Operations' do
     it 'routes to the wimboo_operations action' do
       expect(get: 'Wimboo/Reports/Operations')
