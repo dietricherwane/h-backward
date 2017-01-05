@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe OperationsController, type: :controller do
+RSpec.describe OperationsController, type: :routing do
   describe 'GET operation/create' do
     it 'routes to the create action' do
       expect(get: 'operation/create')

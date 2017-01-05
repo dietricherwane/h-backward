@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe MainController, type: :controller do
+RSpec.describe MainController, type: :routing do
   describe 'GET /Main' do
     it 'routes to the index action' do
       expect(get: '/Main')

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe WalletsController, type: :controller do
+RSpec.describe WalletsController, type: :routing do
   describe 'GET get_wallets' do
     it 'routes to the get_wallets action' do
       expect(get: 'get_wallets')
