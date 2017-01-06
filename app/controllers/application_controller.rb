@@ -6,19 +6,23 @@ class ApplicationController < ActionController::Base
   # Initialise la variable de session contenant les informations sur la transaction
   def get_service_by_token(currency, service_token, operation_token, order, transaction_amount, id, paymoney_account_number, paymoney_password)
     # si la devise envoyee n'existe pas, on renvoie la page d'erreur
-    currency_exists?(currency)
-    session[:currency] = @currency.first
-    @service = Service.where("authentication_token = '#{service_token}' AND published IS NOT FALSE")
-    unless @service.blank?
-      @service = @service.first
-      @operation = Operation.where("authentication_token = '#{operation_token}' AND service_id = #{@service.id} AND published IS NOT FALSE")
-      unless @operation.blank?
-        @operation = @operation.first
+    validate_currency(currency)
+    @service = Service.where("authentication_token = '#{service_token}' AND published IS NOT FALSE").first
+    if @service
+      # @service = @service.first
+      @operation = Operation.where("authentication_token = '#{operation_token}' AND service_id = #{@service.id} AND published IS NOT FALSE").first
+      if @operation
+        # @operation = @operation.first
         unless not_a_number?(transaction_amount)
-          session[:service] = Service.find_by_authentication_token(service_token)
-          session[:operation] = Operation.find_by_authentication_token(operation_token)
+          # session[:service] = Service.find_by_authentication_token(service_token)
+          session[:service] = @service
+          # session[:operation] = Operation.find_by_authentication_token(operation_token)
+          session[:operation] = @operation
           session[:trs_amount] = transaction_amount.to_f.round(2)
-          session[:basket] = {"basket_number" => "#{order}", "transaction_amount" => "#{transaction_amount.to_f.round(2)}"}
+          session[:basket] = {
+            "basket_number" => "#{order}", 
+            "transaction_amount" => "#{transaction_amount.to_f.round(2)}"
+          }
           session[:paymoney_account_number] = paymoney_account_number
           session[:paymoney_password] = paymoney_password
           unless session[:paymoney_account_number].blank?
@@ -33,12 +37,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # Verifie que la devise existe dans la base de donnees
-  def currency_exists?(currency)
-    @currency = Currency.where("code = '#{currency.upcase}' AND published IS TRUE")
-    if @currency.blank?
-      redirect_to error_page_path
-    end
+  # Verifie l'existence de la devise avant de l'enregistrer en session
+  def validate_currency(currency)
+    @currency = Currency.where("code = '#{currency.upcase}' AND published IS TRUE").first
+    redirect_to error_page_path unless @currency
+    session[:currency] = @currency
   end
 
   # Initialise la variable de session contenant les informations sur la transaction
