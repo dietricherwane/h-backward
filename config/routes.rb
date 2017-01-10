@@ -3,6 +3,7 @@ HubsBackOffice::Application.routes.draw do
 
   # Chargement de compte  #### risque de confusion avec la route suivante
   get "/order/reload/:currency/:service_token/:operation_token/:order/:transaction_amount/:paymoney_account_number" => "main#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
+  
   get "order/:currency/:service_token/:operation_token/:order/:transaction_amount/:id" => "main#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "order/:currency/:service_token/:operation_token/:order/:transaction_amount" => "main#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "order/:currency/:service_token/:operation_token/:order/:transaction_amount" => "main#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
