@@ -7,18 +7,12 @@ class MtnCisController < ApplicationController
   before_action :except => [:ipn, :transaction_acknowledgement, :initialize_session, :payment_result_listener, :generic_ipn_notification, :cashout, :get_sdp_notification, :mtn_deposit_from_ussd, :mtn_payment_from_ussd] do |s| s.session_authenticated? end
 
   # Set transaction amount for GUCE requests
-  before_action :only => :index do |o| o.guce_request? end
-
-  #layout "orange_money_ci"
+  before_action :set_guce_transaction_amount, :only => :index
 
   layout :select_layout
 
   def select_layout
-    if session[:service].authentication_token == '57813dc7992fbdc721ca5f6b0d02d559'
-      return "guce"
-    else
-      return "mtn_ci"
-    end
+    session[:service].authentication_token == '57813dc7992fbdc721ca5f6b0d02d559' ? "guce" : "mtn_ci"
   end
 
   # Reçoit les requêtes venant des différents services
@@ -38,7 +32,6 @@ class MtnCisController < ApplicationController
     if (@service.authentication_token rescue nil) == "62c0e7c8189e0737cb036999d3994719"
       @transaction_amount = session[:trs_amount].to_f.ceil - @shipping
       session[:trs_amount] = session[:trs_amount].to_f.ceil - @shipping
-
     end
 
     set_cashout_fee
@@ -65,9 +58,7 @@ class MtnCisController < ApplicationController
     else
       @basket.first.update_attributes(:transaction_amount => session[:trs_amount], :original_transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, :fees => @shipping, :rate => @rate, :login_id => session[:login_id], paymoney_account_number: session[:paymoney_account_number], paymoney_account_token: session[:paymoney_account_token])
     end
-
   end
-
 
   #Méthode de paiement e-commerce
   def ecommerce_payment
@@ -76,7 +67,7 @@ class MtnCisController < ApplicationController
     @transaction_id = params[:transaction_id]
     @transaction_amount = params[:payment_amount].to_f.ceil
     @transaction_fee =  params[:payment_fee].to_f.ceil
-    @total_amount = @transaction_amount+@transaction_fee
+    @total_amount = @transaction_amount + @transaction_fee
     @mtn_msisdn = params[:mobile_money_number]
     session[:transaction_id] = @transaction_id
     @basket = MtnCi.find_by_transaction_id(@transaction_id)
@@ -134,8 +125,7 @@ class MtnCisController < ApplicationController
 
   #Cashout paymoney ==> Cashin MTN Mobile Money
   def cashin_mobile
-
-    @cashin_mobile_number = params[:mobile_money_number]
+    cashin_mobile_number = params[:mobile_money_number]
     @transaction_id = params[:transaction_id]
     @transaction_amount = params[:payment_amount].to_f.ceil
     @transaction_fee =  params[:payment_fee].to_f.ceil
@@ -147,7 +137,7 @@ class MtnCisController < ApplicationController
     @basket = MtnCi.find_by_transaction_id(@transaction_id)
     @response_path = @paymoney_account_token = nil
 
-    if @cashin_mobile_number.blank?
+    if cashin_mobile_number.blank?
       @error = true
       @error_messages = ["Veuillez entrer le compte à recharger"]
       initialize_customer_view("73007113fe", "ceiled_transaction_amount", "ceiled_shipping_fee")
@@ -160,7 +150,7 @@ class MtnCisController < ApplicationController
         @basket.update_attributes(phone_number: @cashin_mobile_number, type_token: 'WEB')
         # Cashin du compte MTN Mobile Money
         update_wallet_used(@basket, "73007113fe")
-        unless @paymoney_account_number.blank?
+        if @paymoney_account_number
           #Vérification du compte paymoney
           paymoney_token_url = "#{ENV['paymoney_wallet_url']}/PAYMONEY_WALLET/rest/check2_compte/#{@paymoney_account_number}"
           @paymoney_account_token = (RestClient.get(paymoney_token_url) rescue "")
@@ -177,7 +167,11 @@ class MtnCisController < ApplicationController
               @status_code = '0'
               # Update in available_wallet the number of failed_transactions
               update_number_of_failed_transactions
-              @basket.update_attributes(payment_status: false, paymoney_transaction_id: @transaction_id, cashout_account_number: @paymoney_account_number)
+              @basket.update_attributes(
+                payment_status: false, 
+                paymoney_transaction_id: @transaction_id, 
+                cashout_account_number: @paymoney_account_number
+              )
               redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
             else
               @status_code = '5'
@@ -265,13 +259,10 @@ class MtnCisController < ApplicationController
           redirect_to error_page_path
         end
       end
-
   end
-
 
   #Cashout MTN Mobile Money ==> Cashin Paymoney
   def cashout_mobile
-
     @cashout_mobile_number = params[:mobile_money_number]
     @cashout_pwd = params[:token]
     @paymoney_account_number = params[:paymoney_account_number]
@@ -294,21 +285,27 @@ class MtnCisController < ApplicationController
 
       render :index
     else
-      if !@basket.blank?
+      if @basket
         # Cashout du compte MTN Mobile Money
         @basket.update_attributes(phone_number: @cashout_mobile_number, type_token: 'WEB', fees: @transaction_fee)
         update_wallet_used(@basket, "73007113fe")
-        unless @paymoney_account_number.blank?
+        if @paymoney_account_number
           #Vérification du compte paymoney
           paymoney_token_url = "#{ENV['paymoney_wallet_url']}/PAYMONEY_WALLET/rest/check2_compte/#{@paymoney_account_number}"
           @paymoney_account_token = (RestClient.get(paymoney_token_url) rescue "")
-
+          # Si le compte PayMoney n'existe pas
           if @paymoney_account_token.blank? || @paymoney_account_token.downcase == "null"
            # redirect_to "#{session[:service].url_on_basket_already_paid}?status_id=4"
-           update_number_of_failed_transactions
-           @status_code = '4'
-           @basket.update_attributes(process_online_client_number: @cashout_mobile_number, process_online_response_code: response_code, process_online_response_message:  payment_request.response.body, payment_status: false, paymoney_account_number: @paymoney_account_number)
-           redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
+            update_number_of_failed_transactions
+            @status_code = '4'
+            @basket.update_attributes(
+              process_online_client_number: @cashout_mobile_number, 
+              process_online_response_code: response_code, 
+              process_online_response_message:  payment_request.response.body, 
+              payment_status: false, 
+              paymoney_account_number: @paymoney_account_number
+          )
+            redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
           else
             #Débiter le compte mtn mobile money
             session[:transaction_id] = @transaction_id
@@ -342,7 +339,7 @@ class MtnCisController < ApplicationController
                   redirect_to @response_path
                 end
               else
-                #La requête de debit n'a pas abouti
+                # La requête de debit n'a pas abouti
                 update_number_of_failed_transactions
                 @status_code = '0'
                 @response_path = "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
@@ -355,7 +352,11 @@ class MtnCisController < ApplicationController
         else
           update_number_of_failed_transactions
           @status_code = '4'
-          @basket.update_attributes(process_online_client_number: @cashout_mobile_number, process_online_response_message:  payment_request.response.body, payment_status: false)
+          @basket.update_attributes(
+            process_online_client_number: @cashout_mobile_number, 
+            process_online_response_message:  payment_request.response.body, 
+            payment_status: false
+          )
           redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
         end
 
@@ -364,11 +365,9 @@ class MtnCisController < ApplicationController
         redirect_to error_page_path
       end
     end
-
   end
 
   def get_sdp_notification
-
     request_message = request.body.read
     OmLog.create(log_rl: request_message.to_s)
     request_body = (Nokogiri.XML(request_message) rescue nil)
@@ -489,10 +488,9 @@ class MtnCisController < ApplicationController
   end
 
   def merchant_side_redirection
-
     @transaction_id= session[:transaction_id]
     @basket = MtnCi.find_by_transaction_id(@transaction_id)
-    if !@basket.blank?
+    if @basket
       #Le paiement s'est bien éffectué chez MTN
       update_wallet_used(@basket, "73007113fe")
       if @basket.payment_status == true
@@ -534,7 +532,11 @@ class MtnCisController < ApplicationController
             # Update in available_wallet the number of successful_transactions
             status = true
           end
-          @basket.update_attributes(paymoney_reload_request: reload_request, paymoney_reload_response: reload_response, payment_status: status)
+          @basket.update_attributes(
+            paymoney_reload_request: reload_request, 
+            paymoney_reload_response: reload_response, 
+            payment_status: status
+          )
           redirect_to  "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
         end
       else
@@ -577,10 +579,7 @@ class MtnCisController < ApplicationController
     else
       redirect_to error_page_path
     end
-
-
   end
-
 
   def waiting_validation
     initialize_customer_view("73007113fe", "ceiled_transaction_amount", "ceiled_shipping_fee")
@@ -854,13 +853,11 @@ class MtnCisController < ApplicationController
     @phone_number_css = @token_number_css = "row-form error"
   end
 
-
-
-  def valid_result_parameters
-    if !@transaction_id.blank? && !@token.blank? && !@clientid.blank? && !@transaction_amount.blank? && (!@status.blank? && @status.to_s.strip == "0")
-      return true
+  def validate_result_parameters
+    if @transaction_id && @token && @clientid && @transaction_amount && (@status && @status.to_s.strip == "0")
+      true
     else
-      return false
+      false
     end
   end
 
@@ -1006,7 +1003,7 @@ class MtnCisController < ApplicationController
                       </SOAP-ENV:Body>
                       </SOAP-ENV:Envelope>]
     end
-    return query_body
+    # return query_body
   end
 
   def set_cashout_fee
@@ -1014,7 +1011,7 @@ class MtnCisController < ApplicationController
       fee_type = FeeType.find_by_token('0175ad')
       @shipping = 0
 
-      if !fee_type.blank?
+      if fee_type
 	      @shipping = ((fee_type.fees.where("min_value <= #{session[:trs_amount].to_f} AND max_value >= #{session[:trs_amount].to_f}").first.fee_value) * @rate).ceil.round(2)
 	    end
 	  end
@@ -1025,7 +1022,11 @@ class MtnCisController < ApplicationController
     log_request = "#{ENV['front_office_url']}/api/856332ed59e5207c68e864564/cashout/log/mtn_ci?transaction_id=#{basket.transaction_id}&order_id=#{basket.number}&status_id=#{@status_code}&transaction_amount=#{basket.original_transaction_amount}&currency=#{basket.currency.code}&paid_transaction_amount=#{basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(basket.paid_currency_id).code}&change_rate=#{basket.rate}&id=#{basket.login_id}&cashout_account_number=#{cashin_mobile_number}&fee=#{basket.fees}"
     log_response = (RestClient.get(log_request) rescue "")
 
-    basket.update_attributes(cashout_notified_to_front_office: (log_response == '1' ? true : false), cashout_notification_request: log_request, cashout_notification_response: log_response)
+    @basket.update_attributes(
+      cashout_notified_to_front_office: (log_response == '1' ? true : false), 
+      cashout_notification_request: log_request, 
+      cashout_notification_response: log_response
+    )
   end
 
   def generic_ipn_notification(basket)
@@ -1064,7 +1065,7 @@ class MtnCisController < ApplicationController
     request.run
   end
 
-  def session_initialized
+  def session_initialized?
     (@session_id != "access denied" && @session_id != nil && @session_id.length > 30) ? true : false
   end
 
@@ -1080,9 +1081,7 @@ class MtnCisController < ApplicationController
     "
     run_typhoeus_request(@request, @internal_com_request)
 
-    if @status.to_s.strip == "1"
-      basket.update_attributes(:notified_to_back_office => true)
-    end
+    basket.update_attributes(:notified_to_back_office => true) if @status.to_s.strip == "1"
   end
 
   # Returns 0 or 1 depending on the status of the transaction

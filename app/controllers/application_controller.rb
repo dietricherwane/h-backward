@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
           session[:operation] = @operation
           session[:trs_amount] = transaction_amount.to_f.round(2)
           session[:basket] = {
-            "basket_number" => "#{order}", 
+            "basket_number"      => "#{order}", 
             "transaction_amount" => "#{transaction_amount.to_f.round(2)}"
           }
           session[:paymoney_account_number] = paymoney_account_number
@@ -80,7 +80,7 @@ class ApplicationController < ActionController::Base
 
   # S'assure que la variable de session existe
   def session_exists?
-    if (session[:service].blank? or session[:operation].blank? or session[:basket].blank?)
+    if session[:service].blank? or session[:operation].blank? or session[:basket].blank?
       #redirect_to session[:service].url_on_session_expired
       redirect_to error_page_path
     end
@@ -264,14 +264,14 @@ class ApplicationController < ActionController::Base
 
   # Handle GUCE requests
   # Is the current request incoming from the GUCE
-  def guce_request?
-    if session[:service].authentication_token == '57813dc7992fbdc721ca5f6b0d02d559'
-      set_guce_transaction_amount
-    end
+  def is_guce_request?
+    session[:service].authentication_token == '57813dc7992fbdc721ca5f6b0d02d559'
+      # set_guce_transaction_amount
   end
 
   # Make a request to the back office to get the last transaction amount
   def set_guce_transaction_amount
+    return nil unless is_guce_request?
 #=begin
 
       request = Typhoeus::Request.new("#{ENV['guce_back_office_url']}/GPG_GUCE/rest/Mob_Mon/Check/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}", method: :get, followlocation: true)
@@ -316,7 +316,7 @@ CATTA-CI SARL 09 BP 1327 ABIDJAN 09 TREICHVILLE-VGE-IMMEUBLE LA BALANCE
     @payment_fee = (response.xpath('//ns3:response').at('bill').at('paymentFee').content rescue nil)
     @tob = (response.xpath('//ns3:response').at('bill').at('tob').content rescue nil)
 
-    if valid_guce_params?
+    if verify_guce_params?
       new_transaction_amount = @amount.to_f.round(2)
       if new_transaction_amount != session[:trs_amount]
         @guce_notice = "Le montant de la transaction a changé. Il est passé de: #{session[:trs_amount]} #{session[:currency].symbol} à #{new_transaction_amount} #{session[:currency].symbol}"
@@ -331,7 +331,7 @@ CATTA-CI SARL 09 BP 1327 ABIDJAN 09 TREICHVILLE-VGE-IMMEUBLE LA BALANCE
   end
 
   # Make sure the order id is not null and amount is a number
-  def valid_guce_params?
+  def verify_guce_params?
     if @order_id == nil || @amount == nil || not_a_number?(@amount) || @payment_fee == nil || not_a_number?(@payment_fee) || @tob == nil || not_a_number?(@tob)
       return false
     else

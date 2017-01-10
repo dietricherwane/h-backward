@@ -23,7 +23,20 @@ class ServicesController < ApplicationController
       @url_on_hold_error = params[:url_on_hold_error]
       @url_on_hold_listener = params[:url_on_hold_listener]
       @url_on_basket_already_paid = params[:url_on_basket_already_paid]
-      Service.create(code: @code, name: @name, sales_area: @sales_area, comment: @comment, url_on_success: @url_on_success, url_to_ipn: @url_to_ipn, url_on_error: @url_on_error, url_on_session_expired: @url_on_session_expired, url_on_hold_success: @url_on_hold_success, url_on_hold_error: @url_on_hold_error, url_on_hold_listener: @url_on_hold_listener, url_on_basket_already_paid: @url_on_basket_already_paid)
+      Service.create(
+        code: @code, 
+        name: @name, 
+        sales_area: @sales_area, 
+        comment: @comment, 
+        url_on_success: @url_on_success, 
+        url_to_ipn: @url_to_ipn, 
+        url_on_error: @url_on_error, 
+        url_on_session_expired: @url_on_session_expired, 
+        url_on_hold_success: @url_on_hold_success, 
+        url_on_hold_error: @url_on_hold_error, 
+        url_on_hold_listener: @url_on_hold_listener, 
+        url_on_basket_already_paid: @url_on_basket_already_paid
+      )
       @status = "f26e0312bd863867f4f1e6b83483644b"
     else
       @status = "bad request"
@@ -49,7 +62,7 @@ class ServicesController < ApplicationController
 
       @service = Service.find_by_token(service_token)
 
-      if !@service.blank?
+      if @service
         @service.update_attributes(url_on_success: url_on_success, url_to_ipn: url_to_ipn, url_on_error: url_on_error, url_on_basket_already_paid: url_on_basket_already_paid)
         @status = "f26e0312bd863867f4f1e6b83483644b"
       else
