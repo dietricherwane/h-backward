@@ -31,12 +31,12 @@
       success: function(response, response_status, xhr) {
         clearInterval(interval);
         console.log(response);
-        if(response == "0"){
+        if (response == "0") {
           $("#countdown").hide();
           $("#countdown").html('15');
           $("#timer_area").show();
         }
-        else{
+        else {
           window.location.replace("<%= url_for :action => 'merchant_side_redirection', :controller => 'mtn_cis' %>");
         }
       }
