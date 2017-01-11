@@ -7,16 +7,18 @@ class ApplicationController < ActionController::Base
   def notification_url(basket, successfull, wallet_name)
     url = successfull ? basket.service.url_on_success : basket.service.url_on_error
     params = {
-      transaction_id:           basket.transaction_id,
-      order_id:                 basket.number,
-      status_id:                @status_id,
-      wallet:                   wallet_name,
-      transaction_amount:       basket.original_transaction_amount,
-      currency:                 basket.currency.code,
-      paid_transaction_amount:  basket.paid_transaction_amount,
-      paid_currency:            Currency.find_by_id(basket.paid_currency_id).code,
-      change_rate:              basket.rate,
-      id:                       basket.login_id
+      transaction_id:                 basket.transaction_id,
+      order_id:                       basket.number,
+      status_id:                      @status_id,
+      wallet:                         wallet_name,
+      transaction_amount:             basket.original_transaction_amount,
+      currency:                       basket.currency.code,
+      paid_transaction_amount:        basket.paid_transaction_amount,
+      paid_currency:                  Currency.find_by_id(basket.paid_currency_id).code,
+      change_rate:                    basket.rate,
+      id:                             basket.login_id,
+      conflictual_transaction_amount: basket.conflictual_transaction_amount,
+      conflictual_currency:           basket.conflictual_currency
     }
     url += "?" + params.to_query
   end
