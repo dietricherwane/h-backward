@@ -7,9 +7,9 @@ class MainController < ApplicationController
   # Vérifie que le panier n'a pas déjà été payé via paypal
   before_action :only => :guard do |s| s.basket_already_paid?(session[:basket]["basket_number"]) end
   # Vérifie pour toutes les actions que la variable de session existe
-  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement]
+  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :mtn_deposit_from_ussd, :mtn_payment_from_ussd]
   # Si l'utilisateur ne s'est pas connecté en passant par guard, on le rejette
-  before_action :except => :guard do |s| s.session_authenticated? end
+  before_action :except => [:guard] do |s| s.session_authenticated? end
 
   #layout "main"
 

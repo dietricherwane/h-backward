@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160930104227) do
+ActiveRecord::Schema.define(version: 20170106145910) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -192,6 +192,9 @@ ActiveRecord::Schema.define(version: 20160930104227) do
     t.boolean  "cashout_notified_to_front_office"
     t.text     "cashout_notification_request"
     t.text     "cashout_notification_response"
+    t.string   "phone_number"
+    t.string   "type_token"
+    t.string   "mom_transaction_id"
   end
 
   create_table "novapays", force: true do |t|

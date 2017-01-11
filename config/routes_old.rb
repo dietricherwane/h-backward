@@ -61,28 +61,21 @@ HubsBackOffice::Application.routes.draw do
 
   get "mtn_ci/:service_id/:operation_id/:basket_number/:transaction_amount" => "mtn_cis#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "MTNCI" => "mtn_cis#index"
-  post "/MTNCI/ecommerce_payment" => "mtn_cis#ecommerce_payment"
-  post "/MTNCI/cashin_mobile" => "mtn_cis#cashin_mobile"
-  post "/MTNCI/cashout_mobile" => "mtn_cis#cashout_mobile"
-
+  post "/MTNCI/InitializePayment" => "mtn_cis#initialize_payment"
+  post "/MTNCI/ProcessPayment" => "mtn_cis#redirect_to_billing_platform"
+  post "MTNCI/PaymentResultListener" => "mtn_cis#payment_result_listener"
   post "MTNCI/ipn" => "mtn_cis#ipn"
-
-  post "/mtn_sdp_notification" => "mtn_cis#get_sdp_notification"
-  get "MTNCI/merchant_side_redirection" => "mtn_cis#merchant_side_redirection", as: :merchant_side_redirection
   get "MTNCI/waiting_validation" => "mtn_cis#waiting_validation", as: :waiting_validation
   get "MTNCI/check_transaction_validation" => "mtn_cis#check_transaction_validation"
-
-  get "/MTNCI/ussd/unload/:service_token/:operation_token/:basket_number/:msisdn/:transaction_amount/:currency/:paymoney_account_number/:paymoney_password" => "mtn_cis#mtn_deposit_from_ussd"
-  get "/MTNCI/ussd/reload/:service_token/:operation_token/:basket_number/:msisdn/:transaction_amount/:currency/:paymoney_account_number" => "mtn_cis#mtn_payment_from_ussd"
-
-
+  get "MTNCI/redirect_to_merchant_website" => "mtn_cis#redirect_to_merchant_website"
   get "om" => "mtn_cis#initialize_session"
   post "MTNCI/transaction_acknowledgement" => "mtn_cis#transaction_acknowledgement"
   post "MTNCI/transaction_acknowledgement/:transaction_id" => "mtn_cis#transaction_acknowledgement"
   get "MTNCI/transaction_acknowledgement/:transaction_id" => "mtn_cis#transaction_acknowledgement"
+  post "/api/93c080fe2b/MTNCI/confirm_amount/:reference_invoice/:transaction_id/:transaction_amount" => "mtn_cis#api_confirm_amount"
+  post "/MTNCI/cashout" => "mtn_cis#cashout"
 
-
-
+  post "/STAS/transaction/confirm" => "mtn_cis#payment_result_listener"
 
   get "/uba/:service_id/:operation_id/:basket_number/:transaction_amount" => "uba#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "/UBA" => "uba#index"

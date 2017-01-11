@@ -67,14 +67,6 @@ HubsBackOffice::Application.routes.draw do
 
   post "MTNCI/ipn" => "mtn_cis#ipn"
 
-  post "/mtn_sdp_notification" => "mtn_cis#get_sdp_notification"
-  get "MTNCI/merchant_side_redirection" => "mtn_cis#merchant_side_redirection", as: :merchant_side_redirection
-  get "MTNCI/waiting_validation" => "mtn_cis#waiting_validation", as: :waiting_validation
-  get "MTNCI/check_transaction_validation" => "mtn_cis#check_transaction_validation"
-
-  get "/MTNCI/ussd/unload/:service_token/:operation_token/:basket_number/:msisdn/:transaction_amount/:currency/:paymoney_account_number/:paymoney_password" => "mtn_cis#mtn_deposit_from_ussd"
-  get "/MTNCI/ussd/reload/:service_token/:operation_token/:basket_number/:msisdn/:transaction_amount/:currency/:paymoney_account_number" => "mtn_cis#mtn_payment_from_ussd"
-
 
   get "om" => "mtn_cis#initialize_session"
   post "MTNCI/transaction_acknowledgement" => "mtn_cis#transaction_acknowledgement"
