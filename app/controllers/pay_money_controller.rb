@@ -1,30 +1,26 @@
 class PayMoneyController < ApplicationController
-
+  @@wallet_name = 'paymoney'
   # Only for guard action, we check if service_id exists and initialize a session variable containing transaction_data
   #before_action :only => :guard do |s| s.get_service(params[:service_id], params[:operation_id], params[:basket_number], params[:transaction_amount]) end
   # Only for guard action, we check if the session varable is initialized, if the operation_id is initialized and if transaction_amount is a number
-  before_action :only => :guard do |o| o.filter_connections end
+  before_action :filter_connections, :only => :guard
   #before_action :only => :guard do |r| r.authenticate_incoming_request(params[:operation_id], params[:basket_number], params[:transaction_amount]) end
   # Vérifie que le panier n'a pas déjà été payé via paymoney
   #before_action :only => :guard do |s| s.basket_already_paid?(params[:basket_number]) end
   # Vérifie pour toutes les actions que la variable de session existe
   before_action :session_exists?, :except => [:create_account, :account, :credit_account, :add_credit, :transaction_acknowledgement]
   #before_action :only => :process_payment do |s| s.basket_already_paid?(session[:service]['basket_number']) end
-  before_action :except => [:create_account, :account, :credit_account, :add_credit, :transaction_acknowledgement] do |s| s.session_authenticated? end
+  before_action :session_authenticated?, :except => [:create_account, :account, :credit_account, :add_credit, :transaction_acknowledgement]
 
   # Set transaction amount for GUCE requests
-  before_action :only => :index do |o| o.guce_request? end
+  before_action :set_guce_transaction_amount, :only => :index
 
   #layout "payMoney"
 
   layout :select_layout
 
   def select_layout
-    if session[:service].authentication_token == '57813dc7992fbdc721ca5f6b0d02d559'
-      return "guce"
-    else
-      return "payMoney"
-    end
+    session[:service].authentication_token == '57813dc7992fbdc721ca5f6b0d02d559' ? "guce" : "payMoney"
   end
 
   # Inclure une sécurité au niveau de la fonction index basée sur l'adresse IP entrante. S'ssurer qu'elle correspond aux IP des services agréés (Les insérer dans une base de données locale ou externe?)
@@ -65,7 +61,18 @@ class PayMoneyController < ApplicationController
         paymoney_account_token: session[:paymoney_account_token]
       )
     else
-      @basket.first.update_attributes(:original_transaction_amount => session[:trs_amount], :transaction_amount => session[:trs_amount].to_f.ceil, :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, :fees => @shipping, :rate => @rate, :login_id => session[:login_id], paymoney_account_number: session[:paymoney_account_number], paymoney_account_token: session[:paymoney_account_token])
+      @basket.first.update_attributes(
+        original_transaction_amount: session[:trs_amount], 
+        transaction_amount: session[:trs_amount].to_f.ceil, 
+        currency_id: session[:currency].id, 
+        paid_transaction_amount: @transaction_amount, 
+        paid_currency_id: @wallet_currency.id, 
+        fees: @shipping, 
+        rate: @rate, 
+        login_id: session[:login_id], 
+        paymoney_account_number: session[:paymoney_account_number], 
+        paymoney_account_token: session[:paymoney_account_token]
+      )
     end
   end
 
@@ -73,26 +80,20 @@ class PayMoneyController < ApplicationController
     @wallet = Wallet.find_by_name("Paymoney")
     @wallet_currency = @wallet.currency
     get_service_logo(session[:service].token)
-
     @transaction_id = params[:transaction_id]
-
     @basket = Basket.find_by_transaction_id(@transaction_id)
-
     #@transaction_status = "7"
     @transaction_amount = params[:magellan].to_f
     @account_number = params[:colomb]
-
     #@shipping = get_shipping_fee("Paymoney")
     params[:Frais] = @basket.fees
     #@shipping = params[:shipping]
     @password = params[:drake]
     @error_messages = []
     @success_messages = []
-
     @transaction_amount_css = @account_number_css = @password_css = "row-form"
     @fields = [[@transaction_amount, "montant de la transaction", "transaction_amount_css"], [@account_number, "numéro de compte", "account_number_css"], [@password, "mot de passe", "password_css"]]
     @notified_to_back_office = nil
-
     @basket = Basket.find_by_transaction_id(@transaction_id)
 
     @fields.each do |field|
@@ -113,7 +114,14 @@ class PayMoneyController < ApplicationController
       url = "#{ENV['paymoney_wallet_url']}/PAYMONEY_WALLET/rest/operation_ecommerce/#{@basket.service.ecommerce_profile.token}/#{@basket.operation.paymoney_token}/#{@paymoney_token}/#{session[:basket]["transaction_amount"]}/#{@basket.fees}/0/#{@transaction_id}/#{@password}"
       @status = RestClient.get(url) rescue ""
 
-      Log.create(description: "Paymoney sale", sent_request: url, sent_response: @status, paymoney_account_number: @account_number, paymoney_token_request: paymoney_token_url, paymoney_token_response: @paymoney_token)
+      Log.create(
+        description: "Paymoney sale", 
+        sent_request: url, 
+        sent_response: @status, 
+        paymoney_account_number: @account_number, 
+        paymoney_token_request: paymoney_token_url, 
+        paymoney_token_response: @paymoney_token
+      )
 
       #@internal_com_request = "@response = Nokogiri.XML(request.response.body)
       #@response.xpath('//status').each do |link|
@@ -126,7 +134,11 @@ class PayMoneyController < ApplicationController
         #if @basket.blank?
           #@basket = Basket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => session[:basket]["transaction_amount"], :paid_currency_id => @wallet_currency.id, transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"), :fees => @shipping, :rate => @rate)
         #else
-          @basket.update_attributes(:paid_transaction_amount => session[:basket]["transaction_amount"], :paid_currency_id => @wallet_currency.id, :rate => @rate)
+          @basket.update_attributes(
+            paid_transaction_amount: session[:basket]["transaction_amount"], 
+            paid_currency_id: @wallet_currency.id, 
+            rate: @rate
+          )
         #end
 
         # Notification to ecommerce IPN
@@ -159,7 +171,7 @@ class PayMoneyController < ApplicationController
 
         if @status == '1'
           # Conversion du montant débité par le wallet et des frais en euro avant envoi pour notification au back office du hub
-          @basket.update_attributes(:notified_to_back_office => false, :payment_status => true)
+          @basket.update_attributes(notified_to_back_office: false, payment_status: true)
 
           @status_id = 1
 
@@ -173,7 +185,6 @@ class PayMoneyController < ApplicationController
             # Update in available_wallet the number of successful_transactions
             update_number_of_succeed_transactions
           else
-
             # Cashin mobile money
             if (@basket.operation.authentication_token rescue nil) == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4'
               mobile_money_token = 'none'
@@ -189,11 +200,15 @@ class PayMoneyController < ApplicationController
                 update_number_of_succeed_transactions
                 @basket.update_attributes(payment_status: true)
               end
-              @basket.update_attributes(paymoney_reload_request: reload_request, paymoney_reload_response: reload_response, paymoney_transaction_id: ((reload_response.blank? || reload_response.include?('|')) ? nil : reload_response))
+              @basket.update_attributes(
+                paymoney_reload_request: reload_request, 
+                paymoney_reload_response: reload_response, 
+                paymoney_transaction_id: ((reload_response.blank? || reload_response.include?('|')) ? nil : reload_response)
+              )
             end
             # Cashin mobile money
-
-            redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=paymoney&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
+            # redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=paymoney&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
+            redirect_to notification_url(@basket, true, @@wallet_name)
           end
         else
           #@basket.update_attributes(:conflictual_transaction_amount => params[:amt].to_f, :conflictual_currency => params[:cc].upcase)
@@ -204,7 +219,8 @@ class PayMoneyController < ApplicationController
           if (@basket.operation.authentication_token rescue nil) == "b6dff4ae-05c1-4050-a976-0db6e358f22b"
             redirect_to "http://ekioskmobile.net/retourabonnement.php?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=paymoney&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}&id=#{@basket.login_id}"
           else
-            redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=paymoney&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}&id=#{@basket.login_id}"
+            # redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=paymoney&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}&id=#{@basket.login_id}"
+            redirect_to notification_url(@basket, true, @@wallet_name)
           end
         end
       else
@@ -219,13 +235,27 @@ class PayMoneyController < ApplicationController
 
   def ipn(basket)
     @service = Service.find_by_id(basket.service_id)
-    @request = Typhoeus::Request.new("#{@service.url_to_ipn}", body: { transaction_id: @basket.transaction_id, order_id: @basket.number, status_id: 1, wallet: "paymoney", transaction_amount: @basket.paid_transaction_amount, currency: @basket.currency.code, paid_transaction_amount: @basket.paid_transaction_amount, paid_currency: Currency.find_by_id(@basket.paid_currency_id).code, change_rate: @basket.rate, id: @basket.login_id}, followlocation: true, method: :post)
+    @request = Typhoeus::Request.new(
+      "#{@service.url_to_ipn}", 
+      body: { 
+        transaction_id: @basket.transaction_id, 
+        order_id: @basket.number, 
+        status_id: 1, 
+        wallet: "paymoney", 
+        transaction_amount: @basket.paid_transaction_amount, 
+        currency: @basket.currency.code, 
+        paid_transaction_amount: @basket.paid_transaction_amount, 
+        paid_currency: Currency.find_by_id(@basket.paid_currency_id).code, 
+        change_rate: @basket.rate, 
+        id: @basket.login_id
+      }, 
+      followlocation: true, 
+      method: :post
+    )
     # wallet=05ccd7ba3d
     @request.run
     @response = @request.response
-    if @response.code.to_s == "200"
-      basket.update_attributes(:notified_to_ecommerce => true)
-    end
+    basket.update_attributes(notified_to_ecommerce: true) if @response.code.to_s == "200"
   end
 
   # Returns 0 or 1 depending on the status of the transaction
@@ -281,7 +311,7 @@ class PayMoneyController < ApplicationController
       @internal_com_request = "@response = Nokogiri.XML(request.response.body)"
 
       run_typhoeus_request(@request, @internal_com_request)
-      if(!@response.blank?)
+      if @response
         if @response.xpath('//compte').blank? or @response.xpath('//compte').blank? or @response.xpath('//compteNumero').blank?
           @error = true
           @error_messages << "Ce compte existe déjà"
@@ -334,7 +364,7 @@ class PayMoneyController < ApplicationController
       @internal_com_request = "@response = Nokogiri.XML(request.response.body)"
       run_typhoeus_request(@request, @internal_com_request)
 
-      if !@response.blank? and !@response.xpath('//pin').blank? and !@response.xpath('//pin').at("pinStatus").blank?
+      if @response and @response.xpath('//pin') and @response.xpath('//pin').at("pinStatus")
         @pin_status = @response.xpath('//pin').at("pinStatus").text
         # Si le PIN est valide
         if @pin_status == "1"
@@ -346,14 +376,14 @@ class PayMoneyController < ApplicationController
           @internal_com_request = "@response = Nokogiri.XML(request.response.body)"
           run_typhoeus_request(@request, @internal_com_request)
 
-          if(!@response.blank? and @response.xpath('//status').at("idStatus").text == "1")
+          if(@response and @response.xpath('//status').at("idStatus").text == "1")
             @success = true
             @success_messages << "Le compte #{@account} a été crédité de #{@amount.to_i.abs} unités"
             @request = Typhoeus::Request.new("#{ENV['paymoney_url']}/GATEWAY/rest/ES/ChangeStatus/#{@pin}", followlocation: true)
 
             @internal_com_request = "@response = Nokogiri.XML(request.response.body)"
             run_typhoeus_request(@request, @internal_com_request)
-            if(!@response.blank? and @response.xpath('//pin').at("pinStatus").text == "1")
+            if(@response and @response.xpath('//pin').at("pinStatus").text == "1")
               # record into database
             end
           else
