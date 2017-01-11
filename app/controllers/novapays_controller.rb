@@ -1,23 +1,19 @@
 require 'net/http'
 
 class NovapaysController < ApplicationController
-
+  @@wallet_name = 'biao'
   ##before_action :only => :guard do |o| o.filter_connections end
-  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :payment_result_listener, :valid_result_parameters, :generic_ipn_notification, :cashout, :process_payment, :cashout]
+  before_action :session_exists?, :only => [:index, :select_layout, :guard, :set_cashout_fee, :valid_transaction, :notify_to_back_office, :save_cashout_log]
   # Si l'utilisateur ne s'est pas connecté en passant par main#guard, on le rejette
-  before_action :except => [:ipn, :transaction_acknowledgement, :payment_result_listener, :valid_result_parameters, :generic_ipn_notification, :cashout, :process_payment, :cashout] do |s| s.session_authenticated? end
+  before_action :session_authenticated?, :only => [:index, :select_layout, :guard, :set_cashout_fee, :valid_transaction, :notify_to_back_office, :save_cashout_log]
 
   # Set transaction amount for GUCE requests
-  before_action :only => :index do |o| o.guce_request? end
+  before_action :set_guce_transaction_amount, :only => :index
 
   layout :select_layout
 
   def select_layout
-    if session[:service].authentication_token == '57813dc7992fbdc721ca5f6b0d02d559'
-      return "guce"
-    else
-      return "novapay"
-    end
+    session[:service].authentication_token == '57813dc7992fbdc721ca5f6b0d02d559' ? "guce" : "novapay"
   end
 
   # Reçoit les requêtes venant des différents services
@@ -29,8 +25,7 @@ class NovapaysController < ApplicationController
     initialize_customer_view("77e26b3cbd", "ceiled_transaction_amount", "ceiled_shipping_fee")
     get_service_logo(session[:service].token)
 
-    # vérifie qu'un numéro panier appartenant à ce service n'existe pas déjà. Si non, on crée un panier temporaire, si oui, on met à jour le montant envoyé par le ecommerce, la monnaie envoyée par celui ci ainsi que le montant, la monnaie et les frais à envoyer au ecommerce
-   #render text: "#{ENV['guce_back_office_url']}/GPG_GUCE/rest/Mob_Mon/Check/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}"
+    # Si le panier n'existe pas on en crée un nouveau sinon on met à jour les nouvelles informations (le montant, la monnaie envoyés par le ecommerce ainsi que le montant, la monnaie et les frais à envoyer au ecommerce)
     @basket = Novapay.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'")
 
     set_cashout_fee
@@ -54,7 +49,19 @@ class NovapaysController < ApplicationController
         paymoney_password: session[:paymoney_password]
       )
     else
-      @basket.first.update_attributes(:transaction_amount => session[:trs_amount].to_f.ceil, :original_transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, :fees => @shipping, :rate => @rate, :login_id => session[:login_id], paymoney_account_number: session[:paymoney_account_number], paymoney_account_token: session[:paymoney_account_token], paymoney_password: session[:paymoney_password])
+      @basket.first.update_attributes(
+        transaction_amount: session[:trs_amount].to_f.ceil, 
+        original_transaction_amount: session[:trs_amount], 
+        currency_id: session[:currency].id, 
+        paid_transaction_amount: @transaction_amount, 
+        paid_currency_id: @wallet_currency.id, 
+        fees: @shipping, 
+        rate: @rate, 
+        login_id: session[:login_id], 
+        paymoney_account_number: session[:paymoney_account_number], 
+        paymoney_account_token: session[:paymoney_account_token], 
+        paymoney_password: session[:paymoney_password]
+      )
     end
   end
 
@@ -66,7 +73,6 @@ class NovapaysController < ApplicationController
     request.run
     response = request.response
 
-    #render text: "response_code: " + response.code.to_s + " " + str
     render text: response.body
   end
 
@@ -78,20 +84,22 @@ class NovapaysController < ApplicationController
     OmLog.create(log_rl: params.to_s + "method: #{request.get? ? 'GET' : 'POST'}") rescue nil
     @request_type = request
     #valid_transaction
-    if valid_result_parameters
+    if validate_result_parameters
       if valid_transaction || request.get?
         @basket = Novapay.find_by_number(@refact)
         if @basket
-
           # Use NovaPay authentication_token
           update_wallet_used(@basket, "77e26b3cbd")
           request.post? ? @status = "1" : nil
           if (@status.to_s.downcase.strip == "1" || @status.to_s.downcase.strip == "succes")
-
             # Conversion du montant débité par le wallet et des frais en euro avant envoi pour notification au back office du hub
             @rate = get_change_rate("XAF", "EUR")
             if request.post?
-              @basket.update_attributes(payment_status: true, refoper: @refoper, compensation_rate: @rate)
+              @basket.update_attributes(
+                payment_status: true, 
+                refoper: @refoper, 
+                compensation_rate: @rate
+              )
             end
             @amount_for_compensation = ((@basket.paid_transaction_amount + @basket.fees) * @rate).round(2)
             @fees_for_compensation = (@basket.fees * @rate).round(2)
@@ -124,7 +132,8 @@ class NovapaysController < ApplicationController
               # Cashin mobile money
 
               # Redirection vers le site marchand
-              redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=biao&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
+              # redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=biao&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
+              redirect_to notification_url(@basket, true, @@wallet_name)
             end
           else
             if request.post?
@@ -134,7 +143,8 @@ class NovapaysController < ApplicationController
               update_number_of_failed_transactions
               render text: "1"
             else
-              redirect_to "#{@basket.service.url_on_error}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=biao&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}&id=#{@basket.login_id}"
+              # redirect_to "#{@basket.service.url_on_error}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=biao&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}&id=#{@basket.login_id}"
+              redirect_to notification_url(@basket, false, @@wallet_name)
             end
           end
         else
@@ -163,12 +173,8 @@ class NovapaysController < ApplicationController
     end
   end
 
-  def valid_result_parameters
-    if !@refact.blank? && !@refoper.blank? && !@status.blank?
-      return true
-    else
-      return false
-    end
+  def validate_result_parameters
+    @refact && @refoper && @status
   end
 
   def ipn
@@ -189,14 +195,11 @@ class NovapaysController < ApplicationController
       else
         OmLog.create(log_rl: "Paramètres de vérification de paiement: code " + response.code.to_s + " body " + (response.body.to_s rescue ''))
       end
+      request.run
+
+      OmLog.create(log_rl: "Paramètres de vérification de paiement: " + @result.to_s)
     end
-
-    request.run
-
-    OmLog.create(log_rl: "Paramètres de vérification de paiement: " + @result.to_s)
-
-    end
-    !@result.blank? ? true : false
+    !@result.blank?
   end
 
   def notify_to_back_office(basket, url)
@@ -209,7 +212,7 @@ class NovapaysController < ApplicationController
     run_typhoeus_request(@request, @internal_com_request)
 
     if @status.to_s.strip == "1"
-      basket.update_attributes(:notified_to_back_office => true)
+      basket.update_attributes(notified_to_back_office: true)
     end
   end
 
@@ -228,7 +231,7 @@ class NovapaysController < ApplicationController
 
       render :index
     else
-      if !@basket.blank?
+      if @basket
         # Cashout mobile money
         operation_token = '98414bba'
         mobile_money_token = 'ffce3241'
@@ -240,18 +243,33 @@ class NovapaysController < ApplicationController
           @status_id = '0'
           # Update in available_wallet the number of failed_transactions
           update_number_of_failed_transactions
-          @basket.update_attributes(payment_status: false, cashout: true, cashout_completed: false, paymoney_reload_request: unload_request, paymoney_reload_response: unload_response, paymoney_transaction_id: unload_response, cashout_account_number: @cashout_account_number)
+          @basket.update_attributes(
+            payment_status: false, 
+            cashout: true, 
+            cashout_completed: false, 
+            paymoney_reload_request: unload_request, 
+            paymoney_reload_response: unload_response, 
+            paymoney_transaction_id: unload_response, 
+            cashout_account_number: @cashout_account_number
+          )
         else
           @status_id = '5'
           # Update in available_wallet the number of successful_transactions
           #update_number_of_succeed_transactions
-          @basket.update_attributes(payment_status: true, cashout: true, cashout_completed: true, paymoney_reload_request: unload_request, paymoney_reload_response: unload_response, cashout_account_number: @cashout_account_number)
+          @basket.update_attributes(
+            payment_status: true, 
+            cashout: true, 
+            cashout_completed: true, 
+            paymoney_reload_request: unload_request, 
+            paymoney_reload_response: unload_response, 
+            cashout_account_number: @cashout_account_number
+          )
         end
 
         # Saves the transaction on the front office
         save_cashout_log
-
-        redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=biao&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
+        # redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=biao&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
+        redirect_to notification_url(@basket, true, @@wallet_name)
         # Cashout mobile money
       else
         redirect_to error_page_path
@@ -264,7 +282,7 @@ class NovapaysController < ApplicationController
       fee_type = FeeType.find_by_token('0175ad')
       @shipping = 0
 
-      if !fee_type.blank?
+      if fee_type
 	      @shipping = ((fee_type.fees.where("min_value <= #{session[:trs_amount].to_f} AND max_value >= #{session[:trs_amount].to_f}").first.fee_value) * @rate).ceil.round(2)
 	    end
 	  end
@@ -275,7 +293,11 @@ class NovapaysController < ApplicationController
     log_request = "#{ENV['front_office_url']}/api/856332ed59e5207c68e864564/cashout/log/novapay?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}&cashout_account_number=#{@cashout_account_number}&fee=#{@basket.fees}"
     log_response = (RestClient.get(log_request) rescue "")
 
-    @basket.update_attributes(cashout_notified_to_front_office: (log_response == '1' ? true : false), cashout_notification_request: log_request, cashout_notification_response: log_response)
+    @basket.update_attributes(
+      cashout_notified_to_front_office: (log_response == '1' ? true : false), 
+      cashout_notification_request: log_request, 
+      cashout_notification_response: log_response
+    )
   end
 
   # Returns 0 or 1 depending on the status of the transaction
@@ -289,9 +311,6 @@ class NovapaysController < ApplicationController
     # wallet=05ccd7ba3d
     @request.run
     @response = @request.response
-    if @response.code.to_s == "200"
-      basket.update_attributes(:notified_to_ecommerce => true)
-    end
+    basket.update_attributes(notified_to_ecommerce: true) if @response.code.to_s == "200"
   end
-
 end
