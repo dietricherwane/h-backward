@@ -3,6 +3,24 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   #protect_from_forgery with: :null_session
 
+  # Génère l'URL de notification du ecommerce
+  def notification_url(basket, successfull, wallet_name)
+    url = successfull ? basket.service.url_on_success : basket.service.url_on_error
+    params = {
+      transaction_id:           basket.transaction_id,
+      order_id:                 basket.number,
+      status_id:                @status_id,
+      wallet:                   wallet_name,
+      transaction_amount:       basket.original_transaction_amount,
+      currency:                 basket.currency.code,
+      paid_transaction_amount:  basket.paid_transaction_amount,
+      paid_currency:            Currency.find_by_id(basket.paid_currency_id).code,
+      change_rate:              basket.rate,
+      id:                       basket.login_id
+    }
+    url += "?" + params.to_query
+  end
+
   # Initialise la variable de session contenant les informations sur la transaction
   def get_service_by_token(currency, service_token, operation_token, order, transaction_amount, id, paymoney_account_number, paymoney_password)
     # si la devise envoyee n'existe pas, on renvoie la page d'erreur
