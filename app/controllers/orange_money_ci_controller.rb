@@ -2,12 +2,12 @@ class OrangeMoneyCiController < ApplicationController
   @@wallet_name = 'orange_money_ci'
   @@second_origin_url = Parameter.first.second_origin_url
   ##before_action :only => :guard do |o| o.filter_connections end
-  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :initialize_session, :session_initialized, :payment_result_listener, :generic_ipn_notification, :cashout]
+  before_action :session_exists?, only: [:index, :select_layout, :guard, :set_cashout_fee, :valid_result_parameters, :valid_transaction, :notify_to_back_office, :save_cashout_log]
   # Si l'utilisateur ne s'est pas connecté en passant par main#guard, on le rejette
-  before_action :except => [:ipn, :transaction_acknowledgement, :initialize_session, :payment_result_listener, :generic_ipn_notification, :cashout] do |s| s.session_authenticated? end
+  before_action :session_authenticated?, only: [:index, :session_initialized, :select_layout, :guard, :set_cashout_fee, :valid_result_parameters, :valid_transaction, :notify_to_back_office, :save_cashout_log]
 
   # Set transaction amount for GUCE requests
-  before_action :only => :index do |o| o.guce_request? end
+  before_action :set_guce_transaction_amount, :only => :index
 
   #layout "orange_money_ci"
 
@@ -262,7 +262,7 @@ class OrangeMoneyCiController < ApplicationController
     )
 
     request.on_complete do |response|
-      @result = response.success? ? response.body.strip rescue nil : nil
+      @result = response.success? ? (response.body.strip rescue nil) : nil
     end
 
     request.run
