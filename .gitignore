@@ -16,6 +16,7 @@
 /tmp
 **/tmp
 /log/development.log
+/.byebug_history
 
 # Ignore all media files.
 /public/images/
