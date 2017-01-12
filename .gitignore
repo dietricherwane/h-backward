@@ -17,6 +17,7 @@
 /tmp/cache
 **/tmp
 /log/development.log
+/.byebug_history
 
 # Ignore environment variables
 /config/env_variables.yml
