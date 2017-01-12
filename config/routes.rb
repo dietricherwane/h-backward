@@ -1,19 +1,31 @@
 HubsBackOffice::Application.routes.draw do
   root 'errors_handling#home_page'
+
+  # Chargement de compte  #### risque de confusion avec la route suivante
+  get "/order/reload/:currency/:service_token/:operation_token/:order/:transaction_amount/:paymoney_account_number" => "main#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   
-  get "products/index"
-  get "products/edit"
-  get "products/show"
-  get "products/testing_json_parsing"
-  post "products/create"
-  post "products/update"
-  post "products/delete"
-  
+  get "order/:currency/:service_token/:operation_token/:order/:transaction_amount/:id" => "main#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "order/:currency/:service_token/:operation_token/:order/:transaction_amount" => "main#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
-  get "Main" => "main#index"
-  
+  get "order/:currency/:service_token/:operation_token/:order/:transaction_amount" => "main#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
+
+  # Déchargement de compte
+  get "/order/unload/:currency/:service_token/:operation_token/:order/:transaction_amount/:paymoney_account_number/:paymoney_password" => "main#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
+
+  get "/Main" => "main#index", as: :main
+
   get "get_wallets" => "wallets#get_wallets"
-  
+
+  get "duke" => "mtn_cis#duke"
+
+  # Upload wallets logos
+  get "bfaad58e15f671064fd87277/wallets/edit/:authentication_token" => "wallets#edit"
+  post "bfaad58e15f671064fd87277/wallets/update/:authentication_token" => "wallets#update", as: :update_wallet
+  post "wallets/available" => "wallets#available"
+  post "available_wallet/enable_disable" => "available_wallets#enable_disable"
+  post "wallets/used_per_country/:token" => "wallets#used_wallets_per_country"
+  post "wallet/successful_transactions/:service_token/:wallet_token" => "wallets#successful_transactions_per_service"
+  post "wallet/failed_transactions/:service_token/:wallet_token" => "wallets#failed_transactions_per_service"
+
   get "paymoney/:service_id/:operation_id/:basket_number/:transaction_amount" => "pay_money#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "PayMoney" => "pay_money#index"
   post "PayMoney/ProcessPayment" => "pay_money#process_payment"
@@ -21,65 +33,119 @@ HubsBackOffice::Application.routes.draw do
   post "PayMoney/CreateAccount" => "pay_money#create_account"
   get "PayMoney/CreditAccount" => "pay_money#credit_account"
   post "PayMoney/Account/AddCredit" => "pay_money#add_credit"
-  post "paymoney/ipn" => "pay_money#ipn" 
+  post "paymoney/ipn" => "pay_money#ipn"
   post "paymoney/transaction_acknowledgement" => "pay_money#transaction_acknowledgement"
-  
+  post "paymoney/transaction_acknowledgement/:transaction_id" => "pay_money#transaction_acknowledgement"
+  get "paymoney/transaction_acknowledgement/:transaction_id" => "pay_money#transaction_acknowledgement"
+
   get "paypal/:service_id/:operation_id/:basket_number/:transaction_amount" => "paypal#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "Paypal" => "paypal#index"
   get "Paypal/PaymentResult" => "paypal#paypal_display"
   post "Paypal/ProcessPayment" => "paypal#process_payment"
   get "Paypal/PaymentResultListener" => "paypal#payment_result_listener"
-  post "paypal/ipn" => "paypal#ipn" 
-  post "paypal/transaction_acknowledgement" => "paypal#transaction_acknowledgement"
-  
+  post "paypal/ipn" => "paypal#ipn"
+  post "Paypal/transaction_acknowledgement" => "paypal#transaction_acknowledgement"
+  get "Paypal/transaction_acknowledgement/:transaction_id" => "paypal#transaction_acknowledgement"
+  post "Paypal/transaction_acknowledgement/:transaction_id" => "paypal#transaction_acknowledgement"
+  post "/Paypal/cashout" => "paypal#cashout"
+
   get "orange_money_ci/:service_id/:operation_id/:basket_number/:transaction_amount" => "orange_money_ci#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "OrangeMoneyCI" => "orange_money_ci#index"
   post "/OrangeMoneyCI/ProcessPayment" => "orange_money_ci#redirect_to_billing_platform"
   post "OrangeMoneyCI/PaymentResultListener" => "orange_money_ci#payment_result_listener"
-  post "OrangeMoneyCI/ipn" => "orange_money_ci#ipn" 
+  post "OrangeMoneyCI/ipn" => "orange_money_ci#ipn"
   get "om" => "orange_money_ci#initialize_session"
-  
+  post "OrangeMoneyCI/transaction_acknowledgement" => "orange_money_ci#transaction_acknowledgement"
+  post "OrangeMoneyCI/transaction_acknowledgement/:transaction_id" => "orange_money_ci#transaction_acknowledgement"
+  get "OrangeMoneyCI/transaction_acknowledgement/:transaction_id" => "orange_money_ci#transaction_acknowledgement"
+  post "/OrangeMoneyCI/cashout" => "orange_money_ci#cashout"
+
+  get "mtn_ci/:service_id/:operation_id/:basket_number/:transaction_amount" => "mtn_cis#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
+  get "MTNCI" => "mtn_cis#index"
+  post "/MTNCI/ecommerce_payment" => "mtn_cis#ecommerce_payment"
+  post "/MTNCI/cashin_mobile" => "mtn_cis#cashin_mobile"
+  post "/MTNCI/cashout_mobile" => "mtn_cis#cashout_mobile"
+
+  post "MTNCI/ipn" => "mtn_cis#ipn"
+
+  post "/mtn_sdp_notification" => "mtn_cis#get_sdp_notification"
+  get "MTNCI/merchant_side_redirection" => "mtn_cis#merchant_side_redirection", as: :merchant_side_redirection
+  get "MTNCI/waiting_validation" => "mtn_cis#waiting_validation", as: :waiting_validation
+  get "MTNCI/check_transaction_validation" => "mtn_cis#check_transaction_validation"
+
+
+  get "om" => "mtn_cis#initialize_session"
+  post "MTNCI/transaction_acknowledgement" => "mtn_cis#transaction_acknowledgement"
+  post "MTNCI/transaction_acknowledgement/:transaction_id" => "mtn_cis#transaction_acknowledgement"
+  get "MTNCI/transaction_acknowledgement/:transaction_id" => "mtn_cis#transaction_acknowledgement"
+
+
+
+
+  get "/uba/:service_id/:operation_id/:basket_number/:transaction_amount" => "uba#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
+  get "/UBA" => "uba#index"
+  post "/UBA/validate" => "uba#validate_transaction"
+  post "/UBA/transaction_acknowledgement" => "uba#transaction_acknowledgement"
+  get "/UBA/transaction_acknowledgement" => "uba#transaction_acknowledgement"
+  post "/UBA/cashout" => "uba#cashout"
+
+  get "novapay/:service_id/:operation_id/:basket_number/:transaction_amount" => "novapays#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
+  get "NovaPay" => "novapays#index"
+  post "novapay/process_payment" => "novapays#process_payment"
+  get "/NovaPay/script" => "novapays#payment_result_listener"
+  post "/NovaPay/ipn" => "novapays#payment_result_listener"
+  post "NovaPay/transaction_acknowledgement" => "novapays#transaction_acknowledgement"
+  post "NovaPay/transaction_acknowledgement/:transaction_id" => "novapays#transaction_acknowledgement"
+  get "NovaPay/transaction_acknowledgement/:transaction_id" => "novapays#transaction_acknowledgement"
+  post "/NovaPay/cashout/process" => "novapays#cashout"
+
   get "qash/:service_id/:operation_id/:basket_number/:transaction_amount" => "qash_baskets#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "Qash" => "qash_baskets#index"
   get "/Qash/PaymentResultListener" => "qash_baskets#payment_result_listener"
-  
-  get "PayPal/PaymentValidation" => "paypal_payment_validation#my_queue"
-  
+  #get "PayPal/PaymentValidation" => "paypal_payment_validation#my_queue"
+  post "Qash/transaction_acknowledgement" => "qash_baskets#transaction_acknowledgement"
+  post "Qash/transaction_acknowledgement/:transaction_id" => "qash_baskets#transaction_acknowledgement"
+  get "Qash/transaction_acknowledgement/:transaction_id" => "qash_baskets#transaction_acknowledgement"
+  post "/Qash/cashout" => "qash_baskets#cashout"
+
   get "delayed_payments/:service_id/:operation_id/:basket_number/:transaction_amount" => "delayed_payments#guard"
   get "Delayed_Payment" => "delayed_payments#index"
   get "delayed_payment_listener/:service_id/:operation_id/:basket_number/:transaction_amount" => "delayed_payments#delayed_payment_listener"
   #get "Delayed_Payment/PaymentResult" => "paypal#paypal_display"
   #post "Paypal/ProcessPayment" => "paypal#process_payment"
   #get "Paypal/PaymentResultListener" => "paypal#payment_result_listener"
-  
+
   get "flooz" => "moov_flooz_ci#index"
-  
+
   get "Wimboo/Reports/Operations" => "reports#wimboo_operations"
-  post "Wimboo/FilterOperations" => "reports#filter_wimboo_operations"  
+  post "Wimboo/FilterOperations" => "reports#filter_wimboo_operations"
   get "Wimboo/Reports/AyantsDroit" => "reports#wimboo_ayants_droit"
-  
+
   get "E-kiosk/Reports/Operations" => "reports#gepci_operations"
   post "E-kiosk/FilterOperations" => "reports#filter_gepci_operations"
   get "E-kiosk/Reports/AyantsDroit" => "reports#gepci_ayants_droit"
-  
+
   get "error" => "errors_handling#error_page", as: :error_page
   get "success" => "errors_handling#success_page", as: :success_page
-  
+
   get "services" => "services#index"
   get "service/create" => "services#create"
   get "service/update" => "services#update"
   get "service/disable" => "services#disable"
   get "service/enable" => "services#enable"
-  
+  post "service/qualify" => "services#qualify"
+  post "service/enable_disable" => "services#enable_disable"
+
   get "operation/create" => "operations#create"
   get "operation/update" => "operations#update"
   get "operation/disable" => "operations#disable"
   get "operation/enable" => "operations#enable"
-  
+
   get "payment_way_fee/create" => "payment_way_fees#create"
   get "payment_way_fee/update" => "payment_way_fees#update"
-  
-  
+
+  get 'guce' => 'products#guce'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -121,7 +187,7 @@ HubsBackOffice::Application.routes.draw do
   #       get 'recent', on: :collection
   #     end
   #   end
-  
+
   # Example resource route with concerns:
   #   concern :toggleable do
   #     post 'toggle'

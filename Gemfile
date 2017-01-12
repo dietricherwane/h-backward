@@ -2,10 +2,10 @@ source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 #gem 'rails', '4.0.4'
-#gem 'rails', :git => 'git://github.com/rails/rails.git' 
+#gem 'rails', :git => 'git://github.com/rails/rails.git'
 gem 'rails', '4.0.0'
 
-ruby '2.0.0'
+ruby '2.3.1'
 
 # Use postgresql as the database for Active Record
 gem 'pg'
@@ -32,6 +32,8 @@ gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
 
+gem 'json'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
@@ -41,7 +43,7 @@ end
 gem 'magic_encoding'
 
 # Used to make http requests
-gem 'typhoeus'
+gem 'typhoeus', '0.6.9'
 
 # Used to connect to heroku
 gem 'heroku'
@@ -50,7 +52,7 @@ gem 'heroku'
 gem 'rabl'
 
 # JSON parser
-gem "yajl-ruby"
+# gem "yajl-ruby"
 
 # XML parser
 gem "nokogiri"
@@ -60,14 +62,39 @@ gem 'protected_attributes'
 # stores session variables into database
 gem 'activerecord-session_store'#, github: 'rails/activerecord-session_store'
 
-# 
+#
 gem 'bundler-audit'
 
-# 
+#
 gem 'brakeman'
 
 #
 gem 'rack-attack'
+
+# Handling file upload
+gem "paperclip", "~> 4.2"
+
+# Create soap server
+gem 'wash_out'
+
+# Create soap client
+gem 'savon', '~> 2.10.0'
+
+gem 'rest-client'
+
+group :development do
+  gem 'pry-byebug', '~> 3.4', '>= 3.4.2'
+end
+
+group :development, :test do
+  gem 'rspec-rails', "~> 3.5"
+  gem 'shoulda', '~> 3.5'
+  gem 'factory_girl_rails'
+end
+
+group :test do
+  gem 'database_cleaner'
+end
 
 #gem "rails_12factor", group: :production
 

@@ -1,0 +1,51 @@
+Fields to display on main page:
+
+Raison sociale
+
+Lien web
+
+Montant
+
+Devise
+
+http://41.189.40.193:6968/order/xof/ef34523f1196c904c6e09af80e472ac2/535ef2a5-c7bc-48c0-8b4d-d5c73c40b272/YU465JDJ455N6C/500
+
+41.189.40.193:6968/order/xof/57813dc7992fbdc721ca5f6b0d02d559/1c2018aa-434e-43e2-b494-a18c25986602/SAD201600003821/20040
+
+http://41.189.40.193:6968/order/xof/7388694f453b631c31e5e23baac54e34/762685df-d2f5-4177-91dd-1374fbfceafa/Y4U465JDJ455N687C/500
+
+http://0.0.0.0:3000/order/xof/ef34523f1196c904c6e09af80e472ac2/535ef2a5-c7bc-48c0-8b4d-d5c73c40b272/YdddfHHDC447CCC/500
+https://pay-money.net/order/xof/ef34523f1196c904c6e09af80e472ac2/535ef2a5-c7bc-48c0-8b4d-d5c73c40b272/Ydfdd4dfHHD7C447C5CC/500
+0e18096f-1f49-405b-b6c7-da376d7e65db
+https://pay-money.net/order/xof/1021d0b7e744b8649182308f12554dcc/0e18096f-1f49-405b-b6c7-da376d7e65db/Ydffdd4dfHHD7C447C5CC/500
+
+http://41.189.40.193:6968/order/xof/ef34523f1196c904c6e09af80e472ac2/535ef2a5-c7bc-48c0-8b4d-d5c73c40b272/GGFJJD5554445D/500
+
+https://pay-money.net/order/xof/57813dc7992fbdc721ca5f6b0d02d559/1c2018aa-434e-43e2-b494-a18c25986602/SAD201600002604/100761
+
+https://pay-money.net/order/xof/57813dc7992fbdc721ca5f6b0d02d559/1c2018aa-434e-43e2-b494-a18c25986602/SAD201600009655/20000
+
+
+curl --request POST --data "{"_refact": "d414cfc7e9d1e494387a26916fd2524dd4f504a9", "_prix": "12384192", "_nooper": "H072468" }" --header "QUERY-STRING: _identify=3155832361,_password=f46eb4cc014288254ad8ade06b6cc6e1,_dateheure=20160223174400517" https://novaplus.ci/NOVAPAY_WEB/FR/paycheck.awp  --insecure
+
+"http://41.189.40.193:8080/GPG_GUCE/rest/Mob_Mon_Pay/pay/SAD201600002604/100761/VIECOB8/QRTGH78/NULL
+
+http://41.189.40.193:8080/GPG_GUCE/rest/Mob_Mon/Check/SAD201600002604/100761
+
+http://195.14.0.128:8080/GPG_GUCE/rest/Mob_Mon/Check/SAD201600013039/20040
+
+_identify=3155832361,_password=f46eb4cc014288254ad8ade06b6cc6e1,_dateheure=20160223174400517 --- {"_refact": "d414cfc7e9d1e494387a26916fd2524dd4f504a9", "_prix": "12384192", "_nooper": "H072468" }
+
+41.189.40.193:6968/order/reload/XOF/af1a30551acd531383e605d7c1afbbe2/3d20d7af-2ecb-4681-8e4f-a585d7700ee4/XHJOH52DMQ16455/500/440000019
+
+https://pay-money.net/order/reload/XOF/af1a30551acd531383e605d7c1afbbe2/3d20d7af-2ecb-4681-8e4f-a585d7700ee4/XHJOH52DMQ16455/500/440000019
+
+41.189.40.193:6968/order/unload/XOF/af1a30551acd531383e605d7c1afbbe2/3d20d7af-2ecb-4681-8e4f-a585d7705423/XH22JO418554HDMQ565448655746455/500/440000019/3415
+
+http://195.14.0.128:8080/PAYMONEY_WALLET/rest/check2_compte/440000019
+
+http://41.189.40.193:8080/PAYMONEY_WALLET/rest/check2_compte/440000019
+
+41.189.40.193:10001/api/86d138798bc43ed59e5207c664/mobile_money/cashin/:mobile_money_account/:account/:transaction_amount/:fee
+
+rails generate model PaypalCashout transaction_id:string:index order_id:string:index status_id:string{5}:index transaction_a

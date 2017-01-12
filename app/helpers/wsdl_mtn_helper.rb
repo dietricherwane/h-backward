@@ -1,0 +1,2 @@
+module WsdlMtnHelper
+end

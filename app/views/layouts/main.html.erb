@@ -8,20 +8,21 @@
 		<%= stylesheet_link_tag "creative/normalize", media: "all", "data-turbolinks-track" => true %>
 		<%= stylesheet_link_tag "creative/demo", media: "all", "data-turbolinks-track" => true %>
 		<%= stylesheet_link_tag "creative/component", media: "all", "data-turbolinks-track" => true %>
-		<%= stylesheet_link_tag "clouds/clouds", media: "all", "data-turbolinks-track" => true %>
+		<%#= stylesheet_link_tag "clouds/clouds", media: "all", "data-turbolinks-track" => true %>
 		<%= stylesheet_link_tag "letterpress/letterpress", media: "all", "data-turbolinks-track" => true %>
-		
-		
+		<%= stylesheet_link_tag "main", media: "all", "data-turbolinks-track" => true %>
+
+
 		<%= javascript_include_tag "plugins/jquery/jquery-1.9.1.min", "data-turbolinks-track" => true %>
 		<%= javascript_include_tag "creative/ga", "data-turbolinks-track" => true %>
 		<%= javascript_include_tag "creative/modernizr.custom", "data-turbolinks-track" => true %>
-						   
+
 		<%#= javascript_include_tag "shuffle_letters/jquery.shuffleLetters", "data-turbolinks-track" => true %>
-			
+
     </head>
     <body>
       <div id = "inner-body">
-		    <%= yield %>  
-		  </div> 
+		    <%= yield %>
+		  </div>
     </body>
 </html>

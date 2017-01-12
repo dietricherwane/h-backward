@@ -1,4 +1,5 @@
 class PaypalController < ApplicationController
+  @@wallet_name = 'paypal'
   @@second_origin_url = Parameter.first.second_origin_url
   # Only for guard action, we check if service_id exists and initialize a session variable containing transaction_data
   #before_action :only => :guard do |s| s.get_service(params[:service_id], params[:operation_id], params[:basket_number], params[:transaction_amount]) end
@@ -8,11 +9,20 @@ class PaypalController < ApplicationController
   # Vérifie que le panier n'a pas déjà été payé via paypal
   #before_action :only => :guard do |s| s.basket_already_paid?(params[:basket_number]) end
   # Vérifie pour toutes les actions que la variable de session existe
-  before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement]
+  before_action :session_exists?, :only => [:index, :guard, :select_layout, :set_cashout_fee, :notify_to_back_office, :save_cashout_log]
   # Si l'utilisateur ne s'est pas connecté en passant par main#guard, on le rejette
-  before_action :except => [:ipn, :transaction_acknowledgement] do |s| s.session_authenticated? end
+  before_action :session_authenticated?, :only => [:index, :guard, :select_layout, :set_cashout_fee, :notify_to_back_office, :save_cashout_log]
 
-  layout "paypal"
+  # Set transaction amount for GUCE requests
+  before_action :set_guce_transaction_amount, :only => :index
+
+  #layout "paypal"
+
+  layout :select_layout
+
+  def select_layout
+    session[:service].authentication_token == '57813dc7992fbdc721ca5f6b0d02d559' ? "guce" : "paypal"
+  end
 
   # Reçoit les requêtes venant des différents services
   def guard
@@ -21,19 +31,48 @@ class PaypalController < ApplicationController
 
   # Efface les parmètres du corps de la requête et affiche un friendly url dans le navigateur du client
   def index
-    # récupération du wallet, de la monnaie utilisée par le wallet, du taux de change entre la monnaie envoyée par le ecommerce et celle du wallet, conversion du montant envoyé par le ecommerce en celui supporté par le wallet et affichage des frais de transfert
-    @wallet = Wallet.find_by_name("Paypal")
-    @wallet_currency = @wallet.currency
-    @rate = get_change_rate(session[:currency].code, @wallet_currency.code)
-    session[:basket]["transaction_amount"] = (session[:trs_amount] * @rate).round(2)
-    @shipping = get_shipping_fee("Paypal")
+    initialize_customer_view("e6da96e284", "unceiled_transaction_amount", "unceiled_shipping_fee")
+    get_service_logo(session[:service].token)
 
     # vérifie qu'un numéro panier appartenant à ce service n'existe pas déjà. Si non, on crée un panier temporaire, si oui, on met à jour le montant envoyé par le ecommerce, la monnaie envoyée par celui ci ainsi que le montant, la monnaie et les frais à envoyer au ecommerce
     @basket = PaypalBasket.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'")
+
+    set_cashout_fee
+
+    @shipping = @shipping + 1
+
     if @basket.blank?
-      @basket = PaypalBasket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :original_transaction_amount => session[:trs_amount], :transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => session[:basket]["transaction_amount"], :paid_currency_id => @wallet_currency.id, transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"), :fees => @shipping, :rate => @rate)
+      @basket = PaypalBasket.create(
+        number: session[:basket]["basket_number"], 
+        service_id: session[:service].id, 
+        operation_id: session[:operation].id, 
+        original_transaction_amount: session[:trs_amount], 
+        transaction_amount: session[:trs_amount], 
+        currency_id: session[:currency].id, 
+        paid_transaction_amount: @transaction_amount, 
+        paid_currency_id: @wallet_currency.id, 
+        transaction_id: Digest::SHA1.hexdigest([DateTime.now.iso8601(6), rand].join), 
+        fees: @shipping, 
+        rate: @rate, 
+        login_id: session[:login_id], 
+        paymoney_account_number: session[:paymoney_account_number], 
+        paymoney_account_token: session[:paymoney_account_token], 
+        paymoney_password: session[:paymoney_password]
+      )
     else
-      @basket.first.update_attributes(:transaction_amount => session[:trs_amount], :original_transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => session[:basket]["transaction_amount"], :paid_currency_id => @wallet_currency.id, :fees => @shipping, :rate => @rate)
+      @basket.first.update_attributes(
+        transaction_amount: session[:trs_amount], 
+        original_transaction_amount: session[:trs_amount], 
+        currency_id: session[:currency].id, 
+        paid_transaction_amount: @transaction_amount, 
+        paid_currency_id: @wallet_currency.id, 
+        fees: @shipping, 
+        rate: @rate, 
+        login_id: session[:login_id], 
+        paymoney_account_number: session[:paymoney_account_number], 
+        paymoney_account_token: session[:paymoney_account_token], 
+        paymoney_password: session[:paymoney_password]
+      )
     end
   end
 
@@ -45,19 +84,22 @@ class PaypalController < ApplicationController
     OmLog.create(log_rl: params.to_s) rescue nil
     @status = ""
     @parameters = {"cmd" => "_notify-validate"}.merge(params.except(:action, :controller))
-    #@request = Typhoeus::Request.new("https://www.sandbox.paypal.com/cgi-bin/webscr", followlocation: true, params: @parameters, method: :post)
-    @request = Typhoeus::Request.new("https://www.paypal.com/cgi-bin/webscr", followlocation: true, params: @parameters, method: :post)
+    @request = Typhoeus::Request.new("https://www.sandbox.paypal.com/cgi-bin/webscr", followlocation: true, params: @parameters, method: :post)
+    #@request = Typhoeus::Request.new("https://www.paypal.com/cgi-bin/webscr", followlocation: true, params: @parameters, method: :post)
     @request.run
     @response = @request.response
     if @response.body == "VERIFIED"
       @basket = PaypalBasket.find_by_transaction_id(params[:custom].to_s)
-      if ( !@basket.blank? && (params[:payment_status] == "Completed" || params[:payment_status] == "Processed" || (params[:payment_status] == "Pending" && ["address", "authorization", "multi-currency"].include?(params[:pending_reason]))))
-        if @basket.payment_status != true
-          @basket.update_attributes(:payment_status => true)
-        end
-        if @basket.notified_to_back_office != true
+      if (@basket && (params[:payment_status] == "Completed" || params[:payment_status] == "Processed" || (params[:payment_status] == "Pending" && ["address", "authorization", "multi-currency"].include?(params[:pending_reason]))))
+        # Use Paypal authentication_token
+        @basket.service.available_wallets.where(wallet_id: Wallet.find_by_authentication_token("e6da96e284").id).first.update_attribute(:wallet_used, true) rescue nil
+
+        @basket.update_attributes(payment_status: true) unless @basket.payment_status = true
+
+        unless @basket.notified_to_back_office = true
           @rate = get_change_rate(params[:cc], "EUR")
-          @@basket.update_attributes(compensation_rate: @rate)
+          # @@basket.update_attributes(compensation_rate: @rate)
+          @basket.update_attributes(compensation_rate: @rate)
           @amount_for_compensation = ((@basket.paid_transaction_amount + @basket.fees) * @rate).round(2)
           @fees_for_compensation = (@basket.fees * @rate).round(2)
 
@@ -65,31 +107,25 @@ class PaypalController < ApplicationController
           notify_to_back_office(@basket, "#{@@second_origin_url}/GATEWAY/rest/WS/#{session[:operation].id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")
         end
         # Notification au back office du ecommerce
-        if @basket.notified_to_ecommerce != true
+        unless @basket.notified_to_ecommerce = true
           @service = Service.find_by_id(@basket.service_id)
-          @request = Typhoeus::Request.new("#{@service.url_to_ipn}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paypal&transaction_amount=#{@basket.transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}", followlocation: true, method: :post)
+          @request = Typhoeus::Request.new(
+            "#{@service.url_to_ipn}" + "?" + notification_parameters(@basket, @@wallet_name), 
+            followlocation: true, 
+            method: :post
+          )
           # wallet=e6da96e284
           @request.run
           @response = @request.response
-          #if @response.to_s == "200" and @response.body.blank?
-            @basket.update_attributes(:notified_to_ecommerce => true)
-          #end
+          @basket.update_attributes(notified_to_ecommerce: true) if @response.code.to_s == "200"
         end
       end
     end
   end
 
+  # Returns 0 or 1 depending on the status of the transaction
   def transaction_acknowledgement
-    @status = "0"
-    @basket = PaypalBasket.find_by_transaction_id(params[:transaction_id])
-    if !@basket.blank?
-      if @basket.payment_status == true
-        @status = "1"
-      end
-    else
-      @status = "0"
-    end
-    render :text => @status
+    generic_transaction_acknowledgement(PaypalBasket, params[:transaction_id])
   end
 
   # Lorsque l'utilisateur finit son achat sur paypal, il est redirigé vers cette fonction pour authentifier  la transaction, l'historiser et envoyer le reporting au back end
@@ -98,21 +134,27 @@ class PaypalController < ApplicationController
     @error_messages = []
     @status = ""
 
-    OmLog.create(log_rl: params.to_s) rescue nil
+    OmLog.create(log_rl: ("Paypal parameters 1: " + params.to_s)) rescue nil
 
-    #@request = Typhoeus::Request.new("https://www.sandbox.paypal.com/cgi-bin/webscr", method: :post, params: {cmd: "_notify-sync", tx: "#{params[:tx]}", at: "wc9rbATkeBqy488jdxnQeXHsv9ya8Sh6Pq_DST3BihQ4oV2-De3epJilfKG"})
-    @request = Typhoeus::Request.new("https://www.paypal.com/cgi-bin/webscr", method: :post, params: {cmd: "_notify-sync", tx: "#{params[:tx]}", at: "xGmhRanXxEiDPNYldQAjQA_uC5plNzWVCCJFb_n_Tbxk5ncfm_vlsYXls1C"})
+    @request = Typhoeus::Request.new("https://www.sandbox.paypal.com/cgi-bin/webscr", method: :post, params: {cmd: "_notify-sync", tx: "#{params[:tx]}", at: "wc9rbATkeBqy488jdxnQeXHsv9ya8Sh6Pq_DST3BihQ4oV2-De3epJilfKG"})
+    #@request = Typhoeus::Request.new("https://www.paypal.com/cgi-bin/webscr", method: :post, params: {cmd: "_notify-sync", tx: "#{params[:tx]}", at: "xGmhRanXxEiDPNYldQAjQA_uC5plNzWVCCJFb_n_Tbxk5ncfm_vlsYXls1C"})
     @request.run
     @response = @request.response
+
+    OmLog.create(log_rl: ("Paypal parameters 2: " + @request.response.body + '--' + params.to_s)) rescue nil
 
     # On vérifie que la transaction a été effectuée
     if( params[:st] == "Completed" || params[:st] == "Processed" || (params[:st] == "Pending" && ["address", "authorization", "multi-currency"].include?(params[:pending_reason])) )
       @basket = PaypalBasket.find_by_transaction_id(params[:cm])
       # On vérifie que la panier existe
-      if !@basket.blank?
+      if @basket
         # On vérifie que le montant ainsi que les frais payés et la monnaie correspondent à ceux stockés dans la base de données
-        if (@basket.paid_transaction_amount + @basket.fees) == params[:amt].to_f  and @basket.currency.code.upcase == params[:cc].upcase
-          @basket.update_attributes(:payment_status => true)
+
+        # Use authentication_token to update wallet used
+        update_wallet_used(@basket, "e6da96e284")
+
+        #if true #(@basket.paid_transaction_amount + @basket.fees) == params[:amt].to_f #(@basket.paid_transaction_amount + @basket.fees) == params[:amt].to_f  and (Currency.find_by_id(@basket.paid_currency_id).code.upcase rescue "") == params[:cc].upcase
+          @basket.update_attributes(payment_status: true)
 
           # Conversion du montant débité par le wallet et des frais en euro avant envoi pour notification au back office du hub
           @rate = get_change_rate(params[:cc], "EUR")
@@ -121,16 +163,60 @@ class PaypalController < ApplicationController
           @fees_for_compensation = (@basket.fees * @rate).round(2)
 
           # Notification au back office du hub
-          notify_to_back_office(@basket, "#{@@second_origin_url}/GATEWAY/rest/WS/#{session[:operation].id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")
+          #notify_to_back_office(@basket, "#{@@second_origin_url}/GATEWAY/rest/WS/#{session[:operation].id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")
+
+          # Update in available_wallet the number of successful_transactions
+          update_number_of_succeed_transactions
+
+          @status_id = 1
+
+          # Handle GUCE notifications
+          guce_request_payment?(@basket.service.authentication_token, 'QRT2LS1', 'ELNPAY4')
 
           # Redirection vers le site marchand
-          redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
+          if (@basket.operation.authentication_token rescue nil) == "b6dff4ae-05c1-4050-a976-0db6e358f22b"
+            redirect_to "http://ekioskmobile.net/retourabonnement.php?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
+          else
+
+            # Cashin mobile money
+            if ['3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '0acae92d-d63c-41d7-b385-d797b95e98dc', '7489bd19-6ef8-4748-8218-ac9201512345', 'ebb1f4f3-116b-417e-8348-5964771d0123', 's8g56da9-63f1-486e-9b0c-eceb0aab6d6c'].include?(@basket.operation.authentication_token)
+              operation_token = 'd62b4b7c'
+              mobile_money_token = 'CEWlSRkn'
+              deposit_request = "#{Parameter.first.paymoney_wallet_url}/PAYMONEY_WALLET/rest/cash_in_pos/53740905/CEWlSRkn/#{@basket.original_transaction_amount}/#{Digest::SHA1.hexdigest([DateTime.now.iso8601(6), rand].join).hex.to_s[0..8]}"
+              deposit_response = (RestClient.get(deposit_request) rescue "")
+              OmLog.create(log_rl: deposit_request.force_encoding('iso8859-1').encode('utf-8'), log_tv: deposit_response.force_encoding('iso8859-1').encode('utf-8')) rescue nil
+              reload_request = "#{Parameter.first.gateway_wallet_url}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/PAYPAL/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.original_transaction_amount}/0"
+
+              reload_response = (RestClient.get(reload_request) rescue "")
+              OmLog.create(log_rl: reload_request.force_encoding('iso8859-1').encode('utf-8'), log_tv: reload_response.force_encoding('iso8859-1').encode('utf-8')) rescue nil
+              
+              @status_id = '5' if reload_response.include?('|')
+
+              @basket.update_attributes(paymoney_reload_request: reload_request, paymoney_reload_response: reload_response, paymoney_transaction_id: ((reload_response.blank? || reload_response.include?('|')) ? nil : reload_response))
+            end
+            # Cashin mobile money
+
+            # OmLog.create(log_rl: ("Paypal parameters 3: " + "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}")) rescue nil
+            OmLog.create(log_rl: ("Paypal parameters 3: " + notification_url(@basket, true, @@wallet_name))) rescue nil
+            # redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
+            redirect_to notification_url(@basket, true, @@wallet_name)
+          end
+=begin
         else
           (params[:cc].length > 3) ? params[:cc][0,3] : false
           # Le montant payé ou la monnaie n'est pas celui ou celle envoyé au wallet pour ce panier
           @basket.update_attributes(:conflictual_transaction_amount => params[:amt].to_f, :conflictual_currency => params[:cc].upcase)
-          redirect_to "#{session[:service].url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}"
+
+          # Update in available_wallet the number of failed_transactions
+          update_number_of_failed_transactions
+
+          if (@basket.operation.authentication_token rescue nil) == "b6dff4ae-05c1-4050-a976-0db6e358f22b"
+            redirect_to "http://ekioskmobile.net/retourabonnement.php?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}&id=#{@basket.login_id}"
+          else
+            redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}&id=#{@basket.login_id}"
+          end
         end
+=end
       else
         # On vérifie que le panier existe
         redirect_to error_page_path
@@ -141,6 +227,88 @@ class PaypalController < ApplicationController
       redirect_to error_page_path
       #redirect_to "#{session[:service].url_on_error}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0"
     end
+  end
+
+  def cashout
+    @transaction_id = params[:custom]
+    @cashout_account_number = params[:cashout_account_number]
+
+    @basket = PaypalBasket.find_by_transaction_id(@transaction_id)
+
+    if @cashout_account_number.blank?
+      @error = true
+      @error_messages = ["Veuillez entrer le compte à recharger"]
+      initialize_customer_view("e6da96e284", "unceiled_transaction_amount", "unceiled_shipping_fee")
+      get_service_logo(session[:service].token)
+      @basket = PaypalBasket.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'")
+
+      render :index
+    else
+      if @basket
+        # Cashout mobile money
+        operation_token = 'c85ee39c'
+        mobile_money_token = 'CEWlSRkn'
+
+
+        unload_request = "#{Parameter.first.gateway_wallet_url}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/PAYPAL/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.paymoney_password}/#{@basket.original_transaction_amount}/#{(@basket.fees / @basket.rate).ceil.round(2)}"
+
+        unload_response = (RestClient.get(unload_request) rescue "")
+        if unload_response.include?('|') || unload_response.blank?
+          @status_id = '0'
+          # Update in available_wallet the number of failed_transactions
+          update_number_of_failed_transactions
+          @basket.update_attributes(
+            payment_status: false, 
+            cashout: true, 
+            cashout_completed: false, 
+            paymoney_reload_request: unload_request, 
+            paymoney_reload_response: unload_response, 
+            paymoney_transaction_id: unload_response, 
+            cashout_account_number: @cashout_account_number
+          )
+        else
+          @status_id = '5'
+          # Update in available_wallet the number of successful_transactions
+          #update_number_of_succeed_transactions
+          @basket.update_attributes(
+            payment_status: true, 
+            cashout: true, 
+            cashout_completed: true, 
+            paymoney_reload_request: unload_request, 
+            paymoney_reload_response: unload_response, 
+            cashout_account_number: @cashout_account_number
+          )
+        end
+
+        # Saves the transaction on the front office
+        save_cashout_log
+
+        # redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=paypal&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
+        redirect_to notification_url(@basket, true, @@wallet_name)
+        # Cashout mobile money
+      else
+        redirect_to error_page_path
+      end
+    end
+  end
+
+  def set_cashout_fee
+    if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423'
+      fee_type = FeeType.find_by_token('0175ad')
+      @shipping = 0
+
+      if fee_type
+	      @shipping = ((fee_type.fees.where("min_value <= #{session[:trs_amount].to_f} AND max_value >= #{session[:trs_amount].to_f}").first.fee_value) * @rate).ceil.round(2)
+	    end
+	  end
+  end
+
+  # Saves the transaction on the front office
+  def save_cashout_log
+    log_request = "#{Parameter.first.front_office_url}/api/856332ed59e5207c68e864564/cashout/log/paypal?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}&cashout_account_number=#{@cashout_account_number}&fee=#{@basket.fees}"
+    log_response = (RestClient.get(log_request) rescue "")
+
+    @basket.update_attributes(cashout_notified_to_front_office: (log_response == '1' ? true : false), cashout_notification_request: log_request, cashout_notification_response: log_response)
   end
 
   def notify_to_back_office(basket, url)
@@ -155,9 +323,7 @@ class PaypalController < ApplicationController
     "
     run_typhoeus_request(@request, @internal_com_request)
 
-    if @status.to_s.strip == "1"
-      basket.update_attributes(:notified_to_back_office => true)
-    end
+    basket.update_attributes(notified_to_back_office: true) if @status.to_s.strip == "1"
   end
 
 end
