@@ -13,6 +13,11 @@ class ApplicationController < ActionController::Base
   # Génère l'URL de notification du ecommerce
   def notification_url(basket, successfull, wallet_name)
     url = successfull ? basket.service.url_on_success : basket.service.url_on_error
+    parameters = notification_parameters(basket, wallet_name)
+    url += "?" + parameters
+  end
+
+  def notification_parameters(basket, wallet_name)
     params = {
       transaction_id:                 basket.transaction_id,
       order_id:                       basket.number,
@@ -27,7 +32,7 @@ class ApplicationController < ActionController::Base
       conflictual_transaction_amount: basket.conflictual_transaction_amount,
       conflictual_currency:           basket.conflictual_currency
     }
-    url += "?" + params.to_query
+    params.to_query
   end
 
   # Initialise la variable de session contenant les informations sur la transaction
