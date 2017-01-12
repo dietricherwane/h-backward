@@ -8,9 +8,9 @@ class PayMoneyController < ApplicationController
   # Vérifie que le panier n'a pas déjà été payé via paymoney
   #before_action :only => :guard do |s| s.basket_already_paid?(params[:basket_number]) end
   # Vérifie pour toutes les actions que la variable de session existe
-  before_action :session_exists?, :except => [:create_account, :account, :credit_account, :add_credit, :transaction_acknowledgement]
+  before_action :session_exists?, :only => [:index, :guard, :select_layout, :process_payment, :ipn]
   #before_action :only => :process_payment do |s| s.basket_already_paid?(session[:service]['basket_number']) end
-  before_action :session_authenticated?, :except => [:create_account, :account, :credit_account, :add_credit, :transaction_acknowledgement]
+  before_action :session_authenticated?, :only => [:index, :guard, :select_layout, :process_payment, :ipn]
 
   # Set transaction amount for GUCE requests
   before_action :set_guce_transaction_amount, :only => :index

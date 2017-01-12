@@ -352,7 +352,13 @@ class MtnCisController < ApplicationController
                   update_number_of_failed_transactions
                   @status_code = '0'
                   # @response_path = "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
-                  @basket.update_attributes(process_online_client_number: @cashout_mobile_number, process_online_response_code: response_code, process_online_response_message:  payment_request.response.body, payment_status: false, paymoney_account_number: @paymoney_account_number)
+                  @basket.update_attributes(
+                    process_online_client_number: @cashout_mobile_number, 
+                    process_online_response_code: response_code, 
+                    process_online_response_message:  payment_request.response.body, 
+                    payment_status: false, 
+                    paymoney_account_number: @paymoney_account_number
+                  )
                   redirect_to notification_url(@basket, true, @@wallet_name)
                 end
               else
@@ -360,7 +366,13 @@ class MtnCisController < ApplicationController
                 update_number_of_failed_transactions
                 @status_code = '0'
                 # @response_path = "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
-                @basket.update_attributes(process_online_client_number: @cashout_mobile_number, process_online_response_code: response_code, process_online_response_message:  payment_request.response.body, payment_status: false, paymoney_account_number: @paymoney_account_number)
+                @basket.update_attributes(
+                  process_online_client_number: @cashout_mobile_number, 
+                  process_online_response_code: response_code, 
+                  process_online_response_message:  payment_request.response.body, 
+                  payment_status: false, 
+                  paymoney_account_number: @paymoney_account_number
+                )
                 redirect_to notification_url(@basket, true, @@wallet_name)
               end
             end
