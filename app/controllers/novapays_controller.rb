@@ -330,7 +330,7 @@ class NovapaysController < ApplicationController
   def generic_ipn_notification(basket)
     @service = Service.find_by_id(basket.service_id)
     @request = Typhoeus::Request.new(
-      "#{@service.url_to_ipn}" + "?" + notification_parameters(@basket, @@wallet_name), 
+      "#{@service.url_to_ipn}" + "?" + notification_parameters(basket, @@wallet_name), 
       followlocation: true, 
       method: :post
     )
