@@ -328,7 +328,11 @@ class OrangeMoneyCiController < ApplicationController
 
   def generic_ipn_notification(basket)
     @service = Service.find_by_id(basket.service_id)
-    @request = Typhoeus::Request.new("#{@service.url_to_ipn}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=orange_money_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}", followlocation: true, method: :post)
+    @request = Typhoeus::Request.new(
+      "#{@service.url_to_ipn}" + "?" + notification_parameters(@basket, @@wallet_name), 
+      followlocation: true, 
+      method: :post
+    )
     # wallet=05ccd7ba3d
     @request.run
     @response = @request.response
