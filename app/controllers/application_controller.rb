@@ -197,11 +197,8 @@ class ApplicationController < ActionController::Base
   def generic_transaction_acknowledgement(my_model, transaction_id)
     status = "0"
     order = my_model.find_by_transaction_id(transaction_id)
-    if order
-      if order.payment_status == true
-        status = "1"
-      end
-    end
+    status = "1" if order && order.payment_status == true
+    
     render :text => status
   end
 

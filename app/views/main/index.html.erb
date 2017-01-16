@@ -48,8 +48,11 @@
         <section>
             <span id = "wallets_list">
               <% @available_wallets.each do |available_wallet| %>
-                <% @url = "#{available_wallet.wallet.url}/#{session[:service].code}/#{session[:operation].code}/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}" %>
-                <%= link_to image_tag(available_wallet.wallet.logo.url(:medium)), @url %>
+                <% 
+                wallet = available_wallet.wallet
+                url = "#{wallet.url}/#{session[:service].code}/#{session[:operation].code}/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}"
+                %>
+                <%= link_to image_tag(wallet.logo.url(:medium)), url, class: ["#{wallet.name.downcase.underscore}", "wallet_link"] %>
               <% end %>
             </span>
         </section>
@@ -102,7 +105,7 @@
           <span id = "wallets_list">
             <% @available_wallets.each do |available_wallet| %>
               <% @url = "#{available_wallet.wallet.url}/#{session[:service].code}/#{session[:operation].code}/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}" %>
-              <%= link_to image_tag(available_wallet.wallet.logo.url(:medium)), @url %>
+              <%= link_to image_tag(wallet.logo.url(:medium)), url, class: ["#{wallet.name.downcase.underscore}", "wallet_link"] %>
             <% end %>
           </span>
 
