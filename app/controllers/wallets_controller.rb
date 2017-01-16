@@ -16,7 +16,7 @@ class WalletsController < ApplicationController
         @basket_number = session[:basket]['basket_number']
         @available_wallets.each do |available_wallet|
           @url = "#{available_wallet.wallet.url}/#{session[:service].code}/#{session[:operation].code}/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}"
-          @message << "<a href='#{@url}'>
+          @message << "<a href='#{@url}' class='#{available_wallet.wallet.name.downcase.underscore} wallet_link'>
           <img src = '#{available_wallet.wallet.logo.url(:medium)}' />
           </a>"
         end
