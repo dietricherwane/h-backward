@@ -93,7 +93,10 @@ group :development, :test do
 end
 
 group :test do
+  gem 'capybara'
   gem 'database_cleaner'
+  gem 'faker'
+  gem 'launchy'
 end
 
 #gem "rails_12factor", group: :production

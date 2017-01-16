@@ -77,7 +77,7 @@ HubsBackOffice::Application.routes.draw do
   get "/MTNCI/ussd/reload/:service_token/:operation_token/:basket_number/:msisdn/:transaction_amount/:currency/:paymoney_account_number" => "mtn_cis#mtn_payment_from_ussd"
 
 
-  get "om" => "mtn_cis#initialize_session"
+  # get "om" => "mtn_cis#initialize_session"
   post "MTNCI/transaction_acknowledgement" => "mtn_cis#transaction_acknowledgement"
   post "MTNCI/transaction_acknowledgement/:transaction_id" => "mtn_cis#transaction_acknowledgement"
   get "MTNCI/transaction_acknowledgement/:transaction_id" => "mtn_cis#transaction_acknowledgement"
