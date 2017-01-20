@@ -16,8 +16,12 @@
 # users commonly want.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+require 'support/wait_for_ajax'
+
 require 'factory_girl_rails'
 require 'capybara/rspec'
+require "rack_session_access/capybara"
+require 'capybara-screenshot/rspec'
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
@@ -26,6 +30,8 @@ RSpec.configure do |config|
   config.before(:all) do
     FactoryGirl.reload
   end
+
+  config.include WaitForAjax, type: :feature
   
   config.expect_with :rspec do |expectations|
     # This option will default to `true` in RSpec 4. It makes the `description`
