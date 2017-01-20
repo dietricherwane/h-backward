@@ -84,6 +84,7 @@ gem 'rest-client'
 
 group :development do
   gem 'pry-byebug', '~> 3.4', '>= 3.4.2'
+  gem 'rubocop'
 end
 
 group :development, :test do
@@ -93,7 +94,13 @@ group :development, :test do
 end
 
 group :test do
+  gem 'capybara'
+  gem 'capybara-screenshot'
+  gem 'capybara-webkit'
+  gem 'rack_session_access'
   gem 'database_cleaner'
+  gem 'faker'
+  gem 'launchy'
 end
 
 #gem "rails_12factor", group: :production

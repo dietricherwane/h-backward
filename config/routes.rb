@@ -74,7 +74,7 @@ HubsBackOffice::Application.routes.draw do
   get "MTNCI/check_transaction_validation" => "mtn_cis#check_transaction_validation"
 
 
-  get "om" => "mtn_cis#initialize_session"
+  # get "om" => "mtn_cis#initialize_session"
   post "MTNCI/transaction_acknowledgement" => "mtn_cis#transaction_acknowledgement"
   post "MTNCI/transaction_acknowledgement/:transaction_id" => "mtn_cis#transaction_acknowledgement"
   get "MTNCI/transaction_acknowledgement/:transaction_id" => "mtn_cis#transaction_acknowledgement"

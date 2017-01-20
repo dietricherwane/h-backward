@@ -85,15 +85,12 @@ class ApplicationController < ActionController::Base
   end
 
   def get_change_rate(from, to)
-    @from = from
-    @to = to
-    @rate = 0
-    if @from ==@to
-      @rate = 1
+    rate = 0
+    if from == to
+      rate = 1
     else
-      @rate = ActiveRecord::Base.connection.execute("SELECT * FROM currencies_matches WHERE first_code = '#{@from}' AND second_code = '#{@to}'").first["rate"].to_f
+      rate = ActiveRecord::Base.connection.execute("SELECT * FROM currencies_matches WHERE first_code = '#{from}' AND second_code = '#{to}'").first["rate"].to_f
     end
-    @rate
   end
 
   # S'assure que la variable de session existe
@@ -197,12 +194,9 @@ class ApplicationController < ActionController::Base
   def generic_transaction_acknowledgement(my_model, transaction_id)
     status = "0"
     order = my_model.find_by_transaction_id(transaction_id)
-    if order
-      if order.payment_status == true
-        status = "1"
-      end
-    end
-    render :text => status
+    status = "1" if order && order.payment_status == true
+    
+    render text: status
   end
 
   # Initialize mandatory variables before displaying the payment validation form to the user
@@ -227,29 +221,25 @@ class ApplicationController < ActionController::Base
   end
 
   def ceiled_shipping_fee
-    return get_shipping_fee.ceil
+    get_shipping_fee.ceil
   end
 
   def unceiled_shipping_fee
-    return get_shipping_fee
+    get_shipping_fee
   end
 
   # Récupère les frais de transaction en fonction du wallet
   def get_shipping_fee
     @fee = 0
 
-    if !session[:service].fee.blank?
+    if session[:service].fee
       @fee = ((@transaction_amount.to_f * (session[:service].fee || 0)) / 100).round(2)
     else
-      if @wallet
-        if(@wallet.percentage)
-          @fee = (((@transaction_amount).to_f * @wallet.fee) / 100).round(2)
-        else
-          @fee = @wallet.fee
-        end
+      @fee = @wallet.fee
+      if @wallet && @wallet.percentage
+        @fee = (((@transaction_amount).to_f * @wallet.fee) / 100).round(2)
       end
     end
-    return @fee
   end
 
   def get_service_logo(token)
@@ -299,6 +289,7 @@ class ApplicationController < ActionController::Base
       request.run
 
       response = (Nokogiri.XML(request.response.body) rescue nil)
+      # byebug //
 #=end
 =begin
       response = Nokogiri.XML(%Q{<ns3:response xmlns="epayment/common" xmlns:ns2="epayment/common-response" xmlns:ns3="epayment/check-response" xmlns:ns4="epayment/common-request">
