@@ -187,13 +187,13 @@ class NovapaysController < ApplicationController
 
     request = Typhoeus::Request.new(ENV['novapay_verify_url'], method: :post, body: %Q[{"_refact": "#{@refact}", "_prix": "#{@mtnt}", "_nooper": "#{@refoper}" }], headers: { 'QUERY-STRING' => %Q[_identify=#{ENV['novapay_login']},_password=#{Digest::MD5.hexdigest(ENV['novapay_login'] + DateTime.now.strftime('%Y%m%d%H%M%S%L') + ENV['novapay_password'])},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}]}, followlocation: true, method: :get, ssl_verifypeer: false, ssl_verifyhost: 0)
     @result = nil
-
     request.on_complete do |response|
       if response.success?
         @result = response.body.strip
         OmLog.create(log_rl: %Q[#{ENV['novapay_verify_url']} -- #{@result} --  {"_refact": "#{@refact}", "_prix": "#{@mtnt}", "_nooper": "#{@refoper}" }]) rescue nil
       else
-        OmLog.create(log_rl: "Paramètres de vérification de paiement: code " + response.code.to_s + " body " + (response.body.to_s rescue ''))
+          OmLog.create(log_rl: "Paramètres de vérification de paiement: code " + response.code.to_s + " body " + (response.body.to_s rescue ''))
+        end
       end
       request.run
 
