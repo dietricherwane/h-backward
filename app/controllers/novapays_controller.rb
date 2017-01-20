@@ -204,7 +204,6 @@ class NovapaysController < ApplicationController
           'QUERY-STRING' => %Q[_identify=8150851951,_password=#{Digest::MD5.hexdigest('8150851951' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '32785')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}]
         }, 
         followlocation: true, 
-        method: :get, 
         ssl_verifypeer: false, 
         ssl_verifyhost: 0
       )
