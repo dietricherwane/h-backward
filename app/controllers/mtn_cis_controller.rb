@@ -47,7 +47,22 @@ class MtnCisController < ApplicationController
     @wallet_currency = @wallet.currency
 
     if @basket.blank?
-      @basket = MtnCi.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :original_transaction_amount => session[:trs_amount], :transaction_amount => session[:trs_amount].to_f.ceil, :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, transaction_id: (generate_random_token(3)+Time.now.to_i.to_s), :fees => @shipping, :rate => @rate, :login_id => session[:login_id], paymoney_account_number: session[:paymoney_account_number], paymoney_account_token: session[:paymoney_account_token])
+      @basket = MtnCi.create(
+        number: session[:basket]["basket_number"],
+        service_id: session[:service].id,
+        operation_id: session[:operation].id,
+        original_transaction_amount: session[:trs_amount],
+        transaction_amount: session[:trs_amount].to_f.ceil,
+        currency_id: session[:currency].id,
+        paid_transaction_amount: @transaction_amount,
+        paid_currency_id: @wallet_currency.id,
+        transaction_id: generate_transaction_id,
+        fees: @shipping,
+        rate: @rate,
+        login_id: session[:login_id],
+        paymoney_account_number: session[:paymoney_account_number],
+        paymoney_account_token: session[:paymoney_account_token]
+      )
     else
       @basket.first.update_attributes(:transaction_amount => session[:trs_amount], :original_transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, :fees => @shipping, :rate => @rate, :login_id => session[:login_id], paymoney_account_number: session[:paymoney_account_number], paymoney_account_token: session[:paymoney_account_token])
     end
@@ -701,7 +716,7 @@ class MtnCisController < ApplicationController
     currency = params[:currency]
     fee =nil
     paymoney_account_number = params[:paymoney_account_number]
-    
+
     @operation_token = 'e3dbe20c'
     @mobile_money_token = '5cbd715e'
     paymoney_transaction_number= Time.now.to_i.to_s

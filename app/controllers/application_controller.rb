@@ -3,6 +3,13 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   #protect_from_forgery with: :null_session
 
+  # Génère l'identifiant de transaction
+  def generate_transaction_id(len = 8)
+    chars_source = %w{ 0 1 2 3 4 5 6 7 8 9}
+    code = (0...len).map{ chars_source.to_a[rand(chars_source.size)] }.join
+    code
+  end
+
   # Initialise la variable de session contenant les informations sur la transaction
   def get_service_by_token(currency, service_token, operation_token, order, transaction_amount, id, paymoney_account_number, paymoney_password)
     # si la devise envoyee n'existe pas, on renvoie la page d'erreur
