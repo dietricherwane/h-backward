@@ -1,7 +1,6 @@
 class MtnCisController < ApplicationController
   require 'savon'
   require 'digest'
-  #@@second_origin_url = Parameter.first.second_origin_url
   ##before_action :only => :guard do |o| o.filter_connections end
   before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :initialize_session, :session_initialized, :payment_result_listener, :generic_ipn_notification, :cashout, :get_sdp_notification, :mtn_deposit_from_ussd, :mtn_payment_from_ussd]
   # Si l'utilisateur ne s'est pas connecté en passant par main#guard, on le rejette
@@ -163,14 +162,14 @@ class MtnCisController < ApplicationController
         update_wallet_used(@basket, "73007113fe")
         unless @paymoney_account_number.blank?
           #Vérification du compte paymoney
-          paymoney_token_url = "#{Parameter.first.paymoney_wallet_url}/PAYMONEY_WALLET/rest/check2_compte/#{@paymoney_account_number}"
+          paymoney_token_url = "#{ENV['paymoney_wallet_url']}/PAYMONEY_WALLET/rest/check2_compte/#{@paymoney_account_number}"
           @paymoney_account_token = (RestClient.get(paymoney_token_url) rescue "")
 
           if @paymoney_account_token.blank? || @paymoney_account_token.downcase == "null"
             redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=4&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
           else
             #Débiter le compte paymoney
-            paymoney_debit_request = "#{Parameter.first.gateway_wallet_url}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/Mtn/#{@operation_token}/#{@mobile_money_token}/#{@basket.paymoney_account_number}/#{@paymoney_password}/#{@basket.transaction_id}/#{@basket.original_transaction_amount}/#{(@basket.fees / @basket.rate).ceil.round(2)}"
+            paymoney_debit_request = "#{ENV['gateway_wallet_url']}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/Mtn/#{@operation_token}/#{@mobile_money_token}/#{@basket.paymoney_account_number}/#{@paymoney_password}/#{@basket.transaction_id}/#{@basket.original_transaction_amount}/#{(@basket.fees / @basket.rate).ceil.round(2)}"
             unload_response = (RestClient.get(paymoney_debit_request) rescue "")
 
             if unload_response.include?('|') || unload_response.blank?
@@ -218,8 +217,8 @@ class MtnCisController < ApplicationController
 
                     #Requête pour notifier au GATEWAY qu'il a eu opération de cashin mobile money
                     #C'est qu'il faudra insérer la requête DepositPayment de MTN
-                    restitution_request_pm_mtn = "http://94.247.178.141:8080/PAYMONEY_WALLET/rest/remonte_vers_TRJ/c905b4c3/#{@paymoney_account_token}/5cbd715e/#{@basket.original_transaction_amount}/0/0/#{@transaction_id}"
-                    restitution_request_fees = "http://94.247.178.141:8080/PAYMONEY_WALLET/rest/remonte_vers_TRJ/c905b4c3/#{@paymoney_account_token}/alOWhAgC/#{(@basket.fees / @basket.rate).ceil.round(2)}/0/0/#{@transaction_id}"
+                    restitution_request_pm_mtn = "#{ENV['mtn_restitution_request_url']}/#{@paymoney_account_token}/5cbd715e/#{@basket.original_transaction_amount}/0/0/#{@transaction_id}"
+                    restitution_request_fees = "#{ENV['mtn_restitution_request_url']}/#{@paymoney_account_token}/alOWhAgC/#{(@basket.fees / @basket.rate).ceil.round(2)}/0/0/#{@transaction_id}"
                     res1 = (RestClient.get(restitution_request_pm_mtn) rescue "")
                     res1 = res1.force_encoding('iso8859-1').encode('utf-8')
                     res2 = (RestClient.get(restitution_request_fees) rescue "")
@@ -237,8 +236,8 @@ class MtnCisController < ApplicationController
 
                   #Requête pour notifier au GATEWAY qu'il a eu opération de cashin mobile money
                   #C'est qu'il faudra insérer la requête DepositPayment de MTN
-                  restitution_request_pm_mtn = "http://94.247.178.141:8080/PAYMONEY_WALLET/rest/remonte_vers_TRJ/c905b4c3/#{@paymoney_account_token}/5cbd715e/#{@basket.original_transaction_amount}/0/0/#{@transaction_id}"
-                  restitution_request_fees = "http://94.247.178.141:8080/PAYMONEY_WALLET/rest/remonte_vers_TRJ/c905b4c3/#{@paymoney_account_token}/alOWhAgC/#{(@basket.fees / @basket.rate).ceil.round(2)}/0/0/#{@transaction_id}"
+                  restitution_request_pm_mtn = "#{ENV['mtn_restitution_request_url']}/#{@paymoney_account_token}/5cbd715e/#{@basket.original_transaction_amount}/0/0/#{@transaction_id}"
+                  restitution_request_fees = "#{ENV['mtn_restitution_request_url']}/#{@paymoney_account_token}/alOWhAgC/#{(@basket.fees / @basket.rate).ceil.round(2)}/0/0/#{@transaction_id}"
                   res1 = (RestClient.get(restitution_request_pm_mtn) rescue "")
                   res1 = res1.force_encoding('iso8859-1').encode('utf-8')
                   res2 = (RestClient.get(restitution_request_fees) rescue "")
@@ -301,7 +300,7 @@ class MtnCisController < ApplicationController
         update_wallet_used(@basket, "73007113fe")
         unless @paymoney_account_number.blank?
           #Vérification du compte paymoney
-          paymoney_token_url = "#{Parameter.first.paymoney_wallet_url}/PAYMONEY_WALLET/rest/check2_compte/#{@paymoney_account_number}"
+          paymoney_token_url = "#{ENV['paymoney_wallet_url']}/PAYMONEY_WALLET/rest/check2_compte/#{@paymoney_account_number}"
           @paymoney_account_token = (RestClient.get(paymoney_token_url) rescue "")
 
           if @paymoney_account_token.blank? || @paymoney_account_token.downcase == "null"
@@ -389,13 +388,13 @@ class MtnCisController < ApplicationController
       if @status_code == '01'
         @operation_token = 'a71766d6'
         @mobile_money_token = '5cbd715e'
-        first_reload = "http://94.247.178.141:8080/PAYMONEY_WALLET/rest/cash_in_pos/53740905/5cbd715e/#{@basket.transaction_amount.to_i}/#{@transaction_token}"
+        first_reload = "#{ENV['mtn_cash_in_pos_url']}/#{@basket.transaction_amount.to_i}/#{@transaction_token}"
         log = 'USSD-Transaction_Id: #{@transaction_token} StatusCode: #{@status_code} MOMTransactionID #{@mom_transaction_id}'
         log = log+"; Requête deposit: "+first_reload
 
         OmLog.create(log_rl: log)
         RestClient.get(first_reload)
-        reload_request = "#{Parameter.first.gateway_wallet_url}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/Mtn/#{@operation_token}/#{@mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.original_transaction_amount}/0"
+        reload_request = "#{ENV['gateway_wallet_url']}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/Mtn/#{@operation_token}/#{@mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.original_transaction_amount}/0"
         reload_response = (RestClient.get(reload_request) rescue "")
         status = nil
         if reload_response.include?('|') || reload_response.blank?
@@ -499,13 +498,13 @@ class MtnCisController < ApplicationController
         elsif ['3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '0acae92d-d63c-41d7-b385-d797b95e98dc'].include?(@basket.operation.authentication_token)
           @operation_token = 'a71766d6'
           @mobile_money_token = '5cbd715e'
-          first_reload = "http://192.168.1.40:8080/"+"PAYMONEY_WALLET/rest/cash_in_pos/53740905/5cbd715e/#{@basket.transaction_amount.to_i}/#{@transaction_id}"
+          first_reload = "#{ENV['mtn_cash_in_pos_url']}/#{@basket.transaction_amount.to_i}/#{@transaction_id}"
           log = "Transaction_Id: "+ @transaction_id
           log = log+"; Requête deposit: "+first_reload
 
           OmLog.create(log_rl: log)
           RestClient.get(first_reload)
-          reload_request = "#{Parameter.first.gateway_wallet_url}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/Mtn/#{@operation_token}/#{@mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.transaction_id}/#{@basket.original_transaction_amount}/0"
+          reload_request = "#{ENV['gateway_wallet_url']}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/Mtn/#{@operation_token}/#{@mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.transaction_id}/#{@basket.original_transaction_amount}/0"
           reload_response = (RestClient.get(reload_request) rescue "")
           status = nil
           if reload_response.include?('|') || reload_response.blank?
@@ -539,8 +538,8 @@ class MtnCisController < ApplicationController
 
           #Requête pour notifier au GATEWAY qu'il a eu opération de cashin mobile money
           #C'est qu'il faudra insérer la requête DepositPayment de MTN
-          restitution_request_pm_mtn = "http://94.247.178.141:8080/PAYMONEY_WALLET/rest/remonte_vers_TRJ/c905b4c3/#{@basket.paymoney_account_token}/5cbd715e/#{@basket.original_transaction_amount}/0/0/#{@transaction_id}"
-          restitution_request_fees = "http://94.247.178.141:8080/PAYMONEY_WALLET/rest/remonte_vers_TRJ/c905b4c3/#{@basket.paymoney_account_token}/alOWhAgC/#{(@basket.fees / @basket.rate).ceil.round(2)}/0/0/#{@transaction_id}"
+          restitution_request_pm_mtn = "#{ENV['mtn_restitution_request_url']}/#{@basket.paymoney_account_token}/5cbd715e/#{@basket.original_transaction_amount}/0/0/#{@transaction_id}"
+          restitution_request_fees = "#{ENV['mtn_restitution_request_url']}/#{@basket.paymoney_account_token}/alOWhAgC/#{(@basket.fees / @basket.rate).ceil.round(2)}/0/0/#{@transaction_id}"
           res1 = (RestClient.get(restitution_request_pm_mtn) rescue "")
           res1 = res1.force_encoding('iso8859-1').encode('utf-8')
           res2 = (RestClient.get(restitution_request_fees) rescue "")
@@ -613,13 +612,13 @@ class MtnCisController < ApplicationController
       unless fee.nil?
         @basket_ussd.update_attributes(fees: fee.fee_value)
       end
-      paymoney_token_url = "#{Parameter.first.paymoney_wallet_url}/PAYMONEY_WALLET/rest/check2_compte/#{paymoney_account_number}"
+      paymoney_token_url = "#{ENV['paymoney_wallet_url']}/PAYMONEY_WALLET/rest/check2_compte/#{paymoney_account_number}"
       paymoney_account_token = (RestClient.get(paymoney_token_url) rescue "")
 
       if paymoney_account_token.blank? || paymoney_account_token.downcase == "null"
         @return_code = -1
       else
-        paymoney_debit_request = "#{Parameter.first.gateway_wallet_url}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/Mtn/#{@operation_token}/#{@mobile_money_token}/#{@basket_ussd.paymoney_account_number}/#{@paymoney_password}/#{@basket_ussd.original_transaction_amount}/#{(@basket_ussd.fees).ceil.round(2)}"
+        paymoney_debit_request = "#{ENV['gateway_wallet_url']}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/Mtn/#{@operation_token}/#{@mobile_money_token}/#{@basket_ussd.paymoney_account_number}/#{@paymoney_password}/#{@basket_ussd.original_transaction_amount}/#{(@basket_ussd.fees).ceil.round(2)}"
         unload_response = (RestClient.get(paymoney_debit_request) rescue "")
 
         if unload_response.include?('|') || unload_response.blank?
@@ -663,8 +662,8 @@ class MtnCisController < ApplicationController
 
                 #Requête pour notifier au GATEWAY qu'il a eu opération de cashin mobile money
                 #C'est qu'il faudra insérer la requête DepositPayment de MTN
-                restitution_request_pm_mtn = "http://94.247.178.141:8080/PAYMONEY_WALLET/rest/remonte_vers_TRJ/c905b4c3/#{paymoney_account_token}/5cbd715e/#{@basket_ussd.original_transaction_amount}/0/0/#{paymoney_transaction_number}"
-                restitution_request_fees = "http://94.247.178.141:8080/PAYMONEY_WALLET/rest/remonte_vers_TRJ/c905b4c3/#{paymoney_account_token}/alOWhAgC/#{(@basket_ussd.fees).ceil.round(2)}/0/0/#{paymoney_transaction_number}"
+                restitution_request_pm_mtn = "#{ENV['mtn_restitution_request_url']}/#{paymoney_account_token}/5cbd715e/#{@basket_ussd.original_transaction_amount}/0/0/#{paymoney_transaction_number}"
+                restitution_request_fees = "#{ENV['mtn_restitution_request_url']}/#{paymoney_account_token}/alOWhAgC/#{(@basket_ussd.fees).ceil.round(2)}/0/0/#{paymoney_transaction_number}"
                 res1 = (RestClient.get(restitution_request_pm_mtn) rescue "")
                 res1 = res1.force_encoding('iso8859-1').encode('utf-8')
                 res2 = (RestClient.get(restitution_request_fees) rescue "")
@@ -681,8 +680,8 @@ class MtnCisController < ApplicationController
 
               #Requête pour notifier au GATEWAY qu'il a eu opération de cashin mobile money
               #C'est qu'il faudra insérer la requête DepositPayment de MTN
-              restitution_request_pm_mtn = "http://94.247.178.141:8080/PAYMONEY_WALLET/rest/remonte_vers_TRJ/c905b4c3/#{paymoney_account_token}/5cbd715e/#{@basket_ussd.original_transaction_amount}/0/0/#{paymoney_transaction_number}"
-              restitution_request_fees = "http://94.247.178.141:8080/PAYMONEY_WALLET/rest/remonte_vers_TRJ/c905b4c3/#{paymoney_account_token}/alOWhAgC/#{(@basket_ussd.fees).ceil.round(2)}/0/0/#{paymoney_transaction_number}"
+              restitution_request_pm_mtn = "#{ENV['mtn_restitution_request_url']}/#{paymoney_account_token}/5cbd715e/#{@basket_ussd.original_transaction_amount}/0/0/#{paymoney_transaction_number}"
+              restitution_request_fees = "#{ENV['mtn_restitution_request_url']}/#{paymoney_account_token}/alOWhAgC/#{(@basket_ussd.fees).ceil.round(2)}/0/0/#{paymoney_transaction_number}"
               res1 = (RestClient.get(restitution_request_pm_mtn) rescue "")
               res1 = res1.force_encoding('iso8859-1').encode('utf-8')
               res2 = (RestClient.get(restitution_request_fees) rescue "")
@@ -732,7 +731,7 @@ class MtnCisController < ApplicationController
       @basket_ussd = MtnCi.create(number: basket_number, service_id: @service_ussd.id, operation_id: @operation_ussd.id, original_transaction_amount: transaction_amount.to_f, transaction_amount: transaction_amount.to_f.ceil, currency_id: currency.id, paid_transaction_amount: transaction_amount.to_f, paid_currency_id: currency.id, transaction_id: paymoney_transaction_number, paymoney_account_number: paymoney_account_number, phone_number: msisdn, type_token: 'USSD')
       update_wallet_used(@basket_ussd, "73007113fe")
         #Vérification du compte paymoney
-        paymoney_token_url = "#{Parameter.first.paymoney_wallet_url}/PAYMONEY_WALLET/rest/check2_compte/#{paymoney_account_number}"
+        paymoney_token_url = "#{ENV['paymoney_wallet_url']}/PAYMONEY_WALLET/rest/check2_compte/#{paymoney_account_number}"
         paymoney_account_token = (RestClient.get(paymoney_token_url) rescue "")
 
         if paymoney_account_token.blank? || paymoney_account_token.downcase == "null"
@@ -857,14 +856,14 @@ class MtnCisController < ApplicationController
     case request_type
     when 1
       url_to_post = Typhoeus::Request.new(
-              "http://196.201.33.108:8310/ThirdPartyServiceUMMImpl/UMMServiceService/RequestPayment/v17",
+              ENV['mtn_payment_request_url'],
               method: :post,
               body: request_body,
               headers: { Accept: "text/xml" }
             )
     when 2
       url_to_post = Typhoeus::Request.new(
-                "http://196.201.33.108:8310/ThirdPartyServiceUMMImpl/UMMServiceService/DepositMobileMoney/v17",
+                ENV['mtn_deposit_request_url'],
                 method: :post,
                 body: request_body,
                 headers: { Accept: "application/xml" }
@@ -877,18 +876,18 @@ class MtnCisController < ApplicationController
   #Construction du corps de la requête à envoyer au SDP MTN
   def build_mtn_request(request_type, msisdn, token_transaction, amount)
     query_body = ""
-    @sdp_id = '2250110001599'
-    @sdp_password = 'bmeB500'
+    sdp_id = ENV['mtn_sdp_id']
+    sdp_password = ENV['mtn_sdp_password']
     @timestamp = Time.now.strftime('%Y%m%d%H%M%S')
-    md5_encrypt = @sdp_id+@sdp_password+@timestamp
-    @sdp_password = Digest::MD5.hexdigest(md5_encrypt)
+    md5_encrypt = sdp_id+sdp_password+@timestamp
+    sdp_password = Digest::MD5.hexdigest(md5_encrypt)
     case request_type.to_i
     when 1
       query_body = %Q[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:b2b="http://b2b.mobilemoney.mtn.zm_v1.0">
                       <soapenv:Header>
                         <RequestSOAPHeader xmlns="http://www.huawei.com.cn/schema/common/v2_1">
-                          <spId>#{@sdp_id}</spId>
-                          <spPassword>#{@sdp_password}</spPassword>
+                          <spId>#{sdp_id}</spId>
+                          <spPassword>#{sdp_password}</spPassword>
                           <bundleID></bundleID>
                           <serviceId></serviceId>
                           <timeStamp>#{@timestamp}</timeStamp>
@@ -944,8 +943,8 @@ class MtnCisController < ApplicationController
       query_body = %Q[<?xml version="1.0" encoding="utf-8"?>
                       <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:b2b="http://b2b.mobilemoney.mtn.zm_v1.0/">
                       <SOAP-ENV:Header><b2b:RequestSOAPHeader xmlns="http://www.huawei.com.cn/schema/common/v2_1">
-                      <b2b:spId>#{@sdp_id}</b2b:spId>
-                      <b2b:spPassword>#{@sdp_password}</b2b:spPassword>
+                      <b2b:spId>#{sdp_id}</b2b:spId>
+                      <b2b:spPassword>#{sdp_password}</b2b:spPassword>
                       <b2b:timeStamp>#{@timestamp}</b2b:timeStamp>
                       </b2b:RequestSOAPHeader>
                       </SOAP-ENV:Header>
@@ -1008,7 +1007,7 @@ class MtnCisController < ApplicationController
 
   # Saves the transaction on the front office
   def save_cashout_log(basket, cashin_mobile_number)
-    log_request = "#{Parameter.first.front_office_url}/api/856332ed59e5207c68e864564/cashout/log/mtn_ci?transaction_id=#{basket.transaction_id}&order_id=#{basket.number}&status_id=#{@status_code}&transaction_amount=#{basket.original_transaction_amount}&currency=#{basket.currency.code}&paid_transaction_amount=#{basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(basket.paid_currency_id).code}&change_rate=#{basket.rate}&id=#{basket.login_id}&cashout_account_number=#{cashin_mobile_number}&fee=#{basket.fees}"
+    log_request = "#{ENV['front_office_url']}/api/856332ed59e5207c68e864564/cashout/log/mtn_ci?transaction_id=#{basket.transaction_id}&order_id=#{basket.number}&status_id=#{@status_code}&transaction_amount=#{basket.original_transaction_amount}&currency=#{basket.currency.code}&paid_transaction_amount=#{basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(basket.paid_currency_id).code}&change_rate=#{basket.rate}&id=#{basket.login_id}&cashout_account_number=#{cashin_mobile_number}&fee=#{basket.fees}"
     log_response = (RestClient.get(log_request) rescue "")
 
     basket.update_attributes(cashout_notified_to_front_office: (log_response == '1' ? true : false), cashout_notification_request: log_request, cashout_notification_response: log_response)
@@ -1031,8 +1030,7 @@ class MtnCisController < ApplicationController
   end
 
   def initialize_session
-    @parameter = Parameter.first
-    request = Typhoeus::Request.new(@parameter.orange_money_ci_initialization_url, followlocation: true, method: :post, body: "merchantid=1f3e745c66347bc2cc9492d8526bfe040519396d7c98ad199f4211f39dfd6365&amount=#{@transaction_amount + (@basket.fees.ceil rescue @basket.first.fees.ceil)}&sessionid=#{@basket.transaction_id rescue @basket.first.transaction_id}&purchaseref=#{@basket.number rescue @basket.first.number}", headers: {:'Content-Type'=> "application/x-www-form-urlencoded"})
+    request = Typhoeus::Request.new(ENV['orange_money_ci_initialization_url'], followlocation: true, method: :post, body: "merchantid=1f3e745c66347bc2cc9492d8526bfe040519396d7c98ad199f4211f39dfd6365&amount=#{@transaction_amount + (@basket.fees.ceil rescue @basket.first.fees.ceil)}&sessionid=#{@basket.transaction_id rescue @basket.first.transaction_id}&purchaseref=#{@basket.number rescue @basket.first.number}", headers: {:'Content-Type'=> "application/x-www-form-urlencoded"})
 
     OmLog.create(log_rl: "OM initialization -- " + @parameter.orange_money_ci_initialization_url + "?" + "merchantid=1f3e745c66347bc2cc9492d8526bfe040519396d7c98ad199f4211f39dfd6365&amount=#{@transaction_amount + (@basket.fees.ceil rescue @basket.first.fees.ceil)}&sessionid=#{@basket.transaction_id rescue @basket.first.transaction_id}&purchaseref=#{@basket.number rescue @basket.first.number}") rescue nil
 

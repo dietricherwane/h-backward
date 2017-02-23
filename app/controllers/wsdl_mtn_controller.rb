@@ -1,5 +1,4 @@
 class WsdlMtnController < ApplicationController
-  @@second_origin_url = Parameter.first.second_origin_url
 
   soap_service namespace: 'PayMoney:MTN:wsdl'
 
@@ -95,7 +94,7 @@ class WsdlMtnController < ApplicationController
           @fees_for_compensation = (@bill.fees * @rate).round(2)
 
           # Notification au back office du hub
-          notify_to_back_office(@bill, "#{@@second_origin_url}/GATEWAY/rest/WS/#{@bill.operation.id}/#{@bill.number}/#{@bill.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")
+          notify_to_back_office(@bill, "#{ENV['second_origin_url']}/GATEWAY/rest/WS/#{@bill.operation.id}/#{@bill.number}/#{@bill.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")
 
           # Update in available_wallet the number of successful_transactions
           update_number_of_succeed_transactions

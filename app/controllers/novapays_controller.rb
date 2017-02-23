@@ -1,7 +1,6 @@
 require 'net/http'
 
 class NovapaysController < ApplicationController
-  @@second_origin_url = Parameter.first.second_origin_url
 
   ##before_action :only => :guard do |o| o.filter_connections end
   before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :payment_result_listener, :valid_result_parameters, :generic_ipn_notification, :cashout, :process_payment, :cashout]
@@ -31,7 +30,7 @@ class NovapaysController < ApplicationController
     get_service_logo(session[:service].token)
 
     # vérifie qu'un numéro panier appartenant à ce service n'existe pas déjà. Si non, on crée un panier temporaire, si oui, on met à jour le montant envoyé par le ecommerce, la monnaie envoyée par celui ci ainsi que le montant, la monnaie et les frais à envoyer au ecommerce
-   #render text: "#{Parameter.first.guce_back_office_url}/GPG_GUCE/rest/Mob_Mon/Check/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}"
+   #render text: "#{ENV['guce_back_office_url']}/GPG_GUCE/rest/Mob_Mon/Check/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}"
     @basket = Novapay.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'")
 
     set_cashout_fee
@@ -62,8 +61,8 @@ class NovapaysController < ApplicationController
   # Redirect to NovaPay platform
   def process_payment
     OmLog.create(log_rl: %Q[_identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}])
-    request = Typhoeus::Request.new("http://novaplus.ci/novapay/novapay.awp", method: :post, body: %Q[{"_descprod": "#{params[:service_name]}", "_refact": "#{params[:_refact]}", "_prix": "#{params[:_prix]}" }], headers: { 'QUERY-STRING' => %Q[_identify=7777242441,_password=#{Digest::MD5.hexdigest('7777242441' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}]}, followlocation: true, ssl_verifypeer: false, ssl_verifyhost: 0)
-    str = %Q[https://novaplus.ci/NOVAPAY_WEB/FR/novapay.awp | body: {"_descprod": "#{params[:service_name]}", "_refact": "#{params[:_refact]}", "_prix": "#{params[:_prix]}"} headers: { 'QUERY_STRING' => _identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}}]
+    request = Typhoeus::Request.new(ENV['novapay_payment_url'], method: :post, body: %Q[{"_descprod": "#{params[:service_name]}", "_refact": "#{params[:_refact]}", "_prix": "#{params[:_prix]}" }], headers: { 'QUERY-STRING' => %Q[_identify=7777242441,_password=#{Digest::MD5.hexdigest('7777242441' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}]}, followlocation: true, ssl_verifypeer: false, ssl_verifyhost: 0)
+    str = %Q[#{ENV['novapay_payment_url']} | body: {"_descprod": "#{params[:service_name]}", "_refact": "#{params[:_refact]}", "_prix": "#{params[:_prix]}"} headers: { 'QUERY_STRING' => _identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}}]
     #, params: { _refact: params[:_refact], _prix: params[:_prix], _descprod: "#{session[:service].name}" }
     request.run
     response = request.response
@@ -100,9 +99,9 @@ class NovapaysController < ApplicationController
 
             if request.post?
               # Notification au back office du hub
-              notify_to_back_office(@basket, "#{@@second_origin_url}/GATEWAY/rest/WS/#{@basket.operation.id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")
+              notify_to_back_office(@basket, "#{ENV['second_origin_url']}/GATEWAY/rest/WS/#{@basket.operation.id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")
 
-              OmLog.create(log_rl: "Notification à paymoney: " + "#{@@second_origin_url}/GATEWAY/rest/WS/#{@basket.operation.id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")
+              OmLog.create(log_rl: "Notification à paymoney: " + "#{ENV['second_origin_url']}/GATEWAY/rest/WS/#{@basket.operation.id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")
 
               # Update in available_wallet the number of successful_transactions
               update_number_of_succeed_transactions
@@ -116,7 +115,7 @@ class NovapaysController < ApplicationController
               if ['3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '0acae92d-d63c-41d7-b385-d797b95e98dc', '7489bd19-6ef8-4748-8218-ac9201512345', 'ebb1f4f3-116b-417e-8348-5964771d0123', 's8g56da9-63f1-486e-9b0c-eceb0aab6d6c'].include?(@basket.operation.authentication_token)
                 operation_token = '1be8397d'
                 mobile_money_token = 'ffce3241'
-                reload_request = "#{Parameter.first.gateway_wallet_url}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/Nsia/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.transaction_id}/#{@basket.original_transaction_amount}/0"
+                reload_request = "#{ENV['gateway_wallet_url']}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/Nsia/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.transaction_id}/#{@basket.original_transaction_amount}/0"
                 reload_response = (RestClient.get(reload_request) rescue "")
                 if reload_response.include?('|')
                   @status_id = '5'
@@ -179,15 +178,15 @@ class NovapaysController < ApplicationController
 
   def valid_transaction
     if @request_type.post?
-    OmLog.create(log_rl: %Q[_identify=7777242441,_password=#{Digest::MD5.hexdigest('7777242441' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')} --- {"_refact": "#{@refact}", "_prix": "#{@mtnt}", "_nooper": "#{@refoper}" }])
+    OmLog.create(log_rl: %Q[_identify=#{ENV['novapay_login']},_password=#{ENV['novapay_password']},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')} --- {"_refact": "#{@refact}", "_prix": "#{@mtnt}", "_nooper": "#{@refoper}" }])
 
-    request = Typhoeus::Request.new("http://novaplus.ci/novapay/paycheck.awp", method: :post, body: %Q[{"_refact": "#{@refact}", "_prix": "#{@mtnt}", "_nooper": "#{@refoper}" }], headers: { 'QUERY-STRING' => %Q[_identify=7777242441,_password=#{Digest::MD5.hexdigest('7777242441' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '32785')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}]}, followlocation: true, method: :get, ssl_verifypeer: false, ssl_verifyhost: 0)
+    request = Typhoeus::Request.new(ENV['novapay_verify_url'], method: :post, body: %Q[{"_refact": "#{@refact}", "_prix": "#{@mtnt}", "_nooper": "#{@refoper}" }], headers: { 'QUERY-STRING' => %Q[_identify=#{ENV['novapay_login']},_password=#{ENV['novapay_password']},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}]}, followlocation: true, method: :get, ssl_verifypeer: false, ssl_verifyhost: 0)
     @result = nil
 
     request.on_complete do |response|
       if response.success?
         @result = response.body.strip
-        OmLog.create(log_rl: %Q[https://novaplus.ci/NOVAPAY_WEB/FR/paycheck.awp -- #{@result} --  {"_refact": "#{@refact}", "_prix": "#{@mtnt}", "_nooper": "#{@refoper}" }]) rescue nil
+        OmLog.create(log_rl: %Q[#{ENV['novapay_verify_url']} -- #{@result} --  {"_refact": "#{@refact}", "_prix": "#{@mtnt}", "_nooper": "#{@refoper}" }]) rescue nil
       else
         OmLog.create(log_rl: "Paramètres de vérification de paiement: code " + response.code.to_s + " body " + (response.body.to_s rescue ''))
       end
@@ -235,7 +234,7 @@ class NovapaysController < ApplicationController
         operation_token = '98414bba'
         mobile_money_token = 'ffce3241'
 
-        unload_request = "#{Parameter.first.gateway_wallet_url}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/Nsia/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.paymoney_password}/#{@basket.transaction_id}/#{@basket.original_transaction_amount}/#{(@basket.fees / @basket.rate).ceil.round(2)}"
+        unload_request = "#{ENV['gateway_wallet_url']}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/Nsia/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.paymoney_password}/#{@basket.transaction_id}/#{@basket.original_transaction_amount}/#{(@basket.fees / @basket.rate).ceil.round(2)}"
 
         unload_response = (RestClient.get(unload_request) rescue "")
         if unload_response.include?('|') || unload_response.blank?
@@ -274,7 +273,7 @@ class NovapaysController < ApplicationController
 
   # Saves the transaction on the front office
   def save_cashout_log
-    log_request = "#{Parameter.first.front_office_url}/api/856332ed59e5207c68e864564/cashout/log/novapay?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}&cashout_account_number=#{@cashout_account_number}&fee=#{@basket.fees}"
+    log_request = "#{ENV['front_office_url']}/api/856332ed59e5207c68e864564/cashout/log/novapay?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}&cashout_account_number=#{@cashout_account_number}&fee=#{@basket.fees}"
     log_response = (RestClient.get(log_request) rescue "")
 
     @basket.update_attributes(cashout_notified_to_front_office: (log_response == '1' ? true : false), cashout_notification_request: log_request, cashout_notification_response: log_response)

@@ -1,4 +1,4 @@
-module EnvironmentVariables
+module HubsBackOffice
   class Application < Rails::Application
     config.before_configuration do
       env_file = Rails.root.join("config", "env_variables.yml").to_s

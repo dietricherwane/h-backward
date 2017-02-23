@@ -1,12 +1,8 @@
 class UbaController < ApplicationController
-  @@second_origin_url = Parameter.first.second_origin_url
   before_action :except => [:guard, :cashout] do |s| s.session_authenticated? end
 
   # Set transaction amount for GUCE requests
   before_action :only => :index do |o| o.guce_request? end
-
-  #@@bill_request = "http://27.34.246.91:8080/Guce/uba/billrequest"
-  @@bill_request = "http://27.34.246.91:8080/Guce/uba/billrequest"
 
   #layout "uba"
   layout :select_layout
@@ -73,7 +69,7 @@ class UbaController < ApplicationController
     @basket = Uba.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'").first rescue nil
 
     if @error_messages.blank?
-      request = Typhoeus::Request.new(@@bill_request, method: :post, body: {userName: 'ngser', password: 'ngser', currency: 'XOF', referenceInvoice: @basket.transaction_id, amount: @basket.paid_transaction_amount, serviceFees: @basket.fees, operatorId: '411cd', guceTransactionId: @basket.transaction_id, channelId: '01', firstname: @firstname, lastname: @lastname, email: @email, phone: @msisdn}, followlocation: true)
+      request = Typhoeus::Request.new(ENV['uba_bill_request'], method: :post, body: {userName: ENV['uba_username'], password: ENV['uba_password'], currency: 'XOF', referenceInvoice: @basket.transaction_id, amount: @basket.paid_transaction_amount, serviceFees: @basket.fees, operatorId: ENV['uba_operator_id'], guceTransactionId: @basket.transaction_id, channelId: ENV['uba_channel_id'], firstname: @firstname, lastname: @lastname, email: @email, phone: @msisdn}, followlocation: true)
 
       request.run
       response = request.response
@@ -117,7 +113,7 @@ class UbaController < ApplicationController
         operation_token = 'cb77b491'
         mobile_money_token = '8ed6ab4a'
 
-        unload_request = "#{Parameter.first.gateway_wallet_url}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/Uba/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.paymoney_password}/#{@basket.transaction_id}/#{@basket.original_transaction_amount}/#{(@basket.fees / @basket.rate).ceil.round(2)}"
+        unload_request = "#{ENV['gateway_wallet_url']}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/Uba/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.paymoney_password}/#{@basket.transaction_id}/#{@basket.original_transaction_amount}/#{(@basket.fees / @basket.rate).ceil.round(2)}"
 
         unload_response = (RestClient.get(unload_request) rescue "")
         if unload_response.include?('|') || unload_response.blank?
@@ -156,7 +152,7 @@ class UbaController < ApplicationController
 
   # Saves the transaction on the front office
   def save_cashout_log
-    log_request = "#{Parameter.first.front_office_url}/api/856332ed59e5207c68e864564/cashout/log/uba?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}&cashout_account_number=#{@cashout_account_number}&fee=#{@basket.fees}"
+    log_request = "#{ENV['front_office_url']}/api/856332ed59e5207c68e864564/cashout/log/uba?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}&cashout_account_number=#{@cashout_account_number}&fee=#{@basket.fees}"
     log_response = (RestClient.get(log_request) rescue "")
 
     @basket.update_attributes(cashout_notified_to_front_office: (log_response == '1' ? true : false), cashout_notification_request: log_request, cashout_notification_response: log_response)

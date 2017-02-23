@@ -1,7 +1,5 @@
 class PayMoneyController < ApplicationController
 
-  @@second_origin_url = Parameter.first.second_origin_url
-  @@paymoney_url = Parameter.first.paymoney_url
   # Only for guard action, we check if service_id exists and initialize a session variable containing transaction_data
   #before_action :only => :guard do |s| s.get_service(params[:service_id], params[:operation_id], params[:basket_number], params[:transaction_amount]) end
   # Only for guard action, we check if the session varable is initialized, if the operation_id is initialized and if transaction_amount is a number
@@ -110,9 +108,9 @@ class PayMoneyController < ApplicationController
       render action: 'index'
     else
       # communication with paymoney
-      paymoney_token_url = "#{Parameter.first.paymoney_wallet_url}/PAYMONEY_WALLET/rest/check2_compte/#{@account_number}"
+      paymoney_token_url = "#{ENV['paymoney_wallet_url']}/PAYMONEY_WALLET/rest/check2_compte/#{@account_number}"
       @paymoney_token = (RestClient.get(paymoney_token_url) rescue "")
-      url = "#{Parameter.first.paymoney_wallet_url}/PAYMONEY_WALLET/rest/operation_ecommerce/#{@basket.service.ecommerce_profile.token}/#{@basket.operation.paymoney_token}/#{@paymoney_token}/#{session[:basket]["transaction_amount"]}/#{@basket.fees}/0/#{@transaction_id}/#{@password}"
+      url = "#{ENV['paymoney_wallet_url']}/PAYMONEY_WALLET/rest/operation_ecommerce/#{@basket.service.ecommerce_profile.token}/#{@basket.operation.paymoney_token}/#{@paymoney_token}/#{session[:basket]["transaction_amount"]}/#{@basket.fees}/0/#{@transaction_id}/#{@password}"
       @status = RestClient.get(url) rescue ""
 
       Log.create(description: "Paymoney sale", sent_request: url, sent_response: @status, paymoney_account_number: @account_number, paymoney_token_request: paymoney_token_url, paymoney_token_response: @paymoney_token)
@@ -144,7 +142,7 @@ class PayMoneyController < ApplicationController
         @basket.update_attributes(compensation_rate: @rate)
         @amount_for_compensation = ((@basket.paid_transaction_amount + @basket.fees) * @rate).round(2)
         @fees_for_compensation = (@basket.fees * @rate).round(2)
-        #@request = Typhoeus::Request.new("#{@@second_origin_url}/GATEWAY/rest/WS/#{session[:operation].id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/1", followlocation: true)
+        #@request = Typhoeus::Request.new("#{ENV['second_origin_url']}/GATEWAY/rest/WS/#{session[:operation].id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/1", followlocation: true)
 
         #@internal_com_request = "@response = Nokogiri.XML(request.response.body)
         #@response.xpath('//status').each do |link|
@@ -179,7 +177,7 @@ class PayMoneyController < ApplicationController
             # Cashin mobile money
             if (@basket.operation.authentication_token rescue nil) == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4'
               mobile_money_token = 'none'
-              reload_request = "#{Parameter.first.gateway_wallet_url}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.transaction_id}/#{@basket.original_transaction_amount}/0"
+              reload_request = "#{ENV['gateway_wallet_url']}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.transaction_id}/#{@basket.original_transaction_amount}/0"
               reload_response = (RestClient.get(reload_request) rescue "")
               if reload_response.include?('|')
                 @status_id = '5'
@@ -278,7 +276,7 @@ class PayMoneyController < ApplicationController
     if(@error)
 
     else
-      @request = Typhoeus::Request.new("#{@@paymoney_url}/PAYMONEY-NGSER/rest/CompteService/CreateCompte/#{@firstname}/#{@lastname}/#{@age}/#{@phone_number}/#{@email}", followlocation: true)
+      @request = Typhoeus::Request.new("#{ENV['paymoney_url']}/PAYMONEY-NGSER/rest/CompteService/CreateCompte/#{@firstname}/#{@lastname}/#{@age}/#{@phone_number}/#{@email}", followlocation: true)
 
       @internal_com_request = "@response = Nokogiri.XML(request.response.body)"
 
@@ -331,7 +329,7 @@ class PayMoneyController < ApplicationController
 
     else
       # Envoi d'une requête à la plateforme EVD pour vérifier la validité du PIN
-      @request = Typhoeus::Request.new("#{@@paymoney_url}/GATEWAY/rest/ES/VerifyPin/#{@pin}", followlocation: true)
+      @request = Typhoeus::Request.new("#{ENV['paymoney_url']}/GATEWAY/rest/ES/VerifyPin/#{@pin}", followlocation: true)
 
       @internal_com_request = "@response = Nokogiri.XML(request.response.body)"
       run_typhoeus_request(@request, @internal_com_request)
@@ -342,7 +340,7 @@ class PayMoneyController < ApplicationController
         if @pin_status == "1"
           # Envoi de la requête de rechargement de compte
           @amount = @response.xpath('//pin').at("pinMontant").text
-          @request = Typhoeus::Request.new("#{@@paymoney_url}/PAYMONEY-NGSER/rest/OperationService/CreditOperation/1/#{@account}/#{@amount.to_i.abs}", followlocation: true)
+          @request = Typhoeus::Request.new("#{ENV['paymoney_url']}/PAYMONEY-NGSER/rest/OperationService/CreditOperation/1/#{@account}/#{@amount.to_i.abs}", followlocation: true)
           #@request = Typhoeus::Request.new("#{@@url}/PAYMONEY-NGSER/rest/OperationService/CreditOperation/1/#{@account}/#{@password}/#{@amount.to_i.abs}", followlocation: true)
 
           @internal_com_request = "@response = Nokogiri.XML(request.response.body)"
@@ -351,7 +349,7 @@ class PayMoneyController < ApplicationController
           if(!@response.blank? and @response.xpath('//status').at("idStatus").text == "1")
             @success = true
             @success_messages << "Le compte #{@account} a été crédité de #{@amount.to_i.abs} unités"
-            @request = Typhoeus::Request.new("#{@@paymoney_url}/GATEWAY/rest/ES/ChangeStatus/#{@pin}", followlocation: true)
+            @request = Typhoeus::Request.new("#{ENV['paymoney_url']}/GATEWAY/rest/ES/ChangeStatus/#{@pin}", followlocation: true)
 
             @internal_com_request = "@response = Nokogiri.XML(request.response.body)"
             run_typhoeus_request(@request, @internal_com_request)
