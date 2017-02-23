@@ -16,3 +16,6 @@
 /tmp
 **/tmp
 /log/development.log
+
+# Ignore environment variables
+/config/env_variables.yml
