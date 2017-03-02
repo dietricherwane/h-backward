@@ -48,8 +48,15 @@
         <section>
             <span id = "wallets_list">
               <% @available_wallets.each do |available_wallet| %>
-                <% @url = "#{available_wallet.wallet.url}/#{session[:service].code}/#{session[:operation].code}/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}" %>
-                <%= link_to image_tag(available_wallet.wallet.logo.url(:medium)), @url %>
+                <%# if available_wallet.wallet.name == 'MTN Money' %>
+                  <% if (available_wallet.wallet.name == 'MTN Money' && ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e98dc', '7489bd19-6ef8-4748-8218-ac92015039c1', 'ebb1f4f3-116b-417e-8348-5964771d0758', 'f8c56da9-63f1-486e-9b0c-eceb0aab6d6c'].include?(session[:operation].authentication_token)) || available_wallet.wallet.name =! 'MTN Money' %>
+                    <% @url = "#{available_wallet.wallet.url}/#{session[:service].code}/#{session[:operation].code}/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}" %>
+                    <%= link_to image_tag(available_wallet.wallet.logo.url(:medium)), @url %>
+                  <% end %>
+                <%# else %>
+                  <%# @url = "#{available_wallet.wallet.url}/#{session[:service].code}/#{session[:operation].code}/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}" %>
+                  <%#= link_to image_tag(available_wallet.wallet.logo.url(:medium)), @url %>
+                <%# end %>
               <% end %>
             </span>
         </section>
