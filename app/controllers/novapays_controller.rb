@@ -61,9 +61,9 @@ class NovapaysController < ApplicationController
 
   # Redirect to NovaPay platform
   def process_payment
-    OmLog.create(log_rl: %Q[_identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}])
-    request = Typhoeus::Request.new("http://novaplus.ci/novapay/novapay.awp", method: :post, body: %Q[{"_descprod": "#{params[:service_name]}", "_refact": "#{params[:_refact]}", "_prix": "#{params[:_prix]}" }], headers: { 'QUERY-STRING' => %Q[_identify=7777242441,_password=#{Digest::MD5.hexdigest('7777242441' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}]}, followlocation: true, ssl_verifypeer: false, ssl_verifyhost: 0)
-    str = %Q[https://novaplus.ci/NOVAPAY_WEB/FR/novapay.awp | body: {"_descprod": "#{params[:service_name]}", "_refact": "#{params[:_refact]}", "_prix": "#{params[:_prix]}"} headers: { 'QUERY_STRING' => _identify=3155832361,_password=#{Digest::MD5.hexdigest('3155832361' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}}]
+    OmLog.create(log_rl: %Q[_identify=3155832361,_password=#{Digest::MD5.hexdigest('9090765244' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '8JZAB6QKKK')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}])
+    request = Typhoeus::Request.new("http://novaplus.ci/novapay/novapay.awp", method: :post, body: %Q[{"_descprod": "#{params[:service_name]}", "_refact": "#{params[:_refact]}", "_prix": "#{params[:_prix]}" }], headers: { 'QUERY-STRING' => %Q[_identify=9090765244,_password=#{Digest::MD5.hexdigest('9090765244' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '8JZAB6QKKK')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}]}, followlocation: true, ssl_verifypeer: false, ssl_verifyhost: 0)
+    str = %Q[https://novaplus.ci/NOVAPAY_WEB/FR/novapay.awp | body: {"_descprod": "#{params[:service_name]}", "_refact": "#{params[:_refact]}", "_prix": "#{params[:_prix]}"} headers: { 'QUERY_STRING' => _identify=9090765244,_password=#{Digest::MD5.hexdigest('9090765244' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '8JZAB6QKKK')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}}]
     #, params: { _refact: params[:_refact], _prix: params[:_prix], _descprod: "#{session[:service].name}" }
     request.run
     response = request.response
@@ -179,9 +179,9 @@ class NovapaysController < ApplicationController
 
   def valid_transaction
     if @request_type.post?
-    OmLog.create(log_rl: %Q[_identify=7777242441,_password=#{Digest::MD5.hexdigest('7777242441' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '44680')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')} --- {"_refact": "#{@refact}", "_prix": "#{@mtnt}", "_nooper": "#{@refoper}" }])
+    OmLog.create(log_rl: %Q[_identify=9090765244,_password=#{Digest::MD5.hexdigest('9090765244' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '8JZAB6QKKK')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')} --- {"_refact": "#{@refact}", "_prix": "#{@mtnt}", "_nooper": "#{@refoper}" }])
 
-    request = Typhoeus::Request.new("http://novaplus.ci/novapay/paycheck.awp", method: :post, body: %Q[{"_refact": "#{@refact}", "_prix": "#{@mtnt}", "_nooper": "#{@refoper}" }], headers: { 'QUERY-STRING' => %Q[_identify=7777242441,_password=#{Digest::MD5.hexdigest('7777242441' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '32785')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}]}, followlocation: true, method: :get, ssl_verifypeer: false, ssl_verifyhost: 0)
+    request = Typhoeus::Request.new("http://novaplus.ci/novapay/paycheck.awp", method: :post, body: %Q[{"_refact": "#{@refact}", "_prix": "#{@mtnt}", "_nooper": "#{@refoper}" }], headers: { 'QUERY-STRING' => %Q[_identify=9090765244,_password=#{Digest::MD5.hexdigest('9090765244' + DateTime.now.strftime('%Y%m%d%H%M%S%L') + '8JZAB6QKKK')},_dateheure=#{DateTime.now.strftime('%Y%m%d%H%M%S%L')}]}, followlocation: true, method: :get, ssl_verifypeer: false, ssl_verifyhost: 0)
     @result = nil
 
     request.on_complete do |response|
