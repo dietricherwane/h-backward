@@ -47,7 +47,22 @@ class MtnCisController < ApplicationController
     @wallet_currency = @wallet.currency
 
     if @basket.blank?
-      @basket = MtnCi.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :original_transaction_amount => session[:trs_amount], :transaction_amount => session[:trs_amount].to_f.ceil, :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, transaction_id: (generate_random_token(3)+Time.now.to_i.to_s), :fees => @shipping, :rate => @rate, :login_id => session[:login_id], paymoney_account_number: session[:paymoney_account_number], paymoney_account_token: session[:paymoney_account_token])
+      @basket = MtnCi.create(
+        number: session[:basket]["basket_number"],
+        service_id: session[:service].id,
+        operation_id: session[:operation].id,
+        original_transaction_amount: session[:trs_amount],
+        transaction_amount: session[:trs_amount].to_f.ceil,
+        currency_id: session[:currency].id,
+        paid_transaction_amount: @transaction_amount,
+        paid_currency_id: @wallet_currency.id,
+        transaction_id: generate_transaction_id,
+        fees: @shipping,
+        rate: @rate,
+        login_id: session[:login_id],
+        paymoney_account_number: session[:paymoney_account_number],
+        paymoney_account_token: session[:paymoney_account_token]
+      )
     else
       @basket.first.update_attributes(:transaction_amount => session[:trs_amount], :original_transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, :fees => @shipping, :rate => @rate, :login_id => session[:login_id], paymoney_account_number: session[:paymoney_account_number], paymoney_account_token: session[:paymoney_account_token])
     end
@@ -155,8 +170,7 @@ class MtnCisController < ApplicationController
             redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=4&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
           else
             #Débiter le compte paymoney
-
-            paymoney_debit_request = "#{Parameter.first.gateway_wallet_url}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/Mtn/#{@operation_token}/#{@mobile_money_token}/#{@basket.paymoney_account_number}/#{@paymoney_password}/#{@basket.original_transaction_amount}/#{(@basket.fees / @basket.rate).ceil.round(2)}"
+            paymoney_debit_request = "#{Parameter.first.gateway_wallet_url}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/Mtn/#{@operation_token}/#{@mobile_money_token}/#{@basket.paymoney_account_number}/#{@paymoney_password}/#{@basket.transaction_id}/#{@basket.original_transaction_amount}/#{(@basket.fees / @basket.rate).ceil.round(2)}"
             unload_response = (RestClient.get(paymoney_debit_request) rescue "")
 
             if unload_response.include?('|') || unload_response.blank?
@@ -491,7 +505,7 @@ class MtnCisController < ApplicationController
 
           OmLog.create(log_rl: log)
           RestClient.get(first_reload)
-          reload_request = "#{Parameter.first.gateway_wallet_url}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/Mtn/#{@operation_token}/#{@mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.original_transaction_amount}/0"
+          reload_request = "#{Parameter.first.gateway_wallet_url}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/Mtn/#{@operation_token}/#{@mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.transaction_id}/#{@basket.original_transaction_amount}/0"
           reload_response = (RestClient.get(reload_request) rescue "")
           status = nil
           if reload_response.include?('|') || reload_response.blank?
@@ -701,7 +715,7 @@ class MtnCisController < ApplicationController
     currency = params[:currency]
     fee =nil
     paymoney_account_number = params[:paymoney_account_number]
-    
+
     @operation_token = 'e3dbe20c'
     @mobile_money_token = '5cbd715e'
     paymoney_transaction_number= Time.now.to_i.to_s
