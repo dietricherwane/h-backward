@@ -17,15 +17,12 @@
 development:
   adapter: postgresql
   encoding: utf_8
-  pool: 5
   timeout: 5000
   username: <%= ENV['DB_USER'] %>
   password: <%= ENV['DB_PASSWORD'] %>
   database: HubsBackOffice_development
   pool: 10005
-  username: <%= ENV['db_username'] %>
-  password: <%= ENV['db_password'] %>
-  host: 41.189.40.193
+  host: localhost
   port: 5432
   encoding: utf8
 
@@ -65,8 +62,8 @@ production:
   encoding: unicode
   database: HubsBackOffice_production
   pool: 10005
-  username: erwan
-  password: dukenukemdie
+  username: <%= ENV['db_username'] %>
+  password: <%= ENV['db_password'] %>
   host: localhost
   port: 5432
   encoding: utf8

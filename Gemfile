@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 #gem 'rails', :git => 'git://github.com/rails/rails.git'
 gem 'rails', '4.0.0'
 
-ruby '2.3.1'
+ruby '2.3.3'
 
 # Use postgresql as the database for Active Record
 gem 'pg'
@@ -44,6 +44,7 @@ gem 'magic_encoding'
 
 # Used to make http requests
 gem 'typhoeus', '0.6.9'
+gem 'httparty', '~> 0.14.0'
 
 # Used to connect to heroku
 gem 'heroku'
