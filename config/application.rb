@@ -22,7 +22,7 @@ module HubsBackOffice
     # config.time_zone = 'Central Time (US & Canada)'
 
     config.action_dispatch.default_headers = {'X-Frame-Options' => 'GOFORIT'}
-    
+
     config.generators do |g|
       g.test_framework :rspec,
         :fixtures => true,

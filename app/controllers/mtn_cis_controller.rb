@@ -1,6 +1,9 @@
 class MtnCisController < ApplicationController
   require 'savon'
   require 'digest'
+
+  # include Wallets::MTNMoMo
+
   @@wallet_name = 'mtn_ci'
   ##before_action :only => :guard do |o| o.filter_connections end
   before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :initialize_session, :session_initialized, :payment_result_listener, :generic_ipn_notification, :cashout, :get_sdp_notification, :mtn_deposit_from_ussd, :mtn_payment_from_ussd]
@@ -77,50 +80,105 @@ class MtnCisController < ApplicationController
     #Si le numéro de téléphone n'est pas vide
     unless @mtn_msisdn.blank?
       if !@basket.blank?
-
-        @request_body = build_mtn_request(1, @mtn_msisdn, @transaction_id, @total_amount)
-        payment_request = request_to_send(1, @request_body)
-
-        @basket.update_attributes(sent_request: @request_body, phone_number: @mtn_msisdn, type_token: 'WEB')
+        # @request_body = build_mtn_request(1, @mtn_msisdn, @transaction_id, @total_amount)
+        # payment_request = request_to_send(1, @request_body)
+        #########  Début Modification  #########
+        @payment = Wallets::Mtnmomo.new(
+          msisdn: @mtn_msisdn,
+          processing_number: @transaction_id,
+          due_amount: @total_amount
+        )
+        response = @payment.unload
+        @basket.update_attributes(
+          # sent_request: @payload,
+          sent_request: response.request.path.to_s,
+          phone_number: @mtn_msisdn,
+          type_token: 'WEB'
+        )
         @status_code = nil
         update_wallet_used(@basket, "73007113fe")
-        @response_path = ""
-        payment_request.on_complete do |response|
-          if response.success?
-            response_code = (Nokogiri.XML(payment_request.response.body) rescue nil)
-            return_array = response_code.xpath('//return')
-            response_code = return_array[3].to_s
-            response_code = Nokogiri.XML(response_code)
-            response_code = (response_code.xpath('//value').first.text rescue nil)
 
-            if response_code.to_s.strip == '01' || response_code.to_s.strip == '1000'
-              session[:transaction_id] = @transaction_id
-              @basket.update_attributes(process_online_response_code: response_code, process_online_response_message:   payment_request.response.body)
-              redirect_to waiting_validation_path
-            else
-              @status_code = 0
-              update_number_of_failed_transactions
-              @basket.update_attributes(
-                process_online_response_code: response_code, 
-                process_online_response_message: payment_request.response.body, 
-                payment_status: false
-              # redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
-              )
-              redirect_to notification_url(@basket, true, @@wallet_name)
-            end
-          else
+        ### Processing based on former request result ###
+        # Successful request
+        if response.code == 200
+          response_code = Nokogiri.XML(response.body)
+          return_array = response_code.xpath('//return')
+          response_code = return_array[3].to_s
+          response_code = Nokogiri.XML(response_code)
+          response_code = response_code.xpath('//value').first.text
+          ### Checking StatusCode ###
+          # Successful transaction
+          if response_code.to_s.strip == '01' || response_code.to_s.strip == '1000'
+            session[:transaction_id] = @transaction_id
+            @basket.update_attributes(
+              process_online_response_code: response_code,
+              process_online_response_message: response.body
+            )
+            redirect_to waiting_validation_path
+          else # Failed transaction
             @status_code = 0
             update_number_of_failed_transactions
             @basket.update_attributes(
-              process_online_response_code: response_code, 
+              process_online_response_code: response_code,
+              process_online_response_message: response.body,
               payment_status: false
-              process_online_response_message: payment_request.response.body, 
-            # redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
             )
             redirect_to notification_url(@basket, true, @@wallet_name)
+            # redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
           end
+        else # Failed request
+          @status_code = 0
+          update_number_of_failed_transactions
+          @basket.update_attributes(
+            process_online_response_code: response_code,
+            payment_status: false,
+            process_online_response_message: response.body,
+          )
+          redirect_to notification_url(@basket, true, @@wallet_name)
+          # redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
         end
-        payment_request.run
+        ######### Fin Modification  #########
+
+        # @basket.update_attributes(sent_request: @request_body, phone_number: @mtn_msisdn, type_token: 'WEB')
+        # @status_code = nil
+        # update_wallet_used(@basket, "73007113fe")
+        # @response_path = ""
+        # payment_request.on_complete do |response|
+        #   if response.success?
+        #     response_code = (Nokogiri.XML(payment_request.response.body) rescue nil)
+        #     return_array = response_code.xpath('//return')
+        #     response_code = return_array[3].to_s
+        #     response_code = Nokogiri.XML(response_code)
+        #     response_code = (response_code.xpath('//value').first.text rescue nil)
+        #
+        #     if response_code.to_s.strip == '01' || response_code.to_s.strip == '1000'
+        #       session[:transaction_id] = @transaction_id
+        #       @basket.update_attributes(process_online_response_code: response_code, process_online_response_message:   payment_request.response.body)
+        #       redirect_to waiting_validation_path
+        #     else
+        #       @status_code = 0
+        #       update_number_of_failed_transactions
+        #       @basket.update_attributes(
+        #         process_online_response_code: response_code,
+        #         process_online_response_message: payment_request.response.body,
+        #         payment_status: false
+        #       # redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
+        #       )
+        #       redirect_to notification_url(@basket, true, @@wallet_name)
+        #     end
+        #   else
+        #     @status_code = 0
+        #     update_number_of_failed_transactions
+        #     @basket.update_attributes(
+        #       process_online_response_code: response_code,
+        #       payment_status: false,
+        #       process_online_response_message: payment_request.response.body,
+        #     # redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
+        #     )
+        #     redirect_to notification_url(@basket, true, @@wallet_name)
+        #   end
+        # end
+        # payment_request.run
       else
         redirect_to error_page_path
       end
@@ -180,8 +238,8 @@ class MtnCisController < ApplicationController
               # Update in available_wallet the number of failed_transactions
               update_number_of_failed_transactions
               @basket.update_attributes(
-                payment_status: false, 
-                paymoney_transaction_id: @transaction_id, 
+                payment_status: false,
+                paymoney_transaction_id: @transaction_id,
                 cashout_account_number: @paymoney_account_number
               )
               # redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
@@ -192,55 +250,50 @@ class MtnCisController < ApplicationController
               #update_number_of_succeed_transactions
               #Créditer le compte MTN Mobile Money
 
-              @request_body = build_mtn_request(2, @cashin_mobile_number, @transaction_id, @transaction_amount.to_i)
-              deposit_request= request_to_send(2, @request_body)
+              # @request_body = build_mtn_request(2, @cashin_mobile_number, @transaction_id, @transaction_amount.to_i)
+              # deposit_request= request_to_send(2, @request_body)
+              @payment = Wallets::Mtnmomo.new(
+                msisdn: @cashin_mobile_number,
+                processing_number: @transaction_id,
+                due_amount: @transaction_amount.to_i
+              )
+              response = @payment.reload
 
               @basket.update_attributes(sent_request: @request_body)
-              @status_code = nil
-              @response_path = ""
               update_wallet_used(@basket, "73007113fe")
-              deposit_request.on_complete do |response|
-                if response.success?
-                  response_code = (Nokogiri.XML(deposit_request.response.body) rescue nil)
-                  return_array = response_code.xpath('//return')
-                  mom_transaction_code = return_array[2].to_s
-                  mom_transaction_code = Nokogiri.XML(mom_transaction_code)
-                  mom_transaction_code = (mom_transaction_code.xpath('//value').first.text rescue nil)
-                  response_code = return_array[0].to_s
-                  response_code = Nokogiri.XML(response_code)
-                  response_code = (response_code.xpath('//value').first.text rescue nil)
 
-                  if response_code.to_s.strip == '01'
-                    @basket.update_attributes(process_online_response_code: response_code, process_online_response_message: deposit_request.response.body, payment_status: true, cashout_account_number: @cashin_mobile_number, paymoney_account_number: @paymoney_account_number, cashout: true, cashout_completed: true, mom_transaction_id: mom_transaction_code)
-                    session[:transaction_id] = @transaction_id
-                    #redirect_to waiting_validation_path
-                    @status_code = 1
-                    update_number_of_succeed_transactions
-                    save_cashout_log(@basket, @cashin_mobile_number)
-                    # @response_path = "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
-                    # redirect_to @response_path
-                    redirect_to notification_url(@basket, true, @@wallet_name)
-                  else
-                    update_number_of_failed_transactions
-
-                    #Requête pour notifier au GATEWAY qu'il a eu opération de cashin mobile money
-                    #C'est qu'il faudra insérer la requête DepositPayment de MTN
-                    restitution_request_pm_mtn = "#{ENV['mtn_restitution_request_url']}/#{@paymoney_account_token}/5cbd715e/#{@basket.original_transaction_amount}/0/0/#{@transaction_id}"
-                    restitution_request_fees = "#{ENV['mtn_restitution_request_url']}/#{@paymoney_account_token}/alOWhAgC/#{(@basket.fees / @basket.rate).ceil.round(2)}/0/0/#{@transaction_id}"
-                    res1 = (RestClient.get(restitution_request_pm_mtn) rescue "")
-                    res1 = res1.force_encoding('iso8859-1').encode('utf-8')
-                    res2 = (RestClient.get(restitution_request_fees) rescue "")
-                    res2 = res2.force_encoding('iso8859-1').encode('utf-8')
-
-                    log = "Transaction_Id: #{@transaction_id}// restitution_request_pm_mtn: #{restitution_request_pm_mtn}// response1: #{res1}// restitution_request_fees: #{restitution_request_fees}// response2: #{res2}"
-                    OmLog.create(log_rl: log)
-                    @status_code = '0'
-                    # @response_path = "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
-                    @basket.update_attributes(process_online_response_code: response_code, process_online_response_message: deposit_request.response.body, payment_status: false, mom_transaction_id: mom_transaction_code)
-                    # redirect_to @response_path
-                    redirect_to notification_url(@basket, true, @@wallet_name)
-                  end
-                else
+              ### Processing based on former request result ###
+              # Successful request
+              if response.code == 200
+                response_code = (Nokogiri.XML(response.body) rescue nil)
+                return_array = response_code.xpath('//return')
+                mom_transaction_code = return_array[2].to_s
+                mom_transaction_code = Nokogiri.XML(mom_transaction_code)
+                mom_transaction_code = (mom_transaction_code.xpath('//value').first.text rescue nil)
+                response_code = return_array[0].to_s
+                response_code = Nokogiri.XML(response_code)
+                response_code = (response_code.xpath('//value').first.text rescue nil)
+                ### Checking StatusCode ###
+                # Successful transaction
+                if response_code.to_s.strip == '01'
+                  @basket.update_attributes(
+                    process_online_response_code: response_code,
+                    process_online_response_message: response.body,
+                    payment_status: true,
+                    cashout_account_number: @cashin_mobile_number,
+                    paymoney_account_number: @paymoney_account_number,
+                    cashout: true,
+                    cashout_completed: true,
+                    mom_transaction_id: mom_transaction_code
+                  )
+                  session[:transaction_id] = @transaction_id
+                  @status_code = 1
+                  update_number_of_succeed_transactions
+                  save_cashout_log(@basket, @cashin_mobile_number)
+                  # @response_path = "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
+                  # redirect_to @response_path
+                  redirect_to notification_url(@basket, true, @@wallet_name)
+                else # Failed transaction
                   update_number_of_failed_transactions
 
                   #Requête pour notifier au GATEWAY qu'il a eu opération de cashin mobile money
@@ -251,30 +304,56 @@ class MtnCisController < ApplicationController
                   res1 = res1.force_encoding('iso8859-1').encode('utf-8')
                   res2 = (RestClient.get(restitution_request_fees) rescue "")
                   res2 = res2.force_encoding('iso8859-1').encode('utf-8')
+
                   log = "Transaction_Id: #{@transaction_id}// restitution_request_pm_mtn: #{restitution_request_pm_mtn}// response1: #{res1}// restitution_request_fees: #{restitution_request_fees}// response2: #{res2}"
                   OmLog.create(log_rl: log)
                   @status_code = '0'
                   # @response_path = "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
-                  @basket.update_attributes(process_online_client_number: cashin_mobile_number, payment_status: false)
+                  @basket.update_attributes(
+                    process_online_response_code: response_code,
+                    process_online_response_message: response.body,
+                    payment_status: false,
+                    mom_transaction_id: mom_transaction_code
+                  )
+                  # redirect_to @response_path
                   redirect_to notification_url(@basket, true, @@wallet_name)
                 end
+              else # Failed request
+                update_number_of_failed_transactions
+
+                #Requête pour notifier au GATEWAY qu'il a eu opération de cashin mobile money
+                #C'est qu'il faudra insérer la requête DepositPayment de MTN
+                restitution_request_pm_mtn = "#{ENV['mtn_restitution_request_url']}/#{@paymoney_account_token}/5cbd715e/#{@basket.original_transaction_amount}/0/0/#{@transaction_id}"
+                restitution_request_fees = "#{ENV['mtn_restitution_request_url']}/#{@paymoney_account_token}/alOWhAgC/#{(@basket.fees / @basket.rate).ceil.round(2)}/0/0/#{@transaction_id}"
+                res1 = (RestClient.get(restitution_request_pm_mtn) rescue "")
+                res1 = res1.force_encoding('iso8859-1').encode('utf-8')
+                res2 = (RestClient.get(restitution_request_fees) rescue "")
+                res2 = res2.force_encoding('iso8859-1').encode('utf-8')
+                log = "Transaction_Id: #{@transaction_id}// restitution_request_pm_mtn: #{restitution_request_pm_mtn}// response1: #{res1}// restitution_request_fees: #{restitution_request_fees}// response2: #{res2}"
+                OmLog.create(log_rl: log)
+                @status_code = '0'
+                # @response_path = "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
+                @basket.update_attributes(
+                  process_online_client_number: cashin_mobile_number,
+                  payment_status: false
+                )
+                redirect_to notification_url(@basket, true, @@wallet_name)
               end
-              deposit_request.run
               #Fin condition compte paymoney debité
             end
             #Fin condition compte paymoney existe
           end
-          else
-            #Paramètre numéro compte paymoney nul
-            # redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=4&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
-            redirect_to notification_url(@basket, true, @@wallet_name)
-          end
-          #save_cashout_log
         else
-          #Panier vide
-          redirect_to error_page_path
+          #Paramètre numéro compte paymoney nul
+          # redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=4&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
+          redirect_to notification_url(@basket, true, @@wallet_name)
         end
+        #save_cashout_log
+      else
+        #Panier vide
+        redirect_to error_page_path
       end
+    end
   end
 
   #Cashout MTN Mobile Money ==> Cashin Paymoney
@@ -303,7 +382,11 @@ class MtnCisController < ApplicationController
     else
       if @basket
         # Cashout du compte MTN Mobile Money
-        @basket.update_attributes(phone_number: @cashout_mobile_number, type_token: 'WEB', fees: @transaction_fee)
+        @basket.update_attributes(
+          phone_number: @cashout_mobile_number,
+          type_token: 'WEB',
+          fees: @transaction_fee
+        )
         update_wallet_used(@basket, "73007113fe")
         if @paymoney_account_number
           #Vérification du compte paymoney
@@ -315,83 +398,91 @@ class MtnCisController < ApplicationController
             update_number_of_failed_transactions
             @status_code = '4'
             @basket.update_attributes(
-              process_online_client_number: @cashout_mobile_number, 
-              process_online_response_code: response_code, 
-              process_online_response_message:  payment_request.response.body, 
-              payment_status: false, 
+              process_online_client_number: @cashout_mobile_number,
+              process_online_response_code: response_code,
+              process_online_response_message:  payment_request.response.body,
+              payment_status: false,
               paymoney_account_number: @paymoney_account_number
-          )
+            )
             # redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
             redirect_to notification_url(@basket, true, @@wallet_name)
           else
             #Débiter le compte mtn mobile money
             session[:transaction_id] = @transaction_id
 
-            @request_body = build_mtn_request(1, @cashout_mobile_number, @transaction_id, @total_amount.to_i)
+            # @request_body = build_mtn_request(1, @cashout_mobile_number, @transaction_id, @total_amount.to_i)
+            # payment_request = request_to_send(1, @request_body)
 
-            payment_request = request_to_send(1, @request_body)
+            @payment = Wallets::Mtnmomo.new(
+              msisdn: @cashout_mobile_number,
+              processing_number: @transaction_id,
+              due_amount: @total_amount.to_i
+            )
+            response = @payment.unload
 
-            @basket.update_attributes(sent_request: @request_body)
-            @status_code = nil
+            @basket.update_attributes(sent_request: response.request.options)
             update_wallet_used(@basket, "73007113fe")
-            @response_path = ""
-            payment_request.on_complete do |response|
-              if response.success?
-                response_code = (Nokogiri.XML(payment_request.response.body) rescue nil)
-                return_array = response_code.xpath('//return')
-                response_code = return_array[3].to_s
-                response_code = Nokogiri.XML(response_code)
-                response_code = (response_code.xpath('//value').first.text rescue nil)
 
-                if response_code.to_s.strip == '01' || response_code.to_s.strip == '1000'
-                  session[:transaction_id] = @transaction_id
-                  @basket.update_attributes(process_online_response_code: response_code, process_online_response_message:  payment_request.response.body, paymoney_account_number: @paymoney_account_number)
-                  redirect_to waiting_validation_path
-                else
-                  #Le compte MTN n'a pas été débité
-                  update_number_of_failed_transactions
-                  @status_code = '0'
-                  # @response_path = "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
-                  @basket.update_attributes(
-                    process_online_client_number: @cashout_mobile_number, 
-                    process_online_response_code: response_code, 
-                    process_online_response_message:  payment_request.response.body, 
-                    payment_status: false, 
-                    paymoney_account_number: @paymoney_account_number
-                  )
-                  redirect_to notification_url(@basket, true, @@wallet_name)
-                end
-              else
-                # La requête de debit n'a pas abouti
+            ### Processing based on former request result ###
+            # Successful request
+            if response.code == 200
+              response_code = Nokogiri.XML(response.body)
+              return_array = response_code.xpath('//return')
+              response_code = return_array[3].to_s
+              response_code = Nokogiri.XML(response_code)
+              response_code = response_code.xpath('//value').first.text
+              ### Checking StatusCode ###
+              # Successful transaction
+              if response_code.to_s.strip == '01' || response_code.to_s.strip == '1000'
+                session[:transaction_id] = @transaction_id
+                @basket.update_attributes(
+                  process_online_response_code: response_code,
+                  process_online_response_message:  response.body,
+                  paymoney_account_number: @paymoney_account_number
+                )
+                redirect_to waiting_validation_path
+              else # Failed transaction
+                #Le compte MTN n'a pas été débité
                 update_number_of_failed_transactions
                 @status_code = '0'
                 # @response_path = "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
                 @basket.update_attributes(
-                  process_online_client_number: @cashout_mobile_number, 
-                  process_online_response_code: response_code, 
-                  process_online_response_message:  payment_request.response.body, 
-                  payment_status: false, 
+                  process_online_client_number: @cashout_mobile_number,
+                  process_online_response_code: response_code,
+                  process_online_response_message:  response.body,
+                  payment_status: false,
                   paymoney_account_number: @paymoney_account_number
                 )
                 redirect_to notification_url(@basket, true, @@wallet_name)
               end
+            else # Failed request
+              # La requête de debit n'a pas abouti
+              update_number_of_failed_transactions
+              @status_code = '0'
+              # @response_path = "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
+              @basket.update_attributes(
+                process_online_client_number: @cashout_mobile_number,
+                process_online_response_code: response_code,
+                process_online_response_message:  response.body,
+                payment_status: false,
+                paymoney_account_number: @paymoney_account_number
+              )
+              redirect_to notification_url(@basket, true, @@wallet_name)
             end
-            payment_request.run
           end
         else
           update_number_of_failed_transactions
           @status_code = '4'
           @basket.update_attributes(
-            process_online_client_number: @cashout_mobile_number, 
-            process_online_response_message:  payment_request.response.body, 
+            process_online_client_number: @cashout_mobile_number,
+            process_online_response_message:  response.body,
             payment_status: false
           )
           # redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
           redirect_to notification_url(@basket, true, @@wallet_name)
         end
-
       else
-          #Panier vide
+        #Panier vide
         redirect_to error_page_path
       end
     end
@@ -508,6 +599,7 @@ class MtnCisController < ApplicationController
       update_wallet_used(@basket, "73007113fe")
       if @basket.payment_status == true
         if !['3d20d7af-2ecb-4681-8e4f-a585d7705423', '3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '0acae92d-d63c-41d7-b385-d797b95e9855', '0acae92d-d63c-41d7-b385-d797b95e98dc', '3dcbb787-cdba-43a0-b38d-1ecda36a1e36'].include?(@basket.operation.authentication_token)
+          # Paiement e-commerce
           @status_code = 1
           # @response_path = "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
           @response_path = notification_url(@basket, true, @@wallet_name)
@@ -518,11 +610,13 @@ class MtnCisController < ApplicationController
           update_number_of_succeed_transactions
           redirect_to @response_path
         elsif ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e9855'].include?(@basket.operation.authentication_token)
+          # Déchargement PayMoney
           @status_code = 5
           update_number_of_succeed_transactions
           # @response_path = "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
           redirect_to notification_url(@basket, true, @@wallet_name)
         elsif ['3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '0acae92d-d63c-41d7-b385-d797b95e98dc'].include?(@basket.operation.authentication_token)
+          # Rechargement PayMoney
           @operation_token = 'a71766d6'
           @mobile_money_token = '5cbd715e'
           first_reload = "#{ENV['mtn_cash_in_pos_url']}/#{@basket.transaction_amount.to_i}/#{@transaction_id}"
@@ -547,8 +641,8 @@ class MtnCisController < ApplicationController
             status = true
           end
           @basket.update_attributes(
-            paymoney_reload_request: reload_request, 
-            paymoney_reload_response: reload_response, 
+            paymoney_reload_request: reload_request,
+            paymoney_reload_response: reload_response,
             payment_status: status
           )
           # redirect_to  "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
@@ -557,6 +651,7 @@ class MtnCisController < ApplicationController
       else
         #Erreur lors de l'opération chez MTN
         if !['3d20d7af-2ecb-4681-8e4f-a585d7705423', '3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '0acae92d-d63c-41d7-b385-d797b95e9855', '0acae92d-d63c-41d7-b385-d797b95e98dc', '3dcbb787-cdba-43a0-b38d-1ecda36a1e36'].include?(@basket.operation.authentication_token)
+          # Paiement e-commerce
           @status_code = 0
           # @response_path = "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
           @response_path = notification_url(@basket, true, @@wallet_name)
@@ -567,6 +662,7 @@ class MtnCisController < ApplicationController
           redirect_to @response_path
           update_number_of_failed_transactions
         elsif ['3d20d7af-2ecb-4681-8e4f-a585d7705423', '0acae92d-d63c-41d7-b385-d797b95e9855'].include?(@basket.operation.authentication_token)
+          # Déchargement PayMoney
           update_number_of_failed_transactions
 
           #Requête pour notifier au GATEWAY qu'il a eu opération de cashin mobile money
@@ -584,6 +680,7 @@ class MtnCisController < ApplicationController
           @basket.update_attributes(payment_status: false)
           redirect_to notification_url(@basket, true, @@wallet_name)
         elsif ['3d20d7af-2ecb-4681-8e4f-a585d7700ee4', '0acae92d-d63c-41d7-b385-d797b95e98dc'].include?(@basket.operation.authentication_token)
+          # Rechargement PayMoney
           update_number_of_failed_transactions
           @status_code = '0'
           # @response_path = "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_code}&wallet=mtn_ci&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
@@ -591,7 +688,6 @@ class MtnCisController < ApplicationController
           redirect_to notification_url(@basket, true, @@wallet_name)
         end
       end
-
     else
       redirect_to error_page_path
     end
@@ -616,7 +712,9 @@ class MtnCisController < ApplicationController
     render text: transaction_status
   end
 
-  def mtn_deposit_from_ussd
+  # TODO Must be placed in API namespace
+  # Cashout paymoney ==> Cashin MTN Mobile Money
+  def mtn_deposit_from_ussd # cashin
     service_token = params[:service_token]
     reload_token = params[:operation_token]
     msisdn = params[:msisdn]
@@ -734,8 +832,10 @@ class MtnCisController < ApplicationController
     render :text => @return_code
   end
 
+  # TODO Must be placed in API namespace
+  #Cashout MTN Mobile Money ==> Cashin Paymoney
   #Méthode de cashin USSD
-  def mtn_payment_from_ussd
+  def mtn_payment_from_ussd # cashout
     service_token = params[:service_token]
     reload_token = params[:operation_token]
     msisdn = params[:msisdn]
@@ -747,7 +847,7 @@ class MtnCisController < ApplicationController
 
     @operation_token = 'e3dbe20c'
     @mobile_money_token = '5cbd715e'
-    paymoney_transaction_number= Time.now.to_i.to_s
+    paymoney_transaction_number = Time.now.to_i.to_s
     paymoney_transaction_number = generate_random_token(3)+paymoney_transaction_number
 
     paymoney_account_token = nil
@@ -816,8 +916,6 @@ class MtnCisController < ApplicationController
     render :text => @return_code
   end
 
-
-
   def valid_phone_number?(n)
     validity = (Integer(n) != nil rescue false)
     if validity == true && n.length == 11
@@ -849,7 +947,6 @@ class MtnCisController < ApplicationController
     end
   end
 
-
   def get_paymoney_fees(amount)
 
     fee = nil
@@ -877,150 +974,150 @@ class MtnCisController < ApplicationController
     end
   end
 
-
-  def request_to_send(request_type, request_body)
-    url_to_post = nil
-
-    case request_type
-    when 1
-      url_to_post = Typhoeus::Request.new(
-              ENV['mtn_payment_request_url'],
-              method: :post,
-              body: request_body,
-              headers: { Accept: "text/xml" }
-            )
-    when 2
-      url_to_post = Typhoeus::Request.new(
-                ENV['mtn_deposit_request_url'],
-                method: :post,
-                body: request_body,
-                headers: { Accept: "application/xml" }
-              )
-    end
-
-    return url_to_post
-  end
+  # def request_to_send(request_type, request_body)
+  #   url_to_post = nil
+  #
+  #   case request_type
+  #   when 1
+  #     url_to_post = Typhoeus::Request.new(
+  #             ENV['mtn_payment_request_url'],
+  #             method: :post,
+  #             body: request_body,
+  #             headers: { Accept: "text/xml" }
+  #           )
+  #   when 2
+  #     url_to_post = Typhoeus::Request.new(
+  #               ENV['mtn_deposit_request_url'],
+  #               method: :post,
+  #               body: request_body,
+  #               headers: { Accept: "application/xml" }
+  #             )
+  #   end
+  #
+  #   return url_to_post
+  # end
 
   #Construction du corps de la requête à envoyer au SDP MTN
-  def build_mtn_request(request_type, msisdn, token_transaction, amount)
-    query_body = ""
-    sdp_id = ENV['mtn_sdp_id']
-    sdp_password = ENV['mtn_sdp_password']
-    @timestamp = Time.now.strftime('%Y%m%d%H%M%S')
-    md5_encrypt = sdp_id+sdp_password+@timestamp
-    sdp_password = Digest::MD5.hexdigest(md5_encrypt)
-    case request_type.to_i
-    when 1
-      query_body = %Q[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:b2b="http://b2b.mobilemoney.mtn.zm_v1.0">
-                      <soapenv:Header>
-                        <RequestSOAPHeader xmlns="http://www.huawei.com.cn/schema/common/v2_1">
-                          <spId>#{sdp_id}</spId>
-                          <spPassword>#{sdp_password}</spPassword>
-                          <bundleID></bundleID>
-                          <serviceId></serviceId>
-                          <timeStamp>#{@timestamp}</timeStamp>
-                        </RequestSOAPHeader>
-                      </soapenv:Header>
-                      <soapenv:Body>
-                        <b2b:processRequest>
-                          <serviceId>#{msisdn}@LONACIE.SDP</serviceId>
-                          <parameter>
-                            <name>DueAmount</name>
-                            <value>#{amount}</value>
-                          </parameter>
-                          <parameter>
-                            <name>MSISDNNum</name>
-                            <value>#{msisdn}</value>
-                          </parameter>
-                          <parameter>
-                            <name>ProcessingNumber</name>
-                            <value>#{token_transaction}</value>
-                          </parameter>
-                          <parameter>
-                          <name>serviceId</name>
-                          <value>#{msisdn}@LONACIE.SDP</value>
-                          </parameter>
-                          <parameter>
-                          <name>AcctRef</name>
-                          <value></value>
-                          </parameter>
-                          <parameter>
-                          <name>AcctBalance</name>
-                          <value></value>
-                          </parameter>
-                          <parameter>
-                          <name>MinDueAmount</name>
-                          <value></value>
-                          </parameter>
-                          <parameter>
-                          <name>Narration</name>
-                          <value></value>
-                          </parameter>
-                          <parameter>
-                          <name>PrefLang</name>
-                          <value></value>
-                          </parameter>
-                          <parameter>
-                          <name>OpCoID</name>
-                          <value>22501</value>
-                          </parameter>
-                        </b2b:processRequest>
-                      </soapenv:Body>
-                    </soapenv:Envelope>]
-    when 2
-      query_body = %Q[<?xml version="1.0" encoding="utf-8"?>
-                      <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:b2b="http://b2b.mobilemoney.mtn.zm_v1.0/">
-                      <SOAP-ENV:Header><b2b:RequestSOAPHeader xmlns="http://www.huawei.com.cn/schema/common/v2_1">
-                      <b2b:spId>#{sdp_id}</b2b:spId>
-                      <b2b:spPassword>#{sdp_password}</b2b:spPassword>
-                      <b2b:timeStamp>#{@timestamp}</b2b:timeStamp>
-                      </b2b:RequestSOAPHeader>
-                      </SOAP-ENV:Header>
-                      <SOAP-ENV:Body>
-                      <b2b:processRequest>
-                      <serviceId>201</serviceId>
-                      <parameter>
-                      <name>ProcessingNumber</name>
-                      <value>#{token_transaction}</value>
-                      </parameter>
-                      <parameter>
-                      <name>serviceId</name>
-                      <value>LONACIE.SDP</value>
-                      </parameter>
-                      <parameter>
-                      <name>SenderID</name>
-                      <value>420</value>
-                      </parameter>
-                      <parameter>
-                      <name>PrefLang</name>
-                      <value>fr</value>
-                      </parameter>
-                      <parameter>
-                      <name>OpCoID</name>
-                      <value>ic</value>
-                      </parameter>
-                      <parameter>
-                      <name>MSISDNNum</name>
-                      <value>#{msisdn}</value>
-                      </parameter>
-                      <parameter>
-                      <name>Amount</name>
-                      <value>#{amount}</value>
-                      </parameter>
-                      <parameter>
-                      <name>OrderDateTime</name>
-                      <value>#{@timestamp}</value>
-                      </parameter>
-                      <parameter>
-                      <name>CurrCode</name>
-                      <value>XOF</value>
-                      </parameter>
-                      </b2b:processRequest>
-                      </SOAP-ENV:Body>
-                      </SOAP-ENV:Envelope>]
-    end
-    # return query_body
-  end
+
+  # def build_mtn_request(request_type, msisdn, token_transaction, amount)
+  #   query_body = ""
+  #   sdp_id = ENV['mtn_sdp_id']
+  #   sdp_password = ENV['mtn_sdp_password']
+  #   @timestamp = Time.now.strftime('%Y%m%d%H%M%S')
+  #   md5_encrypt = sdp_id+sdp_password+@timestamp
+  #   sdp_password = Digest::MD5.hexdigest(md5_encrypt)
+  #   case request_type.to_i
+  #   when 1
+  #     query_body = %Q[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:b2b="http://b2b.mobilemoney.mtn.zm_v1.0">
+  #                     <soapenv:Header>
+  #                       <RequestSOAPHeader xmlns="http://www.huawei.com.cn/schema/common/v2_1">
+  #                         <spId>#{sdp_id}</spId>
+  #                         <spPassword>#{sdp_password}</spPassword>
+  #                         <bundleID></bundleID>
+  #                         <serviceId></serviceId>
+  #                         <timeStamp>#{@timestamp}</timeStamp>
+  #                       </RequestSOAPHeader>
+  #                     </soapenv:Header>
+  #                     <soapenv:Body>
+  #                       <b2b:processRequest>
+  #                         <serviceId>#{msisdn}@LONACIE.SDP</serviceId>
+  #                         <parameter>
+  #                           <name>DueAmount</name>
+  #                           <value>#{amount}</value>
+  #                         </parameter>
+  #                         <parameter>
+  #                           <name>MSISDNNum</name>
+  #                           <value>#{msisdn}</value>
+  #                         </parameter>
+  #                         <parameter>
+  #                           <name>ProcessingNumber</name>
+  #                           <value>#{token_transaction}</value>
+  #                         </parameter>
+  #                         <parameter>
+  #                         <name>serviceId</name>
+  #                         <value>#{msisdn}@LONACIE.SDP</value>
+  #                         </parameter>
+  #                         <parameter>
+  #                         <name>AcctRef</name>
+  #                         <value></value>
+  #                         </parameter>
+  #                         <parameter>
+  #                         <name>AcctBalance</name>
+  #                         <value></value>
+  #                         </parameter>
+  #                         <parameter>
+  #                         <name>MinDueAmount</name>
+  #                         <value></value>
+  #                         </parameter>
+  #                         <parameter>
+  #                         <name>Narration</name>
+  #                         <value></value>
+  #                         </parameter>
+  #                         <parameter>
+  #                         <name>PrefLang</name>
+  #                         <value></value>
+  #                         </parameter>
+  #                         <parameter>
+  #                         <name>OpCoID</name>
+  #                         <value>22501</value>
+  #                         </parameter>
+  #                       </b2b:processRequest>
+  #                     </soapenv:Body>
+  #                   </soapenv:Envelope>]
+  #   when 2
+  #     query_body = %Q[<?xml version="1.0" encoding="utf-8"?>
+  #                     <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:b2b="http://b2b.mobilemoney.mtn.zm_v1.0/">
+  #                     <SOAP-ENV:Header><b2b:RequestSOAPHeader xmlns="http://www.huawei.com.cn/schema/common/v2_1">
+  #                     <b2b:spId>#{sdp_id}</b2b:spId>
+  #                     <b2b:spPassword>#{sdp_password}</b2b:spPassword>
+  #                     <b2b:timeStamp>#{@timestamp}</b2b:timeStamp>
+  #                     </b2b:RequestSOAPHeader>
+  #                     </SOAP-ENV:Header>
+  #                     <SOAP-ENV:Body>
+  #                     <b2b:processRequest>
+  #                     <serviceId>201</serviceId>
+  #                     <parameter>
+  #                     <name>ProcessingNumber</name>
+  #                     <value>#{token_transaction}</value>
+  #                     </parameter>
+  #                     <parameter>
+  #                     <name>serviceId</name>
+  #                     <value>LONACIE.SDP</value>
+  #                     </parameter>
+  #                     <parameter>
+  #                     <name>SenderID</name>
+  #                     <value>420</value>
+  #                     </parameter>
+  #                     <parameter>
+  #                     <name>PrefLang</name>
+  #                     <value>fr</value>
+  #                     </parameter>
+  #                     <parameter>
+  #                     <name>OpCoID</name>
+  #                     <value>ic</value>
+  #                     </parameter>
+  #                     <parameter>
+  #                     <name>MSISDNNum</name>
+  #                     <value>#{msisdn}</value>
+  #                     </parameter>
+  #                     <parameter>
+  #                     <name>Amount</name>
+  #                     <value>#{amount}</value>
+  #                     </parameter>
+  #                     <parameter>
+  #                     <name>OrderDateTime</name>
+  #                     <value>#{@timestamp}</value>
+  #                     </parameter>
+  #                     <parameter>
+  #                     <name>CurrCode</name>
+  #                     <value>XOF</value>
+  #                     </parameter>
+  #                     </b2b:processRequest>
+  #                     </SOAP-ENV:Body>
+  #                     </SOAP-ENV:Envelope>]
+  #   end
+  #   # return query_body
+  # end
 
   def set_cashout_fee
     if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423'
@@ -1039,8 +1136,8 @@ class MtnCisController < ApplicationController
     log_response = (RestClient.get(log_request) rescue "")
 
     @basket.update_attributes(
-      cashout_notified_to_front_office: (log_response == '1' ? true : false), 
-      cashout_notification_request: log_request, 
+      cashout_notified_to_front_office: (log_response == '1' ? true : false),
+      cashout_notification_request: log_request,
       cashout_notification_response: log_response
     )
   end
@@ -1056,37 +1153,9 @@ class MtnCisController < ApplicationController
     end
   end
 
-
   def ipn
     render text: params.except(:controller, :action)
   end
-
-  # def initialize_session
-  #   @parameter = Parameter.first
-  #   request = Typhoeus::Request.new(
-  #     @parameter.orange_money_ci_initialization_url, 
-  #     followlocation: true, 
-  #     method: :post, 
-  #     body: "merchantid=1f3e745c66347bc2cc9492d8526bfe040519396d7c98ad199f4211f39dfd6365&amount=#{@transaction_amount + (@basket.fees.ceil rescue @basket.first.fees.ceil)}&sessionid=#{@basket.transaction_id rescue @basket.first.transaction_id}&purchaseref=#{@basket.number rescue @basket.first.number}", 
-  #     headers: {:'Content-Type' => "application/x-www-form-urlencoded"}
-  #   )
-
-  #   OmLog.create(log_rl: "OM initialization -- " + @parameter.orange_money_ci_initialization_url + "?" + "merchantid=1f3e745c66347bc2cc9492d8526bfe040519396d7c98ad199f4211f39dfd6365&amount=#{@transaction_amount + (@basket.fees.ceil rescue @basket.first.fees.ceil)}&sessionid=#{@basket.transaction_id rescue @basket.first.transaction_id}&purchaseref=#{@basket.number rescue @basket.first.number}") rescue nil
-
-  #   request.on_complete do |response|
-  #     if response.success?
-  #       @session_id = response.body.strip
-  #     elsif response.timed_out?
-  #       @session_id = nil
-  #     elsif response.code == 0
-  #       @session_id = nil
-  #     else
-  #       @session_id = nil
-  #     end
-  #   end
-
-  #   request.run
-  # end
 
   def session_initialized?
     (@session_id != "access denied" && @session_id != nil && @session_id.length > 30) ? true : false
@@ -1111,6 +1180,4 @@ class MtnCisController < ApplicationController
   def transaction_acknowledgement
     generic_transaction_acknowledgement(MtnCi, params[:transaction_id])
   end
-
-
 end
