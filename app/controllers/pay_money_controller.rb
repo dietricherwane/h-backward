@@ -62,15 +62,15 @@ class PayMoneyController < ApplicationController
       )
     else
       @basket.first.update_attributes(
-        original_transaction_amount: session[:trs_amount], 
-        transaction_amount: session[:trs_amount].to_f.ceil, 
-        currency_id: session[:currency].id, 
-        paid_transaction_amount: @transaction_amount, 
-        paid_currency_id: @wallet_currency.id, 
-        fees: @shipping, 
-        rate: @rate, 
-        login_id: session[:login_id], 
-        paymoney_account_number: session[:paymoney_account_number], 
+        original_transaction_amount: session[:trs_amount],
+        transaction_amount: session[:trs_amount].to_f.ceil,
+        currency_id: session[:currency].id,
+        paid_transaction_amount: @transaction_amount,
+        paid_currency_id: @wallet_currency.id,
+        fees: @shipping,
+        rate: @rate,
+        login_id: session[:login_id],
+        paymoney_account_number: session[:paymoney_account_number],
         paymoney_account_token: session[:paymoney_account_token]
       )
     end
@@ -109,34 +109,38 @@ class PayMoneyController < ApplicationController
       render action: 'index'
     else
       # communication with paymoney
-      paymoney_token_url = "#{ENV['paymoney_wallet_url']}/PAYMONEY_WALLET/rest/check2_compte/#{@account_number}"
-      @paymoney_token = (RestClient.get(paymoney_token_url) rescue "")
-      url = "#{ENV['paymoney_wallet_url']}/PAYMONEY_WALLET/rest/operation_ecommerce/#{@basket.service.ecommerce_profile.token}/#{@basket.operation.paymoney_token}/#{@paymoney_token}/#{session[:basket]["transaction_amount"]}/#{@basket.fees}/0/#{@transaction_id}/#{@password}"
-      @status = RestClient.get(url) rescue ""
+      token_request = Wallets::Paymoney.new(account_number: @account_number)
+      token_response = token_request.get_account_token
+      token = token_response.body
 
-      Log.create(
-        description: "Paymoney sale", 
-        sent_request: url, 
-        sent_response: @status, 
-        paymoney_account_number: @account_number, 
-        paymoney_token_request: paymoney_token_url, 
-        paymoney_token_response: @paymoney_token
+      unload_request = Wallets::Paymoney.new(
+        service_profile_token: @basket.service.ecommerce_profile.token,
+        paymoney_token: @basket.operation.paymoney_token,
+        token: token,
+        transaction_amount: session[:basket]["transaction_amount"],
+        fees: @basket.fees,
+        transaction_id: @transaction_id,
+        password: @password
       )
+      unload_response = unload_request.unload
 
-      #@internal_com_request = "@response = Nokogiri.XML(request.response.body)
-      #@response.xpath('//status').each do |link|
-      #@status = link.content
-      #end
-      #"
-      #run_typhoeus_request(@request, @internal_com_request)
+      @status = unload_response.body
+      Log.create(
+        description: "Paymoney sale",
+        sent_request: unload_response.request.path.to_s,
+        sent_response: @status,
+        paymoney_account_number: @account_number,
+        paymoney_token_request: token_response.request.path.to_s,
+        paymoney_token_response: token
+      )
 
       if @status.to_s.strip == "good"
         #if @basket.blank?
           #@basket = Basket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => session[:basket]["transaction_amount"], :paid_currency_id => @wallet_currency.id, transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"), :fees => @shipping, :rate => @rate)
         #else
           @basket.update_attributes(
-            paid_transaction_amount: session[:basket]["transaction_amount"], 
-            paid_currency_id: @wallet_currency.id, 
+            paid_transaction_amount: session[:basket]["transaction_amount"],
+            paid_currency_id: @wallet_currency.id,
             rate: @rate
           )
         #end
@@ -188,6 +192,7 @@ class PayMoneyController < ApplicationController
             # Cashin mobile money
             if (@basket.operation.authentication_token rescue nil) == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4'
               mobile_money_token = 'none'
+              # TODO Use Wallet::Paymoney for this operation
               reload_request = "#{ENV['gateway_wallet_url']}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.transaction_id}/#{@basket.original_transaction_amount}/0"
               reload_response = (RestClient.get(reload_request) rescue "")
               if reload_response.include?('|')
@@ -201,8 +206,8 @@ class PayMoneyController < ApplicationController
                 @basket.update_attributes(payment_status: true)
               end
               @basket.update_attributes(
-                paymoney_reload_request: reload_request, 
-                paymoney_reload_response: reload_response, 
+                paymoney_reload_request: reload_request,
+                paymoney_reload_response: reload_response,
                 paymoney_transaction_id: ((reload_response.blank? || reload_response.include?('|')) ? nil : reload_response)
               )
             end
@@ -236,20 +241,20 @@ class PayMoneyController < ApplicationController
   def ipn(basket)
     @service = Service.find_by_id(basket.service_id)
     @request = Typhoeus::Request.new(
-      "#{@service.url_to_ipn}", 
-      body: { 
-        transaction_id: @basket.transaction_id, 
-        order_id: @basket.number, 
-        status_id: 1, 
-        wallet: "paymoney", 
-        transaction_amount: @basket.paid_transaction_amount, 
-        currency: @basket.currency.code, 
-        paid_transaction_amount: @basket.paid_transaction_amount, 
-        paid_currency: Currency.find_by_id(@basket.paid_currency_id).code, 
-        change_rate: @basket.rate, 
+      "#{@service.url_to_ipn}",
+      body: {
+        transaction_id: @basket.transaction_id,
+        order_id: @basket.number,
+        status_id: 1,
+        wallet: "paymoney",
+        transaction_amount: @basket.paid_transaction_amount,
+        currency: @basket.currency.code,
+        paid_transaction_amount: @basket.paid_transaction_amount,
+        paid_currency: Currency.find_by_id(@basket.paid_currency_id).code,
+        change_rate: @basket.rate,
         id: @basket.login_id
-      }, 
-      followlocation: true, 
+      },
+      followlocation: true,
       method: :post
     )
     # wallet=05ccd7ba3d
@@ -308,9 +313,7 @@ class PayMoneyController < ApplicationController
     else
       @request = Typhoeus::Request.new("#{ENV['paymoney_url']}/PAYMONEY-NGSER/rest/CompteService/CreateCompte/#{@firstname}/#{@lastname}/#{@age}/#{@phone_number}/#{@email}", followlocation: true)
 
-      @internal_com_request = "@response = Nokogiri.XML(request.response.body)"
-
-      run_typhoeus_request(@request, @internal_com_request)
+      run_typhoeus_request(@request) { @response = Nokogiri.XML(request.response.body) }
       if @response
         if @response.xpath('//compte').blank? or @response.xpath('//compte').blank? or @response.xpath('//compteNumero').blank?
           @error = true
@@ -342,13 +345,11 @@ class PayMoneyController < ApplicationController
       @error_messages << "Le numéro de compte n'est pas valide"
       @accountcss = "row-form error"
     end
-=begin
-    if @password.blank?
-      @error = true
-      @error_messages << "Le mot de passe n'est pas valide"
-      @passwordcss = "row-form error"
-    end
-=end
+    # if @password.blank?
+    #   @error = true
+    #   @error_messages << "Le mot de passe n'est pas valide"
+    #   @passwordcss = "row-form error"
+    # end
     if @pin.blank?
       @error = true
       @error_messages << "Le montant n'est pas valide"
@@ -359,10 +360,19 @@ class PayMoneyController < ApplicationController
 
     else
       # Envoi d'une requête à la plateforme EVD pour vérifier la validité du PIN
-      @request = Typhoeus::Request.new("#{ENV['paymoney_url']}/GATEWAY/rest/ES/VerifyPin/#{@pin}", followlocation: true)
+      # TODO Use Wallet::Paymoney for this operation
+      # @request = Typhoeus::Request.new("#{ENV['paymoney_url']}/GATEWAY/rest/ES/VerifyPin/#{@pin}", followlocation: true)
 
-      @internal_com_request = "@response = Nokogiri.XML(request.response.body)"
-      run_typhoeus_request(@request, @internal_com_request)
+      paymoney_request = Wallets::Paymoney.new(
+        transaction_amount: session[:basket]["transaction_amount"],
+        account: @account,
+        pin: @pin
+      )
+
+      verification_response = payment_request.verify_pin
+
+      # run_typhoeus_request(@request, @internal_com_request)
+      run_typhoeus_request(payment_request) { @response = Nokogiri.XML(request.response.body) }
 
       if @response and @response.xpath('//pin') and @response.xpath('//pin').at("pinStatus")
         @pin_status = @response.xpath('//pin').at("pinStatus").text
@@ -370,19 +380,21 @@ class PayMoneyController < ApplicationController
         if @pin_status == "1"
           # Envoi de la requête de rechargement de compte
           @amount = @response.xpath('//pin').at("pinMontant").text
-          @request = Typhoeus::Request.new("#{ENV['paymoney_url']}/PAYMONEY-NGSER/rest/OperationService/CreditOperation/1/#{@account}/#{@amount.to_i.abs}", followlocation: true)
-          #@request = Typhoeus::Request.new("#{@@url}/PAYMONEY-NGSER/rest/OperationService/CreditOperation/1/#{@account}/#{@password}/#{@amount.to_i.abs}", followlocation: true)
+          # TODO Use Wallet::Paymoney for this operation
+          # @request = Typhoeus::Request.new("#{ENV['paymoney_url']}/PAYMONEY-NGSER/rest/OperationService/CreditOperation/1/#{@account}/#{@amount.to_i.abs}", followlocation: true)
 
-          @internal_com_request = "@response = Nokogiri.XML(request.response.body)"
-          run_typhoeus_request(@request, @internal_com_request)
+          reload_response = paymoney_request.reload
+
+          run_typhoeus_request(paymoney_request) { @response = Nokogiri.XML(request.response.body) }
 
           if(@response and @response.xpath('//status').at("idStatus").text == "1")
             @success = true
             @success_messages << "Le compte #{@account} a été crédité de #{@amount.to_i.abs} unités"
-            @request = Typhoeus::Request.new("#{ENV['paymoney_url']}/GATEWAY/rest/ES/ChangeStatus/#{@pin}", followlocation: true)
+            # TODO Use Wallet::Paymoney for this operation
+            # @request = Typhoeus::Request.new("#{ENV['paymoney_url']}/GATEWAY/rest/ES/ChangeStatus/#{@pin}", followlocation: true)
+            paymoney_request.change_status
 
-            @internal_com_request = "@response = Nokogiri.XML(request.response.body)"
-            run_typhoeus_request(@request, @internal_com_request)
+            run_typhoeus_request(@request) { @response = Nokogiri.XML(request.response.body) }
             if(@response and @response.xpath('//pin').at("pinStatus").text == "1")
               # record into database
             end

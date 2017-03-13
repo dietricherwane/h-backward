@@ -52,7 +52,7 @@ class ApplicationController < ActionController::Base
           session[:operation] = @operation
           session[:trs_amount] = transaction_amount.to_f.round(2)
           session[:basket] = {
-            "basket_number"      => "#{order}", 
+            "basket_number"      => "#{order}",
             "transaction_amount" => "#{transaction_amount.to_f.round(2)}"
           }
           session[:paymoney_account_number] = paymoney_account_number
@@ -149,11 +149,32 @@ class ApplicationController < ActionController::Base
     uri.to_s
   end
 
-  def run_typhoeus_request(request, code_on_success)
+  # def run_typhoeus_request(request, code_on_success)
+  #   @error_messages = []
+  #   request.on_complete do |response|
+  #     if response.success?
+  #       eval(code_on_success)
+  #     elsif response.timed_out?
+  #       @error_messages << "Délai d'attente de la demande dépassé. Veuillez contacter l'administrateur."
+  #       @error = true
+  #     elsif response.code == 0
+  #       #@error_messages << "L'URL demandé n'existe pas. Veuillez contacter l'administrateur."
+  #       @error = true
+  #     else
+  #       #@error_messages << "Une erreur s'est produite. Veuillez contacter l'administrateur"
+  #       @error = true
+  #     end
+  #   end
+  #   hydra = Typhoeus::Hydra.hydra
+	#   hydra.queue(request)
+	#   hydra.run
+  # end
+
+  def run_typhoeus_request(request)
     @error_messages = []
     request.on_complete do |response|
       if response.success?
-        eval(code_on_success)
+        yield
       elsif response.timed_out?
         @error_messages << "Délai d'attente de la demande dépassé. Veuillez contacter l'administrateur."
         @error = true
@@ -166,10 +187,9 @@ class ApplicationController < ActionController::Base
       end
     end
     hydra = Typhoeus::Hydra.hydra
-	  hydra.queue(request)
-	  hydra.run
+    hydra.queue(request)
+    hydra.run
   end
-
 
 
   def authenticate_incoming_request(operation_id, basket_number, transaction_amount)
@@ -202,7 +222,7 @@ class ApplicationController < ActionController::Base
     status = "0"
     order = my_model.find_by_transaction_id(transaction_id)
     status = "1" if order && order.payment_status == true
-    
+
     render text: status
   end
 
