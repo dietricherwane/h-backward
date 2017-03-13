@@ -60,16 +60,16 @@ class PaypalController < ApplicationController
       )
     else
       @basket.first.update_attributes(
-        transaction_amount: session[:trs_amount], 
-        original_transaction_amount: session[:trs_amount], 
-        currency_id: session[:currency].id, 
-        paid_transaction_amount: @transaction_amount, 
-        paid_currency_id: @wallet_currency.id, 
-        fees: @shipping, 
-        rate: @rate, 
-        login_id: session[:login_id], 
-        paymoney_account_number: session[:paymoney_account_number], 
-        paymoney_account_token: session[:paymoney_account_token], 
+        transaction_amount: session[:trs_amount],
+        original_transaction_amount: session[:trs_amount],
+        currency_id: session[:currency].id,
+        paid_transaction_amount: @transaction_amount,
+        paid_currency_id: @wallet_currency.id,
+        fees: @shipping,
+        rate: @rate,
+        login_id: session[:login_id],
+        paymoney_account_number: session[:paymoney_account_number],
+        paymoney_account_token: session[:paymoney_account_token],
         paymoney_password: session[:paymoney_password]
       )
     end
@@ -108,8 +108,8 @@ class PaypalController < ApplicationController
         unless @basket.notified_to_ecommerce = true
           @service = Service.find_by_id(@basket.service_id)
           @request = Typhoeus::Request.new(
-            "#{@service.url_to_ipn}" + "?" + notification_parameters(@basket, @@wallet_name), 
-            followlocation: true, 
+            "#{@service.url_to_ipn}" + "?" + notification_parameters(@basket, @@wallet_name),
+            followlocation: true,
             method: :post
           )
           # wallet=e6da96e284
@@ -186,7 +186,7 @@ class PaypalController < ApplicationController
 
               reload_response = (RestClient.get(reload_request) rescue "")
               OmLog.create(log_rl: reload_request.force_encoding('iso8859-1').encode('utf-8'), log_tv: reload_response.force_encoding('iso8859-1').encode('utf-8')) rescue nil
-              
+
               @status_id = '5' if reload_response.include?('|')
 
               @basket.update_attributes(paymoney_reload_request: reload_request, paymoney_reload_response: reload_response, paymoney_transaction_id: ((reload_response.blank? || reload_response.include?('|')) ? nil : reload_response))
@@ -254,12 +254,12 @@ class PaypalController < ApplicationController
           # Update in available_wallet the number of failed_transactions
           update_number_of_failed_transactions
           @basket.update_attributes(
-            payment_status: false, 
-            cashout: true, 
-            cashout_completed: false, 
-            paymoney_reload_request: unload_request, 
-            paymoney_reload_response: unload_response, 
-            paymoney_transaction_id: unload_response, 
+            payment_status: false,
+            cashout: true,
+            cashout_completed: false,
+            paymoney_reload_request: unload_request,
+            paymoney_reload_response: unload_response,
+            paymoney_transaction_id: unload_response,
             cashout_account_number: @cashout_account_number
           )
         else
@@ -267,11 +267,11 @@ class PaypalController < ApplicationController
           # Update in available_wallet the number of successful_transactions
           #update_number_of_succeed_transactions
           @basket.update_attributes(
-            payment_status: true, 
-            cashout: true, 
-            cashout_completed: true, 
-            paymoney_reload_request: unload_request, 
-            paymoney_reload_response: unload_response, 
+            payment_status: true,
+            cashout: true,
+            cashout_completed: true,
+            paymoney_reload_request: unload_request,
+            paymoney_reload_response: unload_response,
             cashout_account_number: @cashout_account_number
           )
         end
@@ -312,12 +312,11 @@ class PaypalController < ApplicationController
       #basket.update_attributes(:payment_status => true)
     #end
     @request = Typhoeus::Request.new(url, followlocation: true)
-    @internal_com_request = "@response = Nokogiri.XML(request.response.body)
-    @response.xpath('//status').each do |link|
-    @status = link.content
+
+    run_typhoeus_request(@request) do
+      @response = Nokogiri.XML(request.response.body)
+      @response.xpath('//status').each { |link| @status = link.content }
     end
-    "
-    run_typhoeus_request(@request, @internal_com_request)
 
     basket.update_attributes(notified_to_back_office: true) if @status.to_s.strip == "1"
   end

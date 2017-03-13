@@ -15,7 +15,7 @@ module Wallets
 
     class << self
       def unload(transaction_details = {}) # RequestPayment
-        uri = "/PAYMONEY_WALLET/rest/operation_ecommerce/#{transaction_details[:service_profile_token]}/#{transaction_details[:paymoney_token]}/#{transaction_details[:token]}/#{transaction_details[:transaction_amount]}/#{transaction_details[:fees]}/0/#{transaction_details[:transaction_id]}/#{transaction_details[:password]}"
+        uri = "/PAYMONEY_WALLET/rest/operation_ecommerce/#{transaction_details[:service_profile_token]}/#{transaction_details[:operation_paymoney_token]}/#{transaction_details[:token]}/#{transaction_details[:transaction_amount]}/#{transaction_details[:fees]}/0/#{transaction_details[:transaction_id]}/#{transaction_details[:password]}"
         HTTParty.get(BASE_URI + uri)
       end
 
@@ -24,8 +24,9 @@ module Wallets
         HTTParty.get(BASE_URI + uri)
       end
 
-      def get_account_token(transaction_details = {})
-        uri = "/PAYMONEY_WALLET/rest/check2_compte/#{transaction_details[:account_number]}"
+      # def get_account_token(transaction_details = {})
+      def get_account_token(account_number)
+        uri = "/PAYMONEY_WALLET/rest/check2_compte/#{account_number}"
         HTTParty.get(BASE_URI + uri)
       end
 

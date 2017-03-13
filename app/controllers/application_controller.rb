@@ -149,27 +149,6 @@ class ApplicationController < ActionController::Base
     uri.to_s
   end
 
-  # def run_typhoeus_request(request, code_on_success)
-  #   @error_messages = []
-  #   request.on_complete do |response|
-  #     if response.success?
-  #       eval(code_on_success)
-  #     elsif response.timed_out?
-  #       @error_messages << "Délai d'attente de la demande dépassé. Veuillez contacter l'administrateur."
-  #       @error = true
-  #     elsif response.code == 0
-  #       #@error_messages << "L'URL demandé n'existe pas. Veuillez contacter l'administrateur."
-  #       @error = true
-  #     else
-  #       #@error_messages << "Une erreur s'est produite. Veuillez contacter l'administrateur"
-  #       @error = true
-  #     end
-  #   end
-  #   hydra = Typhoeus::Hydra.hydra
-	#   hydra.queue(request)
-	#   hydra.run
-  # end
-
   def run_typhoeus_request(request)
     @error_messages = []
     request.on_complete do |response|

@@ -55,16 +55,16 @@ class OrangeMoneyCiController < ApplicationController
       )
     else
       @basket.first.update_attributes(
-        transaction_amount: session[:trs_amount].to_f.ceil, 
-        original_transaction_amount: session[:trs_amount], 
-        currency_id: session[:currency].id, 
-        paid_transaction_amount: @transaction_amount, 
-        paid_currency_id: @wallet_currency.id, 
-        fees: @shipping, 
-        rate: @rate, 
-        login_id: session[:login_id], 
-        paymoney_account_number: session[:paymoney_account_number], 
-        paymoney_account_token: session[:paymoney_account_token], 
+        transaction_amount: session[:trs_amount].to_f.ceil,
+        original_transaction_amount: session[:trs_amount],
+        currency_id: session[:currency].id,
+        paid_transaction_amount: @transaction_amount,
+        paid_currency_id: @wallet_currency.id,
+        fees: @shipping,
+        rate: @rate,
+        login_id: session[:login_id],
+        paymoney_account_number: session[:paymoney_account_number],
+        paymoney_account_token: session[:paymoney_account_token],
         paymoney_password: session[:paymoney_password]
       )
     end
@@ -94,10 +94,10 @@ class OrangeMoneyCiController < ApplicationController
             @rate = get_change_rate("XAF", "EUR")
 
             @basket.update_attributes(
-              payment_status: true, 
-              ompay_token: @token, 
-              ompay_clientid: @clientid, 
-              ompay_payid: @payid, 
+              payment_status: true,
+              ompay_token: @token,
+              ompay_clientid: @clientid,
+              ompay_payid: @payid,
               compensation_rate: @rate
             )
 
@@ -193,12 +193,12 @@ class OrangeMoneyCiController < ApplicationController
           # Update in available_wallet the number of failed_transactions
           update_number_of_failed_transactions
           @basket.update_attributes(
-            payment_status: false, 
-            cashout: true, 
-            cashout_completed: false, 
-            paymoney_reload_request: unload_request, 
-            paymoney_reload_response: unload_response, 
-            paymoney_transaction_id: unload_response, 
+            payment_status: false,
+            cashout: true,
+            cashout_completed: false,
+            paymoney_reload_request: unload_request,
+            paymoney_reload_response: unload_response,
+            paymoney_transaction_id: unload_response,
             cashout_account_number: @cashout_account_number
           )
         else
@@ -206,11 +206,11 @@ class OrangeMoneyCiController < ApplicationController
           # Update in available_wallet the number of successful_transactions
           #update_number_of_succeed_transactions
           @basket.update_attributes(
-            payment_status: true, 
-            cashout: true, 
-            cashout_completed: true, 
-            paymoney_reload_request: unload_request, 
-            paymoney_reload_response: unload_response, 
+            payment_status: true,
+            cashout: true,
+            cashout_completed: true,
+            paymoney_reload_request: unload_request,
+            paymoney_reload_response: unload_response,
             cashout_account_number: @cashout_account_number
           )
         end
@@ -244,8 +244,8 @@ class OrangeMoneyCiController < ApplicationController
     log_response = (RestClient.get(log_request) rescue "")
 
     @basket.update_attributes(
-      cashout_notified_to_front_office: (log_response == '1' ? true : false), 
-      cashout_notification_request: log_request, 
+      cashout_notified_to_front_office: (log_response == '1' ? true : false),
+      cashout_notification_request: log_request,
       cashout_notification_response: log_response
     )
   end
@@ -296,12 +296,11 @@ class OrangeMoneyCiController < ApplicationController
       #basket.update_attributes(:payment_status => true)
     #end
     @request = Typhoeus::Request.new(url, followlocation: true)
-    @internal_com_request = "@response = Nokogiri.XML(request.response.body)
-    @response.xpath('//status').each do |link|
-    @status = link.content
+
+    run_typhoeus_request(@request) do
+      @response = Nokogiri.XML(request.response.body)
+      @response.xpath('//status').each { |link| @status = link.content }
     end
-    "
-    run_typhoeus_request(@request, @internal_com_request)
 
     basket.update_attributes(notified_to_back_office: true) if @status.to_s.strip == "1"
   end
@@ -314,8 +313,8 @@ class OrangeMoneyCiController < ApplicationController
   def generic_ipn_notification(basket)
     @service = Service.find_by_id(basket.service_id)
     @request = Typhoeus::Request.new(
-      "#{@service.url_to_ipn}" + "?" + notification_parameters(basket, @@wallet_name), 
-      followlocation: true, 
+      "#{@service.url_to_ipn}" + "?" + notification_parameters(basket, @@wallet_name),
+      followlocation: true,
       method: :post
     )
     # wallet=05ccd7ba3d
