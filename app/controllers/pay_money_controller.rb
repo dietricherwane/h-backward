@@ -109,11 +109,10 @@ class PayMoneyController < ApplicationController
       render action: 'index'
     else
       # communication with paymoney
-      token_request = Wallets::Paymoney.new(account_number: @account_number)
-      token_response = token_request.get_account_token
+      token_response = Wallets::Paymoney.get_account_token(account_number: @account_number)
       token = token_response.body
 
-      unload_request = Wallets::Paymoney.new(
+      unload_response = Wallets::Paymoney.unload(
         service_profile_token: @basket.service.ecommerce_profile.token,
         paymoney_token: @basket.operation.paymoney_token,
         token: token,
@@ -122,7 +121,6 @@ class PayMoneyController < ApplicationController
         transaction_id: @transaction_id,
         password: @password
       )
-      unload_response = unload_request.unload
 
       @status = unload_response.body
       Log.create(
@@ -135,15 +133,11 @@ class PayMoneyController < ApplicationController
       )
 
       if @status.to_s.strip == "good"
-        #if @basket.blank?
-          #@basket = Basket.create(:number => session[:basket]["basket_number"], :service_id => session[:service].id, :operation_id => session[:operation].id, :transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => session[:basket]["transaction_amount"], :paid_currency_id => @wallet_currency.id, transaction_id: Time.now.strftime("%Y%m%d%H%M%S%L"), :fees => @shipping, :rate => @rate)
-        #else
-          @basket.update_attributes(
-            paid_transaction_amount: session[:basket]["transaction_amount"],
-            paid_currency_id: @wallet_currency.id,
-            rate: @rate
-          )
-        #end
+        @basket.update_attributes(
+          paid_transaction_amount: session[:basket]["transaction_amount"],
+          paid_currency_id: @wallet_currency.id,
+          rate: @rate
+        )
 
         # Notification to ecommerce IPN
         Thread.new do
@@ -158,15 +152,6 @@ class PayMoneyController < ApplicationController
         @basket.update_attributes(compensation_rate: @rate)
         @amount_for_compensation = ((@basket.paid_transaction_amount + @basket.fees) * @rate).round(2)
         @fees_for_compensation = (@basket.fees * @rate).round(2)
-        #@request = Typhoeus::Request.new("#{ENV['second_origin_url']}/GATEWAY/rest/WS/#{session[:operation].id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/1", followlocation: true)
-
-        #@internal_com_request = "@response = Nokogiri.XML(request.response.body)
-        #@response.xpath('//status').each do |link|
-        #@status = link.content
-        #end
-        #"
-
-        #run_typhoeus_request(@request, @internal_com_request)
 
         # Use Paymoney authentication_token
         update_wallet_used(@basket, "05ccd7ba3d")
@@ -182,17 +167,16 @@ class PayMoneyController < ApplicationController
           # Handle GUCE notifications
           guce_request_payment?(@basket.service.authentication_token, 'QRTM9DZ', 'ELNPAY4')
 
-
           # Redirection vers le site marchand
           if (@basket.operation.authentication_token rescue nil) == "b6dff4ae-05c1-4050-a976-0db6e358f22b"
             redirect_to "http://ekioskmobile.net/retourabonnement.php?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=1&wallet=paymoney&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
             # Update in available_wallet the number of successful_transactions
             update_number_of_succeed_transactions
           else
-            # Cashin mobile money
+            # Cashin mobile money PARIONSDIRECT
             if (@basket.operation.authentication_token rescue nil) == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4'
               mobile_money_token = 'none'
-              # TODO Use Wallet::Paymoney for this operation
+              # TODO Use Wallets::Hub for this operation
               reload_request = "#{ENV['gateway_wallet_url']}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.transaction_id}/#{@basket.original_transaction_amount}/0"
               reload_response = (RestClient.get(reload_request) rescue "")
               if reload_response.include?('|')
@@ -212,19 +196,15 @@ class PayMoneyController < ApplicationController
               )
             end
             # Cashin mobile money
-            # redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=paymoney&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}"
             redirect_to notification_url(@basket, true, @@wallet_name)
           end
         else
-          #@basket.update_attributes(:conflictual_transaction_amount => params[:amt].to_f, :conflictual_currency => params[:cc].upcase)
-
           # Update in available_wallet the number of failed_transactions
           update_number_of_failed_transactions
 
           if (@basket.operation.authentication_token rescue nil) == "b6dff4ae-05c1-4050-a976-0db6e358f22b"
             redirect_to "http://ekioskmobile.net/retourabonnement.php?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=paymoney&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}&id=#{@basket.login_id}"
           else
-            # redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=0&wallet=paymoney&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=&paid_currency=&change_rate=#{@basket.rate}&conflictual_transaction_amount=#{@basket.conflictual_transaction_amount}&conflictual_currency=#{@basket.conflictual_currency}&id=#{@basket.login_id}"
             redirect_to notification_url(@basket, true, @@wallet_name)
           end
         end
@@ -363,39 +343,40 @@ class PayMoneyController < ApplicationController
       # TODO Use Wallet::Paymoney for this operation
       # @request = Typhoeus::Request.new("#{ENV['paymoney_url']}/GATEWAY/rest/ES/VerifyPin/#{@pin}", followlocation: true)
 
-      paymoney_request = Wallets::Paymoney.new(
-        transaction_amount: session[:basket]["transaction_amount"],
-        account: @account,
-        pin: @pin
-      )
-
-      verification_response = payment_request.verify_pin
+      # Verifying PIN
+      verification_response = Wallets::Paymoney.verify_pin(pin: @pin)
+      verification_response_body = Nokogiri.XML(verification_response.body)
 
       # run_typhoeus_request(@request, @internal_com_request)
-      run_typhoeus_request(payment_request) { @response = Nokogiri.XML(request.response.body) }
 
-      if @response and @response.xpath('//pin') and @response.xpath('//pin').at("pinStatus")
-        @pin_status = @response.xpath('//pin').at("pinStatus").text
+      if verification_response_body and verification_response_body.xpath('//pin') and verification_response_body.xpath('//pin').at("pinStatus")
+        @pin_status = verification_response_body.xpath('//pin').at("pinStatus").text
         # Si le PIN est valide
         if @pin_status == "1"
           # Envoi de la requête de rechargement de compte
-          @amount = @response.xpath('//pin').at("pinMontant").text
+          @amount = verification_response_body.xpath('//pin').at("pinMontant").text
           # TODO Use Wallet::Paymoney for this operation
           # @request = Typhoeus::Request.new("#{ENV['paymoney_url']}/PAYMONEY-NGSER/rest/OperationService/CreditOperation/1/#{@account}/#{@amount.to_i.abs}", followlocation: true)
 
-          reload_response = paymoney_request.reload
+          reload_response = Wallets::Paymoney.reload(
+            transaction_amount: session[:basket]["transaction_amount"],
+            account: @account
+          )
+          reload_response_body = Nokogiri.XML reload_response
 
-          run_typhoeus_request(paymoney_request) { @response = Nokogiri.XML(request.response.body) }
+          # run_typhoeus_request(paymoney_request) { @response = Nokogiri.XML(request.response.body) }
 
-          if(@response and @response.xpath('//status').at("idStatus").text == "1")
+          if(reload_response_body and reload_response_body.xpath('//status').at("idStatus").text == "1")
             @success = true
             @success_messages << "Le compte #{@account} a été crédité de #{@amount.to_i.abs} unités"
             # TODO Use Wallet::Paymoney for this operation
             # @request = Typhoeus::Request.new("#{ENV['paymoney_url']}/GATEWAY/rest/ES/ChangeStatus/#{@pin}", followlocation: true)
-            paymoney_request.change_status
 
-            run_typhoeus_request(@request) { @response = Nokogiri.XML(request.response.body) }
-            if(@response and @response.xpath('//pin').at("pinStatus").text == "1")
+            # Changing status
+            status_response = Wallets::Paymoney.change_status(pin: @pin)
+            status_response_body = Nokogiri.XML(status_response_body)
+
+            if(status_response_body and status_response_body.xpath('//pin').at("pinStatus").text == "1")
               # record into database
             end
           else

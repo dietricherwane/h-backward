@@ -2,8 +2,6 @@ class MtnCisController < ApplicationController
   require 'savon'
   require 'digest'
 
-  # include Wallets::MTNMoMo
-
   @@wallet_name = 'mtn_ci'
   ##before_action :only => :guard do |o| o.filter_connections end
   before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :initialize_session, :session_initialized, :payment_result_listener, :generic_ipn_notification, :cashout, :get_sdp_notification, :mtn_deposit_from_ussd, :mtn_payment_from_ussd]
@@ -83,15 +81,13 @@ class MtnCisController < ApplicationController
         # @request_body = build_mtn_request(1, @mtn_msisdn, @transaction_id, @total_amount)
         # payment_request = request_to_send(1, @request_body)
         #########  Début Modification  #########
-        @payment = Wallets::Mtnmomo.new(
+        response = Wallets::Mtnmomo.unload(
           msisdn: @mtn_msisdn,
           processing_number: @transaction_id,
           due_amount: @total_amount
         )
-        response = @payment.unload
         @basket.update_attributes(
-          # sent_request: @payload,
-          sent_request: response.request.path.to_s,
+          sent_request: response.request.options[:body].to_s,
           phone_number: @mtn_msisdn,
           type_token: 'WEB'
         )
@@ -252,14 +248,13 @@ class MtnCisController < ApplicationController
 
               # @request_body = build_mtn_request(2, @cashin_mobile_number, @transaction_id, @transaction_amount.to_i)
               # deposit_request= request_to_send(2, @request_body)
-              @payment = Wallets::Mtnmomo.new(
+              response = Wallets::Mtnmomo.reload(
                 msisdn: @cashin_mobile_number,
                 processing_number: @transaction_id,
                 due_amount: @transaction_amount.to_i
               )
-              response = @payment.reload
 
-              @basket.update_attributes(sent_request: @request_body)
+              @basket.update_attributes(sent_request: response.request.options[:body].to_s)
               update_wallet_used(@basket, "73007113fe")
 
               ### Processing based on former request result ###
@@ -413,14 +408,13 @@ class MtnCisController < ApplicationController
             # @request_body = build_mtn_request(1, @cashout_mobile_number, @transaction_id, @total_amount.to_i)
             # payment_request = request_to_send(1, @request_body)
 
-            @payment = Wallets::Mtnmomo.new(
+            response = Wallets::Mtnmomo.unload(
               msisdn: @cashout_mobile_number,
               processing_number: @transaction_id,
               due_amount: @total_amount.to_i
             )
-            response = @payment.unload
 
-            @basket.update_attributes(sent_request: response.request.options)
+            @basket.update_attributes(sent_request: response.request.options[:body].to_s)
             update_wallet_used(@basket, "73007113fe")
 
             ### Processing based on former request result ###
@@ -974,150 +968,151 @@ class MtnCisController < ApplicationController
     end
   end
 
-  # def request_to_send(request_type, request_body)
-  #   url_to_post = nil
-  #
-  #   case request_type
-  #   when 1
-  #     url_to_post = Typhoeus::Request.new(
-  #             ENV['mtn_payment_request_url'],
-  #             method: :post,
-  #             body: request_body,
-  #             headers: { Accept: "text/xml" }
-  #           )
-  #   when 2
-  #     url_to_post = Typhoeus::Request.new(
-  #               ENV['mtn_deposit_request_url'],
-  #               method: :post,
-  #               body: request_body,
-  #               headers: { Accept: "application/xml" }
-  #             )
-  #   end
-  #
-  #   return url_to_post
-  # end
+  # FIXME Should be deleted as soon as USSD transactions are not using it anymore
+  def request_to_send(request_type, request_body)
+    url_to_post = nil
 
-  #Construction du corps de la requête à envoyer au SDP MTN
+    case request_type
+    when 1
+      url_to_post = Typhoeus::Request.new(
+              ENV['mtn_payment_request_url'],
+              method: :post,
+              body: request_body,
+              headers: { Accept: "text/xml" }
+            )
+    when 2
+      url_to_post = Typhoeus::Request.new(
+                ENV['mtn_deposit_request_url'],
+                method: :post,
+                body: request_body,
+                headers: { Accept: "application/xml" }
+              )
+    end
 
-  # def build_mtn_request(request_type, msisdn, token_transaction, amount)
-  #   query_body = ""
-  #   sdp_id = ENV['mtn_sdp_id']
-  #   sdp_password = ENV['mtn_sdp_password']
-  #   @timestamp = Time.now.strftime('%Y%m%d%H%M%S')
-  #   md5_encrypt = sdp_id+sdp_password+@timestamp
-  #   sdp_password = Digest::MD5.hexdigest(md5_encrypt)
-  #   case request_type.to_i
-  #   when 1
-  #     query_body = %Q[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:b2b="http://b2b.mobilemoney.mtn.zm_v1.0">
-  #                     <soapenv:Header>
-  #                       <RequestSOAPHeader xmlns="http://www.huawei.com.cn/schema/common/v2_1">
-  #                         <spId>#{sdp_id}</spId>
-  #                         <spPassword>#{sdp_password}</spPassword>
-  #                         <bundleID></bundleID>
-  #                         <serviceId></serviceId>
-  #                         <timeStamp>#{@timestamp}</timeStamp>
-  #                       </RequestSOAPHeader>
-  #                     </soapenv:Header>
-  #                     <soapenv:Body>
-  #                       <b2b:processRequest>
-  #                         <serviceId>#{msisdn}@LONACIE.SDP</serviceId>
-  #                         <parameter>
-  #                           <name>DueAmount</name>
-  #                           <value>#{amount}</value>
-  #                         </parameter>
-  #                         <parameter>
-  #                           <name>MSISDNNum</name>
-  #                           <value>#{msisdn}</value>
-  #                         </parameter>
-  #                         <parameter>
-  #                           <name>ProcessingNumber</name>
-  #                           <value>#{token_transaction}</value>
-  #                         </parameter>
-  #                         <parameter>
-  #                         <name>serviceId</name>
-  #                         <value>#{msisdn}@LONACIE.SDP</value>
-  #                         </parameter>
-  #                         <parameter>
-  #                         <name>AcctRef</name>
-  #                         <value></value>
-  #                         </parameter>
-  #                         <parameter>
-  #                         <name>AcctBalance</name>
-  #                         <value></value>
-  #                         </parameter>
-  #                         <parameter>
-  #                         <name>MinDueAmount</name>
-  #                         <value></value>
-  #                         </parameter>
-  #                         <parameter>
-  #                         <name>Narration</name>
-  #                         <value></value>
-  #                         </parameter>
-  #                         <parameter>
-  #                         <name>PrefLang</name>
-  #                         <value></value>
-  #                         </parameter>
-  #                         <parameter>
-  #                         <name>OpCoID</name>
-  #                         <value>22501</value>
-  #                         </parameter>
-  #                       </b2b:processRequest>
-  #                     </soapenv:Body>
-  #                   </soapenv:Envelope>]
-  #   when 2
-  #     query_body = %Q[<?xml version="1.0" encoding="utf-8"?>
-  #                     <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:b2b="http://b2b.mobilemoney.mtn.zm_v1.0/">
-  #                     <SOAP-ENV:Header><b2b:RequestSOAPHeader xmlns="http://www.huawei.com.cn/schema/common/v2_1">
-  #                     <b2b:spId>#{sdp_id}</b2b:spId>
-  #                     <b2b:spPassword>#{sdp_password}</b2b:spPassword>
-  #                     <b2b:timeStamp>#{@timestamp}</b2b:timeStamp>
-  #                     </b2b:RequestSOAPHeader>
-  #                     </SOAP-ENV:Header>
-  #                     <SOAP-ENV:Body>
-  #                     <b2b:processRequest>
-  #                     <serviceId>201</serviceId>
-  #                     <parameter>
-  #                     <name>ProcessingNumber</name>
-  #                     <value>#{token_transaction}</value>
-  #                     </parameter>
-  #                     <parameter>
-  #                     <name>serviceId</name>
-  #                     <value>LONACIE.SDP</value>
-  #                     </parameter>
-  #                     <parameter>
-  #                     <name>SenderID</name>
-  #                     <value>420</value>
-  #                     </parameter>
-  #                     <parameter>
-  #                     <name>PrefLang</name>
-  #                     <value>fr</value>
-  #                     </parameter>
-  #                     <parameter>
-  #                     <name>OpCoID</name>
-  #                     <value>ic</value>
-  #                     </parameter>
-  #                     <parameter>
-  #                     <name>MSISDNNum</name>
-  #                     <value>#{msisdn}</value>
-  #                     </parameter>
-  #                     <parameter>
-  #                     <name>Amount</name>
-  #                     <value>#{amount}</value>
-  #                     </parameter>
-  #                     <parameter>
-  #                     <name>OrderDateTime</name>
-  #                     <value>#{@timestamp}</value>
-  #                     </parameter>
-  #                     <parameter>
-  #                     <name>CurrCode</name>
-  #                     <value>XOF</value>
-  #                     </parameter>
-  #                     </b2b:processRequest>
-  #                     </SOAP-ENV:Body>
-  #                     </SOAP-ENV:Envelope>]
-  #   end
-  #   # return query_body
-  # end
+    return url_to_post
+  end
+
+  # FIXME Should be deleted as soon as USSD transactions are not using it anymore
+  # Construction du corps de la requête à envoyer au SDP MTN
+  def build_mtn_request(request_type, msisdn, token_transaction, amount)
+    query_body = ""
+    sdp_id = ENV['mtn_sdp_id']
+    sdp_password = ENV['mtn_sdp_password']
+    @timestamp = Time.now.strftime('%Y%m%d%H%M%S')
+    md5_encrypt = sdp_id+sdp_password+@timestamp
+    sdp_password = Digest::MD5.hexdigest(md5_encrypt)
+    case request_type.to_i
+    when 1
+      query_body = %Q[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:b2b="http://b2b.mobilemoney.mtn.zm_v1.0">
+                      <soapenv:Header>
+                        <RequestSOAPHeader xmlns="http://www.huawei.com.cn/schema/common/v2_1">
+                          <spId>#{sdp_id}</spId>
+                          <spPassword>#{sdp_password}</spPassword>
+                          <bundleID></bundleID>
+                          <serviceId></serviceId>
+                          <timeStamp>#{@timestamp}</timeStamp>
+                        </RequestSOAPHeader>
+                      </soapenv:Header>
+                      <soapenv:Body>
+                        <b2b:processRequest>
+                          <serviceId>#{msisdn}@LONACIE.SDP</serviceId>
+                          <parameter>
+                            <name>DueAmount</name>
+                            <value>#{amount}</value>
+                          </parameter>
+                          <parameter>
+                            <name>MSISDNNum</name>
+                            <value>#{msisdn}</value>
+                          </parameter>
+                          <parameter>
+                            <name>ProcessingNumber</name>
+                            <value>#{token_transaction}</value>
+                          </parameter>
+                          <parameter>
+                          <name>serviceId</name>
+                          <value>#{msisdn}@LONACIE.SDP</value>
+                          </parameter>
+                          <parameter>
+                          <name>AcctRef</name>
+                          <value></value>
+                          </parameter>
+                          <parameter>
+                          <name>AcctBalance</name>
+                          <value></value>
+                          </parameter>
+                          <parameter>
+                          <name>MinDueAmount</name>
+                          <value></value>
+                          </parameter>
+                          <parameter>
+                          <name>Narration</name>
+                          <value></value>
+                          </parameter>
+                          <parameter>
+                          <name>PrefLang</name>
+                          <value></value>
+                          </parameter>
+                          <parameter>
+                          <name>OpCoID</name>
+                          <value>22501</value>
+                          </parameter>
+                        </b2b:processRequest>
+                      </soapenv:Body>
+                    </soapenv:Envelope>]
+    when 2
+      query_body = %Q[<?xml version="1.0" encoding="utf-8"?>
+                      <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:b2b="http://b2b.mobilemoney.mtn.zm_v1.0/">
+                      <SOAP-ENV:Header><b2b:RequestSOAPHeader xmlns="http://www.huawei.com.cn/schema/common/v2_1">
+                      <b2b:spId>#{sdp_id}</b2b:spId>
+                      <b2b:spPassword>#{sdp_password}</b2b:spPassword>
+                      <b2b:timeStamp>#{@timestamp}</b2b:timeStamp>
+                      </b2b:RequestSOAPHeader>
+                      </SOAP-ENV:Header>
+                      <SOAP-ENV:Body>
+                      <b2b:processRequest>
+                      <serviceId>201</serviceId>
+                      <parameter>
+                      <name>ProcessingNumber</name>
+                      <value>#{token_transaction}</value>
+                      </parameter>
+                      <parameter>
+                      <name>serviceId</name>
+                      <value>LONACIE.SDP</value>
+                      </parameter>
+                      <parameter>
+                      <name>SenderID</name>
+                      <value>420</value>
+                      </parameter>
+                      <parameter>
+                      <name>PrefLang</name>
+                      <value>fr</value>
+                      </parameter>
+                      <parameter>
+                      <name>OpCoID</name>
+                      <value>ic</value>
+                      </parameter>
+                      <parameter>
+                      <name>MSISDNNum</name>
+                      <value>#{msisdn}</value>
+                      </parameter>
+                      <parameter>
+                      <name>Amount</name>
+                      <value>#{amount}</value>
+                      </parameter>
+                      <parameter>
+                      <name>OrderDateTime</name>
+                      <value>#{@timestamp}</value>
+                      </parameter>
+                      <parameter>
+                      <name>CurrCode</name>
+                      <value>XOF</value>
+                      </parameter>
+                      </b2b:processRequest>
+                      </SOAP-ENV:Body>
+                      </SOAP-ENV:Envelope>]
+    end
+    # return query_body
+  end
 
   def set_cashout_fee
     if session[:operation].authentication_token == '3d20d7af-2ecb-4681-8e4f-a585d7705423'
@@ -1166,12 +1161,10 @@ class MtnCisController < ApplicationController
       #basket.update_attributes(:payment_status => true)
     #end
     @request = Typhoeus::Request.new(url, followlocation: true)
-    @internal_com_request = "@response = Nokogiri.XML(request.response.body)
-    @response.xpath('//status').each do |link|
-    @status = link.content
+    run_typhoeus_request(@request) do
+      @response = Nokogiri.XML(request.response.body)
+      @response.xpath('//status').each { |link| @status = link.content }
     end
-    "
-    run_typhoeus_request(@request, @internal_com_request)
 
     basket.update_attributes(:notified_to_back_office => true) if @status.to_s.strip == "1"
   end
