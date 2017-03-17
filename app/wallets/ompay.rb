@@ -7,14 +7,15 @@ module Wallets
       def reload # deposit
       end
 
-      def get_token
+      def initialize(basket)
+        byebug
         HTTParty.post(
           ENV['orange_money_initialization_url'],
           body: {
             merchantid: ENV['orange_money_merchant_id'],
-            amount: @transaction_amount + (@basket.fees.ceil rescue @basket.first.fees.ceil),
-            sessionid:@basket.transaction_id,
-            purchaseref: @basket.number
+            amount: basket.transaction_amount + basket.fees.ceil,
+            sessionid: basket.transaction_id,
+            purchaseref: basket.number
           },
           headers: {
             'Content-Type' => "application/x-www-form-urlencoded"

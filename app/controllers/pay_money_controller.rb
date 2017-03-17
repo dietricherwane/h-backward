@@ -109,7 +109,7 @@ class PayMoneyController < ApplicationController
       render action: 'index'
     else
       # communication with paymoney
-      token_response = Wallets::Paymoney.get_account_token(account_number: @account_number)
+      token_response = Wallets::Paymoney.get_account_token(@account_number)
       token = token_response.body
 
       unload_response = Wallets::Paymoney.unload(

@@ -18,23 +18,26 @@ class OrangeMoneyCiController < ApplicationController
 
   # Reçoit les requêtes venant des différents services
   def guard
+    byebug
     redirect_to action: "index"
   end
 
   def index
+    byebug
     initialize_customer_view("b005fd07f0", "ceiled_transaction_amount", "ceiled_shipping_fee")
+    byebug
     get_service_logo(session[:service].token)
-
+    byebug
     # vérifie qu'un numéro panier appartenant à ce service n'existe pas déjà. Si non, on crée un panier temporaire, si oui, on met à jour le montant envoyé par le ecommerce, la monnaie envoyée par celui ci ainsi que le montant, la monnaie et les frais à envoyer au ecommerce
-    @basket = OrangeMoneyCiBasket.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'")
-
+    @basket = OrangeMoneyCiBasket.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'").first
+    byebug
     if (@service.authentication_token rescue nil) == "62c0e7c8189e0737cb036999d3994719"
       session[:trs_amount] = session[:trs_amount].to_f.ceil - @shipping
       @transaction_amount = session[:trs_amount].to_f.ceil - @shipping
     end
-
+    byebug
     set_cashout_fee
-
+    byebug
     if @basket.blank?
       @basket = OrangeMoneyCiBasket.create(
         number: session[:basket]["basket_number"],
@@ -53,8 +56,9 @@ class OrangeMoneyCiController < ApplicationController
         paymoney_account_token: session[:paymoney_account_token],
         paymoney_password: session[:paymoney_password]
       )
+      byebug
     else
-      @basket.first.update_attributes(
+      @basket.update_attributes(
         transaction_amount: session[:trs_amount].to_f.ceil,
         original_transaction_amount: session[:trs_amount],
         currency_id: session[:currency].id,
@@ -67,9 +71,11 @@ class OrangeMoneyCiController < ApplicationController
         paymoney_account_token: session[:paymoney_account_token],
         paymoney_password: session[:paymoney_password]
       )
+      byebug
     end
-
+    byebug
     initialize_session
+    byebug
     redirect_to error_page_path unless session_initialized
   end
 
@@ -268,23 +274,7 @@ class OrangeMoneyCiController < ApplicationController
   end
 
   def initialize_session
-    request = Typhoeus::Request.new(ENV['orange_money_initialization_url'], followlocation: true, method: :post, body: "merchantid=1f3e745c66347bc2cc9492d8526bfe040519396d7c98ad199f4211f39dfd6365&amount=#{@transaction_amount + (@basket.fees.ceil rescue @basket.first.fees.ceil)}&sessionid=#{@basket.transaction_id rescue @basket.first.transaction_id}&purchaseref=#{@basket.number rescue @basket.first.number}", headers: {:'Content-Type'=> "application/x-www-form-urlencoded"})
-
-    OmLog.create(log_rl: "OM initialization -- " + @parameter.orange_money_ci_initialization_url + "?" + "merchantid=1f3e745c66347bc2cc9492d8526bfe040519396d7c98ad199f4211f39dfd6365&amount=#{@transaction_amount + (@basket.fees.ceil rescue @basket.first.fees.ceil)}&sessionid=#{@basket.transaction_id rescue @basket.first.transaction_id}&purchaseref=#{@basket.number rescue @basket.first.number}") rescue nil
-
-    request.on_complete do |response|
-      if response.success?
-        @session_id = response.body.strip
-      elsif response.timed_out?
-        @session_id = nil
-      elsif response.code == 0
-        @session_id = nil
-      else
-        @session_id = nil
-      end
-    end
-
-    request.run
+    @session_id = Wallets::Ompay.initialize(@basket)
   end
 
   def session_initialized

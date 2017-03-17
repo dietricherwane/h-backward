@@ -51,16 +51,16 @@ class UbaController < ApplicationController
       )
     else
       @basket.first.update_attributes(
-        transaction_amount: session[:trs_amount].to_f.ceil, 
-        original_transaction_amount: session[:trs_amount], 
-        currency_id: session[:currency].id, 
-        paid_transaction_amount: @transaction_amount, 
-        paid_currency_id: @wallet_currency.id, 
-        fees: @shipping, 
-        rate: @rate, 
-        login_id: session[:login_id], 
-        paymoney_account_number: session[:paymoney_account_number], 
-        paymoney_account_token: session[:paymoney_account_token], 
+        transaction_amount: session[:trs_amount].to_f.ceil,
+        original_transaction_amount: session[:trs_amount],
+        currency_id: session[:currency].id,
+        paid_transaction_amount: @transaction_amount,
+        paid_currency_id: @wallet_currency.id,
+        fees: @shipping,
+        rate: @rate,
+        login_id: session[:login_id],
+        paymoney_account_number: session[:paymoney_account_number],
+        paymoney_account_token: session[:paymoney_account_token],
         paymoney_password: session[:paymoney_password]
       )
     end
@@ -78,7 +78,6 @@ class UbaController < ApplicationController
     @basket = Uba.where("number = '#{session[:basket]["basket_number"]}' AND service_id = '#{session[:service].id}' AND operation_id = '#{session[:operation].id}'").first rescue nil
 
     if @error_messages.blank?
-          operatorId: '411cd', 
       request = Typhoeus::Request.new(ENV['uba_bill_request'], method: :post, body: {userName: ENV['uba_username'], password: ENV['uba_password'], currency: 'XOF', referenceInvoice: @basket.transaction_id, amount: @basket.paid_transaction_amount, serviceFees: @basket.fees, operatorId: ENV['uba_operator_id'], guceTransactionId: @basket.transaction_id, channelId: ENV['uba_channel_id'], firstname: @firstname, lastname: @lastname, email: @email, phone: @msisdn}, followlocation: true)
 
       request.run
@@ -131,12 +130,12 @@ class UbaController < ApplicationController
           # Update in available_wallet the number of failed_transactions
           update_number_of_failed_transactions
           @basket.update_attributes(
-            payment_status: false, 
-            cashout: true, 
-            cashout_completed: false, 
-            paymoney_reload_request: unload_request, 
-            paymoney_reload_response: unload_response, 
-            paymoney_transaction_id: unload_response, 
+            payment_status: false,
+            cashout: true,
+            cashout_completed: false,
+            paymoney_reload_request: unload_request,
+            paymoney_reload_response: unload_response,
+            paymoney_transaction_id: unload_response,
             cashout_account_number: @cashout_account_number
           )
         else
@@ -144,11 +143,11 @@ class UbaController < ApplicationController
           # Update in available_wallet the number of successful_transactions
           #update_number_of_succeed_transactions
           @basket.update_attributes(
-            payment_status: true, 
-            cashout: true, 
-            cashout_completed: true, 
-            paymoney_reload_request: unload_request, 
-            paymoney_reload_response: unload_response, 
+            payment_status: true,
+            cashout: true,
+            cashout_completed: true,
+            paymoney_reload_request: unload_request,
+            paymoney_reload_response: unload_response,
             cashout_account_number: @cashout_account_number
           )
         end
@@ -182,8 +181,8 @@ class UbaController < ApplicationController
     log_response = (RestClient.get(log_request) rescue "")
 
     @basket.update_attributes(
-      cashout_notified_to_front_office: (log_response == '1' ? true : false), 
-      cashout_notification_request: log_request, 
+      cashout_notified_to_front_office: (log_response == '1' ? true : false),
+      cashout_notification_request: log_request,
       cashout_notification_response: log_response
     )
   end

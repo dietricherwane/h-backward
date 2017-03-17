@@ -40,5 +40,7 @@ module HubsBackOffice
 
     # Loads all config files
     config.autoload_paths += %W(#{config.root}/app)
+    # Loads all lib files
+    config.autoload_paths += %W(#{config.root}/lib)
   end
 end

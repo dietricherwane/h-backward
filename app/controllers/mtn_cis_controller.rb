@@ -58,7 +58,18 @@ class MtnCisController < ApplicationController
         paymoney_account_token: session[:paymoney_account_token]
       )
     else
-      @basket.first.update_attributes(:transaction_amount => session[:trs_amount], :original_transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, :fees => @shipping, :rate => @rate, :login_id => session[:login_id], paymoney_account_number: session[:paymoney_account_number], paymoney_account_token: session[:paymoney_account_token])
+      @basket.first.update_attributes(
+        :transaction_amount => session[:trs_amount],
+        :original_transaction_amount => session[:trs_amount],
+        :currency_id => session[:currency].id,
+        :paid_transaction_amount => @transaction_amount,
+        :paid_currency_id => @wallet_currency.id,
+        :fees => @shipping,
+        :rate => @rate,
+        :login_id => session[:login_id],
+        paymoney_account_number: session[:paymoney_account_number],
+        paymoney_account_token: session[:paymoney_account_token]
+      )
     end
   end
 
