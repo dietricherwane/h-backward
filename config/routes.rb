@@ -3,7 +3,7 @@ HubsBackOffice::Application.routes.draw do
 
   # Chargement de compte  #### risque de confusion avec la route suivante
   get "/order/reload/:currency/:service_token/:operation_token/:order/:transaction_amount/:paymoney_account_number" => "main#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
-  
+
   get "order/:currency/:service_token/:operation_token/:order/:transaction_amount/:id" => "main#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "order/:currency/:service_token/:operation_token/:order/:transaction_amount" => "main#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "order/:currency/:service_token/:operation_token/:order/:transaction_amount" => "main#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
@@ -149,61 +149,18 @@ HubsBackOffice::Application.routes.draw do
 
   get 'guce' => 'products#guce'
 
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
+  namespace :api, defaults: {format: :json}, path: '/' do
+    scope module: :v1 do
+      post 'auth' => 'auth#auth'
+      post 'wallets_list' => 'wallets#wallets_list'
+      post 'process_payment' => 'payments#process_payment'
+      post 'check_payment_status' => 'payments#check_payment_status'
+      post 'get_token' => 'api#get_auth_token' # Just for test purpose
+      # post 'withdraw' => 'wallets#withdraw'
+      # post 'cashin' => 'wallets#cashin'
+    end
+  end
 
-  # You can have the root of your site routed with "root"
-  # root 'welcome#index'
-  #resources :products
-
-  # Example of regular route:
-  #   get 'products/:id' => 'catalog#view'
-
-  # Example of named route that can be invoked with purchase_url(id: product.id)
-  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
-
-  # Example resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
-
-  # Example resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
-
-  # Example resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
-
-  # Example resource route with more complex sub-resources:
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', on: :collection
-  #     end
-  #   end
-
-  # Example resource route with concerns:
-  #   concern :toggleable do
-  #     post 'toggle'
-  #   end
-  #   resources :posts, concerns: :toggleable
-  #   resources :photos, concerns: :toggleable
-
-  # Example resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
   get '*rogue_url', :to => 'errors#routing'
   post '*rogue_url', :to => 'errors#routing'
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170106145910) do
+ActiveRecord::Schema.define(version: 20170317091915) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -520,6 +520,8 @@ ActiveRecord::Schema.define(version: 20170106145910) do
     t.datetime "logo_updated_at"
     t.string   "table_name",           limit: 100
     t.string   "collector_id"
+    t.boolean  "availble_for_api",                 default: false
+    t.string   "alias"
   end
 
 end
