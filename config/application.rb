@@ -2,7 +2,7 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 require 'uri'
-require 'yajl/http_stream'
+# require 'yajl/http_stream'
 require "nokogiri"
 require "open-uri"
 require 'json'
@@ -23,11 +23,24 @@ module HubsBackOffice
 
     config.action_dispatch.default_headers = {'X-Frame-Options' => 'GOFORIT'}
 
+    config.generators do |g|
+      g.test_framework :rspec,
+        :fixtures => true,
+        :view_specs => true,
+        :helper_specs => true,
+        :routing_specs => true,
+        :controller_specs => true,
+        :request_specs => true
+      g.fixture_replacement :factory_girl, dir: "spec/factories"
+    end
+
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
     # Loads all config files
     config.autoload_paths += %W(#{config.root}/app)
+    # Loads all lib files
+    config.autoload_paths += %W(#{config.root}/lib)
   end
 end

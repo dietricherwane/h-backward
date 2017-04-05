@@ -5,37 +5,36 @@ class WalletsController < ApplicationController
     if @country.blank?
       @message = "Ce pays n'existe pas."
     else
-      @available_wallets = session[:service].available_wallets.where(published: true, wallet_id: session[:service].wallets.where(country_id: @country.first.id).map{|w| w.id})
+      @available_wallets = session[:service].available_wallets.where(
+        published: true, 
+        wallet_id: session[:service].wallets.where(country_id: @country.first.id).map{|w| w.id}
+      )
       if @available_wallets.blank?
         @message = "Il n'y a aucun moyen de paiement pour ce pays."
       else
         @transaction_amount = session[:basket]["transaction_amount"]
         @basket_number = session[:basket]['basket_number']
         @available_wallets.each do |available_wallet|
+          wallet_name = available_wallet.wallet.name.split.first.downcase
           @url = "#{available_wallet.wallet.url}/#{session[:service].code}/#{session[:operation].code}/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}"
-          @message << "<a href='#{@url}'>
+          @message << "<a href='#{@url}' class='#{wallet_name} wallet_link'>
           <img src = '#{available_wallet.wallet.logo.url(:medium)}' />
           </a>"
         end
       end
     end
 
-    render :text => @message.html_safe
+    render text: @message.html_safe
   end
 
   def edit
     @wallet = Wallet.find_by_authentication_token(params[:authentication_token])
-    unless @wallet
-      render file: "#{Rails.root}/public/404.html", status: 404, layout: false
-    end
+    render file: "#{Rails.root}/public/404.html", status: 404, layout: false unless @wallet
   end
 
   def update
-    @wallet = Wallet.find_by_authentication_token(params[:authentication_token])
-    unless @wallet
-      render file: "#{Rails.root}/public/404.html", status: 404, layout: false
-    end
-
+    @wallet = Wallet.find(authentication_token: params[:authentication_token])
+    render file: "#{Rails.root}/public/404.html", status: 404, layout: false unless @wallet
     @wallet.update_attributes(params[:wallet])
     flash.now[:notice] = "Le logo du wallet a été ajouté"
 
@@ -51,7 +50,7 @@ class WalletsController < ApplicationController
       country_object = Country.find_by_id(country["id"])
       wallets = country_object.wallets.where(published: true)
       my_wallets = format_wallets(wallets)
-      my_hash.merge!("#{country['id']}" => country.merge({:wallets => my_wallets}))
+      my_hash.merge!("#{country['id']}" => country.merge({wallets: my_wallets}))
     end
 
     render json: my_hash
@@ -88,7 +87,7 @@ class WalletsController < ApplicationController
     available_wallets = @service.available_wallets.where(wallet_used: true) rescue nil
     my_hash = {}
 
-    if !available_wallets.blank?
+    if available_wallets
       available_countries = available_wallets.map{|w| w.wallet.country.id}
       countries = Country.where(id: available_countries)
 
@@ -96,7 +95,7 @@ class WalletsController < ApplicationController
         @available_wallets = AvailableWallet.where(service_id: @service.id, wallet_id: country.wallets.map{|w| w.id}, wallet_used: true)#.map{|aw| aw.wallet}
 
         my_wallets = format_used_wallets(@available_wallets)
-        my_hash.merge!("#{country.id}" => country.as_json.merge({:wallets => my_wallets}))
+        my_hash.merge!("#{country.id}" => country.as_json.merge({wallets: my_wallets}))
       end
 
     end

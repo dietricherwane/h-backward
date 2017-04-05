@@ -2,8 +2,8 @@ class AvailableWalletsController < ApplicationController
 
   # Enables or disables a wallet for a given service
   def enable_disable
-    @service = Service.find_by_token(params[:service_token])
-    @wallet = Wallet.find_by_authentication_token(params[:wallet_token])
+    @service = Service.find(token: params[:service_token])
+    @wallet = Wallet.find(authentication_token: params[:wallet_token])
 
     if @service && @wallet
       available_wallet = AvailableWallet.where(service_id: @service.id, wallet_id: @wallet.id)

@@ -1,18 +1,15 @@
 class UbaController < ApplicationController
-  before_action :except => [:guard, :cashout] do |s| s.session_authenticated? end
+  @@wallet_name = 'uba'
+  before_action :session_authenticated?, :except => [:guard, :cashout]
 
   # Set transaction amount for GUCE requests
-  before_action :only => :index do |o| o.guce_request? end
+  before_action :set_guce_transaction_amount, :only => :index
 
   #layout "uba"
   layout :select_layout
 
   def select_layout
-    if session[:service].authentication_token == '57813dc7992fbdc721ca5f6b0d02d559'
-      return "guce"
-    else
-      return "uba"
-    end
+    session[:service].authentication_token == '57813dc7992fbdc721ca5f6b0d02d559' ? "guce" : "uba"
   end
 
   # Reçoit les requêtes venant des différents services
@@ -53,7 +50,19 @@ class UbaController < ApplicationController
         paymoney_password: session[:paymoney_password]
       )
     else
-      @basket.first.update_attributes(:transaction_amount => session[:trs_amount].to_f.ceil, :original_transaction_amount => session[:trs_amount], :currency_id => session[:currency].id, :paid_transaction_amount => @transaction_amount, :paid_currency_id => @wallet_currency.id, :fees => @shipping, :rate => @rate, :login_id => session[:login_id], paymoney_account_number: session[:paymoney_account_number], paymoney_account_token: session[:paymoney_account_token], paymoney_password: session[:paymoney_password])
+      @basket.first.update_attributes(
+        transaction_amount: session[:trs_amount].to_f.ceil,
+        original_transaction_amount: session[:trs_amount],
+        currency_id: session[:currency].id,
+        paid_transaction_amount: @transaction_amount,
+        paid_currency_id: @wallet_currency.id,
+        fees: @shipping,
+        rate: @rate,
+        login_id: session[:login_id],
+        paymoney_account_number: session[:paymoney_account_number],
+        paymoney_account_token: session[:paymoney_account_token],
+        paymoney_password: session[:paymoney_password]
+      )
     end
   end
 
@@ -108,7 +117,7 @@ class UbaController < ApplicationController
 
       render :index
     else
-      if !@basket.blank?
+      if @basket
         # Cashout mobile money
         operation_token = 'cb77b491'
         mobile_money_token = '8ed6ab4a'
@@ -120,18 +129,34 @@ class UbaController < ApplicationController
           @status_id = '0'
           # Update in available_wallet the number of failed_transactions
           update_number_of_failed_transactions
-          @basket.update_attributes(payment_status: false, cashout: true, cashout_completed: false, paymoney_reload_request: unload_request, paymoney_reload_response: unload_response, paymoney_transaction_id: unload_response, cashout_account_number: @cashout_account_number)
+          @basket.update_attributes(
+            payment_status: false,
+            cashout: true,
+            cashout_completed: false,
+            paymoney_reload_request: unload_request,
+            paymoney_reload_response: unload_response,
+            paymoney_transaction_id: unload_response,
+            cashout_account_number: @cashout_account_number
+          )
         else
           @status_id = '5'
           # Update in available_wallet the number of successful_transactions
           #update_number_of_succeed_transactions
-          @basket.update_attributes(payment_status: true, cashout: true, cashout_completed: true, paymoney_reload_request: unload_request, paymoney_reload_response: unload_response, cashout_account_number: @cashout_account_number)
+          @basket.update_attributes(
+            payment_status: true,
+            cashout: true,
+            cashout_completed: true,
+            paymoney_reload_request: unload_request,
+            paymoney_reload_response: unload_response,
+            cashout_account_number: @cashout_account_number
+          )
         end
 
         # Saves the transaction on the front office
         save_cashout_log
 
-        redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=uba&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
+        # redirect_to "#{@basket.service.url_on_success}?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&wallet=uba&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}"
+        redirect_to notification_url(@basket, successfull, @@wallet_name)
         # Cashout mobile money
       else
         redirect_to error_page_path
@@ -144,7 +169,7 @@ class UbaController < ApplicationController
       fee_type = FeeType.find_by_token('0175ad')
       @shipping = 0
 
-      if !fee_type.blank?
+      if fee_type
 	      @shipping = ((fee_type.fees.where("min_value <= #{session[:trs_amount].to_f} AND max_value >= #{session[:trs_amount].to_f}").first.fee_value) * @rate).ceil.round(2)
 	    end
 	  end
@@ -155,7 +180,11 @@ class UbaController < ApplicationController
     log_request = "#{ENV['front_office_url']}/api/856332ed59e5207c68e864564/cashout/log/uba?transaction_id=#{@basket.transaction_id}&order_id=#{@basket.number}&status_id=#{@status_id}&transaction_amount=#{@basket.original_transaction_amount}&currency=#{@basket.currency.code}&paid_transaction_amount=#{@basket.paid_transaction_amount}&paid_currency=#{Currency.find_by_id(@basket.paid_currency_id).code}&change_rate=#{@basket.rate}&id=#{@basket.login_id}&cashout_account_number=#{@cashout_account_number}&fee=#{@basket.fees}"
     log_response = (RestClient.get(log_request) rescue "")
 
-    @basket.update_attributes(cashout_notified_to_front_office: (log_response == '1' ? true : false), cashout_notification_request: log_request, cashout_notification_response: log_response)
+    @basket.update_attributes(
+      cashout_notified_to_front_office: (log_response == '1' ? true : false),
+      cashout_notification_request: log_request,
+      cashout_notification_response: log_response
+    )
   end
 
   def validate_user_params
@@ -177,5 +206,4 @@ class UbaController < ApplicationController
     OmLog.create(log_rl: 'UBA -- ' + params.to_s) rescue nil
     render text: params
   end
-
 end

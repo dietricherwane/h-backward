@@ -10,22 +10,51 @@ class ApplicationController < ActionController::Base
     code
   end
 
+  # Génère l'URL de notification du ecommerce
+  def notification_url(basket, successfull, wallet_name)
+    url = successfull ? basket.service.url_on_success : basket.service.url_on_error
+    parameters = notification_parameters(basket, wallet_name)
+    url += "?" + parameters
+  end
+
+  def notification_parameters(basket, wallet_name)
+    params = {
+      transaction_id:                 basket.transaction_id,
+      order_id:                       basket.number,
+      status_id:                      @status_id,
+      wallet:                         wallet_name,
+      transaction_amount:             basket.original_transaction_amount,
+      currency:                       basket.currency.code,
+      paid_transaction_amount:        basket.paid_transaction_amount,
+      paid_currency:                  Currency.find_by_id(basket.paid_currency_id).code,
+      change_rate:                    basket.rate,
+      id:                             basket.login_id,
+      conflictual_transaction_amount: basket.conflictual_transaction_amount,
+      conflictual_currency:           basket.conflictual_currency
+    }
+    params.to_query
+  end
+
   # Initialise la variable de session contenant les informations sur la transaction
   def get_service_by_token(currency, service_token, operation_token, order, transaction_amount, id, paymoney_account_number, paymoney_password)
     # si la devise envoyee n'existe pas, on renvoie la page d'erreur
-    currency_exists?(currency)
-    session[:currency] = @currency.first
-    @service = Service.where("authentication_token = '#{service_token}' AND published IS NOT FALSE")
-    unless @service.blank?
-      @service = @service.first
-      @operation = Operation.where("authentication_token = '#{operation_token}' AND service_id = #{@service.id} AND published IS NOT FALSE")
-      unless @operation.blank?
-        @operation = @operation.first
+    validate_currency(currency)
+    @service = Service.where("authentication_token = '#{service_token}' AND published IS NOT FALSE").first
+    if @service
+      # @service = @service.first
+      @operation = Operation.where("authentication_token = '#{operation_token}' AND service_id = #{@service.id} AND published IS NOT FALSE").first
+      if @operation
+        # @operation = @operation.first
         unless not_a_number?(transaction_amount)
-          session[:service] = Service.find_by_authentication_token(service_token)
-          session[:operation] = Operation.find_by_authentication_token(operation_token)
+          # session[:service] = Service.find_by_authentication_token(service_token)
+          session[:service] = @service
+          # session[:operation] = Operation.find_by_authentication_token(operation_token)
+          session[:operation] = @operation
           session[:trs_amount] = transaction_amount.to_f.round(2)
-          session[:basket] = {"basket_number" => "#{order}", "transaction_amount" => "#{transaction_amount.to_f.round(2)}"}
+          session[:basket] = {
+            "basket_number"      => "#{order}",
+            "transaction_amount" => "#{transaction_amount.to_f.round(2)}"
+          }
           session[:paymoney_account_number] = paymoney_account_number
           session[:paymoney_password] = paymoney_password
           unless session[:paymoney_account_number].blank?
@@ -40,12 +69,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # Verifie que la devise existe dans la base de donnees
-  def currency_exists?(currency)
-    @currency = Currency.where("code = '#{currency.upcase}' AND published IS TRUE")
-    if @currency.blank?
-      redirect_to error_page_path
-    end
+  # Verifie l'existence de la devise avant de l'enregistrer en session
+  def validate_currency(currency)
+    @currency = Currency.where("code = '#{currency.upcase}' AND published IS TRUE").first
+    redirect_to error_page_path unless @currency
+    session[:currency] = @currency
   end
 
   # Initialise la variable de session contenant les informations sur la transaction
@@ -64,20 +92,17 @@ class ApplicationController < ActionController::Base
   end
 
   def get_change_rate(from, to)
-    @from = from
-    @to = to
-    @rate = 0
-    if @from ==@to
-      @rate = 1
+    rate = 0
+    if from == to
+      rate = 1
     else
-      @rate = ActiveRecord::Base.connection.execute("SELECT * FROM currencies_matches WHERE first_code = '#{@from}' AND second_code = '#{@to}'").first["rate"].to_f
+      rate = ActiveRecord::Base.connection.execute("SELECT * FROM currencies_matches WHERE first_code = '#{from}' AND second_code = '#{to}'").first["rate"].to_f
     end
-    @rate
   end
 
   # S'assure que la variable de session existe
   def session_exists?
-    if (session[:service].blank? or session[:operation].blank? or session[:basket].blank?)
+    if session[:service].blank? or session[:operation].blank? or session[:basket].blank?
       #redirect_to session[:service].url_on_session_expired
       redirect_to error_page_path
     end
@@ -124,11 +149,11 @@ class ApplicationController < ActionController::Base
     uri.to_s
   end
 
-  def run_typhoeus_request(request, code_on_success)
+  def run_typhoeus_request(request)
     @error_messages = []
     request.on_complete do |response|
       if response.success?
-        eval(code_on_success)
+        yield
       elsif response.timed_out?
         @error_messages << "Délai d'attente de la demande dépassé. Veuillez contacter l'administrateur."
         @error = true
@@ -141,10 +166,9 @@ class ApplicationController < ActionController::Base
       end
     end
     hydra = Typhoeus::Hydra.hydra
-	  hydra.queue(request)
-	  hydra.run
+    hydra.queue(request)
+    hydra.run
   end
-
 
 
   def authenticate_incoming_request(operation_id, basket_number, transaction_amount)
@@ -176,12 +200,9 @@ class ApplicationController < ActionController::Base
   def generic_transaction_acknowledgement(my_model, transaction_id)
     status = "0"
     order = my_model.find_by_transaction_id(transaction_id)
-    if order
-      if order.payment_status == true
-        status = "1"
-      end
-    end
-    render :text => status
+    status = "1" if order && order.payment_status == true
+
+    render text: status
   end
 
   # Initialize mandatory variables before displaying the payment validation form to the user
@@ -206,29 +227,25 @@ class ApplicationController < ActionController::Base
   end
 
   def ceiled_shipping_fee
-    return get_shipping_fee.ceil
+    get_shipping_fee.ceil
   end
 
   def unceiled_shipping_fee
-    return get_shipping_fee
+    get_shipping_fee
   end
 
   # Récupère les frais de transaction en fonction du wallet
   def get_shipping_fee
     @fee = 0
 
-    if !session[:service].fee.blank?
+    if session[:service].fee
       @fee = ((@transaction_amount.to_f * (session[:service].fee || 0)) / 100).round(2)
     else
-      if @wallet
-        if(@wallet.percentage)
-          @fee = (((@transaction_amount).to_f * @wallet.fee) / 100).round(2)
-        else
-          @fee = @wallet.fee
-        end
+      @fee = @wallet.fee
+      if @wallet && @wallet.percentage
+        @fee = (((@transaction_amount).to_f * @wallet.fee) / 100).round(2)
       end
     end
-    return @fee
   end
 
   def get_service_logo(token)
@@ -261,20 +278,21 @@ class ApplicationController < ActionController::Base
 
   # Handle GUCE requests
   # Is the current request incoming from the GUCE
-  def guce_request?
-    if session[:service].authentication_token == '57813dc7992fbdc721ca5f6b0d02d559'
-      set_guce_transaction_amount
-    end
+  def is_guce_request?
+    session[:service].authentication_token == '57813dc7992fbdc721ca5f6b0d02d559'
+      # set_guce_transaction_amount
   end
 
   # Make a request to the back office to get the last transaction amount
   def set_guce_transaction_amount
+    return nil unless is_guce_request?
 #=begin
 
       request = Typhoeus::Request.new("#{ENV['guce_back_office_url']}/GPG_GUCE/rest/Mob_Mon/Check/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}", method: :get, followlocation: true)
       request.run
 
       response = (Nokogiri.XML(request.response.body) rescue nil)
+      # byebug //
 #=end
 =begin
       response = Nokogiri.XML(%Q{<ns3:response xmlns="epayment/common" xmlns:ns2="epayment/common-response" xmlns:ns3="epayment/check-response" xmlns:ns4="epayment/common-request">
@@ -313,7 +331,7 @@ CATTA-CI SARL 09 BP 1327 ABIDJAN 09 TREICHVILLE-VGE-IMMEUBLE LA BALANCE
     @payment_fee = (response.xpath('//ns3:response').at('bill').at('paymentFee').content rescue nil)
     @tob = (response.xpath('//ns3:response').at('bill').at('tob').content rescue nil)
 
-    if valid_guce_params?
+    if verify_guce_params?
       new_transaction_amount = @amount.to_f.round(2)
       if new_transaction_amount != session[:trs_amount]
         @guce_notice = "Le montant de la transaction a changé. Il est passé de: #{session[:trs_amount]} #{session[:currency].symbol} à #{new_transaction_amount} #{session[:currency].symbol}"
@@ -328,7 +346,7 @@ CATTA-CI SARL 09 BP 1327 ABIDJAN 09 TREICHVILLE-VGE-IMMEUBLE LA BALANCE
   end
 
   # Make sure the order id is not null and amount is a number
-  def valid_guce_params?
+  def verify_guce_params?
     if @order_id == nil || @amount == nil || not_a_number?(@amount) || @payment_fee == nil || not_a_number?(@payment_fee) || @tob == nil || not_a_number?(@tob)
       return false
     else

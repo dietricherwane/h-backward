@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 #gem 'rails', :git => 'git://github.com/rails/rails.git'
 gem 'rails', '4.0.0'
 
-ruby '2.0.0'
+ruby '2.3.3'
 
 # Use postgresql as the database for Active Record
 gem 'pg'
@@ -44,6 +44,7 @@ gem 'magic_encoding'
 
 # Used to make http requests
 gem 'typhoeus', '0.6.9'
+gem 'httparty', '~> 0.14.0'
 
 # Used to connect to heroku
 gem 'heroku'
@@ -52,7 +53,7 @@ gem 'heroku'
 gem 'rabl'
 
 # JSON parser
-gem "yajl-ruby"
+# gem "yajl-ruby"
 
 # XML parser
 gem "nokogiri"
@@ -81,6 +82,27 @@ gem 'wash_out'
 gem 'savon', '~> 2.10.0'
 
 gem 'rest-client'
+
+group :development do
+  gem 'pry-byebug', '~> 3.4', '>= 3.4.2'
+  gem 'rubocop'
+end
+
+group :development, :test do
+  gem 'rspec-rails', "~> 3.5"
+  gem 'shoulda', '~> 3.5'
+  gem 'factory_girl_rails'
+end
+
+group :test do
+  gem 'capybara'
+  gem 'capybara-screenshot'
+  gem 'capybara-webkit'
+  gem 'rack_session_access'
+  gem 'database_cleaner'
+  gem 'faker'
+  gem 'launchy'
+end
 
 #gem "rails_12factor", group: :production
 

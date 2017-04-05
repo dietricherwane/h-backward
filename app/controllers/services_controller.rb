@@ -23,7 +23,20 @@ class ServicesController < ApplicationController
       @url_on_hold_error = params[:url_on_hold_error]
       @url_on_hold_listener = params[:url_on_hold_listener]
       @url_on_basket_already_paid = params[:url_on_basket_already_paid]
-      Service.create(code: @code, name: @name, sales_area: @sales_area, comment: @comment, url_on_success: @url_on_success, url_to_ipn: @url_to_ipn, url_on_error: @url_on_error, url_on_session_expired: @url_on_session_expired, url_on_hold_success: @url_on_hold_success, url_on_hold_error: @url_on_hold_error, url_on_hold_listener: @url_on_hold_listener, url_on_basket_already_paid: @url_on_basket_already_paid)
+      Service.create(
+        code: @code, 
+        name: @name, 
+        sales_area: @sales_area, 
+        comment: @comment, 
+        url_on_success: @url_on_success, 
+        url_to_ipn: @url_to_ipn, 
+        url_on_error: @url_on_error, 
+        url_on_session_expired: @url_on_session_expired, 
+        url_on_hold_success: @url_on_hold_success, 
+        url_on_hold_error: @url_on_hold_error, 
+        url_on_hold_listener: @url_on_hold_listener, 
+        url_on_basket_already_paid: @url_on_basket_already_paid
+      )
       @status = "f26e0312bd863867f4f1e6b83483644b"
     else
       @status = "bad request"
@@ -49,7 +62,7 @@ class ServicesController < ApplicationController
 
       @service = Service.find_by_token(service_token)
 
-      if !@service.blank?
+      if @service
         @service.update_attributes(url_on_success: url_on_success, url_to_ipn: url_to_ipn, url_on_error: url_on_error, url_on_basket_already_paid: url_on_basket_already_paid)
         @status = "f26e0312bd863867f4f1e6b83483644b"
       else
@@ -132,17 +145,17 @@ class ServicesController < ApplicationController
     # wallets structure is like: [["05ccd7ba3d", true], ["b005fd07f0", true], ["936166e255", false], ["e6da96e284", false]]
     wallets = JSON.parse(@wallets) rescue nil
     if wallets
-      wallet_creation_failed = wallets_creation_succeed?(wallets)
+      # wallet_creation_failed = wallets_setting_succeed?(wallets)
 
       # Deletes everything if the creation of even a single wallet failed
-      if wallet_creation_failed
+      if wallets_setting_succeed?
+        render json: {"status" => "6", "service_token" => @service_token, "operation_token" => @operation_token}
+      else
         @service.available_wallets.each do |available_wallet|
           available_wallet.delete
         end
         delete_service_and_operation
         render json: {"status" => "5"}
-      else
-        render json: {"status" => "6", "service_token" => @service_token, "operation_token" => @operation_token}
       end
     else
       delete_service_and_operation
@@ -163,19 +176,18 @@ class ServicesController < ApplicationController
   end
 
   # Returns true or false depending on the wallets creation status
-  def wallets_creation_succeed?(wallets)
-    wallet_creation_failed = false
+  def wallets_setting_succeed?(wallets)
+    setting_succeed = true
     # Creates available wallets for a given service (Ecommerce)
     wallets.each do |wallet|
       @wallet = Wallet.find_by_authentication_token(wallet[0])
       if @wallet
         @service.available_wallets.create(wallet_id: @wallet.id, published: (wallet[1] == true ? true : false))
       else
-        wallet_creation_failed = true
+        setting_succeed = false
       end
     end
-
-    return wallet_creation_failed
+    setting_succeed
   end
 
   def params_present?(params)

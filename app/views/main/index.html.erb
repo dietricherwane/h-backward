@@ -108,8 +108,12 @@
         <div class="col-xs-12 paymethod">
           <span id = "wallets_list">
             <% @available_wallets.each do |available_wallet| %>
-              <% @url = "#{available_wallet.wallet.url}/#{session[:service].code}/#{session[:operation].code}/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}" %>
-              <%= link_to image_tag(available_wallet.wallet.logo.url(:medium)), @url %>
+              <% 
+              wallet = available_wallet.wallet
+              url = "#{wallet.url}/#{session[:service].code}/#{session[:operation].code}/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}"
+              wallet_name = wallet.name.split.first.downcase
+              %>
+              <%= link_to image_tag(wallet.logo.url(:medium)), url, class: ["#{wallet_name}", "wallet_link"] %>
             <% end %>
           </span>
 

@@ -153,12 +153,11 @@ class WsdlMtnController < ApplicationController
       #basket.update_attributes(:payment_status => true)
     #end
     @request = Typhoeus::Request.new(url, followlocation: true)
-    @internal_com_request = "@response = Nokogiri.XML(request.response.body)
-    @response.xpath('//status').each do |link|
-    @status = link.content
+
+    run_typhoeus_request(@request) do
+      @response = Nokogiri.XML(request.response.body)
+      @response.xpath('//status').each { |link| @status = link.content }
     end
-    "
-    run_typhoeus_request(@request, @internal_com_request)
 
     if @status.to_s.strip == "1"
       basket.update_attributes(:notified_to_back_office => true)

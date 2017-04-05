@@ -17,9 +17,28 @@
 /tmp/cache
 **/tmp
 /log/development.log
+log/development.log
+/.byebug_history
 
 # Ignore environment variables
 /config/env_variables.yml
 
 # Ignore byebug history
 .byebug_history
+
+# Ignore all media files.
+/public/images
+/public/images_old
+/public/system
+/public/wallets
+/app/assets/images
+
+# Ignore old files.
+app/controllers/mtn_cis_controller_old.rb
+app/controllers/mtn_cis_controller_old_jean.rb
+app/views/mtn_cis/index_old.html.erb
+app/views/mtn_cis/waiting_validation_old.html.erb
+/config/routes_old.rb
+/config/routes_old_jean.rb
+
+/HubsBackOffice_development.sql

@@ -1,0 +1,22 @@
+mtnmomo:
+  -
+    name: transaction_amount
+    type: numeric
+    description: montant (HT) de la transaction
+  -
+    name: phone_number
+    type: numeric
+    description: numéro de téléphone MTN
+paymoney:
+  -
+    name: transaction_amount
+    type: numeric
+    description: montant (HT) de la transaction
+  -
+    name: account_number
+    type: numeric
+    description: numméro de compte PayMoney Wallet
+  -
+    name: otp
+    type: numeric
+    description: code OTP PayMoney
