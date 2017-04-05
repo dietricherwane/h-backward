@@ -1,7 +1,6 @@
 require 'net/http'
 
 class NovapaysController < ApplicationController
-  @@second_origin_url = Parameter.first.second_origin_url
 
   ##before_action :only => :guard do |o| o.filter_connections end
   before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :payment_result_listener, :valid_result_parameters, :generic_ipn_notification]
@@ -78,7 +77,7 @@ class NovapaysController < ApplicationController
 
             if request.post?
               # Notification au back office du hub
-              notify_to_back_office(@basket, "#{@@second_origin_url}/GATEWAY/rest/WS/#{@basket.operation.id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")
+              notify_to_back_office(@basket, "#{ENV['second_origin_url']}/GATEWAY/rest/WS/#{@basket.operation.id}/#{@basket.number}/#{@basket.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")
 
               # Update in available_wallet the number of successful_transactions
               update_number_of_succeed_transactions

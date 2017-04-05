@@ -59,11 +59,10 @@ class WalletsController < ApplicationController
 
   def format_wallets(wallets)
     my_wallets = []
-    parameters = Parameter.first
 
     unless wallets.empty?
       wallets.each do |wallet|
-        my_wallets << wallet.as_json.merge({currency: wallet.currency.name, logo: "#{parameters.back_office_url}#{wallet.logo.url(:medium)}"}).except(*["id", "created_at", "updated_at", "country_id", "published", "logo_file_name", "logo_content_type", "logo_file_size", "logo_updated_at", "url", "currency_id", "percentage"])
+        my_wallets << wallet.as_json.merge({currency: wallet.currency.name, logo: "#{ENV['back_office_url']}#{wallet.logo.url(:medium)}"}).except(*["id", "created_at", "updated_at", "country_id", "published", "logo_file_name", "logo_content_type", "logo_file_size", "logo_updated_at", "url", "currency_id", "percentage"])
       end
     end
 
@@ -72,12 +71,11 @@ class WalletsController < ApplicationController
 
   def format_used_wallets(available_wallets)
     my_wallets = []
-    parameters = Parameter.first
 
     unless available_wallets.empty?
       available_wallets.each do |available_wallet|
         wallet = available_wallet.wallet
-        my_wallets << wallet.as_json.merge({currency: wallet.currency.name, logo: "#{parameters.back_office_url}#{wallet.logo.url(:medium)}", succeed_transactions: available_wallet.succeed_transactions.to_i, failed_transactions: available_wallet.failed_transactions.to_i}).except(*["id", "created_at", "updated_at", "country_id", "published", "logo_file_name", "logo_content_type", "logo_file_size", "logo_updated_at", "url", "currency_id", "percentage"])
+        my_wallets << wallet.as_json.merge({currency: wallet.currency.name, logo: "#{ENV['back_office_url']}#{wallet.logo.url(:medium)}", succeed_transactions: available_wallet.succeed_transactions.to_i, failed_transactions: available_wallet.failed_transactions.to_i}).except(*["id", "created_at", "updated_at", "country_id", "published", "logo_file_name", "logo_content_type", "logo_file_size", "logo_updated_at", "url", "currency_id", "percentage"])
       end
     end
 

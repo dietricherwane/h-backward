@@ -1,7 +1,6 @@
 class MtnCisController < ApplicationController
   require 'savon'
   require 'digest'
-  #@@second_origin_url = Parameter.first.second_origin_url
   ##before_action :only => :guard do |o| o.filter_connections end
   before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :initialize_session, :session_initialized, :payment_result_listener, :generic_ipn_notification, :cashout]
   # Si l'utilisateur ne s'est pas connecté en passant par main#guard, on le rejette
@@ -175,7 +174,7 @@ class MtnCisController < ApplicationController
           else
             #Débiter le compte paymoney
 
-            paymoney_debit_request = "#{Parameter.first.gateway_wallet_url}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/Mtn/#{@operation_token}/#{@mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.paymoney_password}/#{@basket.original_transaction_amount}/#{(@basket.fees / @basket.rate).ceil.round(2)}"
+            paymoney_debit_request = "#{ENV['gateway_wallet_url']}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/Mtn/#{@operation_token}/#{@mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.paymoney_password}/#{@basket.original_transaction_amount}/#{(@basket.fees / @basket.rate).ceil.round(2)}"
             unload_response = (RestClient.get(paymoney_debit_request) rescue "")
 
             if unload_response.include?('|') || unload_response.blank?
@@ -230,7 +229,7 @@ class MtnCisController < ApplicationController
                     @mobile_money_token = '5cbd715e'
                     #Requête pour notifier au GATEWAY qu'il a eu opération de cashin mobile money
                     #C'est qu'il faudra insérer la requête DepositPayment de MTN
-                    reload_request = "#{Parameter.first.gateway_wallet_url}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/Mtn/#{@operation_token}/#{@mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.original_transaction_amount}/#{(@basket.fees / @basket.rate).ceil.round(2)}"
+                    reload_request = "#{ENV['gateway_wallet_url']}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/Mtn/#{@operation_token}/#{@mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.original_transaction_amount}/#{(@basket.fees / @basket.rate).ceil.round(2)}"
                     reload_response = (RestClient.get(reload_request) rescue "")
                     @status_code = '0'
                     @basket.update_attributes(process_online_client_number: @cashin_mobile_number, payment_status: false, paymoney_reload_request: reload_request, paymoney_reload_response: reload_response, paymoney_transaction_id: ((reload_response.blank? || reload_response.include?('|')) ? nil : reload_response))
@@ -242,7 +241,7 @@ class MtnCisController < ApplicationController
                   @mobile_money_token = '5cbd715e'
                   #Requête pour notifier au GATEWAY qu'il a eu opération de cashin mobile money
                   #C'est qu'il faudra insérer la requête DepositPayment de MTN
-                  reload_request = "#{Parameter.first.gateway_wallet_url}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/Mtn/#{@operation_token}/#{@mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.original_transaction_amount}/#{(@basket.fees / @basket.rate).ceil.round(2)}"
+                  reload_request = "#{ENV['gateway_wallet_url']}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/Mtn/#{@operation_token}/#{@mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.original_transaction_amount}/#{(@basket.fees / @basket.rate).ceil.round(2)}"
                   reload_response = (RestClient.get(reload_request) rescue "")
                   @status_code = '0'
                   @basket.update_attributes(process_online_client_number: @cashin_mobile_number, payment_status: false, paymoney_reload_request: reload_request, paymoney_reload_response: reload_response, paymoney_transaction_id: ((reload_response.blank? || reload_response.include?('|')) ? nil : reload_response))
@@ -339,7 +338,7 @@ class MtnCisController < ApplicationController
                 response_code = (response_code.xpath('//value').first.text rescue nil)
 
                 if response_code.to_s.strip == '01' || response_code.to_s.strip == '1000'
-                  reload_request = "#{Parameter.first.gateway_wallet_url}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/Mtn/#{@operation_token}/#{@mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.original_transaction_amount}/0"
+                  reload_request = "#{ENV['gateway_wallet_url']}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/Mtn/#{@operation_token}/#{@mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.original_transaction_amount}/0"
                   reload_response = (RestClient.get(reload_request) rescue "")
                   if reload_response.include?('|') || reload_response.blank?
                     @status_code = '5'

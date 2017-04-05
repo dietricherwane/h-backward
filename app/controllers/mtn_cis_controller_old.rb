@@ -1,5 +1,4 @@
 class MtnCisController < ApplicationController
-  @@second_origin_url = Parameter.first.second_origin_url
   ##before_action :only => :guard do |o| o.filter_connections end
   before_action :session_exists?, :except => [:ipn, :transaction_acknowledgement, :initialize_session, :session_initialized, :payment_result_listener, :duke, :api_confirm_amount, :generic_ipn_notification, :cashout]
   # Si l'utilisateur ne s'est pas connecté en passant par main#guard, on le rejette
@@ -147,7 +146,7 @@ class MtnCisController < ApplicationController
       if (@basket.operation.authentication_token rescue nil) == '3d20d7af-2ecb-4681-8e4f-a585d7700ee4' || (@basket.operation.authentication_token rescue nil) == '0acae92d-d63c-41d7-b385-d797b95e98dc'
         operation_token = 'a71766d6'
         mobile_money_token = '5cbd715e'
-        reload_request = "#{Parameter.first.gateway_wallet_url}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/Mtn/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.original_transaction_amount}/0"
+        reload_request = "#{ENV['gateway_wallet_url']}/api/86d138798bc43ed59e5207c664/mobile_money/cashin/Mtn/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.original_transaction_amount}/0"
         reload_response = (RestClient.get(reload_request) rescue "")
         if reload_response.include?('|')
           @status_id = '5'
@@ -205,7 +204,7 @@ class MtnCisController < ApplicationController
           @fees_for_compensation = (@transaction.first.fees * @rate).round(2)
 
           # Notification au back office du hub
-          notify_to_back_office(@basket, "#{@@second_origin_url}/GATEWAY/rest/WS/#{@transaction.first.operation.id}/#{@transaction.first.number}/#{@transaction.first.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")
+          notify_to_back_office(@basket, "#{ENV['second_origin_url']}/GATEWAY/rest/WS/#{@transaction.first.operation.id}/#{@transaction.first.number}/#{@transaction.first.transaction_id}/#{@amount_for_compensation}/#{@fees_for_compensation}/2")
 
           # Update in available_wallet the number of successful_transactions
           update_number_of_succeed_transactions
@@ -335,7 +334,7 @@ class MtnCisController < ApplicationController
       # Cashout mobile money
       operation_token = 'e3dbe20c'
       mobile_money_token = '5cbd715e'
-      unload_request = "#{Parameter.first.gateway_wallet_url}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/PAYPAL/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.paymoney_password}/#{@basket.original_transaction_amount}/0"
+      unload_request = "#{ENV['gateway_wallet_url']}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/PAYPAL/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.paymoney_password}/#{@basket.original_transaction_amount}/0"
 
       unload_response = (RestClient.get(unload_request) rescue "")
       if unload_response.include?('|') || unload_response.blank?
@@ -380,7 +379,7 @@ class MtnCisController < ApplicationController
         mobile_money_token = '5cbd715e'
 
 
-        unload_request = "#{Parameter.first.gateway_wallet_url}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/Mtn/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.paymoney_password}/#{@basket.original_transaction_amount}/#{(@basket.fees / @basket.rate).ceil.round(2)}"
+        unload_request = "#{ENV['gateway_wallet_url']}/api/88bc43ed59e5207c68e864564/mobile_money/cashout/Mtn/#{operation_token}/#{mobile_money_token}/#{@basket.paymoney_account_number}/#{@basket.paymoney_password}/#{@basket.original_transaction_amount}/#{(@basket.fees / @basket.rate).ceil.round(2)}"
 
         unload_response = (RestClient.get(unload_request) rescue "")
         if unload_response.include?('|') || unload_response.blank?

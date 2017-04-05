@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
           session[:paymoney_account_number] = paymoney_account_number
           session[:paymoney_password] = paymoney_password
           unless session[:paymoney_account_number].blank?
-            paymoney_token_url = "#{Parameter.first.paymoney_wallet_url}/PAYMONEY_WALLET/rest/check2_compte/#{session[:paymoney_account_number]}"
+            paymoney_token_url = "#{ENV['paymoney_wallet_url']}/PAYMONEY_WALLET/rest/check2_compte/#{session[:paymoney_account_number]}"
             session[:paymoney_account_token] = (RestClient.get(paymoney_token_url) rescue "")
             if session[:paymoney_account_token].blank? || session[:paymoney_account_token] == "null"
               redirect_to "#{session[:service].url_on_basket_already_paid}?status_id=4"
@@ -232,13 +232,12 @@ class ApplicationController < ActionController::Base
   end
 
   def get_service_logo(token)
-    parameters = Parameter.first
-    request = Typhoeus::Request.new("#{parameters.front_office_url}/ecommerce/get_logo/#{token}", method: :get, followlocation: true)
+    request = Typhoeus::Request.new("#{ENV['front_office_url']}/ecommerce/get_logo/#{token}", method: :get, followlocation: true)
     request.run
     response = request.response
 
     #if response.success?
-      @service_logo = "#{parameters.front_office_url}#{response.body}"
+      @service_logo = "#{ENV['front_office_url']}#{response.body}"
     #else
       #@service_logo = "/images/medium/missing.png"
     #end
@@ -270,11 +269,9 @@ class ApplicationController < ActionController::Base
 
   # Make a request to the back office to get the last transaction amount
   def set_guce_transaction_amount
-    parameters = Parameter.first
-
 #=begin
 
-      request = Typhoeus::Request.new("#{parameters.guce_back_office_url}/GPG_GUCE/rest/Mob_Mon/Check/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}", method: :get, followlocation: true)
+      request = Typhoeus::Request.new("#{ENV['guce_back_office_url']}/GPG_GUCE/rest/Mob_Mon/Check/#{session[:basket]['basket_number']}/#{session[:basket]['transaction_amount']}", method: :get, followlocation: true)
       request.run
 
       response = (Nokogiri.XML(request.response.body) rescue nil)
@@ -340,11 +337,9 @@ CATTA-CI SARL 09 BP 1327 ABIDJAN 09 TREICHVILLE-VGE-IMMEUBLE LA BALANCE
   end
 
   def guce_request_payment?(authentication_token, collector_id, payment_mode)
-    parameters = Parameter.first
-
     if authentication_token == '57813dc7992fbdc721ca5f6b0d02d559'
-      OmLog.create(log_rl: "Requete au GUCE: " + "#{parameters.guce_payment_url}/GPG_GUCE/rest/Mob_Mon_Pay/pay/#{@basket.number}/#{@basket.original_transaction_amount}/#{payment_mode}/#{collector_id}/#{(@basket.login_id.blank? ? 'NULL' : @basket.login_id)}")
-      request = Typhoeus::Request.new("#{parameters.guce_payment_url}/GPG_GUCE/rest/Mob_Mon_Pay/pay/#{@basket.number}/#{@basket.original_transaction_amount}/#{payment_mode}/#{collector_id}/#{(@basket.login_id.blank? ? 'NULL' : @basket.login_id)}", method: :get, followlocation: true)
+      OmLog.create(log_rl: "Requete au GUCE: " + "#{ENV['guce_payment_url']}/GPG_GUCE/rest/Mob_Mon_Pay/pay/#{@basket.number}/#{@basket.original_transaction_amount}/#{payment_mode}/#{collector_id}/#{(@basket.login_id.blank? ? 'NULL' : @basket.login_id)}")
+      request = Typhoeus::Request.new("#{ENV['guce_payment_url']}/GPG_GUCE/rest/Mob_Mon_Pay/pay/#{@basket.number}/#{@basket.original_transaction_amount}/#{payment_mode}/#{collector_id}/#{(@basket.login_id.blank? ? 'NULL' : @basket.login_id)}", method: :get, followlocation: true)
       request.run
 
       response = (Nokogiri.XML(request.response.body) rescue nil)

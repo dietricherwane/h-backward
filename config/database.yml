@@ -19,9 +19,9 @@ development:
   encoding: unicode
   database: HubsBackOffice_development
   pool: 10005
-  username: erwan
-  password: dukenukemdie
-  host: localhost
+  username: <%= ENV['db_username'] %>
+  password: <%= ENV['db_password'] %>
+  host: 41.189.40.193
   port: 5432
   encoding: utf8
 
@@ -51,8 +51,8 @@ test:
   encoding: unicode
   database: HubsBackOffice_test
   pool: 5
-  username: erwan
-  password: dukenukemdie
+  username: <%= ENV['db_username'] %>
+  password: <%= ENV['db_password'] %>
   host: localhost
   port: 5432
   encoding: utf8

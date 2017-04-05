@@ -14,5 +14,12 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+/tmp/cache
 **/tmp
 /log/development.log
+
+# Ignore environment variables
+/config/env_variables.yml
+
+# Ignore byebug history
+.byebug_history
