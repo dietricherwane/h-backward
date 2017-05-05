@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170106145910) do
+ActiveRecord::Schema.define(version: 20170505122013) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,45 @@ ActiveRecord::Schema.define(version: 20170106145910) do
   add_index "baskets", ["number"], name: "index_baskets_on_number", using: :btree
   add_index "baskets", ["operation_id"], name: "index_baskets_on_operation_id", using: :btree
   add_index "baskets", ["service_id"], name: "index_baskets_on_service_id", using: :btree
+
+  create_table "bnis", force: true do |t|
+    t.string   "firstname"
+    t.string   "lastname"
+    t.string   "email"
+    t.string   "phone_number"
+    t.string   "order_id"
+    t.string   "username"
+    t.string   "password"
+    t.string   "channel_id"
+    t.integer  "service_id"
+    t.boolean  "payment_status"
+    t.integer  "operation_id"
+    t.float    "transaction_amount"
+    t.boolean  "notified_to_back_office"
+    t.string   "transaction_id"
+    t.float    "fees"
+    t.integer  "currency_id"
+    t.float    "paid_transaction_amount"
+    t.integer  "paid_currency_id"
+    t.float    "rate"
+    t.float    "conflictual_transaction_amount"
+    t.string   "conflictual_currency"
+    t.float    "compensation_rate"
+    t.float    "original_transaction_amount"
+    t.string   "login_id"
+    t.string   "txn_id"
+    t.text     "redirect_url"
+    t.text     "redirect_response"
+    t.text     "return_params"
+    t.text     "paymoney_account_number"
+    t.string   "paymoney_account_token"
+    t.text     "paymoney_reload_request"
+    t.text     "paymoney_reload_response"
+    t.text     "paymoney_token_request"
+    t.string   "paymoney_transaction_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "countries", force: true do |t|
     t.boolean  "published"
@@ -314,6 +353,11 @@ ActiveRecord::Schema.define(version: 20170106145910) do
     t.string   "guce_payment_url"
     t.string   "paymoney_wallet_url"
     t.string   "gateway_wallet_url"
+    t.string   "bni_billing_request"
+    t.string   "bni_billing_username"
+    t.string   "bni_billing_password"
+    t.string   "bni_operator_id"
+    t.string   "bni_channel_id"
   end
 
   create_table "payment_way_fees", force: true do |t|

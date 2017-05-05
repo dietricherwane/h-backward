@@ -91,6 +91,13 @@ HubsBackOffice::Application.routes.draw do
   get "/UBA/transaction_acknowledgement" => "uba#transaction_acknowledgement"
   post "/UBA/cashout" => "uba#cashout"
 
+  get "/bni/:service_id/:operation_id/:basket_number/:transaction_amount" => "bni#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
+  get "/BNI" => "bni#index"
+  post "/BNI/validate" => "bni#validate_transaction"
+  post "/BNI/transaction_acknowledgement" => "bni#transaction_acknowledgement"
+  get "/BNI/transaction_acknowledgement" => "bni#transaction_acknowledgement"
+  post "/BNI/cashout" => "bni#cashout"
+
   get "novapay/:service_id/:operation_id/:basket_number/:transaction_amount" => "novapays#guard", :constraints => {:transaction_amount => /(\d+(.\d+)?)/}
   get "NovaPay" => "novapays#index"
   post "novapay/process_payment" => "novapays#process_payment"

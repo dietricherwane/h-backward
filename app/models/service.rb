@@ -15,6 +15,7 @@ class Service < ActiveRecord::Base
   has_many :qash_baskets
   has_many :novapays
   has_many :ubas
+  has_many :bnis
   has_many :delayed_payments
   has_many :operations
   has_many :available_wallets

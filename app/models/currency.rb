@@ -4,5 +4,7 @@ class Currency < ActiveRecord::Base
   has_many :paypal_baskets
   has_many :orange_money_ci_baskets
   has_many :qash_baskets
+  has_many :bnis
+
   attr_accessible :name, :code, :symbol, :published
 end
